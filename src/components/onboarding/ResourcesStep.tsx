@@ -1,10 +1,9 @@
-
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import { Resource, ResourceTopic, ResourceType } from "@/types/onboarding";
 import OnboardingLayout from "./OnboardingLayout";
 import { Card } from "@/components/ui/card";
-import { Check, FileText, Video, BookOpen, Pencil, Users, Tool, Database } from "lucide-react";
+import { Check, FileText, Video, BookOpen, Pencil, Users, Wrench, Database } from "lucide-react";
 import { useState, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -16,13 +15,9 @@ const ResourcesStep = () => {
   const [activeTab, setActiveTab] = useState<ResourceTopic>("Storytelling");
   const [selectedResource, setSelectedResource] = useState<Resource | null>(null);
 
-  // Simuler des données de ressources basées sur le profil de l'utilisateur
   useEffect(() => {
-    // Dans une vraie application, ces ressources seraient récupérées depuis une API
-    // en fonction du profil de l'utilisateur (contentTypes, challenges, etc.)
     const recommendedResources: Resource[] = generateRecommendedResources();
     
-    // Si l'utilisateur a déjà sélectionné des ressources, on les conserve
     if (onboardingData.selectedResources && onboardingData.selectedResources.length > 0) {
       setResources(onboardingData.selectedResources);
     } else {
@@ -31,8 +26,6 @@ const ResourcesStep = () => {
   }, [onboardingData.contentTypes, onboardingData.contentChallenges]);
 
   const generateRecommendedResources = (): Resource[] => {
-    // Dans une vraie application, ces ressources seraient générées dynamiquement
-    // en fonction du profil de l'utilisateur
     return [
       {
         id: "1",
@@ -122,7 +115,7 @@ const ResourcesStep = () => {
       case "Template":
         return <FileText className="h-5 w-5" />;
       case "Tool":
-        return <Tool className="h-5 w-5" />;
+        return <Wrench className="h-5 w-5" />;
       case "Community":
         return <Users className="h-5 w-5" />;
       default:
