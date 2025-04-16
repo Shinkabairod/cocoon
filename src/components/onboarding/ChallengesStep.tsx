@@ -1,10 +1,9 @@
-
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import { ContentChallenge, TimeAvailable } from "@/types/onboarding";
 import OnboardingLayout from "./OnboardingLayout";
 import { Card } from "@/components/ui/card";
-import { Check, X, MapPin, Home, Building, Park, Mountain, Coffee, Beach } from "lucide-react";
+import { Check, X, MapPin, Home, Building, Mountain, Coffee, PalmTree, Waves } from "lucide-react";
 import { useState } from "react";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -52,11 +51,11 @@ const ChallengesStep = () => {
   const filmingLocations = [
     { id: 'home', label: 'À domicile', icon: <Home className="h-5 w-5" /> },
     { id: 'studio', label: 'Studio dédié', icon: <Building className="h-5 w-5" /> },
-    { id: 'outdoor', label: 'Extérieur/Nature', icon: <Park className="h-5 w-5" /> },
+    { id: 'outdoor', label: 'Extérieur/Nature', icon: <PalmTree className="h-5 w-5" /> },
     { id: 'urban', label: 'Environnement urbain', icon: <MapPin className="h-5 w-5" /> },
     { id: 'travel', label: 'Lors de voyages', icon: <Mountain className="h-5 w-5" /> },
     { id: 'cafe', label: 'Café/Espace de coworking', icon: <Coffee className="h-5 w-5" /> },
-    { id: 'beach', label: 'Plage/Bord de mer', icon: <Beach className="h-5 w-5" /> },
+    { id: 'beach', label: 'Plage/Bord de mer', icon: <Waves className="h-5 w-5" /> },
     { id: 'custom', label: 'Autre (préciser)', icon: <MapPin className="h-5 w-5" /> }
   ];
   
