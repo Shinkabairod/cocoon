@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import OnboardingLayout from "./OnboardingLayout";
 import { Card } from "@/components/ui/card";
-import { Compass, QuestionMark, Lightbulb } from "lucide-react";
+import { Compass, HelpCircle, Lightbulb } from "lucide-react";
 
 const InitialGuidanceStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
@@ -47,7 +47,7 @@ const InitialGuidanceStep = () => {
               onClick={() => handleDirectionChoice(false)}
             >
               <div className="flex flex-col items-center text-center space-y-4">
-                <QuestionMark className="h-12 w-12 text-primary" />
+                <HelpCircle className="h-12 w-12 text-primary" />
                 <div>
                   <h4 className="font-medium text-lg mb-2">Je cherche encore ma voie</h4>
                   <p className="text-muted-foreground">
