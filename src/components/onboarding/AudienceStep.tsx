@@ -33,7 +33,7 @@ const AudienceStep = () => {
     'Inspire': 'Motiver et inspirer votre audience',
     'Inform': 'Tenir votre audience informée des actualités ou tendances',
     'Provoke thought': 'Stimuler la réflexion et le débat',
-    'Build community': 'Créer un sentiment d'appartenance',
+    'Build community': 'Créer un sentiment d\'appartenance',
     'Sell products/services': 'Promouvoir vos produits ou services'
   };
   
