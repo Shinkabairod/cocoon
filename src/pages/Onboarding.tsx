@@ -7,6 +7,7 @@ import AudienceStep from "@/components/onboarding/AudienceStep";
 import SocialAccountsStep from "@/components/onboarding/SocialAccountsStep";
 import ContentTypeStep from "@/components/onboarding/ContentTypeStep";
 import ChallengesStep from "@/components/onboarding/ChallengesStep";
+import ResourcesStep from "@/components/onboarding/ResourcesStep";
 import LearningStep from "@/components/onboarding/LearningStep";
 import MonetizationStep from "@/components/onboarding/MonetizationStep";
 import SummaryStep from "@/components/onboarding/SummaryStep";
@@ -31,10 +32,12 @@ const Onboarding = () => {
       case 7:
         return <ChallengesStep />;
       case 8:
-        return <LearningStep />;
+        return <ResourcesStep />;
       case 9:
-        return <MonetizationStep />;
+        return <LearningStep />;
       case 10:
+        return <MonetizationStep />;
+      case 11:
         return <SummaryStep />;
       default:
         return <InitialGuidanceStep />;

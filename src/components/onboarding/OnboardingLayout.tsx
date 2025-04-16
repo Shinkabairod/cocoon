@@ -25,7 +25,7 @@ const OnboardingLayout = ({
         <div className="container mx-auto flex items-center">
           <h1 className="text-2xl font-bold gradient-text">AI Content Coach</h1>
           <div className="ml-auto text-sm text-muted-foreground">
-            Step {onboardingData.step} of 7
+            Step {onboardingData.step} of 11
           </div>
         </div>
       </header>

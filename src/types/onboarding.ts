@@ -16,6 +16,17 @@ export type ImpactGoal = 'Educate' | 'Entertain' | 'Inspire' | 'Inform' | 'Provo
 export type OnboardingStage = 'Initial Guidance' | 'Profile Setup' | 'Content Strategy' | 'Implementation Plan';
 export type ContentCategory = string;
 export type FilmingLocation = string;
+export type ResourceType = 'PDF' | 'Video' | 'Book' | 'Course' | 'Template' | 'Tool' | 'Community';
+export type ResourceTopic = 'Storytelling' | 'Camera Techniques' | 'Editing' | 'Scripting' | 'Business Strategy' | 'SEO' | 'Marketing' | 'Content Planning' | 'Analytics';
+
+export interface Resource {
+  id: string;
+  type: ResourceType;
+  topic: ResourceTopic;
+  title: string;
+  description: string;
+  selected: boolean;
+}
 
 export interface OnboardingData {
   // Initial guidance
@@ -51,6 +62,9 @@ export interface OnboardingData {
   filmingLocation?: FilmingLocation;
   filmingLocationName?: string;
   customFilmingLocation?: string;
+  
+  // AI resources
+  selectedResources?: Resource[];
   
   // Additional information
   existingSkills?: string;
