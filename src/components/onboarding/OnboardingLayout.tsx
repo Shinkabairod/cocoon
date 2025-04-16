@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface OnboardingLayoutProps {
   children: ReactNode;
@@ -17,35 +18,36 @@ const OnboardingLayout = ({
   subtitle,
   showBackButton = true
 }: OnboardingLayoutProps) => {
-  const { prevStep, onboardingData } = useOnboarding();
+  const { prevStep, onboardingData, totalSteps } = useOnboarding();
+  const isMobile = useIsMobile();
   
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="border-b w-full py-4 px-6">
+      <header className="border-b w-full py-3 px-4">
         <div className="container mx-auto flex items-center">
-          <h1 className="text-2xl font-bold gradient-text">AI Content Coach</h1>
+          <h1 className={`font-bold gradient-text ${isMobile ? 'text-xl' : 'text-2xl'}`}>AI Content Coach</h1>
           <div className="ml-auto text-sm text-muted-foreground">
-            Step {onboardingData.step} of 11
+            Étape {onboardingData.step} de {totalSteps}
           </div>
         </div>
       </header>
       
-      <main className="flex-1 flex flex-col items-center justify-center p-6">
+      <main className="flex-1 flex flex-col items-center justify-center p-4">
         <div className="w-full max-w-2xl">
           {showBackButton && onboardingData.step > 1 && (
             <Button
               variant="ghost"
               size="sm"
-              className="mb-6"
+              className="mb-4"
               onClick={prevStep}
             >
-              <ArrowLeft className="h-4 w-4 mr-2" /> Back
+              <ArrowLeft className="h-4 w-4 mr-2" /> Retour
             </Button>
           )}
           
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold mb-2">{title}</h2>
-            {subtitle && <p className="text-muted-foreground">{subtitle}</p>}
+          <div className="text-center mb-6">
+            <h2 className={`font-bold mb-2 ${isMobile ? 'text-2xl' : 'text-3xl'}`}>{title}</h2>
+            {subtitle && <p className="text-muted-foreground text-sm">{subtitle}</p>}
           </div>
           
           {children}

@@ -8,12 +8,16 @@ interface OnboardingContextType {
   nextStep: () => void;
   prevStep: () => void;
   resetOnboarding: () => void;
+  totalSteps: number;
 }
 
 const initialData: OnboardingData = {
   step: 1,
   onboardingStage: 'Initial Guidance'
 };
+
+// Définition du nombre total d'étapes
+const TOTAL_STEPS = 18;
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 
@@ -42,7 +46,8 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
       updateOnboardingData, 
       nextStep, 
       prevStep, 
-      resetOnboarding 
+      resetOnboarding,
+      totalSteps: TOTAL_STEPS
     }}>
       {children}
     </OnboardingContext.Provider>

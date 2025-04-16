@@ -12,6 +12,15 @@ import LearningStep from "@/components/onboarding/LearningStep";
 import MonetizationStep from "@/components/onboarding/MonetizationStep";
 import SummaryStep from "@/components/onboarding/SummaryStep";
 
+// Nouvelles étapes décomposées
+import ExperienceLevelStep from "@/components/onboarding/steps/ExperienceLevelStep";
+import ContentGoalStep from "@/components/onboarding/steps/ContentGoalStep";
+import CountrySelectionStep from "@/components/onboarding/steps/CountrySelectionStep";
+import BusinessTypeStep from "@/components/onboarding/steps/BusinessTypeStep";
+import BusinessDescriptionStep from "@/components/onboarding/steps/BusinessDescriptionStep";
+import AudienceGenerationStep from "@/components/onboarding/steps/AudienceGenerationStep";
+import ImpactGoalsStep from "@/components/onboarding/steps/ImpactGoalsStep";
+
 const Onboarding = () => {
   const { onboardingData } = useOnboarding();
   
@@ -19,25 +28,37 @@ const Onboarding = () => {
     switch (onboardingData.step) {
       case 1:
         return <InitialGuidanceStep />;
+      // Étapes décomposées d'expérience
       case 2:
-        return <ExperienceStep />;
+        return <ExperienceLevelStep />;
       case 3:
-        return <BusinessProfileStep />;
+        return <ContentGoalStep />;
+      // Étapes décomposées de profil professionnel
       case 4:
-        return <AudienceStep />;
+        return <CountrySelectionStep />;
       case 5:
-        return <SocialAccountsStep />;
+        return <BusinessTypeStep />;
       case 6:
-        return <ContentTypeStep />;
+        return <BusinessDescriptionStep />;
+      // Étapes décomposées d'audience
       case 7:
-        return <ChallengesStep />;
+        return <AudienceGenerationStep />;
       case 8:
-        return <ResourcesStep />;
+        return <ImpactGoalsStep />;
+      // Étapes restantes
       case 9:
-        return <LearningStep />;
+        return <SocialAccountsStep />;
       case 10:
-        return <MonetizationStep />;
+        return <ContentTypeStep />;
       case 11:
+        return <ChallengesStep />;
+      case 12:
+        return <ResourcesStep />;
+      case 13:
+        return <LearningStep />;
+      case 14:
+        return <MonetizationStep />;
+      case 15:
         return <SummaryStep />;
       default:
         return <InitialGuidanceStep />;
