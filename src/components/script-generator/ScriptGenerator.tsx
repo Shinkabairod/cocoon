@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -228,7 +227,7 @@ function generateSampleScript(formData: any) {
   
   // Introduction
   if (contentType === 'video') {
-    intro = `[Camera facing you, friendly smile]\n\nHey everyone! Welcome back to the channel. Today we're going to be diving into ${title}. Whether you're ${audienceType === 'beginners' ? 'just starting out' : audienceTypes === 'advanced' ? 'an expert looking to refine your skills' : 'looking to take your skills to the next level'}, this video is going to give you some amazing insights.`;
+    intro = `[Camera facing you, friendly smile]\n\nHey everyone! Welcome back to the channel. Today we're going to be diving into ${title}. Whether you're ${audienceType === 'beginners' ? 'just starting out' : audienceType === 'advanced' ? 'an expert looking to refine your skills' : 'looking to take your skills to the next level'}, this video is going to give you some amazing insights.`;
   } else if (contentType === 'blog') {
     intro = `# ${title}\n\nIn today's fast-paced world, mastering ${title} can give you a significant advantage. This comprehensive guide will walk you through everything you need to know, regardless of your current expertise level.`;
   } else if (contentType === 'podcast') {

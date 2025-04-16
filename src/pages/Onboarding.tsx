@@ -1,6 +1,10 @@
 
 import { useOnboarding } from "@/contexts/OnboardingContext";
+import InitialGuidanceStep from "@/components/onboarding/InitialGuidanceStep";
 import ExperienceStep from "@/components/onboarding/ExperienceStep";
+import BusinessProfileStep from "@/components/onboarding/BusinessProfileStep";
+import AudienceStep from "@/components/onboarding/AudienceStep";
+import SocialAccountsStep from "@/components/onboarding/SocialAccountsStep";
 import ContentTypeStep from "@/components/onboarding/ContentTypeStep";
 import ChallengesStep from "@/components/onboarding/ChallengesStep";
 import LearningStep from "@/components/onboarding/LearningStep";
@@ -13,19 +17,27 @@ const Onboarding = () => {
   const renderStep = () => {
     switch (onboardingData.step) {
       case 1:
-        return <ExperienceStep />;
+        return <InitialGuidanceStep />;
       case 2:
-        return <ContentTypeStep />;
+        return <ExperienceStep />;
       case 3:
-        return <ChallengesStep />;
+        return <BusinessProfileStep />;
       case 4:
-        return <LearningStep />;
+        return <AudienceStep />;
       case 5:
-        return <MonetizationStep />;
+        return <SocialAccountsStep />;
       case 6:
+        return <ContentTypeStep />;
+      case 7:
+        return <ChallengesStep />;
+      case 8:
+        return <LearningStep />;
+      case 9:
+        return <MonetizationStep />;
+      case 10:
         return <SummaryStep />;
       default:
-        return <ExperienceStep />;
+        return <InitialGuidanceStep />;
     }
   };
   

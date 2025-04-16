@@ -11,7 +11,8 @@ interface OnboardingContextType {
 }
 
 const initialData: OnboardingData = {
-  step: 1
+  step: 1,
+  onboardingStage: 'Initial Guidance'
 };
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
