@@ -1,4 +1,3 @@
-
 export type ContentType = 'Videos' | 'Blogs' | 'Podcasts' | 'Social Media Posts';
 export type Platform = 'YouTube' | 'Instagram' | 'TikTok' | 'Twitter' | 'LinkedIn' | 'Blog' | 'Podcast';
 export type ExperienceLevel = 'Beginner' | 'Intermediate' | 'Experienced';
@@ -33,7 +32,7 @@ export interface Resource {
   description: string;
   tags?: string[];
   selected: boolean;
-  topic?: ResourceTopic; // Adding the topic property needed by ResourcesStep
+  topic: ResourceTopic; // Making topic required and not optional
 }
 
 export interface OnboardingData {
