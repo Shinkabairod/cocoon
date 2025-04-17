@@ -8,8 +8,8 @@ import { cn } from "@/lib/utils";
 
 const AICoach = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [messages, setMessages] = useState<{ type: 'user' | 'ai', content: string }[]>([
-    { type: 'ai', content: 'Hey there! I'm your AI Content Coach. How can I help you today?' }
+  const [messages, setMessages] = useState<{ type: 'user' | 'ai'; content: string }[]>([
+    { type: 'ai', content: "Hey there! I'm your AI Content Coach. How can I help you today?" }
   ]);
   const [inputValue, setInputValue] = useState('');
 
