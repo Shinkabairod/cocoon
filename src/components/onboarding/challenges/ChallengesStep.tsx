@@ -1,13 +1,14 @@
+
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import { ContentChallenge, TimeAvailable } from "@/types/onboarding";
-import OnboardingLayout from "./OnboardingLayout";
-import { Card } from "@/components/ui/card";
-import { Check, X, MapPin, Home, Building, Mountain, Coffee, Trees, Waves } from "lucide-react";
+import OnboardingLayout from "../OnboardingLayout";
 import { useState } from "react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
+import { MapPin, Home, Building, Mountain, Coffee, Trees, Waves } from "lucide-react";
+import ChallengeSelectorCard from "./ChallengeSelectorCard";
+import TimeAvailableSelector from "./TimeAvailableSelector";
+import EquipmentSelector from "./EquipmentSelector";
+import FilmingLocationSelector from "./FilmingLocationSelector";
 
 const ChallengesStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
@@ -129,104 +130,37 @@ const ChallengesStep = () => {
               const isDisabled = !isSelected && selectedChallenges.length >= 2;
               
               return (
-                <Card 
+                <ChallengeSelectorCard
                   key={challenge}
-                  className={`p-3 cursor-pointer border-2 ${
-                    isSelected 
-                      ? 'border-primary' 
-                      : isDisabled
-                        ? 'border-border opacity-50'
-                        : 'border-border hover:border-muted-foreground'
-                  }`}
-                  onClick={() => !isDisabled && toggleChallenge(challenge)}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="font-medium text-sm">{challenge}</div>
-                    {isSelected && <Check className="h-4 w-4 text-primary" />}
-                  </div>
-                </Card>
+                  challenge={challenge}
+                  isSelected={isSelected}
+                  isDisabled={isDisabled}
+                  onToggle={toggleChallenge}
+                />
               );
             })}
           </div>
         </div>
         
-        <div>
-          <h3 className="text-lg font-medium mb-3">Combien de temps pouvez-vous consacrer à la création de contenu chaque semaine ?</h3>
-          <div className="grid grid-cols-2 gap-3">
-            {timeOptions.map((time) => (
-              <Card 
-                key={time}
-                className={`p-3 cursor-pointer border-2 ${
-                  onboardingData.timeAvailable === time 
-                    ? 'border-primary' 
-                    : 'border-border hover:border-muted-foreground'
-                }`}
-                onClick={() => handleTimeSelect(time)}
-              >
-                <div className="font-medium text-sm">{time}</div>
-              </Card>
-            ))}
-          </div>
-        </div>
+        <TimeAvailableSelector
+          timeOptions={timeOptions}
+          selectedTime={onboardingData.timeAvailable}
+          onTimeSelect={handleTimeSelect}
+        />
         
-        <div>
-          <h3 className="text-lg font-medium mb-3">De quel équipement disposez-vous déjà ?</h3>
-          <div className="grid grid-cols-2 gap-3">
-            {equipment.map((item) => {
-              const isSelected = onboardingData.equipmentOwned?.includes(item);
-              
-              return (
-                <Card 
-                  key={item}
-                  className={`p-3 cursor-pointer border-2 ${
-                    isSelected 
-                      ? 'border-primary' 
-                      : 'border-border hover:border-muted-foreground'
-                  }`}
-                  onClick={() => handleEquipmentToggle(item)}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="font-medium text-sm">{item}</div>
-                    {isSelected ? (
-                      <Check className="h-4 w-4 text-primary" />
-                    ) : (
-                      <X className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </div>
-                </Card>
-              );
-            })}
-          </div>
-        </div>
+        <EquipmentSelector
+          equipment={equipment}
+          selectedEquipment={onboardingData.equipmentOwned}
+          onEquipmentToggle={handleEquipmentToggle}
+        />
         
-        <div>
-          <h3 className="text-lg font-medium mb-3">Où prévoyez-vous de tourner principalement votre contenu ?</h3>
-          <RadioGroup 
-            value={selectedLocation}
-            onValueChange={handleLocationSelect}
-            className="grid grid-cols-1 md:grid-cols-2 gap-3"
-          >
-            {filmingLocations.map(location => (
-              <div key={location.id} className="flex items-start space-x-2">
-                <RadioGroupItem value={location.id} id={location.id} className="mt-1" />
-                <Label htmlFor={location.id} className="flex items-center cursor-pointer">
-                  <div className="mr-2">{location.icon}</div>
-                  <span>{location.label}</span>
-                </Label>
-              </div>
-            ))}
-          </RadioGroup>
-          
-          {selectedLocation === 'custom' && (
-            <div className="mt-3">
-              <Input
-                placeholder="Précisez le lieu de tournage"
-                value={customLocation}
-                onChange={handleCustomLocationChange}
-              />
-            </div>
-          )}
-        </div>
+        <FilmingLocationSelector
+          locations={filmingLocations}
+          selectedLocation={selectedLocation}
+          customLocation={customLocation}
+          onLocationSelect={handleLocationSelect}
+          onCustomLocationChange={handleCustomLocationChange}
+        />
         
         <div className="pt-4 flex justify-center">
           <Button 

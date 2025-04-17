@@ -2,7 +2,7 @@
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import InitialGuidanceStep from "@/components/onboarding/InitialGuidanceStep";
 import SocialAccountsStep from "@/components/onboarding/SocialAccountsStep";
-import ChallengesStep from "@/components/onboarding/ChallengesStep";
+import ChallengesStep from "@/components/onboarding/challenges/ChallengesStep";
 import ResourcesStep from "@/components/onboarding/ResourcesStep";
 import LearningStep from "@/components/onboarding/LearningStep";
 import MonetizationStep from "@/components/onboarding/MonetizationStep";
