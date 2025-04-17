@@ -16,8 +16,8 @@ const initialData: OnboardingData = {
   onboardingStage: 'Initial Guidance'
 };
 
-// Définition du nombre total d'étapes
-const TOTAL_STEPS = 18;
+// Total number of steps in the onboarding process
+const TOTAL_STEPS = 25;
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 

@@ -4,7 +4,7 @@ import { useOnboarding } from "@/contexts/OnboardingContext";
 import { BusinessType } from "@/types/onboarding";
 import OnboardingLayout from "../OnboardingLayout";
 import { Card } from "@/components/ui/card";
-import { Building, Globe, Store, Briefcase, School, Heart } from "lucide-react";
+import { Building, Globe, Store, Briefcase, School, Heart, Users } from "lucide-react";
 
 const BusinessTypeStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
@@ -14,6 +14,7 @@ const BusinessTypeStep = () => {
     { type: 'Small Business', icon: <Store className="h-5 w-5" /> },
     { type: 'Startup', icon: <Building className="h-5 w-5" /> },
     { type: 'Established Company', icon: <Building className="h-5 w-5" /> },
+    { type: 'Agency', icon: <Users className="h-5 w-5" /> },
     { type: 'Educational Institution', icon: <School className="h-5 w-5" /> },
     { type: 'Non-Profit', icon: <Heart className="h-5 w-5" /> },
     { type: 'Other', icon: <Globe className="h-5 w-5" /> }
@@ -30,7 +31,7 @@ const BusinessTypeStep = () => {
   return (
     <OnboardingLayout 
       title="Type d'Activité" 
-      subtitle="Comment définiriez-vous votre activité ?"
+      subtitle="How would you define your business or activity?"
     >
       <div className="space-y-6">
         <div>
@@ -60,7 +61,7 @@ const BusinessTypeStep = () => {
             onClick={handleContinue}
             disabled={!onboardingData.businessType}
           >
-            Continuer
+            Continue
           </Button>
         </div>
       </div>

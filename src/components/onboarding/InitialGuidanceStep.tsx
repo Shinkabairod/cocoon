@@ -7,30 +7,30 @@ import { Compass, HelpCircle, Lightbulb, Smartphone } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const InitialGuidanceStep = () => {
-  const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
+  const { onboardingData, updateOnboardingData } = useOnboarding();
   const isMobile = useIsMobile();
   
   const handleDirectionChoice = (hasDirection: boolean) => {
     updateOnboardingData({ 
       hasContentDirection: hasDirection,
-      step: 2 // Skip to experience step
+      step: 2 // Move to the next step - either experience or creator discovery
     });
   };
   
   return (
     <OnboardingLayout 
-      title="Bienvenue sur AI Content Coach" 
-      subtitle="Voyons comment nous pouvons vous aider dans votre parcours de création de contenu"
+      title="Welcome to AI Content Coach" 
+      subtitle="Let's see how we can help you on your content creation journey"
       showBackButton={false}
     >
       <div className="space-y-6">
         <div className="flex items-center justify-center mb-2">
           <Smartphone className="h-6 w-6 text-primary mr-2" />
-          <span className="text-sm font-medium text-primary">Version Mobile Optimisée</span>
+          <span className="text-sm font-medium text-primary">Mobile Optimized Experience</span>
         </div>
         
         <div>
-          <h3 className="text-lg font-medium mb-4">Pour commencer, dites-nous où vous en êtes dans votre parcours créatif</h3>
+          <h3 className="text-lg font-medium mb-4">To start, tell us where you are in your creative journey</h3>
           
           <div className="grid grid-cols-1 gap-4">
             <Card 
@@ -40,10 +40,10 @@ const InitialGuidanceStep = () => {
               <div className="flex flex-col items-center text-center space-y-3">
                 <Compass className="h-10 w-10 text-primary" />
                 <div>
-                  <h4 className="font-medium text-lg mb-2">J'ai déjà une idée précise</h4>
+                  <h4 className="font-medium text-lg mb-2">I have a clear idea already</h4>
                   <p className="text-muted-foreground text-sm">
-                    Je sais quel type de contenu je veux créer et sur quelles plateformes,
-                    mais j'ai besoin d'aide pour structurer et optimiser mon approche.
+                    I know what type of content I want to create and on which platforms,
+                    but I need help structuring and optimizing my approach.
                   </p>
                 </div>
               </div>
@@ -56,10 +56,10 @@ const InitialGuidanceStep = () => {
               <div className="flex flex-col items-center text-center space-y-3">
                 <HelpCircle className="h-10 w-10 text-primary" />
                 <div>
-                  <h4 className="font-medium text-lg mb-2">Je cherche encore ma voie</h4>
+                  <h4 className="font-medium text-lg mb-2">I'm still finding my way</h4>
                   <p className="text-muted-foreground text-sm">
-                    Je souhaite créer du contenu mais je ne suis pas sûr par où commencer
-                    ou quel type de contenu me conviendrait le mieux.
+                    I want to create content but I'm not sure where to start
+                    or what type of content would suit me best.
                   </p>
                 </div>
               </div>
@@ -70,8 +70,8 @@ const InitialGuidanceStep = () => {
         <div className="bg-muted p-4 rounded-md flex items-start space-x-3">
           <Lightbulb className="h-5 w-5 text-primary mt-1 flex-shrink-0" />
           <p className="text-sm text-muted-foreground">
-            Nous allons adapter notre processus d'onboarding en fonction de votre situation actuelle,
-            en vous guidant à travers chaque étape du processus de création de contenu.
+            We'll tailor our onboarding process based on your current situation,
+            guiding you through each step of the content creation process.
           </p>
         </div>
       </div>

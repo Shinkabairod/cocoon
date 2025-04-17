@@ -16,10 +16,11 @@ const CountrySelectionStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
   const [country, setCountry] = useState(onboardingData.country || '');
   
-  // Liste de quelques pays pour la démo
+  // List of some countries for the demo
   const popularCountries = [
-    'France', 'États-Unis', 'Canada', 'Royaume-Uni', 'Belgique', 
-    'Suisse', 'Allemagne', 'Espagne', 'Italie', 'Maroc'
+    'United States', 'Canada', 'United Kingdom', 'France', 'Germany', 
+    'Spain', 'Italy', 'Australia', 'Japan', 'Brazil', 'Mexico', 
+    'India', 'South Africa', 'Nigeria', 'Sweden', 'Netherlands'
   ];
   
   const handleContinue = () => {
@@ -29,8 +30,8 @@ const CountrySelectionStep = () => {
   
   return (
     <OnboardingLayout 
-      title="Votre Localisation" 
-      subtitle="Dans quel pays êtes-vous basé ?"
+      title="Your Location" 
+      subtitle="Which country are you based in?"
     >
       <div className="space-y-6">
         <div className="flex justify-center mb-4">
@@ -40,7 +41,7 @@ const CountrySelectionStep = () => {
         <div>
           <Select value={country} onValueChange={setCountry}>
             <SelectTrigger className="w-full">
-              <SelectValue placeholder="Sélectionnez votre pays" />
+              <SelectValue placeholder="Select your country" />
             </SelectTrigger>
             <SelectContent>
               {popularCountries.map((country) => (
@@ -49,7 +50,7 @@ const CountrySelectionStep = () => {
             </SelectContent>
           </Select>
           <p className="text-sm text-muted-foreground mt-2">
-            Cette information nous aide à personnaliser nos recommandations selon les tendances locales.
+            This helps us personalize our recommendations based on local trends.
           </p>
         </div>
         
@@ -59,7 +60,7 @@ const CountrySelectionStep = () => {
             onClick={handleContinue}
             disabled={!country}
           >
-            Continuer
+            Continue
           </Button>
         </div>
       </div>
