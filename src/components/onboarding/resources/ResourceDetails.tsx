@@ -2,7 +2,7 @@
 import { Resource } from "@/types/onboarding";
 import { Button } from "@/components/ui/button";
 import { SheetContent, SheetDescription, SheetHeader, SheetTitle } from "@/components/ui/sheet";
-import { FileText, Video, BookOpen, Pencil, Users, Wrench, Database } from "lucide-react";
+import { getResourceIcon } from "@/utils/resourceIcons";
 
 interface ResourceDetailsProps {
   resource: Resource;
@@ -10,27 +10,6 @@ interface ResourceDetailsProps {
 }
 
 const ResourceDetails = ({ resource, toggleResourceSelection }: ResourceDetailsProps) => {
-  const getResourceIcon = (type: string) => {
-    switch (type) {
-      case "PDF":
-        return <FileText className="h-5 w-5" />;
-      case "Video":
-        return <Video className="h-5 w-5" />;
-      case "Book":
-        return <BookOpen className="h-5 w-5" />;
-      case "Course":
-        return <Pencil className="h-5 w-5" />;
-      case "Template":
-        return <FileText className="h-5 w-5" />;
-      case "Tool":
-        return <Wrench className="h-5 w-5" />;
-      case "Community":
-        return <Users className="h-5 w-5" />;
-      default:
-        return <Database className="h-5 w-5" />;
-    }
-  };
-
   return (
     <SheetContent>
       <SheetHeader>

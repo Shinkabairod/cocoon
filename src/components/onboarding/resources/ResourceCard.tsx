@@ -1,10 +1,11 @@
 
 import { Resource } from "@/types/onboarding";
 import { Card } from "@/components/ui/card";
-import { Check, FileText, Video, BookOpen, Pencil, Users, Wrench, Database } from "lucide-react";
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Sheet, SheetTrigger } from "@/components/ui/sheet";
 import ResourceDetails from "./ResourceDetails";
+import { getResourceIcon } from "@/utils/resourceIcons";
 
 interface ResourceCardProps {
   resource: Resource;
@@ -12,27 +13,6 @@ interface ResourceCardProps {
 }
 
 const ResourceCard = ({ resource, toggleResourceSelection }: ResourceCardProps) => {
-  const getResourceIcon = (type: string) => {
-    switch (type) {
-      case "PDF":
-        return <FileText className="h-5 w-5" />;
-      case "Video":
-        return <Video className="h-5 w-5" />;
-      case "Book":
-        return <BookOpen className="h-5 w-5" />;
-      case "Course":
-        return <Pencil className="h-5 w-5" />;
-      case "Template":
-        return <FileText className="h-5 w-5" />;
-      case "Tool":
-        return <Wrench className="h-5 w-5" />;
-      case "Community":
-        return <Users className="h-5 w-5" />;
-      default:
-        return <Database className="h-5 w-5" />;
-    }
-  };
-
   return (
     <Card key={resource.id} className="p-4 cursor-pointer">
       <div className="flex items-start space-x-4">
