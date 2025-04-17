@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { FileText, Video, BookOpen, Pencil, Users, Wrench, Database } from "lucide-react";
 import { ResourceType } from "@/types/onboarding";
 
