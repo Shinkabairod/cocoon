@@ -1,5 +1,4 @@
-
-import { ContentType, Platform, ContentCategory } from "@/types/onboarding";
+import { ContentType, Platform, ContentCategory, ResourceType, ResourceTopic } from "@/types/onboarding";
 
 export const contentTypes: ContentType[] = [
   'Videos', 
@@ -177,7 +176,8 @@ export const resourcesList = [
     id: '1',
     title: 'Content Creation Masterclass',
     description: 'Comprehensive guide for beginners to advanced creators',
-    type: 'Course',
+    type: 'Course' as ResourceType,
+    topic: 'Content Planning' as ResourceTopic,
     tags: ['Beginner friendly', 'Content strategy', 'Personal branding'],
     selected: false
   },
@@ -185,7 +185,8 @@ export const resourcesList = [
     id: '2',
     title: 'Ultimate Video Editing Guide',
     description: 'Learn professional editing techniques for social media videos',
-    type: 'PDF',
+    type: 'PDF' as ResourceType,
+    topic: 'Editing' as ResourceTopic,
     tags: ['Editing', 'Advanced techniques', 'Storytelling'],
     selected: false
   },
@@ -193,7 +194,8 @@ export const resourcesList = [
     id: '3',
     title: 'Audience Growth Strategies',
     description: 'Proven methods to grow your audience across platforms',
-    type: 'Video',
+    type: 'Video' as ResourceType,
+    topic: 'Marketing' as ResourceTopic,
     tags: ['Audience growth', 'SEO', 'Community building'],
     selected: false
   },
@@ -201,7 +203,8 @@ export const resourcesList = [
     id: '4',
     title: 'Lighting Setup for Creators',
     description: 'Create professional-looking videos with the right lighting',
-    type: 'Guide',
+    type: 'Guide' as ResourceType,
+    topic: 'Camera Techniques' as ResourceTopic,
     tags: ['Lighting', 'Camera setup', 'Beginner friendly'],
     selected: false
   },
@@ -209,7 +212,8 @@ export const resourcesList = [
     id: '5',
     title: 'Monetization Blueprint',
     description: 'Turn your content into a sustainable income source',
-    type: 'Template',
+    type: 'Template' as ResourceType,
+    topic: 'Business Strategy' as ResourceTopic,
     tags: ['Monetization', 'Business', 'Strategy'],
     selected: false
   },
@@ -217,7 +221,8 @@ export const resourcesList = [
     id: '6',
     title: 'Storytelling for Content Creators',
     description: 'Craft compelling narratives that engage your audience',
-    type: 'Book',
+    type: 'Book' as ResourceType,
+    topic: 'Storytelling' as ResourceTopic,
     tags: ['Storytelling', 'Content strategy', 'Audience growth'],
     selected: false
   },
@@ -225,7 +230,8 @@ export const resourcesList = [
     id: '7',
     title: 'Analytics Mastery',
     description: 'Understand your performance metrics to optimize content',
-    type: 'Tool',
+    type: 'Tool' as ResourceType,
+    topic: 'Analytics' as ResourceTopic,
     tags: ['Analytics', 'Data analysis', 'Growth hacking'],
     selected: false
   },
@@ -233,7 +239,8 @@ export const resourcesList = [
     id: '8',
     title: 'Personal Branding Workshop',
     description: 'Build a strong, recognizable brand that stands out',
-    type: 'Course',
+    type: 'Course' as ResourceType,
+    topic: 'Business Strategy' as ResourceTopic,
     tags: ['Personal branding', 'Marketing', 'Community building'],
     selected: false
   }

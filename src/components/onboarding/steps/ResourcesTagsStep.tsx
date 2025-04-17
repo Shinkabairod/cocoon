@@ -7,6 +7,7 @@ import { Tag, BookOpen } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { resourcesList, resourceTags } from "@/components/onboarding/content-type/contentTypeData";
 import { useState } from "react";
+import { Resource, ResourceType } from "@/types/onboarding";
 
 const ResourcesTagsStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
@@ -23,11 +24,18 @@ const ResourcesTagsStep = () => {
   };
   
   const handleContinue = () => {
+    // Convert the resources to match the Resource type
+    const selectedResources: Resource[] = resourcesList
+      .filter(r => r.tags?.some(t => selectedTags.includes(t)))
+      .map(r => ({
+        ...r,
+        type: r.type as ResourceType,
+        selected: true
+      }));
+      
     updateOnboardingData({ 
       selectedResourceTags: selectedTags,
-      selectedResources: resourcesList.filter(r => 
-        r.tags?.some(t => selectedTags.includes(t))
-      ).map(r => ({...r, selected: true}))
+      selectedResources: selectedResources
     });
     nextStep();
   };

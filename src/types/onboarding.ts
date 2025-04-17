@@ -33,6 +33,7 @@ export interface Resource {
   description: string;
   tags?: string[];
   selected: boolean;
+  topic?: ResourceTopic; // Adding the topic property needed by ResourcesStep
 }
 
 export interface OnboardingData {
@@ -60,6 +61,11 @@ export interface OnboardingData {
   contentChallenge?: ContentChallenge;
   contentChallenges?: ContentChallenge[];
   filmingLocations?: FilmingLocation[];
+  
+  // Add properties needed by ChallengesStep
+  filmingLocation?: string;
+  filmingLocationName?: string;
+  customFilmingLocation?: string;
   
   // Resources & preferences
   timeAvailable?: TimeAvailable;
