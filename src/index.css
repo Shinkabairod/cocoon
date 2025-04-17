@@ -43,6 +43,16 @@
     --sidebar-accent-foreground: 240 5.9% 10%;
     --sidebar-border: 220 13% 91%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Soft background colors for icons */
+    --soft-green: 142 76% 95%;
+    --soft-yellow: 50 100% 95%;
+    --soft-orange: 30 100% 95%;
+    --soft-purple: 270 100% 95%;
+    --soft-pink: 350 100% 95%;
+    --soft-peach: 20 100% 95%;
+    --soft-blue: 210 100% 95%;
+    --soft-gray: 240 10% 95%;
   }
 
   .dark {
@@ -101,5 +111,21 @@
   
   .gradient-bg {
     @apply bg-gradient-to-r from-coach-primary via-coach-secondary to-coach-accent;
+  }
+
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
   }
 }
