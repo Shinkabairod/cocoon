@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import { ContentChallenge, TimeAvailable } from "@/types/onboarding";
@@ -50,14 +49,14 @@ const ChallengesStep = () => {
   ];
   
   const filmingLocations = [
-    { id: 'home', label: 'À domicile', icon: <Home className="h-5 w-5" /> },
-    { id: 'studio', label: 'Studio dédié', icon: <Building className="h-5 w-5" /> },
-    { id: 'outdoor', label: 'Extérieur/Nature', icon: <Trees className="h-5 w-5" /> },
-    { id: 'urban', label: 'Environnement urbain', icon: <MapPin className="h-5 w-5" /> },
-    { id: 'travel', label: 'Lors de voyages', icon: <Mountain className="h-5 w-5" /> },
-    { id: 'cafe', label: 'Café/Espace de coworking', icon: <Coffee className="h-5 w-5" /> },
-    { id: 'beach', label: 'Plage/Bord de mer', icon: <Waves className="h-5 w-5" /> },
-    { id: 'custom', label: 'Autre (préciser)', icon: <MapPin className="h-5 w-5" /> }
+    { id: 'home', label: 'At home', icon: <Home className="h-5 w-5" /> },
+    { id: 'studio', label: 'Dedicated studio', icon: <Building className="h-5 w-5" /> },
+    { id: 'outdoor', label: 'Outdoor/Nature', icon: <Trees className="h-5 w-5" /> },
+    { id: 'urban', label: 'Urban environment', icon: <MapPin className="h-5 w-5" /> },
+    { id: 'travel', label: 'While traveling', icon: <Mountain className="h-5 w-5" /> },
+    { id: 'cafe', label: 'Cafe/Coworking space', icon: <Coffee className="h-5 w-5" /> },
+    { id: 'beach', label: 'Beach/Seaside', icon: <Waves className="h-5 w-5" /> },
+    { id: 'custom', label: 'Other (specify)', icon: <MapPin className="h-5 w-5" /> }
   ];
   
   const toggleChallenge = (challenge: ContentChallenge) => {
@@ -118,12 +117,12 @@ const ChallengesStep = () => {
   
   return (
     <OnboardingLayout 
-      title="Vos Défis & Ressources" 
-      subtitle="Identifions vos obstacles et les ressources dont vous disposez"
+      title="Your Challenges & Resources" 
+      subtitle="Let's identify your obstacles and available resources"
     >
       <div className="space-y-6">
         <div>
-          <h3 className="text-lg font-medium mb-3">Quels sont vos plus grands défis dans la création de contenu ? (2 choix max)</h3>
+          <h3 className="text-lg font-medium mb-3">What are your biggest challenges in content creation? (Choose up to 2)</h3>
           <div className="grid grid-cols-2 gap-3">
             {challenges.map((challenge) => {
               const isSelected = selectedChallenges.includes(challenge);
@@ -173,7 +172,7 @@ const ChallengesStep = () => {
               (selectedLocation === 'custom' && !customLocation)
             }
           >
-            Continuer
+            Continue
           </Button>
         </div>
       </div>

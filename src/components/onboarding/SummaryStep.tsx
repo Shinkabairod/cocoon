@@ -3,115 +3,97 @@ import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import OnboardingLayout from "./OnboardingLayout";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, CheckCircle, Globe, Users, Target, User, Laptop } from "lucide-react";
-import { Link } from "react-router-dom";
+import { CheckCircle, ArrowRight } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const SummaryStep = () => {
   const { onboardingData } = useOnboarding();
+  const navigate = useNavigate();
+  
+  const handleFinish = () => {
+    // In a real app, you would save the onboarding data to a backend
+    console.log('Onboarding completed:', onboardingData);
+    navigate('/dashboard');
+  };
+  
+  const summaryItems = [
+    {
+      title: "Experience Level",
+      value: onboardingData.experienceLevel || "Not specified"
+    },
+    {
+      title: "Primary Goal",
+      value: onboardingData.contentGoal || "Not specified"
+    },
+    {
+      title: "Content Types",
+      value: onboardingData.contentTypes?.join(', ') || "Not specified"
+    },
+    {
+      title: "Platforms",
+      value: onboardingData.platforms?.join(', ') || "Not specified"
+    },
+    {
+      title: "Main Challenges",
+      value: onboardingData.contentChallenges?.join(', ') || "Not specified"
+    },
+    {
+      title: "Time Available",
+      value: onboardingData.timeAvailable || "Not specified"
+    },
+    {
+      title: "Selected Resources",
+      value: onboardingData.selectedResources?.filter(r => r.selected).length.toString() + " resources" || "0 resources"
+    }
+  ];
   
   return (
     <OnboardingLayout 
-      title="Tout est prêt ! Votre Coach AI est configuré" 
-      subtitle="Voici un résumé de ce que nous avons appris sur vous"
+      title="Your Profile Summary" 
+      subtitle="Review your preferences before we start your coaching journey"
       showBackButton={false}
     >
-      <div className="space-y-8">
-        <Card className="p-6 border">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h3 className="font-medium mb-2 flex items-center gap-2">
-                <User className="h-5 w-5 text-primary" /> À propos de vous
-              </h3>
-              <ul className="space-y-2 text-muted-foreground">
-                <li><span className="font-medium text-foreground">Expérience:</span> {onboardingData.experienceLevel}</li>
-                <li><span className="font-medium text-foreground">Objectif:</span> {onboardingData.contentGoal}</li>
-                <li><span className="font-medium text-foreground">Pays:</span> {onboardingData.country}</li>
-                <li><span className="font-medium text-foreground">Type d'activité:</span> {onboardingData.businessType}</li>
-                <li><span className="font-medium text-foreground">Temps disponible:</span> {onboardingData.timeAvailable}</li>
-                <li><span className="font-medium text-foreground">Principal défi:</span> {onboardingData.contentChallenge}</li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-medium mb-2 flex items-center gap-2">
-                <Globe className="h-5 w-5 text-primary" /> Préférences de contenu
-              </h3>
-              <ul className="space-y-2 text-muted-foreground">
-                <li><span className="font-medium text-foreground">Types de contenu:</span> {onboardingData.contentTypes?.join(', ')}</li>
-                <li><span className="font-medium text-foreground">Plateformes:</span> {onboardingData.platforms?.join(', ')}</li>
-                <li><span className="font-medium text-foreground">Niche:</span> {onboardingData.niche}</li>
-                <li><span className="font-medium text-foreground">Monétisation:</span> {onboardingData.monetization}</li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6 pt-6 border-t">
-            <div>
-              <h3 className="font-medium mb-2 flex items-center gap-2">
-                <Users className="h-5 w-5 text-primary" /> Votre audience
-              </h3>
-              <ul className="space-y-2 text-muted-foreground">
-                <li><span className="font-medium text-foreground">Génération cible:</span> {onboardingData.targetGeneration}</li>
-                <li><span className="font-medium text-foreground">Objectifs d'impact:</span> {onboardingData.impactGoals?.join(', ')}</li>
-                <li>
-                  <span className="font-medium text-foreground">Comptes liés:</span> {
-                    onboardingData.socialMediaAccounts?.length 
-                      ? onboardingData.socialMediaAccounts.map(a => `${a.platform} (${a.username})`).join(', ')
-                      : 'Aucun compte lié'
-                  }
-                </li>
-              </ul>
-            </div>
-            
-            <div>
-              <h3 className="font-medium mb-2 flex items-center gap-2">
-                <Target className="h-5 w-5 text-primary" /> Objectifs personnels
-              </h3>
-              <div className="text-muted-foreground border-l-2 border-primary/20 pl-3 italic">
-                "{onboardingData.personalGoal}"
-              </div>
-            </div>
-          </div>
-        </Card>
+      <div className="space-y-6">
+        <div className="flex justify-center mb-6">
+          <CheckCircle className="h-16 w-16 text-green-500" />
+        </div>
         
-        <div className="space-y-6">
-          <div className="text-center">
-            <CheckCircle className="h-12 w-12 text-coach-primary mx-auto mb-4" />
-            <h3 className="text-xl font-semibold">Votre coach personnel AI a été créé !</h3>
-            <p className="text-muted-foreground mt-2">
-              En fonction de vos préférences, nous avons créé une expérience personnalisée pour vous.
-            </p>
-          </div>
-          
-          <div className="bg-muted p-6 rounded-lg">
-            <h3 className="font-medium mb-2">Prochaines étapes :</h3>
-            <ul className="space-y-3">
-              <li className="flex items-start gap-2">
-                <CheckCircle className="h-5 w-5 text-coach-primary mt-0.5 flex-shrink-0" />
-                <span>Explorez votre tableau de bord et familiarisez-vous avec votre coach AI</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle className="h-5 w-5 text-coach-primary mt-0.5 flex-shrink-0" />
-                <span>Générez votre premier script de contenu personnalisé</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle className="h-5 w-5 text-coach-primary mt-0.5 flex-shrink-0" />
-                <span>Configurez votre calendrier de contenu et commencez à planifier</span>
-              </li>
-              <li className="flex items-start gap-2">
-                <CheckCircle className="h-5 w-5 text-coach-primary mt-0.5 flex-shrink-0" />
-                <span>Accédez à des ressources d'apprentissage adaptées à vos besoins</span>
-              </li>
-            </ul>
-          </div>
+        <div className="text-center mb-6">
+          <h3 className="text-xl font-semibold mb-2">Congratulations!</h3>
+          <p className="text-muted-foreground">
+            Your AI Content Coach is now personalized and ready to help you achieve your goals.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 gap-4">
+          {summaryItems.map((item, index) => (
+            <Card key={index} className="p-4">
+              <div className="flex justify-between items-center">
+                <span className="font-medium text-sm">{item.title}</span>
+                <span className="text-muted-foreground text-sm">{item.value}</span>
+              </div>
+            </Card>
+          ))}
+        </div>
+        
+        <div className="bg-gradient-to-r from-primary/10 to-secondary/10 p-6 rounded-lg border">
+          <h4 className="font-semibold mb-2">What's next?</h4>
+          <ul className="space-y-2 text-sm text-muted-foreground">
+            <li>• Access your personalized dashboard</li>
+            <li>• Get content suggestions based on your profile</li>
+            <li>• Start receiving coaching tailored to your goals</li>
+            <li>• Track your progress and achievements</li>
+          </ul>
         </div>
         
         <div className="pt-4 flex justify-center">
-          <Link to="/dashboard" className="w-full max-w-xs">
-            <Button className="gradient-bg w-full">
-              Accéder au tableau de bord <ArrowRight className="ml-2 h-4 w-4" />
-            </Button>
-          </Link>
+          <Button 
+            className="gradient-bg w-full max-w-md flex items-center justify-center"
+            onClick={handleFinish}
+          >
+            Start Your Journey
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </div>
       </div>
     </OnboardingLayout>
