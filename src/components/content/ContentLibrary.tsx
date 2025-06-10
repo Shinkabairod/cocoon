@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ContentItem, ContentType } from '@/types/content';
 import { 
   FileText, Lightbulb, Video, Edit, 
-  Calendar, Plus, MoreHorizontal 
+  Calendar, MoreHorizontal 
 } from 'lucide-react';
 
 interface ContentLibraryProps {
@@ -17,7 +17,7 @@ interface ContentLibraryProps {
 }
 
 const ContentLibrary = ({ contents, onEdit, onSchedule }: ContentLibraryProps) => {
-  const [activeTab, setActiveTab] = useState<ContentType>('script');
+  const [activeTab, setActiveTab] = useState<ContentType>('concept');
 
   const getTypeIcon = (type: ContentType) => {
     switch (type) {
@@ -46,21 +46,17 @@ const ContentLibrary = ({ contents, onEdit, onSchedule }: ContentLibraryProps) =
     <div className="space-y-4">
       <div className="flex justify-between items-center">
         <h3 className="text-lg font-semibold">Content Library</h3>
-        <Button size="sm" className="gradient-bg">
-          <Plus className="h-4 w-4 mr-2" />
-          New
-        </Button>
       </div>
 
       <Tabs value={activeTab} onValueChange={(value) => setActiveTab(value as ContentType)}>
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="script">Scripts</TabsTrigger>
           <TabsTrigger value="concept">Concepts</TabsTrigger>
           <TabsTrigger value="idea">Ideas</TabsTrigger>
+          <TabsTrigger value="script">Scripts</TabsTrigger>
           <TabsTrigger value="video">Videos</TabsTrigger>
         </TabsList>
 
-        {(['script', 'concept', 'idea', 'video'] as ContentType[]).map(type => (
+        {(['concept', 'idea', 'script', 'video'] as ContentType[]).map(type => (
           <TabsContent key={type} value={type} className="space-y-3">
             {filterContentsByType(type).length === 0 ? (
               <Card className="p-6 text-center">

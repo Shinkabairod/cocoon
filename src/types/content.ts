@@ -1,5 +1,5 @@
 
-export type ContentType = 'script' | 'concept' | 'idea' | 'video' | 'post';
+export type ContentType = 'concept' | 'idea' | 'script' | 'video' | 'post';
 export type ContentStatus = 'draft' | 'planned' | 'published' | 'archived';
 
 export interface ContentItem {

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNavigation from "@/components/mobile/BottomNavigation";
@@ -68,6 +67,15 @@ const MobileDashboard = () => {
         { id: "feedback", icon: <MessageSquare className="h-6 w-6" />, label: "Feedback" },
         { id: "analytics", icon: <BarChart3 className="h-6 w-6" />, label: "Analytics" },
         { id: "optimize", icon: <TrendingUp className="h-6 w-6" />, label: "Optimize" }
+      ]
+    },
+    {
+      title: "Instagram References",
+      description: "Add and manage Instagram accounts for inspiration",
+      icons: [
+        { id: "add-instagram", icon: <Plus className="h-6 w-6" />, label: "Add Account" },
+        { id: "view-references", icon: <Eye className="h-6 w-6" />, label: "References" },
+        { id: "analyze-content", icon: <BarChart3 className="h-6 w-6" />, label: "Analyze" }
       ]
     }
   ];
