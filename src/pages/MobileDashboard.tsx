@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNavigation from "@/components/mobile/BottomNavigation";
@@ -18,7 +19,7 @@ import {
   Target, Lightbulb, FileText, Calendar, 
   MessageSquare, Github, BookOpen, Users,
   TrendingUp, Star, Trophy, Zap,
-  Video, Mic, Camera, Shield, Eye, Share2
+  Video, Mic, Camera, Shield, Eye
 } from "lucide-react";
 import StarDisplay from "@/components/ui/star-display";
 
@@ -39,7 +40,6 @@ const MobileDashboard = () => {
     { id: "home", icon: <Home className="h-5 w-5" />, label: "Home" },
     { id: "library", icon: <Library className="h-5 w-5" />, label: "Library" },
     { id: "tools", icon: <Bot className="h-5 w-5" />, label: "AI Tools" },
-    { id: "share", icon: <Share2 className="h-5 w-5" />, label: "Share Bot" },
     { id: "profile", icon: <User className="h-5 w-5" />, label: "Profile" }
   ];
 
@@ -166,12 +166,10 @@ const MobileDashboard = () => {
           </div>
         );
 
-      case "share":
-        return <BotSharingSection />;
-
       case "profile":
         return (
           <div className="space-y-6">
+            {/* User Profile Card */}
             <Card className="p-6">
               <div className="text-center space-y-4">
                 <div className="w-20 h-20 bg-gradient-to-br from-coach-primary to-coach-secondary rounded-full mx-auto flex items-center justify-center text-white text-2xl font-bold">
@@ -183,6 +181,12 @@ const MobileDashboard = () => {
                 </div>
               </div>
             </Card>
+
+            {/* Bot Monetization Section */}
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Monetize Your AI Assistant</h3>
+              <BotSharingSection />
+            </div>
 
             {/* Social Media Connections */}
             <Card className="p-4">
