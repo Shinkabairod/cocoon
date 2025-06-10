@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNavigation from "@/components/mobile/BottomNavigation";
@@ -172,10 +173,16 @@ const MobileDashboard = () => {
       case "library":
         return (
           <div className="space-y-6">
-            {/* Header without action button */}
-            <div>
-              <h2 className="text-2xl font-bold text-coach-primary">Content Library</h2>
-              <p className="text-sm text-muted-foreground mt-1">Manage and organize your content</p>
+            {/* Header with action button */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-bold text-coach-primary">Content Library</h2>
+                <p className="text-sm text-muted-foreground mt-1">Manage and organize your content</p>
+              </div>
+              <Button className="gradient-bg shadow-lg">
+                <Plus className="h-4 w-4 mr-2" />
+                Create
+              </Button>
             </div>
 
             {/* Enhanced Stats Cards */}
@@ -198,7 +205,7 @@ const MobileDashboard = () => {
             </div>
 
             {/* Content Library Component - Enhanced */}
-            <Card className="p-4 bg-gradient-to-r from-coach-primary/5 to-coach-secondary/5">
+            <Card className="p-1 bg-gradient-to-r from-coach-primary/5 to-coach-secondary/5">
               <ContentLibrary 
                 contents={contents}
                 onEdit={(content) => console.log('Edit:', content)}
@@ -442,5 +449,3 @@ const MobileDashboard = () => {
 };
 
 export default MobileDashboard;
-
-</edits_to_apply>
