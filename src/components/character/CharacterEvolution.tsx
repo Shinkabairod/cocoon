@@ -15,19 +15,19 @@ interface CharacterEvolutionProps {
 const CharacterEvolution = ({ character, onLevelUp }: CharacterEvolutionProps) => {
   const getStageDescription = (stage: string) => {
     switch (stage) {
-      case 'Beginner': return 'Apprend les bases';
-      case 'Creator': return 'Crée du contenu régulièrement';
-      case 'Influencer': return 'Influence sa communauté';
-      case 'Expert': return 'Maître de son domaine';
-      case 'Legend': return 'Légende vivante';
+      case 'Beginner': return 'Learning the basics';
+      case 'Creator': return 'Creates content regularly';
+      case 'Influencer': return 'Influences their community';
+      case 'Expert': return 'Master of their domain';
+      case 'Legend': return 'Living legend';
       default: return '';
     }
   };
 
   const recentAchievements = [
-    { id: '1', title: 'Premier Script', icon: <Star className="w-4 h-4" />, unlocked: character.contentCreated >= 1 },
-    { id: '2', title: 'Créateur Régulier', icon: <Zap className="w-4 h-4" />, unlocked: character.contentCreated >= 5 },
-    { id: '3', title: 'Premiers Revenus', icon: <Trophy className="w-4 h-4" />, unlocked: character.revenue > 0 },
+    { id: '1', title: 'First Script', icon: <Star className="w-4 h-4" />, unlocked: character.contentCreated >= 1 },
+    { id: '2', title: 'Regular Creator', icon: <Zap className="w-4 h-4" />, unlocked: character.contentCreated >= 5 },
+    { id: '3', title: 'First Revenue', icon: <Trophy className="w-4 h-4" />, unlocked: character.revenue > 0 },
   ];
 
   return (
@@ -52,7 +52,7 @@ const CharacterEvolution = ({ character, onLevelUp }: CharacterEvolutionProps) =
 
         {/* Recent Achievements */}
         <div>
-          <h4 className="font-semibold mb-3">Achievements Récents</h4>
+          <h4 className="font-semibold mb-3">Recent Achievements</h4>
           <div className="grid grid-cols-1 gap-2">
             {recentAchievements.map((achievement) => (
               <div 
@@ -69,7 +69,7 @@ const CharacterEvolution = ({ character, onLevelUp }: CharacterEvolutionProps) =
                 <span className="text-sm font-medium">{achievement.title}</span>
                 {achievement.unlocked && (
                   <Badge variant="outline" className="ml-auto text-xs">
-                    Débloqué
+                    Unlocked
                   </Badge>
                 )}
               </div>
@@ -79,9 +79,9 @@ const CharacterEvolution = ({ character, onLevelUp }: CharacterEvolutionProps) =
 
         {/* Next Goal */}
         <div className="bg-soft-blue rounded-lg p-4">
-          <h4 className="font-semibold text-blue-800 mb-2">Prochain Objectif</h4>
+          <h4 className="font-semibold text-blue-800 mb-2">Next Goal</h4>
           <p className="text-sm text-blue-700">
-            Créez {Math.max(1, 10 - character.contentCreated)} contenus de plus pour débloquer "Créateur Expérimenté"
+            Create {Math.max(1, 10 - character.contentCreated)} more content pieces to unlock "Experienced Creator"
           </p>
         </div>
       </div>
