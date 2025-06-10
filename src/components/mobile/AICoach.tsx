@@ -56,6 +56,34 @@ const AICoach = ({ isOpen = false, onOpenChange }: AICoachProps) => {
               <X className="h-5 w-5" />
             </SheetClose>
           </div>
+
+          {/* Animated Character Section */}
+          <div className="p-6 bg-gradient-to-br from-coach-primary/10 to-coach-secondary/10 border-b">
+            <div className="flex flex-col items-center space-y-4">
+              {/* Character Avatar */}
+              <div className="relative">
+                <div className="w-20 h-20 rounded-full bg-gradient-to-br from-coach-primary to-coach-secondary flex items-center justify-center animate-pulse">
+                  <Sparkles className="h-10 w-10 text-white animate-bounce" />
+                </div>
+                {/* Floating particles effect */}
+                <div className="absolute -top-2 -right-2 w-4 h-4 bg-yellow-400 rounded-full animate-ping"></div>
+                <div className="absolute -bottom-1 -left-1 w-3 h-3 bg-blue-400 rounded-full animate-ping" style={{ animationDelay: '0.5s' }}></div>
+              </div>
+              
+              {/* Character Status */}
+              <div className="text-center">
+                <p className="text-sm font-medium text-coach-primary">AI Coach is ready!</p>
+                <p className="text-xs text-muted-foreground">Ask me anything about content creation</p>
+              </div>
+
+              {/* Breathing animation indicator */}
+              <div className="flex space-x-1">
+                <div className="w-2 h-2 bg-coach-primary rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-coach-primary rounded-full animate-bounce" style={{ animationDelay: '0.1s' }}></div>
+                <div className="w-2 h-2 bg-coach-primary rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></div>
+              </div>
+            </div>
+          </div>
           
           {/* Messages Container */}
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
