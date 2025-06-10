@@ -2,115 +2,128 @@
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Book, Video, Mic, Sparkles, FileText, Target, Camera, Users, Clock } from "lucide-react";
+import { Book, Video, Mic, Sparkles, Zap, Target, Users, ArrowRight } from "lucide-react";
 
 const Index = () => {
-  const features = [
+  const quickFeatures = [
     {
-      icon: <FileText className="h-8 w-8 text-coach-primary" />,
-      title: "Personalized Scripts",
-      description: "Get tailored scripts based on your personality, goals, and audience preferences."
+      icon: <Zap className="h-6 w-6 text-white" />,
+      title: "AI Scripts",
+      description: "Get personalized content in seconds"
     },
     {
-      icon: <Target className="h-8 w-8 text-coach-primary" />,
-      title: "Content Strategy",
-      description: "Develop a focused content strategy that aligns with your long-term goals."
+      icon: <Target className="h-6 w-6 text-white" />,
+      title: "Smart Strategy",
+      description: "Grow faster with AI guidance"
     },
     {
-      icon: <Camera className="h-8 w-8 text-coach-primary" />,
-      title: "Production Guidance",
-      description: "Receive step-by-step guidance on how to film, record, and edit your content."
-    },
-    {
-      icon: <Users className="h-8 w-8 text-coach-primary" />,
+      icon: <Users className="h-6 w-6 text-white" />,
       title: "Audience Growth",
-      description: "Learn strategies to grow your audience and increase engagement."
-    },
-    {
-      icon: <Clock className="h-8 w-8 text-coach-primary" />,
-      title: "Time Management",
-      description: "Optimize your content creation process to make the most of your available time."
-    },
-    {
-      icon: <Sparkles className="h-8 w-8 text-coach-primary" />,
-      title: "AI-Powered Creativity",
-      description: "Overcome creative blocks with AI-generated ideas and inspiration."
+      description: "Build your community effortlessly"
     }
   ];
   
   const contentTypes = [
-    { icon: <Video className="h-8 w-8" />, label: "Videos" },
-    { icon: <Book className="h-8 w-8" />, label: "Blogs" },
-    { icon: <Mic className="h-8 w-8" />, label: "Podcasts" }
+    { icon: <Video className="h-6 w-6" />, label: "Videos", color: "bg-red-500" },
+    { icon: <Book className="h-6 w-6" />, label: "Blogs", color: "bg-blue-500" },
+    { icon: <Mic className="h-6 w-6" />, label: "Podcasts", color: "bg-green-500" }
   ];
 
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="py-16 md:py-24 px-6">
-        <div className="container mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
-            Your Personal <span className="gradient-text">Content Creation Coach</span>
-          </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            Transform your content creation journey with personalized AI guidance tailored to your unique style, goals, and available resources.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/onboarding">
-              <Button size="lg" className="gradient-bg text-white">Get Started</Button>
-            </Link>
-            <Link to="/about">
-              <Button size="lg" variant="outline">Learn More</Button>
-            </Link>
+      {/* Hero Section - Mobile First */}
+      <section className="py-12 px-4">
+        <div className="container mx-auto text-center max-w-md">
+          <div className="mb-6">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full gradient-bg mb-4">
+              <Sparkles className="h-8 w-8 text-white" />
+            </div>
           </div>
           
-          {/* Content Types */}
-          <div className="mt-16">
-            <h2 className="text-2xl font-semibold mb-8">Create Any Type of Content</h2>
-            <div className="flex flex-wrap justify-center gap-8">
-              {contentTypes.map((type, index) => (
-                <div key={index} className="flex flex-col items-center p-4">
-                  <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center mb-4">
-                    {type.icon}
-                  </div>
-                  <span className="text-lg font-medium">{type.label}</span>
-                </div>
-              ))}
-            </div>
+          <h1 className="text-3xl md:text-4xl font-bold mb-4">
+            Your AI <span className="gradient-text">Content Coach</span>
+          </h1>
+          
+          <p className="text-lg text-muted-foreground mb-6">
+            Create amazing content with personalized AI guidance. Perfect for beginners and pros.
+          </p>
+          
+          <div className="space-y-3">
+            <Link to="/onboarding" className="block">
+              <Button size="lg" className="gradient-bg text-white w-full">
+                Start Creating
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            </Link>
+            <Link to="/about" className="block">
+              <Button size="lg" variant="outline" className="w-full">
+                Learn More
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
-      
-      {/* Features Section */}
-      <section className="py-16 px-6 bg-muted">
-        <div className="container mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">
-            Everything You Need to <span className="gradient-text">Create Amazing Content</span>
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((feature, index) => (
-              <div key={index} className="bg-card rounded-lg p-6 shadow-sm border">
-                <div className="mb-4">{feature.icon}</div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground">{feature.description}</p>
+
+      {/* Content Types - Quick Visual */}
+      <section className="py-8 px-4">
+        <div className="container mx-auto max-w-md">
+          <h2 className="text-xl font-semibold text-center mb-6">Create Any Content</h2>
+          <div className="flex justify-center gap-4">
+            {contentTypes.map((type, index) => (
+              <div key={index} className="text-center">
+                <div className={`w-14 h-14 rounded-full ${type.color} flex items-center justify-center mb-2 mx-auto`}>
+                  <div className="text-white">{type.icon}</div>
+                </div>
+                <span className="text-sm font-medium">{type.label}</span>
               </div>
             ))}
           </div>
         </div>
       </section>
       
-      {/* CTA Section */}
-      <section className="py-16 md:py-24 px-6">
-        <div className="container mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Transform Your Content?
+      {/* Quick Features - Card Style */}
+      <section className="py-8 px-4 bg-muted">
+        <div className="container mx-auto max-w-md">
+          <h2 className="text-xl font-semibold text-center mb-6">
+            Everything You Need in <span className="gradient-text">One App</span>
           </h2>
-          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Join thousands of creators who are using AI to streamline their content creation process and reach new heights.
+          
+          <div className="space-y-4">
+            {quickFeatures.map((feature, index) => (
+              <div key={index} className="bg-card rounded-xl p-4 shadow-sm border flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full gradient-bg flex items-center justify-center flex-shrink-0">
+                  {feature.icon}
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">{feature.title}</h3>
+                  <p className="text-sm text-muted-foreground">{feature.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+      
+      {/* CTA Section - Simple & Direct */}
+      <section className="py-12 px-4">
+        <div className="container mx-auto text-center max-w-md">
+          <h2 className="text-2xl font-bold mb-4">
+            Ready to Go Viral?
+          </h2>
+          <p className="text-muted-foreground mb-6">
+            Join creators who are using AI to create better content faster.
           </p>
+          
           <Link to="/onboarding">
-            <Button size="lg" className="gradient-bg text-white">Start Your Journey Today</Button>
+            <Button size="lg" className="gradient-bg text-white w-full">
+              Start Your Journey
+              <Sparkles className="h-4 w-4 ml-2" />
+            </Button>
           </Link>
+          
+          <p className="text-xs text-muted-foreground mt-4">
+            No credit card required • Get started in 2 minutes
+          </p>
         </div>
       </section>
     </Layout>
