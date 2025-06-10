@@ -4,7 +4,7 @@ import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { 
   Lightbulb, FileText, Zap, MessageSquare, BarChart3, 
-  TrendingUp, Plus, Eye, Github, BookOpen, Shield, Sparkles
+  TrendingUp, Plus, Eye, Github, BookOpen, Shield
 } from 'lucide-react';
 
 interface ToolsTabProps {
@@ -51,12 +51,6 @@ const ToolsTab = ({ onIconClick }: ToolsTabProps) => {
 
   return (
     <div className="space-y-6">
-      {/* AI Tools Header */}
-      <div className="text-center py-4">
-        <h2 className="text-2xl font-bold mb-2">AI Content Tools</h2>
-        <p className="text-muted-foreground">Supercharge your content creation with AI</p>
-      </div>
-
       {/* Tool Categories */}
       {aiToolCategories.map((category, index) => (
         <Card key={index} className="p-6">
@@ -100,43 +94,6 @@ const ToolsTab = ({ onIconClick }: ToolsTabProps) => {
               </Badge>
             </div>
           ))}
-        </div>
-      </Card>
-
-      {/* AI Insights */}
-      <Card className="p-6">
-        <h3 className="font-semibold mb-4 flex items-center gap-2">
-          <Sparkles className="h-5 w-5 text-coach-primary" />
-          AI Insights
-        </h3>
-        <div className="space-y-3">
-          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-start gap-3">
-              <div className="text-blue-600 mt-0.5">💡</div>
-              <div>
-                <p className="text-sm font-medium text-blue-800 mb-1">Trending Content Format</p>
-                <p className="text-xs text-blue-700">Short videos (30-60s) generate 3x more engagement this week</p>
-              </div>
-            </div>
-          </div>
-          <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-            <div className="flex items-start gap-3">
-              <div className="text-green-600 mt-0.5">🎯</div>
-              <div>
-                <p className="text-sm font-medium text-green-800 mb-1">Optimal Posting Time</p>
-                <p className="text-xs text-green-700">Your audience is most active between 6-9 PM</p>
-              </div>
-            </div>
-          </div>
-          <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
-            <div className="flex items-start gap-3">
-              <div className="text-purple-600 mt-0.5">📈</div>
-              <div>
-                <p className="text-sm font-medium text-purple-800 mb-1">Growth Opportunity</p>
-                <p className="text-xs text-purple-700">Consider collaborating with creators in your niche</p>
-              </div>
-            </div>
-          </div>
         </div>
       </Card>
     </div>
