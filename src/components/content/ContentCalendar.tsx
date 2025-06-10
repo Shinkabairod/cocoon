@@ -31,7 +31,7 @@ const ContentCalendar = ({ contents }: ContentCalendarProps) => {
   };
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString('fr-FR', { 
+    return date.toLocaleDateString('en-US', { 
       weekday: 'short', 
       month: 'short', 
       day: 'numeric' 
@@ -41,7 +41,7 @@ const ContentCalendar = ({ contents }: ContentCalendarProps) => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">Calendrier Éditorial</h3>
+        <h3 className="text-lg font-semibold">Editorial Calendar</h3>
         <div className="flex gap-2">
           <Button 
             size="sm" 
@@ -55,7 +55,7 @@ const ContentCalendar = ({ contents }: ContentCalendarProps) => {
             variant={viewMode === 'list' ? 'default' : 'outline'}
             onClick={() => setViewMode('list')}
           >
-            Liste
+            List
           </Button>
         </div>
       </div>
@@ -73,10 +73,10 @@ const ContentCalendar = ({ contents }: ContentCalendarProps) => {
           
           <Card className="p-4">
             <h4 className="font-medium mb-3">
-              Contenu prévu pour le {formatDate(selectedDate)}
+              Content scheduled for {formatDate(selectedDate)}
             </h4>
             {getScheduledContents(selectedDate).length === 0 ? (
-              <p className="text-muted-foreground text-sm">Aucun contenu prévu</p>
+              <p className="text-muted-foreground text-sm">No content scheduled</p>
             ) : (
               <div className="space-y-2">
                 {getScheduledContents(selectedDate).map(content => (
@@ -100,9 +100,9 @@ const ContentCalendar = ({ contents }: ContentCalendarProps) => {
         </div>
       ) : (
         <Card className="p-4">
-          <h4 className="font-medium mb-3">Prochains contenus planifiés</h4>
+          <h4 className="font-medium mb-3">Upcoming scheduled content</h4>
           {getUpcomingContents().length === 0 ? (
-            <p className="text-muted-foreground">Aucun contenu planifié</p>
+            <p className="text-muted-foreground">No scheduled content</p>
           ) : (
             <div className="space-y-3">
               {getUpcomingContents().map(content => (
