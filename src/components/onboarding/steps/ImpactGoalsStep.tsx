@@ -20,13 +20,13 @@ const ImpactGoalsStep = () => {
   ];
   
   const impactDescriptions: Record<ImpactGoal, string> = {
-    'Educate': 'Apprendre de nouvelles compétences à votre audience',
-    'Entertain': 'Divertir et faire rire votre audience',
-    'Inspire': 'Motiver et inspirer votre audience',
-    'Inform': 'Tenir votre audience informée des actualités ou tendances',
-    'Provoke thought': 'Stimuler la réflexion et le débat',
-    'Build community': 'Créer un sentiment d\'appartenance',
-    'Sell products/services': 'Promouvoir vos produits ou services'
+    'Educate': 'Teach new skills to your audience',
+    'Entertain': 'Entertain and make your audience laugh',
+    'Inspire': 'Motivate and inspire your audience',
+    'Inform': 'Keep your audience informed about news or trends',
+    'Provoke thought': 'Stimulate reflection and debate',
+    'Build community': 'Create a sense of belonging',
+    'Sell products/services': 'Promote your products or services'
   };
   
   const handleImpactGoalToggle = (goal: ImpactGoal) => {
@@ -47,8 +47,8 @@ const ImpactGoalsStep = () => {
   
   return (
     <OnboardingLayout 
-      title="Objectifs d'Impact" 
-      subtitle="Comment souhaitez-vous impacter votre audience ?"
+      title="Impact Goals" 
+      subtitle="How do you want to impact your audience?"
     >
       <div className="space-y-6">
         <div className="flex justify-center mb-4">
@@ -89,7 +89,7 @@ const ImpactGoalsStep = () => {
             onClick={handleContinue}
             disabled={!(onboardingData.impactGoals?.length)}
           >
-            Continuer
+            Continue
           </Button>
         </div>
       </div>

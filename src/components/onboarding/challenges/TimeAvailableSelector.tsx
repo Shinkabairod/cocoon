@@ -15,7 +15,7 @@ const TimeAvailableSelector = ({
 }: TimeAvailableSelectorProps) => {
   return (
     <div>
-      <h3 className="text-lg font-medium mb-3">Combien de temps pouvez-vous consacrer à la création de contenu chaque semaine ?</h3>
+      <h3 className="text-lg font-medium mb-3">How much time can you dedicate to content creation each week?</h3>
       <div className="grid grid-cols-2 gap-3">
         {timeOptions.map((time) => (
           <Card 

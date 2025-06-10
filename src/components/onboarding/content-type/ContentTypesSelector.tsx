@@ -13,7 +13,7 @@ interface ContentTypesSelectorProps {
 const ContentTypesSelector = ({ contentTypes, selectedTypes, onToggle }: ContentTypesSelectorProps) => {
   return (
     <div>
-      <h3 className="text-lg font-medium mb-3">Quel type de contenu souhaitez-vous créer ?</h3>
+      <h3 className="text-lg font-medium mb-3">What type of content do you want to create?</h3>
       <div className="grid grid-cols-2 gap-3">
         {contentTypes.map((type) => {
           const isSelected = selectedTypes?.includes(type);

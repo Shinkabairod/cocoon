@@ -30,7 +30,7 @@ const BusinessTypeStep = () => {
   
   return (
     <OnboardingLayout 
-      title="Type d'Activité" 
+      title="Business Type" 
       subtitle="How would you define your business or activity?"
     >
       <div className="space-y-6">

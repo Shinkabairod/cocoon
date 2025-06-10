@@ -12,15 +12,15 @@ interface NicheSelectorProps {
 const NicheSelector = ({ niche, setNiche, popularNiches }: NicheSelectorProps) => {
   return (
     <div>
-      <h3 className="text-lg font-medium mb-3">Sur quelle niche ou sujet vous concentrez-vous ?</h3>
+      <h3 className="text-lg font-medium mb-3">What niche or topic do you focus on?</h3>
       <Input
-        placeholder="Ex: Fitness, Technologie, Cuisine, Mode..."
+        placeholder="Ex: Fitness, Technology, Cooking, Fashion..."
         value={niche}
         onChange={(e) => setNiche(e.target.value)}
       />
       
       <div className="mt-3">
-        <p className="text-sm text-muted-foreground mb-2">Suggestions populaires :</p>
+        <p className="text-sm text-muted-foreground mb-2">Popular suggestions:</p>
         <div className="flex flex-wrap gap-2">
           {popularNiches.map((popularNiche) => (
             <Badge

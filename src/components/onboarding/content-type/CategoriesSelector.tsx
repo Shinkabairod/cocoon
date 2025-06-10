@@ -12,7 +12,7 @@ interface CategoriesSelectorProps {
 const CategoriesSelector = ({ categories, selectedCategories, onToggle }: CategoriesSelectorProps) => {
   return (
     <div>
-      <h3 className="text-lg font-medium mb-3">Dans quelle(s) catégorie(s) se situe votre contenu ?</h3>
+      <h3 className="text-lg font-medium mb-3">What category(ies) does your content fall into?</h3>
       <div className="flex flex-wrap gap-2 mb-4">
         {categories.map((category) => {
           const isSelected = selectedCategories.includes(category);

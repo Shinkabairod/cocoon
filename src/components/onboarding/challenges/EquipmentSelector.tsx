@@ -15,7 +15,7 @@ const EquipmentSelector = ({
 }: EquipmentSelectorProps) => {
   return (
     <div>
-      <h3 className="text-lg font-medium mb-3">De quel équipement disposez-vous déjà ?</h3>
+      <h3 className="text-lg font-medium mb-3">What equipment do you already have?</h3>
       <div className="grid grid-cols-2 gap-3">
         {equipment.map((item) => {
           const isSelected = selectedEquipment?.includes(item);

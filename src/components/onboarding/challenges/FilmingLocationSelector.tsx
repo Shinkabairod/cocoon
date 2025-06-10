@@ -27,7 +27,7 @@ const FilmingLocationSelector = ({
 }: FilmingLocationSelectorProps) => {
   return (
     <div>
-      <h3 className="text-lg font-medium mb-3">Où prévoyez-vous de tourner principalement votre contenu ?</h3>
+      <h3 className="text-lg font-medium mb-3">Where do you mainly plan to film your content?</h3>
       <RadioGroup 
         value={selectedLocation}
         onValueChange={onLocationSelect}
@@ -47,7 +47,7 @@ const FilmingLocationSelector = ({
       {selectedLocation === 'custom' && (
         <div className="mt-3">
           <Input
-            placeholder="Précisez le lieu de tournage"
+            placeholder="Specify the filming location"
             value={customLocation}
             onChange={onCustomLocationChange}
           />

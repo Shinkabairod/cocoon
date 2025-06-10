@@ -10,11 +10,11 @@ const AudienceGenerationStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
   
   const generations: { type: TargetGeneration; description: string }[] = [
-    { type: 'Gen Z', description: '10-25 ans' },
-    { type: 'Millennials', description: '26-40 ans' },
-    { type: 'Gen X', description: '41-55 ans' },
-    { type: 'Baby Boomers', description: '56-75 ans' },
-    { type: 'All Ages', description: 'Tous âges confondus' }
+    { type: 'Gen Z', description: '10-25 years old' },
+    { type: 'Millennials', description: '26-40 years old' },
+    { type: 'Gen X', description: '41-55 years old' },
+    { type: 'Baby Boomers', description: '56-75 years old' },
+    { type: 'All Ages', description: 'All ages' }
   ];
   
   const handleGenerationSelect = (generation: TargetGeneration) => {
@@ -27,8 +27,8 @@ const AudienceGenerationStep = () => {
   
   return (
     <OnboardingLayout 
-      title="Votre Audience" 
-      subtitle="Quelle génération souhaitez-vous toucher principalement ?"
+      title="Your Audience" 
+      subtitle="Which generation do you want to reach primarily?"
     >
       <div className="space-y-6">
         <div className="flex justify-center mb-4">
@@ -60,7 +60,7 @@ const AudienceGenerationStep = () => {
             onClick={handleContinue}
             disabled={!onboardingData.targetGeneration}
           >
-            Continuer
+            Continue
           </Button>
         </div>
       </div>

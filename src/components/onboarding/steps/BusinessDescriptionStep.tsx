@@ -25,24 +25,17 @@ const BusinessDescriptionStep = () => {
     'Personal Brand': "I'm a fitness coach specializing in home workouts and nutrition for busy professionals. I want to create content that motivates people to stay fit despite their busy schedules.",
     'Small Business': "We run a local bakery that specializes in gluten-free and vegan treats. We want to showcase our process, share recipes, and connect with health-conscious customers.",
     'Startup': "Our tech startup has developed an app that helps people track their carbon footprint. We want to create educational content around sustainability and promote our solution.",
-    'Established Company': "We're a furniture retailer with 5 locations across the country. We want to showcase our designs, share interior design tips, and highlight our sustainable practices.",
-    'Agency': "We're a digital marketing agency specializing in social media management for small businesses. We want to showcase our expertise and attract potential clients.",
-    'Educational Institution': "We're a coding bootcamp that offers online and in-person courses. We want to share success stories, coding tips, and information about our programs.",
-    'Non-Profit': "Our organization focuses on ocean conservation. We want to raise awareness about plastic pollution and promote our cleanup initiatives.",
-    'Other': "I'm a travel enthusiast who wants to share my experiences exploring hidden gems around the world, focusing on sustainable and budget-friendly travel options."
-  };
-  
-  const getExampleDescription = () => {
-    if (onboardingData.businessType && examplesByType[onboardingData.businessType]) {
-      return examplesByType[onboardingData.businessType];
-    }
-    return "I'm a fitness coach specializing in home workouts and nutrition for busy professionals. I want to create content that motivates people to stay fit despite their busy schedules.";
+    'Established Company': "We're a furniture retailer with 5 locations across the country. We want to showcase our designs, share interior design tips, and connect with customers online.",
+    'Agency': "We're a digital marketing agency that helps small businesses grow their online presence. We want to create content that educates entrepreneurs about marketing strategies.",
+    'Educational Institution': "We're a language school that offers online courses. We want to create engaging content that helps people learn languages and showcases our teaching methods.",
+    'Non-Profit': "We're a non-profit focused on ocean conservation. We want to create awareness about marine pollution and inspire people to take action.",
+    'Other': "I create content about sustainable living and zero-waste lifestyle tips to help people reduce their environmental impact."
   };
   
   return (
     <OnboardingLayout 
-      title="Description de Votre Activité" 
-      subtitle="Briefly describe your business or project"
+      title="Describe Your Business" 
+      subtitle="Tell us about your business or project to help us personalize your experience"
     >
       <div className="space-y-6">
         <div className="flex justify-center mb-4">
@@ -51,42 +44,39 @@ const BusinessDescriptionStep = () => {
         
         <div>
           <Textarea
-            placeholder="For example: I'm a fitness coach who specializes in home workouts and nutrition..."
+            placeholder="Describe your business, project, or what you want to create content about..."
             value={businessDescription}
             onChange={(e) => setBusinessDescription(e.target.value)}
             className="h-32"
           />
-          
-          <Accordion type="single" collapsible className="mt-3">
-            <AccordionItem value="guidelines">
-              <AccordionTrigger className="text-sm text-primary flex items-center">
-                <HelpCircle className="h-4 w-4 mr-2" />
-                Writing guidelines and examples
+          <p className="text-xs text-muted-foreground mt-2">
+            This helps us understand your goals and suggest relevant content strategies.
+          </p>
+        </div>
+        
+        {onboardingData.businessType && examplesByType[onboardingData.businessType] && (
+          <Accordion type="single" collapsible className="w-full">
+            <AccordionItem value="example">
+              <AccordionTrigger className="text-sm">
+                <div className="flex items-center">
+                  <HelpCircle className="h-4 w-4 mr-2" />
+                  Need inspiration? See an example for {onboardingData.businessType}
+                </div>
               </AccordionTrigger>
               <AccordionContent>
-                <div className="space-y-3 text-sm text-muted-foreground">
-                  <p>A good description includes:</p>
-                  <ul className="list-disc pl-5 space-y-1">
-                    <li>What you do or offer</li>
-                    <li>Who your target audience is</li>
-                    <li>What makes you unique</li>
-                    <li>What you want to achieve with your content</li>
-                  </ul>
-                  <div className="mt-2 p-3 bg-muted rounded-md">
-                    <p className="font-medium text-foreground mb-1">Example:</p>
-                    <p>{getExampleDescription()}</p>
-                  </div>
+                <div className="bg-muted p-3 rounded-md text-sm">
+                  {examplesByType[onboardingData.businessType]}
                 </div>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
-        </div>
+        )}
         
         <div className="pt-4 flex justify-center">
           <Button 
             className="gradient-bg w-full"
             onClick={handleContinue}
-            disabled={!businessDescription || businessDescription.length < 20}
+            disabled={!businessDescription.trim()}
           >
             Continue
           </Button>
