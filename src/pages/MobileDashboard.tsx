@@ -1,300 +1,246 @@
 
-import React, { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import BottomNavigation from '@/components/mobile/BottomNavigation';
-import CharacterAvatar from '@/components/character/CharacterAvatar';
-import CharacterProgress from '@/components/character/CharacterProgress';
-import CharacterEvolution from '@/components/character/CharacterEvolution';
-import ContentLibrary from '@/components/content/ContentLibrary';
-import ContentCalendar from '@/components/content/ContentCalendar';
-import { useCharacter } from '@/hooks/useCharacter';
-import useContentLibrary from '@/hooks/useContentLibrary';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import BottomNavigation from "@/components/mobile/BottomNavigation";
+import IconGrid from "@/components/mobile/IconGrid";
+import AICoach from "@/components/mobile/AICoach";
+import CharacterEvolution from "@/components/character/CharacterEvolution";
+import ContentLibrary from "@/components/content/ContentLibrary";
+import ContentCalendar from "@/components/content/ContentCalendar";
+import useCharacter from "@/hooks/useCharacter";
+import useContentLibrary from "@/hooks/useContentLibrary";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import { 
-  Calendar, 
-  Target, 
-  TrendingUp, 
-  Zap, 
-  Trophy,
-  BookOpen,
-  Brain,
-  Lightbulb,
-  Palette,
-  FileText,
-  Clock,
-  CheckCircle,
-  Instagram,
-  Youtube,
-  Twitter,
-  Linkedin,
-  Plus,
-  Star,
-  Award
-} from 'lucide-react';
-
-type TabType = 'home' | 'library' | 'calendar' | 'character' | 'analytics';
+  Home, User, Bot, Library, 
+  Target, Lightbulb, FileText, Calendar, 
+  MessageSquare, Github, BookOpen, Users,
+  TrendingUp, Star, Trophy, Zap,
+  Video, Mic, Camera, Shield, Eye
+} from "lucide-react";
 
 const MobileDashboard = () => {
-  const [activeTab, setActiveTab] = useState<TabType>('home');
-  const character = useCharacter();
-  const { contents, addContent, updateContent } = useContentLibrary();
+  const navigate = useNavigate();
+  const { character, addXP, completeContent } = useCharacter();
+  const { contents, addContent, updateContent, getContentsByStatus } = useContentLibrary();
+  const [activeTab, setActiveTab] = useState("home");
 
-  const tabs = [
-    { id: 'home' as TabType, label: 'Home', icon: Target },
-    { id: 'library' as TabType, label: 'Library', icon: BookOpen },
-    { id: 'calendar' as TabType, label: 'Calendar', icon: Calendar },
-    { id: 'character' as TabType, label: 'Character', icon: Star },
-    { id: 'analytics' as TabType, label: 'Analytics', icon: TrendingUp },
+  useEffect(() => {
+    if (window.location.pathname === "/dashboard") {
+      navigate("/mobile", { replace: true });
+    }
+  }, [navigate]);
+
+  const navIcons = [
+    { id: "home", icon: <Home className="h-5 w-5" />, label: "Accueil" },
+    { id: "library", icon: <Library className="h-5 w-5" />, label: "Bibliothèque" },
+    { id: "tools", icon: <Bot className="h-5 w-5" />, label: "IA Tools" },
+    { id: "profile", icon: <User className="h-5 w-5" />, label: "Profil" }
   ];
 
-  const dailyChallenges = [
-    { id: 1, title: 'Write a catchy hook', completed: false, xp: 50 },
-    { id: 2, title: 'Create a content outline', completed: true, xp: 75 },
-    { id: 3, title: 'Engage with 10 posts', completed: false, xp: 25 }
+  const homeIcons = [
+    { id: "character", icon: <Star className="h-6 w-6" />, label: "Mon Avatar" },
+    { id: "daily", icon: <Target className="h-6 w-6" />, label: "Défis" },
+    { id: "create", icon: <Video className="h-6 w-6" />, label: "Créer" },
+    { id: "calendar", icon: <Calendar className="h-6 w-6" />, label: "Planning" }
   ];
 
-  const recentAchievements = [
-    { id: 1, title: 'First Script Created', description: 'Created your first script', unlocked: true },
-    { id: 2, title: 'Content Creator', description: 'Published 5 pieces of content', unlocked: false }
+  const resourceIcons = [
+    { id: "github", icon: <Github className="h-6 w-6" />, label: "GitHub" },
+    { id: "notion", icon: <BookOpen className="h-6 w-6" />, label: "Notion" },
+    { id: "obsidian", icon: <Eye className="h-6 w-6" />, label: "Obsidian" },
+    { id: "logseq", icon: <Shield className="h-6 w-6" />, label: "LogSeq" }
   ];
 
-  const handleEditContent = (content: any) => {
-    console.log('Edit content:', content);
+  const aiToolIcons = [
+    { id: "concept", icon: <Lightbulb className="h-6 w-6" />, label: "Concepts" },
+    { id: "ideas", icon: <Zap className="h-6 w-6" />, label: "Idées" },
+    { id: "script", icon: <FileText className="h-6 w-6" />, label: "Scripts" },
+    { id: "feedback", icon: <MessageSquare className="h-6 w-6" />, label: "Feedback" }
+  ];
+
+  const handleIconClick = (id: string) => {
+    console.log(`Icon clicked: ${id}`);
+    if (id === "create") {
+      completeContent();
+    }
   };
 
-  const handleScheduleContent = (content: any) => {
-    console.log('Schedule content:', content);
+  const handleTabClick = (tabId: string) => {
+    setActiveTab(tabId);
   };
 
-  const renderHomeTab = () => (
-    <div className="space-y-6">
-      {/* Character Section */}
-      <Card className="p-4">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">Your Creator</h3>
-          <Badge className="gradient-bg text-white">Level {character.level}</Badge>
-        </div>
-        <div className="flex items-center space-x-4">
-          <CharacterAvatar character={character} size="lg" />
-          <div className="flex-1">
-            <h4 className="font-medium">{character.name}</h4>
-            <p className="text-sm text-muted-foreground">{character.type} • {character.stage}</p>
-            <div className="mt-2">
-              <div className="flex justify-between text-xs mb-1">
-                <span>XP</span>
-                <span>{character.xp}/{character.xpToNextLevel}</span>
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "home":
+        return (
+          <div className="space-y-6">
+            <CharacterEvolution character={character} />
+            
+            {/* Daily Challenge - Simplified */}
+            <Card className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold flex items-center gap-2">
+                  <Target className="h-5 w-5 text-coach-primary" />
+                  Défi du Jour
+                </h3>
+                <Badge variant="outline">+100 XP</Badge>
               </div>
-              <Progress value={(character.xp / character.xpToNextLevel) * 100} className="h-2" />
+              <p className="text-sm text-muted-foreground mb-3">
+                Créez un script de 30 secondes sur votre passion principale
+              </p>
+              <Button 
+                size="sm" 
+                className="w-full gradient-bg"
+                onClick={() => addXP(100, 'content')}
+              >
+                Commencer le Défi
+              </Button>
+            </Card>
+
+            <div>
+              <h3 className="font-semibold mb-4">Actions Rapides</h3>
+              <IconGrid icons={homeIcons} onIconClick={handleIconClick} />
             </div>
           </div>
-        </div>
-      </Card>
+        );
 
-      {/* Daily Challenges */}
-      <Card className="p-4">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">Daily Challenges</h3>
-          <Zap className="h-5 w-5 text-primary" />
-        </div>
-        <div className="space-y-3">
-          {dailyChallenges.map(challenge => (
-            <div key={challenge.id} className="flex items-center justify-between p-3 border rounded">
-              <div className="flex items-center space-x-3">
-                <CheckCircle className={`h-5 w-5 ${challenge.completed ? 'text-green-500' : 'text-gray-300'}`} />
-                <div>
-                  <p className="font-medium text-sm">{challenge.title}</p>
-                  <p className="text-xs text-muted-foreground">+{challenge.xp} XP</p>
+      case "library":
+        return (
+          <div className="space-y-6">
+            <ContentLibrary 
+              contents={contents}
+              onEdit={(content) => console.log('Edit:', content)}
+              onSchedule={(content) => console.log('Schedule:', content)}
+            />
+            <ContentCalendar contents={contents} />
+          </div>
+        );
+
+      case "tools":
+        return (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-xl font-bold mb-4">Outils IA</h2>
+              <p className="text-muted-foreground mb-6">
+                Utilisez l'intelligence artificielle pour booster votre création de contenu
+              </p>
+              
+              <IconGrid icons={aiToolIcons} onIconClick={handleIconClick} />
+            </div>
+
+            {/* Connected Resources */}
+            <Card className="p-4">
+              <h3 className="font-semibold mb-3">Ressources Connectées</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {resourceIcons.map(({ id, icon, label }) => (
+                  <div key={id} className="flex items-center gap-2 p-2 border rounded">
+                    <div className="text-coach-primary">{icon}</div>
+                    <span className="text-sm">{label}</span>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            {/* AI Insights */}
+            <Card className="p-4">
+              <h3 className="font-semibold mb-3">Insights IA du Jour</h3>
+              <div className="space-y-3">
+                <div className="p-3 bg-soft-blue rounded-lg">
+                  <p className="text-sm text-blue-800">
+                    💡 Les vidéos courtes (30-60s) génèrent 3x plus d'engagement cette semaine
+                  </p>
+                </div>
+                <div className="p-3 bg-soft-green rounded-lg">
+                  <p className="text-sm text-green-800">
+                    🎯 Votre audience est plus active entre 18h-21h
+                  </p>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </Card>
+            </Card>
+          </div>
+        );
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-2 gap-4">
-        <Card className="p-4 text-center">
-          <FileText className="h-6 w-6 mx-auto mb-2 text-primary" />
-          <p className="text-2xl font-bold">{contents.length}</p>
-          <p className="text-xs text-muted-foreground">Content Created</p>
-        </Card>
-        <Card className="p-4 text-center">
-          <Clock className="h-6 w-6 mx-auto mb-2 text-primary" />
-          <p className="text-2xl font-bold">12</p>
-          <p className="text-xs text-muted-foreground">Days Active</p>
-        </Card>
-      </div>
-
-      {/* Recent Achievements */}
-      <Card className="p-4">
-        <h3 className="text-lg font-semibold mb-4">Recent Achievements</h3>
-        <div className="space-y-3">
-          {recentAchievements.slice(0, 2).map(achievement => (
-            <div key={achievement.id} className="flex items-center space-x-3 p-2 border rounded">
-              <Trophy className={`h-5 w-5 ${achievement.unlocked ? 'text-yellow-500' : 'text-gray-300'}`} />
-              <div>
-                <p className="font-medium text-sm">{achievement.title}</p>
-                <p className="text-xs text-muted-foreground">{achievement.description}</p>
+      case "profile":
+        return (
+          <div className="space-y-6">
+            <Card className="p-6">
+              <div className="text-center space-y-4">
+                <div className="w-20 h-20 bg-gradient-to-br from-coach-primary to-coach-secondary rounded-full mx-auto flex items-center justify-center text-white text-2xl font-bold">
+                  {character.name[0]}
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold">{character.name}</h2>
+                  <p className="text-muted-foreground">{character.type} • Niveau {character.level}</p>
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
-      </Card>
+            </Card>
 
-      {/* Social Connections */}
-      <Card className="p-4">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">Connected Accounts</h3>
-          <Button size="sm" variant="outline">
-            <Plus className="h-4 w-4 mr-2" />
-            Connect
-          </Button>
-        </div>
-        <div className="grid grid-cols-4 gap-4">
-          <div className="text-center">
-            <Instagram className="h-6 w-6 mx-auto mb-1 text-pink-500" />
-            <p className="text-xs">Instagram</p>
-          </div>
-          <div className="text-center opacity-50">
-            <Youtube className="h-6 w-6 mx-auto mb-1" />
-            <p className="text-xs">YouTube</p>
-          </div>
-          <div className="text-center opacity-50">
-            <Twitter className="h-6 w-6 mx-auto mb-1" />
-            <p className="text-xs">Twitter</p>
-          </div>
-          <div className="text-center opacity-50">
-            <Linkedin className="h-6 w-6 mx-auto mb-1" />
-            <p className="text-xs">LinkedIn</p>
-          </div>
-        </div>
-      </Card>
-    </div>
-  );
-
-  const renderLibraryTab = () => (
-    <ContentLibrary 
-      contents={contents}
-      onEdit={handleEditContent}
-      onSchedule={handleScheduleContent}
-    />
-  );
-
-  const renderCalendarTab = () => (
-    <ContentCalendar contents={contents} />
-  );
-
-  const renderCharacterTab = () => (
-    <div className="space-y-6">
-      <CharacterEvolution character={character} />
-      <CharacterProgress character={character} />
-      
-      <Card className="p-4">
-        <h3 className="text-lg font-semibold mb-4">All Achievements</h3>
-        <div className="space-y-3">
-          {recentAchievements.map(achievement => (
-            <div key={achievement.id} className="flex items-center space-x-3 p-3 border rounded">
-              <Award className={`h-6 w-6 ${achievement.unlocked ? 'text-yellow-500' : 'text-gray-300'}`} />
-              <div className="flex-1">
-                <p className="font-medium">{achievement.title}</p>
-                <p className="text-sm text-muted-foreground">{achievement.description}</p>
+            {/* Social Media Connections */}
+            <Card className="p-4">
+              <h3 className="font-semibold mb-3">Comptes Connectés</h3>
+              <div className="space-y-2">
+                {['Instagram', 'TikTok', 'YouTube', 'Twitter'].map(platform => (
+                  <div key={platform} className="flex items-center justify-between p-2 border rounded">
+                    <span className="text-sm">{platform}</span>
+                    <Button variant="outline" size="sm">Connecter</Button>
+                  </div>
+                ))}
               </div>
-              {achievement.unlocked && (
-                <Badge variant="secondary">Unlocked</Badge>
-              )}
-            </div>
-          ))}
-        </div>
-      </Card>
-    </div>
-  );
+            </Card>
 
-  const renderAnalyticsTab = () => (
-    <div className="space-y-6">
-      <Card className="p-4">
-        <h3 className="text-lg font-semibold mb-4">Content Performance</h3>
-        <div className="grid grid-cols-2 gap-4">
-          <div className="text-center">
-            <p className="text-2xl font-bold text-green-600">1.2k</p>
-            <p className="text-sm text-muted-foreground">Total Views</p>
+            {/* Stats Overview - Simplified */}
+            <Card className="p-4">
+              <h3 className="font-semibold mb-4">Mes Statistiques</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-3 bg-soft-purple rounded-lg">
+                  <div className="text-2xl font-bold text-coach-primary">{character.contentCreated}</div>
+                  <div className="text-sm text-muted-foreground">Contenus</div>
+                </div>
+                <div className="text-center p-3 bg-soft-green rounded-lg">
+                  <div className="text-2xl font-bold text-green-600">{character.level}</div>
+                  <div className="text-sm text-muted-foreground">Niveau</div>
+                </div>
+              </div>
+            </Card>
           </div>
-          <div className="text-center">
-            <p className="text-2xl font-bold text-blue-600">89</p>
-            <p className="text-sm text-muted-foreground">Engagement Rate</p>
-          </div>
-        </div>
-      </Card>
+        );
 
-      <Card className="p-4">
-        <h3 className="text-lg font-semibold mb-4">Growth Metrics</h3>
-        <div className="space-y-4">
-          <div>
-            <div className="flex justify-between mb-2">
-              <span className="text-sm">Content Creation</span>
-              <span className="text-sm">75%</span>
-            </div>
-            <Progress value={75} />
-          </div>
-          <div>
-            <div className="flex justify-between mb-2">
-              <span className="text-sm">Audience Engagement</span>
-              <span className="text-sm">60%</span>
-            </div>
-            <Progress value={60} />
-          </div>
-        </div>
-      </Card>
-    </div>
-  );
-
-  const renderActiveTab = () => {
-    switch (activeTab) {
-      case 'home':
-        return renderHomeTab();
-      case 'library':
-        return renderLibraryTab();
-      case 'calendar':
-        return renderCalendarTab();
-      case 'character':
-        return renderCharacterTab();
-      case 'analytics':
-        return renderAnalyticsTab();
       default:
-        return renderHomeTab();
+        return null;
     }
   };
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      <header className="sticky top-0 z-10 bg-background border-b p-4">
+      {/* Header */}
+      <div className="sticky top-0 z-10 bg-background border-b p-4">
         <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-xl font-bold gradient-text">AI Content Coach</h1>
-            <p className="text-sm text-muted-foreground">
-              {activeTab === 'home' && 'Your Creator Dashboard'}
-              {activeTab === 'library' && 'Content Library'}
-              {activeTab === 'calendar' && 'Editorial Calendar'}
-              {activeTab === 'character' && 'Character Evolution'}
-              {activeTab === 'analytics' && 'Performance Analytics'}
-            </p>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Badge variant="outline">{character.stage}</Badge>
-            <CharacterAvatar character={character} size="sm" />
+          <h1 className="text-xl font-bold">AI Content Coach</h1>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Niveau {character.level}</span>
+            <div className="w-8 h-8 bg-gradient-to-br from-coach-primary to-coach-secondary rounded-full flex items-center justify-center text-white text-sm font-bold">
+              {character.name[0]}
+            </div>
           </div>
         </div>
-      </header>
+      </div>
 
-      <main className="container mx-auto p-4">
-        {renderActiveTab()}
-      </main>
+      {/* Content */}
+      <div className="p-4">
+        {renderTabContent()}
+      </div>
 
+      {/* AI Coach Floating Button */}
+      <AICoach />
+
+      {/* Bottom Navigation */}
       <BottomNavigation 
-        tabs={tabs}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
+        icons={navIcons} 
+        activeIcon={activeTab}
+        onIconClick={handleTabClick}
       />
     </div>
   );
