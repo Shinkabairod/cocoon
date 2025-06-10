@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNavigation from "@/components/mobile/BottomNavigation";
@@ -44,7 +45,6 @@ const MobileDashboard = () => {
   ];
 
   const homeQuickActions = [
-    { id: "create", icon: <Video className="h-6 w-6" />, label: "Create Content" },
     { id: "character", icon: <Star className="h-6 w-6" />, label: "My Avatar" },
     { id: "daily", icon: <Target className="h-6 w-6" />, label: "Daily Challenge" },
     { id: "calendar", icon: <Calendar className="h-6 w-6" />, label: "Planning" }
@@ -181,7 +181,7 @@ const MobileDashboard = () => {
       case "library":
         return (
           <div className="space-y-6">
-            {/* Header with action button */}
+            {/* Header */}
             <div className="flex items-center justify-between">
               <div>
                 <h2 className="text-2xl font-bold text-coach-primary">Content Library</h2>
@@ -212,7 +212,7 @@ const MobileDashboard = () => {
               </Card>
             </div>
 
-            {/* Content Library Component - Enhanced */}
+            {/* Content Library Component */}
             <Card className="p-1 bg-gradient-to-r from-coach-primary/5 to-coach-secondary/5">
               <ContentLibrary 
                 contents={contents}
@@ -252,7 +252,7 @@ const MobileDashboard = () => {
               </div>
             </Card>
 
-            {/* Editorial Calendar - Improved */}
+            {/* Editorial Calendar */}
             <Card className="p-6 bg-gradient-to-br from-coach-primary/5 to-coach-secondary/10">
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold text-lg flex items-center gap-2">
@@ -300,7 +300,7 @@ const MobileDashboard = () => {
               </Card>
             ))}
 
-            {/* Connected Resources - Improved */}
+            {/* Connected Resources */}
             <Card className="p-6">
               <h3 className="font-semibold mb-4 flex items-center gap-2">
                 <Shield className="h-5 w-5 text-coach-primary" />
@@ -324,7 +324,7 @@ const MobileDashboard = () => {
               </div>
             </Card>
 
-            {/* AI Insights - Enhanced */}
+            {/* AI Insights */}
             <Card className="p-6">
               <h3 className="font-semibold mb-4 flex items-center gap-2">
                 <Sparkles className="h-5 w-5 text-coach-primary" />
@@ -398,7 +398,7 @@ const MobileDashboard = () => {
               </div>
             </Card>
 
-            {/* Stats Overview - Simplified */}
+            {/* Stats Overview */}
             <Card className="p-4">
               <h3 className="font-semibold mb-4">My Statistics</h3>
               <div className="grid grid-cols-2 gap-4">
@@ -457,5 +457,3 @@ const MobileDashboard = () => {
 };
 
 export default MobileDashboard;
-
-}
