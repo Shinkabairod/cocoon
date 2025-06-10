@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNavigation from "@/components/mobile/BottomNavigation";
@@ -7,6 +6,7 @@ import AICoach from "@/components/mobile/AICoach";
 import CharacterEvolution from "@/components/character/CharacterEvolution";
 import ContentLibrary from "@/components/content/ContentLibrary";
 import ContentCalendar from "@/components/content/ContentCalendar";
+import BotSharingSection from "@/components/bot-sharing/BotSharingSection";
 import useCharacter from "@/hooks/useCharacter";
 import useContentLibrary from "@/hooks/useContentLibrary";
 import { Card } from "@/components/ui/card";
@@ -18,7 +18,7 @@ import {
   Target, Lightbulb, FileText, Calendar, 
   MessageSquare, Github, BookOpen, Users,
   TrendingUp, Star, Trophy, Zap,
-  Video, Mic, Camera, Shield, Eye
+  Video, Mic, Camera, Shield, Eye, Share2
 } from "lucide-react";
 import StarDisplay from "@/components/ui/star-display";
 
@@ -39,6 +39,7 @@ const MobileDashboard = () => {
     { id: "home", icon: <Home className="h-5 w-5" />, label: "Home" },
     { id: "library", icon: <Library className="h-5 w-5" />, label: "Library" },
     { id: "tools", icon: <Bot className="h-5 w-5" />, label: "AI Tools" },
+    { id: "share", icon: <Share2 className="h-5 w-5" />, label: "Share Bot" },
     { id: "profile", icon: <User className="h-5 w-5" />, label: "Profile" }
   ];
 
@@ -164,6 +165,9 @@ const MobileDashboard = () => {
             </Card>
           </div>
         );
+
+      case "share":
+        return <BotSharingSection />;
 
       case "profile":
         return (
