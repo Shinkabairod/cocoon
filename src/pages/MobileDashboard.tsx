@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNavigation from "@/components/mobile/BottomNavigation";
@@ -20,12 +19,14 @@ import {
   TrendingUp, Star, Trophy, Zap,
   Video, Mic, Camera, Shield, Eye
 } from "lucide-react";
+import StarDisplay from "@/components/ui/star-display";
 
 const MobileDashboard = () => {
   const navigate = useNavigate();
   const { character, addXP, completeContent } = useCharacter();
   const { contents, addContent, updateContent, getContentsByStatus } = useContentLibrary();
   const [activeTab, setActiveTab] = useState("home");
+  const [userStars, setUserStars] = useState(100); // Default stars for demo
 
   useEffect(() => {
     if (window.location.pathname === "/dashboard") {
@@ -219,10 +220,13 @@ const MobileDashboard = () => {
       <div className="sticky top-0 z-10 bg-background border-b p-4">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">AI Content Coach</h1>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Level {character.level}</span>
-            <div className="w-8 h-8 bg-gradient-to-br from-coach-primary to-coach-secondary rounded-full flex items-center justify-center text-white text-sm font-bold">
-              {character.name[0]}
+          <div className="flex items-center gap-3">
+            <StarDisplay count={userStars} size="sm" />
+            <div className="flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">Level {character.level}</span>
+              <div className="w-8 h-8 bg-gradient-to-br from-coach-primary to-coach-secondary rounded-full flex items-center justify-center text-white text-sm font-bold">
+                {character.name[0]}
+              </div>
             </div>
           </div>
         </div>

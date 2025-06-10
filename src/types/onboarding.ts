@@ -93,5 +93,8 @@ export interface OnboardingData {
   selectedResources?: Resource[];
   selectedResourceTags?: ResourceTag[];
   
+  // Pricing
+  selectedPlan?: string;
+  
   step: number;
 }

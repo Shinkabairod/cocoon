@@ -29,6 +29,7 @@ import ResourcesTagsStep from "@/components/onboarding/steps/ResourcesTagsStep";
 import LearningStyleStep from "@/components/onboarding/steps/LearningStyleStep";
 import SkillsSelectionStep from "@/components/onboarding/steps/SkillsSelectionStep";
 import SuccessMetricsStep from "@/components/onboarding/steps/SuccessMetricsStep";
+import PricingStep from "@/components/onboarding/steps/PricingStep";
 
 const Onboarding = () => {
   const { onboardingData } = useOnboarding();
@@ -94,6 +95,8 @@ const Onboarding = () => {
         return <MonetizationStep />;
       case 22:
         return <SummaryStep />;
+      case 23:
+        return <PricingStep />;
       default:
         return <InitialGuidanceStep />;
     }

@@ -42,9 +42,6 @@ const Index = () => {
           <Link to="/about">
             <Button variant="ghost">About</Button>
           </Link>
-          <Link to="/pricing">
-            <Button variant="ghost">Pricing</Button>
-          </Link>
           <Link to="/onboarding">
             <Button className="gradient-bg">Get Started</Button>
           </Link>
