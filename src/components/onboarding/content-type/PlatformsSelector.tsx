@@ -12,7 +12,7 @@ interface PlatformsSelectorProps {
 const PlatformsSelector = ({ platforms, selectedPlatforms, onToggle }: PlatformsSelectorProps) => {
   return (
     <div>
-      <h3 className="text-lg font-medium mb-3">Sur quelles plateformes êtes-vous intéressé(e) ?</h3>
+      <h3 className="text-lg font-medium mb-3">Which platforms are you interested in?</h3>
       <div className="grid grid-cols-3 gap-3">
         {platforms.map((platform) => {
           const isSelected = selectedPlatforms?.includes(platform);
