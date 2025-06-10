@@ -70,12 +70,12 @@ const MobileDashboard = () => {
       ]
     },
     {
-      title: "Instagram References",
-      description: "Add and manage Instagram accounts for inspiration",
+      title: "Creator References",
+      description: "Add and manage creator accounts for inspiration",
       icons: [
-        { id: "add-instagram", icon: <Plus className="h-6 w-6" />, label: "Add Account" },
+        { id: "add-creator", icon: <Plus className="h-6 w-6" />, label: "Add Creator" },
         { id: "view-references", icon: <Eye className="h-6 w-6" />, label: "References" },
-        { id: "analyze-content", icon: <BarChart3 className="h-6 w-6" />, label: "Analyze" }
+        { id: "analyze-creators", icon: <BarChart3 className="h-6 w-6" />, label: "Analyze" }
       ]
     }
   ];
@@ -457,3 +457,5 @@ const MobileDashboard = () => {
 };
 
 export default MobileDashboard;
+
+}
