@@ -38,16 +38,6 @@ const ContentLibrary = ({ contents, onEdit, onSchedule }: ContentLibraryProps) =
     }
   };
 
-  const getTypeColor = (type: ContentType) => {
-    switch (type) {
-      case 'concept': return 'from-yellow-50 to-yellow-100 border-yellow-200';
-      case 'idea': return 'from-purple-50 to-purple-100 border-purple-200';
-      case 'script': return 'from-blue-50 to-blue-100 border-blue-200';
-      case 'video': return 'from-green-50 to-green-100 border-green-200';
-      default: return 'from-gray-50 to-gray-100 border-gray-200';
-    }
-  };
-
   const filterContentsByType = (type: ContentType) => {
     return contents.filter(content => content.type === type);
   };
@@ -86,9 +76,9 @@ const ContentLibrary = ({ contents, onEdit, onSchedule }: ContentLibraryProps) =
         {(['concept', 'idea', 'script', 'video'] as ContentType[]).map(type => (
           <TabsContent key={type} value={type} className="space-y-4">
             {filterContentsByType(type).length === 0 ? (
-              <Card className={`p-8 text-center bg-gradient-to-br ${getTypeColor(type)}`}>
+              <Card className="p-8 text-center">
                 <div className="flex flex-col items-center space-y-3">
-                  <div className="p-4 rounded-full bg-white/80">
+                  <div className="p-4 rounded-full bg-muted">
                     {getTypeIcon(type)}
                   </div>
                   <div>
@@ -102,11 +92,11 @@ const ContentLibrary = ({ contents, onEdit, onSchedule }: ContentLibraryProps) =
             ) : (
               <div className="grid gap-4">
                 {filterContentsByType(type).map(content => (
-                  <Card key={content.id} className={`overflow-hidden bg-gradient-to-br ${getTypeColor(content.type)} hover:shadow-lg transition-all duration-200`}>
+                  <Card key={content.id} className="overflow-hidden hover:shadow-lg transition-all duration-200">
                     <div className="p-6">
                       <div className="flex items-start justify-between mb-4">
                         <div className="flex items-center gap-3">
-                          <div className="p-2 bg-white/80 rounded-lg">
+                          <div className="p-2 bg-muted rounded-lg">
                             {getTypeIcon(content.type)}
                           </div>
                           <div className="flex-1">
@@ -124,7 +114,7 @@ const ContentLibrary = ({ contents, onEdit, onSchedule }: ContentLibraryProps) =
                       {content.tags.length > 0 && (
                         <div className="flex flex-wrap gap-2 mb-4">
                           {content.tags.map(tag => (
-                            <Badge key={tag} variant="outline" className="text-xs bg-white/60 border-white/80">
+                            <Badge key={tag} variant="outline" className="text-xs">
                               #{tag}
                             </Badge>
                           ))}
@@ -150,7 +140,6 @@ const ContentLibrary = ({ contents, onEdit, onSchedule }: ContentLibraryProps) =
                             size="sm" 
                             variant="outline" 
                             onClick={() => onEdit(content)}
-                            className="bg-white/80 hover:bg-white border-white/80"
                           >
                             <Edit className="h-3 w-3" />
                           </Button>
@@ -158,14 +147,12 @@ const ContentLibrary = ({ contents, onEdit, onSchedule }: ContentLibraryProps) =
                             size="sm" 
                             variant="outline" 
                             onClick={() => onSchedule(content)}
-                            className="bg-white/80 hover:bg-white border-white/80"
                           >
                             <Calendar className="h-3 w-3" />
                           </Button>
                           <Button 
                             size="sm" 
                             variant="outline"
-                            className="bg-white/80 hover:bg-white border-white/80"
                           >
                             <MoreHorizontal className="h-3 w-3" />
                           </Button>

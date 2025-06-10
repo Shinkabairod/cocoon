@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import BottomNavigation from "@/components/mobile/BottomNavigation";
@@ -165,7 +164,7 @@ const MobileDashboard = () => {
             </div>
 
             {/* Content Library Component */}
-            <Card className="p-1 bg-gradient-to-r from-coach-primary/5 to-coach-secondary/5">
+            <Card className="p-1">
               <ContentLibrary 
                 contents={contents}
                 onEdit={(content) => console.log('Edit:', content)}
@@ -174,17 +173,11 @@ const MobileDashboard = () => {
             </Card>
 
             {/* Editorial Calendar */}
-            <Card className="p-6 bg-gradient-to-br from-coach-primary/5 to-coach-secondary/10">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="font-semibold text-lg flex items-center gap-2">
-                  <Calendar className="h-5 w-5 text-coach-primary" />
-                  Editorial Calendar
-                </h3>
-                <Button variant="outline" size="sm">
-                  <Plus className="h-3 w-3 mr-1" />
-                  Schedule
-                </Button>
-              </div>
+            <Card className="p-6">
+              <h3 className="font-semibold text-lg flex items-center gap-2 mb-4">
+                <Calendar className="h-5 w-5 text-coach-primary" />
+                Editorial Calendar
+              </h3>
               <ContentCalendar contents={contents} />
             </Card>
           </div>
