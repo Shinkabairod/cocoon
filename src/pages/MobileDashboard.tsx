@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,7 +10,7 @@ import CharacterProgress from '@/components/character/CharacterProgress';
 import CharacterEvolution from '@/components/character/CharacterEvolution';
 import ContentLibrary from '@/components/content/ContentLibrary';
 import ContentCalendar from '@/components/content/ContentCalendar';
-import useCharacter from '@/hooks/useCharacter';
+import { useCharacter } from '@/hooks/useCharacter';
 import useContentLibrary from '@/hooks/useContentLibrary';
 import { 
   Calendar, 
@@ -40,12 +41,12 @@ const MobileDashboard = () => {
   const character = useCharacter();
   const { contents, addContent, updateContent } = useContentLibrary();
 
-  const navIcons = [
-    { id: 'home', label: 'Home', icon: <Target className="h-6 w-6" /> },
-    { id: 'library', label: 'Library', icon: <BookOpen className="h-6 w-6" /> },
-    { id: 'calendar', label: 'Calendar', icon: <Calendar className="h-6 w-6" /> },
-    { id: 'character', label: 'Character', icon: <Star className="h-6 w-6" /> },
-    { id: 'analytics', label: 'Analytics', icon: <TrendingUp className="h-6 w-6" /> },
+  const tabs = [
+    { id: 'home' as TabType, label: 'Home', icon: Target },
+    { id: 'library' as TabType, label: 'Library', icon: BookOpen },
+    { id: 'calendar' as TabType, label: 'Calendar', icon: Calendar },
+    { id: 'character' as TabType, label: 'Character', icon: Star },
+    { id: 'analytics' as TabType, label: 'Analytics', icon: TrendingUp },
   ];
 
   const dailyChallenges = [
@@ -291,9 +292,9 @@ const MobileDashboard = () => {
       </main>
 
       <BottomNavigation 
-        icons={navIcons}
-        activeIcon={activeTab}
-        onIconClick={(id) => setActiveTab(id as TabType)}
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
       />
     </div>
   );
