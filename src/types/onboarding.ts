@@ -33,7 +33,7 @@ export interface Resource {
   description: string;
   tags?: string[];
   selected: boolean;
-  topic: ResourceTopic; // Making topic required and not optional
+  topic: ResourceTopic;
 }
 
 export interface OnboardingData {
