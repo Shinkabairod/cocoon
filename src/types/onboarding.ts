@@ -1,3 +1,4 @@
+
 export type ContentType = 'Videos' | 'Blogs' | 'Podcasts' | 'Social Media Posts';
 export type Platform = 'YouTube' | 'Instagram' | 'TikTok' | 'Twitter' | 'LinkedIn' | 'Blog' | 'Podcast';
 export type ExperienceLevel = 'Beginner' | 'Intermediate' | 'Experienced';
@@ -55,7 +56,7 @@ export interface OnboardingData {
   platforms?: Platform[];
   niche?: Niche;
   contentCategories?: ContentCategory[];
-  socialMediaAccounts?: SocialMediaAccount[];
+  socialMediaAccounts?: { [key in Platform]?: string };
   impactGoals?: ImpactGoal[];
   contentChallenge?: ContentChallenge;
   contentChallenges?: ContentChallenge[];
