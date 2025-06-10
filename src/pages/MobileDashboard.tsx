@@ -1,160 +1,247 @@
 
-import Layout from "@/components/layout/Layout";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import BottomNavigation from "@/components/mobile/BottomNavigation";
 import IconGrid from "@/components/mobile/IconGrid";
 import AICoach from "@/components/mobile/AICoach";
+import CharacterEvolution from "@/components/character/CharacterEvolution";
 import ContentLibrary from "@/components/content/ContentLibrary";
 import ContentCalendar from "@/components/content/ContentCalendar";
-import { useState } from "react";
+import useCharacter from "@/hooks/useCharacter";
+import useContentLibrary from "@/hooks/useContentLibrary";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import { 
-  Play, 
-  Clock, 
-  TrendingUp, 
-  Users, 
-  Star,
-  Calendar,
-  BookOpen,
-  Target
+  Home, User, Bot, Library, 
+  Target, Lightbulb, FileText, Calendar, 
+  MessageSquare, Github, BookOpen, Users,
+  TrendingUp, Star, Trophy, Zap,
+  Video, Mic, Camera, Shield, Eye
 } from "lucide-react";
-import useContentLibrary from "@/hooks/useContentLibrary";
 
 const MobileDashboard = () => {
-  const [activeTab, setActiveTab] = useState('home');
-  const { contents } = useContentLibrary();
+  const navigate = useNavigate();
+  const { character, addXP, completeContent } = useCharacter();
+  const { contents, addContent, updateContent, getContentsByStatus } = useContentLibrary();
+  const [activeTab, setActiveTab] = useState("home");
 
-  const stats = [
-    { label: "Total Content", value: "24", icon: <BookOpen className="h-4 w-4" />, change: "+3 this week" },
-    { label: "Views", value: "12.5K", icon: <TrendingUp className="h-4 w-4" />, change: "+15%" },
-    { label: "Followers", value: "1.2K", icon: <Users className="h-4 w-4" />, change: "+8%" },
-    { label: "Engagement", value: "4.8%", icon: <Star className="h-4 w-4" />, change: "+0.3%" }
+  useEffect(() => {
+    if (window.location.pathname === "/dashboard") {
+      navigate("/mobile", { replace: true });
+    }
+  }, [navigate]);
+
+  const navIcons = [
+    { id: "home", icon: <Home className="h-5 w-5" />, label: "Home" },
+    { id: "library", icon: <Library className="h-5 w-5" />, label: "Library" },
+    { id: "tools", icon: <Bot className="h-5 w-5" />, label: "AI Tools" },
+    { id: "profile", icon: <User className="h-5 w-5" />, label: "Profile" }
   ];
 
-  const quickActions = [
-    { icon: <Play className="h-5 w-5" />, label: "New Video", color: "bg-red-500" },
-    { icon: <BookOpen className="h-5 w-5" />, label: "Write Blog", color: "bg-blue-500" },
-    { icon: <Calendar className="h-5 w-5" />, label: "Schedule", color: "bg-green-500" },
-    { icon: <Target className="h-5 w-5" />, label: "Analytics", color: "bg-purple-500" }
+  const homeIcons = [
+    { id: "character", icon: <Star className="h-6 w-6" />, label: "My Avatar" },
+    { id: "daily", icon: <Target className="h-6 w-6" />, label: "Challenges" },
+    { id: "create", icon: <Video className="h-6 w-6" />, label: "Create" },
+    { id: "calendar", icon: <Calendar className="h-6 w-6" />, label: "Planning" }
   ];
 
-  const renderContent = () => {
+  const resourceIcons = [
+    { id: "github", icon: <Github className="h-6 w-6" />, label: "GitHub" },
+    { id: "notion", icon: <BookOpen className="h-6 w-6" />, label: "Notion" },
+    { id: "obsidian", icon: <Eye className="h-6 w-6" />, label: "Obsidian" },
+    { id: "logseq", icon: <Shield className="h-6 w-6" />, label: "LogSeq" }
+  ];
+
+  const aiToolIcons = [
+    { id: "concept", icon: <Lightbulb className="h-6 w-6" />, label: "Concepts" },
+    { id: "ideas", icon: <Zap className="h-6 w-6" />, label: "Ideas" },
+    { id: "script", icon: <FileText className="h-6 w-6" />, label: "Scripts" },
+    { id: "feedback", icon: <MessageSquare className="h-6 w-6" />, label: "Feedback" }
+  ];
+
+  const handleIconClick = (id: string) => {
+    console.log(`Icon clicked: ${id}`);
+    if (id === "create") {
+      completeContent();
+    }
+  };
+
+  const handleTabClick = (tabId: string) => {
+    setActiveTab(tabId);
+  };
+
+  const renderTabContent = () => {
     switch (activeTab) {
-      case 'create':
-        return <IconGrid />;
-      case 'coach':
-        return <AICoach />;
-      case 'library':
-        return <ContentLibrary contents={contents} />;
-      case 'calendar':
-        return <ContentCalendar contents={contents} />;
-      default:
+      case "home":
         return (
-          <div className="p-4 space-y-6">
-            {/* Welcome Section */}
-            <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-4 text-white">
-              <h2 className="text-xl font-bold mb-2">Welcome back!</h2>
-              <p className="text-sm opacity-90">Ready to create amazing content today?</p>
-              <div className="mt-3 flex items-center space-x-2">
-                <span className="text-xs">Progress: step 10/22</span>
-                <Progress value={45} className="flex-1 h-2" />
+          <div className="space-y-6">
+            <CharacterEvolution character={character} />
+            
+            {/* Daily Challenge - Simplified */}
+            <Card className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold flex items-center gap-2">
+                  <Target className="h-5 w-5 text-coach-primary" />
+                  Daily Challenge
+                </h3>
+                <Badge variant="outline">+100 XP</Badge>
               </div>
-            </div>
+              <p className="text-sm text-muted-foreground mb-3">
+                Create a 30-second script about your main passion
+              </p>
+              <Button 
+                size="sm" 
+                className="w-full gradient-bg"
+                onClick={() => addXP(100, 'content')}
+              >
+                Start Challenge
+              </Button>
+            </Card>
 
-            {/* Quick Actions */}
             <div>
-              <h3 className="font-semibold mb-3">Quick Actions</h3>
-              <div className="grid grid-cols-2 gap-3">
-                {quickActions.map((action, index) => (
-                  <Card key={index} className="p-3 cursor-pointer hover:shadow-md transition-shadow">
-                    <div className="flex items-center space-x-3">
-                      <div className={`p-2 rounded-lg ${action.color} text-white`}>
-                        {action.icon}
-                      </div>
-                      <span className="font-medium text-sm">{action.label}</span>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Stats */}
-            <div>
-              <h3 className="font-semibold mb-3">Your Stats</h3>
-              <div className="grid grid-cols-2 gap-3">
-                {stats.map((stat, index) => (
-                  <Card key={index} className="p-3">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-sm text-muted-foreground">{stat.label}</span>
-                      {stat.icon}
-                    </div>
-                    <div className="text-xl font-bold">{stat.value}</div>
-                    <div className="text-xs text-green-600">{stat.change}</div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Recent Activity */}
-            <div>
-              <h3 className="font-semibold mb-3">Recent Activity</h3>
-              <div className="space-y-3">
-                <Card className="p-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">Published "My Story"</p>
-                      <p className="text-xs text-muted-foreground">2 hours ago</p>
-                    </div>
-                    <Badge variant="secondary" className="text-xs">Video</Badge>
-                  </div>
-                </Card>
-                <Card className="p-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                    <div className="flex-1">
-                      <p className="text-sm font-medium">Started "Creative Tips" draft</p>
-                      <p className="text-xs text-muted-foreground">1 day ago</p>
-                    </div>
-                    <Badge variant="secondary" className="text-xs">Blog</Badge>
-                  </div>
-                </Card>
-              </div>
-            </div>
-
-            {/* AI Suggestions */}
-            <div>
-              <h3 className="font-semibold mb-3">AI Suggestions</h3>
-              <Card className="p-4 bg-gradient-to-r from-blue-50 to-purple-50 border-l-4 border-l-blue-500">
-                <div className="flex items-start space-x-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <Star className="h-4 w-4 text-blue-600" />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-medium text-sm mb-1">Time for a new video!</h4>
-                    <p className="text-xs text-muted-foreground mb-3">
-                      Based on your audience engagement, Tuesday evenings work best for you.
-                    </p>
-                    <Button size="sm" className="text-xs">
-                      Create Video
-                    </Button>
-                  </div>
-                </div>
-              </Card>
+              <h3 className="font-semibold mb-4">Quick Actions</h3>
+              <IconGrid icons={homeIcons} onIconClick={handleIconClick} />
             </div>
           </div>
         );
+
+      case "library":
+        return (
+          <div className="space-y-6">
+            <ContentLibrary 
+              contents={contents}
+              onEdit={(content) => console.log('Edit:', content)}
+              onSchedule={(content) => console.log('Schedule:', content)}
+            />
+            <ContentCalendar contents={contents} />
+          </div>
+        );
+
+      case "tools":
+        return (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-xl font-bold mb-4">AI Tools</h2>
+              <p className="text-muted-foreground mb-6">
+                Use artificial intelligence to boost your content creation
+              </p>
+              
+              <IconGrid icons={aiToolIcons} onIconClick={handleIconClick} />
+            </div>
+
+            {/* Connected Resources */}
+            <Card className="p-4">
+              <h3 className="font-semibold mb-3">Connected Resources</h3>
+              <div className="grid grid-cols-2 gap-3">
+                {resourceIcons.map(({ id, icon, label }) => (
+                  <div key={id} className="flex items-center gap-2 p-2 border rounded">
+                    <div className="text-coach-primary">{icon}</div>
+                    <span className="text-sm">{label}</span>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            {/* AI Insights */}
+            <Card className="p-4">
+              <h3 className="font-semibold mb-3">Daily AI Insights</h3>
+              <div className="space-y-3">
+                <div className="p-3 bg-soft-blue rounded-lg">
+                  <p className="text-sm text-blue-800">
+                    💡 Short videos (30-60s) generate 3x more engagement this week
+                  </p>
+                </div>
+                <div className="p-3 bg-soft-green rounded-lg">
+                  <p className="text-sm text-green-800">
+                    🎯 Your audience is most active between 6-9 PM
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        );
+
+      case "profile":
+        return (
+          <div className="space-y-6">
+            <Card className="p-6">
+              <div className="text-center space-y-4">
+                <div className="w-20 h-20 bg-gradient-to-br from-coach-primary to-coach-secondary rounded-full mx-auto flex items-center justify-center text-white text-2xl font-bold">
+                  {character.name[0]}
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold">{character.name}</h2>
+                  <p className="text-muted-foreground">{character.type} • Level {character.level}</p>
+                </div>
+              </div>
+            </Card>
+
+            {/* Social Media Connections */}
+            <Card className="p-4">
+              <h3 className="font-semibold mb-3">Connected Accounts</h3>
+              <div className="space-y-2">
+                {['Instagram', 'TikTok', 'YouTube', 'Twitter'].map(platform => (
+                  <div key={platform} className="flex items-center justify-between p-2 border rounded">
+                    <span className="text-sm">{platform}</span>
+                    <Button variant="outline" size="sm">Connect</Button>
+                  </div>
+                ))}
+              </div>
+            </Card>
+
+            {/* Stats Overview - Simplified */}
+            <Card className="p-4">
+              <h3 className="font-semibold mb-4">My Statistics</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-3 bg-soft-purple rounded-lg">
+                  <div className="text-2xl font-bold text-coach-primary">{character.contentCreated}</div>
+                  <div className="text-sm text-muted-foreground">Content</div>
+                </div>
+                <div className="text-center p-3 bg-soft-green rounded-lg">
+                  <div className="text-2xl font-bold text-green-600">{character.level}</div>
+                  <div className="text-sm text-muted-foreground">Level</div>
+                </div>
+              </div>
+            </Card>
+          </div>
+        );
+
+      default:
+        return null;
     }
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <div className="flex-1 overflow-auto pb-20">
-        {renderContent()}
+    <div className="min-h-screen bg-background pb-20">
+      {/* Header */}
+      <div className="sticky top-0 z-10 bg-background border-b p-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold">AI Content Coach</h1>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Level {character.level}</span>
+            <div className="w-8 h-8 bg-gradient-to-br from-coach-primary to-coach-secondary rounded-full flex items-center justify-center text-white text-sm font-bold">
+              {character.name[0]}
+            </div>
+          </div>
+        </div>
       </div>
-      <BottomNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+
+      {/* Content */}
+      <div className="p-4">
+        {renderTabContent()}
+      </div>
+
+      {/* AI Coach Floating Button */}
+      <AICoach />
+
+      {/* Bottom Navigation */}
+      <BottomNavigation 
+        icons={navIcons} 
+        activeIcon={activeTab}
+        onIconClick={handleTabClick}
+      />
     </div>
   );
 };
