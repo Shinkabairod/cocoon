@@ -34,16 +34,16 @@ const MobileDashboard = () => {
   }, [navigate]);
 
   const navIcons = [
-    { id: "home", icon: <Home className="h-5 w-5" />, label: "Accueil" },
-    { id: "library", icon: <Library className="h-5 w-5" />, label: "Bibliothèque" },
-    { id: "tools", icon: <Bot className="h-5 w-5" />, label: "IA Tools" },
-    { id: "profile", icon: <User className="h-5 w-5" />, label: "Profil" }
+    { id: "home", icon: <Home className="h-5 w-5" />, label: "Home" },
+    { id: "library", icon: <Library className="h-5 w-5" />, label: "Library" },
+    { id: "tools", icon: <Bot className="h-5 w-5" />, label: "AI Tools" },
+    { id: "profile", icon: <User className="h-5 w-5" />, label: "Profile" }
   ];
 
   const homeIcons = [
-    { id: "character", icon: <Star className="h-6 w-6" />, label: "Mon Avatar" },
-    { id: "daily", icon: <Target className="h-6 w-6" />, label: "Défis" },
-    { id: "create", icon: <Video className="h-6 w-6" />, label: "Créer" },
+    { id: "character", icon: <Star className="h-6 w-6" />, label: "My Avatar" },
+    { id: "daily", icon: <Target className="h-6 w-6" />, label: "Challenges" },
+    { id: "create", icon: <Video className="h-6 w-6" />, label: "Create" },
     { id: "calendar", icon: <Calendar className="h-6 w-6" />, label: "Planning" }
   ];
 
@@ -56,7 +56,7 @@ const MobileDashboard = () => {
 
   const aiToolIcons = [
     { id: "concept", icon: <Lightbulb className="h-6 w-6" />, label: "Concepts" },
-    { id: "ideas", icon: <Zap className="h-6 w-6" />, label: "Idées" },
+    { id: "ideas", icon: <Zap className="h-6 w-6" />, label: "Ideas" },
     { id: "script", icon: <FileText className="h-6 w-6" />, label: "Scripts" },
     { id: "feedback", icon: <MessageSquare className="h-6 w-6" />, label: "Feedback" }
   ];
@@ -84,24 +84,24 @@ const MobileDashboard = () => {
               <div className="flex items-center justify-between mb-3">
                 <h3 className="font-semibold flex items-center gap-2">
                   <Target className="h-5 w-5 text-coach-primary" />
-                  Défi du Jour
+                  Daily Challenge
                 </h3>
                 <Badge variant="outline">+100 XP</Badge>
               </div>
               <p className="text-sm text-muted-foreground mb-3">
-                Créez un script de 30 secondes sur votre passion principale
+                Create a 30-second script about your main passion
               </p>
               <Button 
                 size="sm" 
                 className="w-full gradient-bg"
                 onClick={() => addXP(100, 'content')}
               >
-                Commencer le Défi
+                Start Challenge
               </Button>
             </Card>
 
             <div>
-              <h3 className="font-semibold mb-4">Actions Rapides</h3>
+              <h3 className="font-semibold mb-4">Quick Actions</h3>
               <IconGrid icons={homeIcons} onIconClick={handleIconClick} />
             </div>
           </div>
@@ -123,9 +123,9 @@ const MobileDashboard = () => {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-xl font-bold mb-4">Outils IA</h2>
+              <h2 className="text-xl font-bold mb-4">AI Tools</h2>
               <p className="text-muted-foreground mb-6">
-                Utilisez l'intelligence artificielle pour booster votre création de contenu
+                Use artificial intelligence to boost your content creation
               </p>
               
               <IconGrid icons={aiToolIcons} onIconClick={handleIconClick} />
@@ -133,7 +133,7 @@ const MobileDashboard = () => {
 
             {/* Connected Resources */}
             <Card className="p-4">
-              <h3 className="font-semibold mb-3">Ressources Connectées</h3>
+              <h3 className="font-semibold mb-3">Connected Resources</h3>
               <div className="grid grid-cols-2 gap-3">
                 {resourceIcons.map(({ id, icon, label }) => (
                   <div key={id} className="flex items-center gap-2 p-2 border rounded">
@@ -146,16 +146,16 @@ const MobileDashboard = () => {
 
             {/* AI Insights */}
             <Card className="p-4">
-              <h3 className="font-semibold mb-3">Insights IA du Jour</h3>
+              <h3 className="font-semibold mb-3">Daily AI Insights</h3>
               <div className="space-y-3">
                 <div className="p-3 bg-soft-blue rounded-lg">
                   <p className="text-sm text-blue-800">
-                    💡 Les vidéos courtes (30-60s) génèrent 3x plus d'engagement cette semaine
+                    💡 Short videos (30-60s) generate 3x more engagement this week
                   </p>
                 </div>
                 <div className="p-3 bg-soft-green rounded-lg">
                   <p className="text-sm text-green-800">
-                    🎯 Votre audience est plus active entre 18h-21h
+                    🎯 Your audience is most active between 6-9 PM
                   </p>
                 </div>
               </div>
@@ -173,19 +173,19 @@ const MobileDashboard = () => {
                 </div>
                 <div>
                   <h2 className="text-xl font-bold">{character.name}</h2>
-                  <p className="text-muted-foreground">{character.type} • Niveau {character.level}</p>
+                  <p className="text-muted-foreground">{character.type} • Level {character.level}</p>
                 </div>
               </div>
             </Card>
 
             {/* Social Media Connections */}
             <Card className="p-4">
-              <h3 className="font-semibold mb-3">Comptes Connectés</h3>
+              <h3 className="font-semibold mb-3">Connected Accounts</h3>
               <div className="space-y-2">
                 {['Instagram', 'TikTok', 'YouTube', 'Twitter'].map(platform => (
                   <div key={platform} className="flex items-center justify-between p-2 border rounded">
                     <span className="text-sm">{platform}</span>
-                    <Button variant="outline" size="sm">Connecter</Button>
+                    <Button variant="outline" size="sm">Connect</Button>
                   </div>
                 ))}
               </div>
@@ -193,15 +193,15 @@ const MobileDashboard = () => {
 
             {/* Stats Overview - Simplified */}
             <Card className="p-4">
-              <h3 className="font-semibold mb-4">Mes Statistiques</h3>
+              <h3 className="font-semibold mb-4">My Statistics</h3>
               <div className="grid grid-cols-2 gap-4">
                 <div className="text-center p-3 bg-soft-purple rounded-lg">
                   <div className="text-2xl font-bold text-coach-primary">{character.contentCreated}</div>
-                  <div className="text-sm text-muted-foreground">Contenus</div>
+                  <div className="text-sm text-muted-foreground">Content</div>
                 </div>
                 <div className="text-center p-3 bg-soft-green rounded-lg">
                   <div className="text-2xl font-bold text-green-600">{character.level}</div>
-                  <div className="text-sm text-muted-foreground">Niveau</div>
+                  <div className="text-sm text-muted-foreground">Level</div>
                 </div>
               </div>
             </Card>
@@ -220,7 +220,7 @@ const MobileDashboard = () => {
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">AI Content Coach</h1>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-muted-foreground">Niveau {character.level}</span>
+            <span className="text-sm text-muted-foreground">Level {character.level}</span>
             <div className="w-8 h-8 bg-gradient-to-br from-coach-primary to-coach-secondary rounded-full flex items-center justify-center text-white text-sm font-bold">
               {character.name[0]}
             </div>

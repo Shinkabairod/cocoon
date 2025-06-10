@@ -45,10 +45,10 @@ const ContentLibrary = ({ contents, onEdit, onSchedule }: ContentLibraryProps) =
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h3 className="text-lg font-semibold">Bibliothèque de Contenu</h3>
+        <h3 className="text-lg font-semibold">Content Library</h3>
         <Button size="sm" className="gradient-bg">
           <Plus className="h-4 w-4 mr-2" />
-          Nouveau
+          New
         </Button>
       </div>
 
@@ -56,15 +56,15 @@ const ContentLibrary = ({ contents, onEdit, onSchedule }: ContentLibraryProps) =
         <TabsList className="grid w-full grid-cols-4">
           <TabsTrigger value="script">Scripts</TabsTrigger>
           <TabsTrigger value="concept">Concepts</TabsTrigger>
-          <TabsTrigger value="idea">Idées</TabsTrigger>
-          <TabsTrigger value="video">Vidéos</TabsTrigger>
+          <TabsTrigger value="idea">Ideas</TabsTrigger>
+          <TabsTrigger value="video">Videos</TabsTrigger>
         </TabsList>
 
         {(['script', 'concept', 'idea', 'video'] as ContentType[]).map(type => (
           <TabsContent key={type} value={type} className="space-y-3">
             {filterContentsByType(type).length === 0 ? (
               <Card className="p-6 text-center">
-                <p className="text-muted-foreground">Aucun {type} pour le moment</p>
+                <p className="text-muted-foreground">No {type}s yet</p>
               </Card>
             ) : (
               filterContentsByType(type).map(content => (
@@ -90,7 +90,7 @@ const ContentLibrary = ({ contents, onEdit, onSchedule }: ContentLibraryProps) =
                       </div>
                       {content.platform && content.platform.length > 0 && (
                         <div className="text-xs text-muted-foreground">
-                          Plateformes: {content.platform.join(', ')}
+                          Platforms: {content.platform.join(', ')}
                         </div>
                       )}
                     </div>
