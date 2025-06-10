@@ -11,7 +11,7 @@ import ProfileTab from "@/components/mobile/tabs/ProfileTab";
 import useCharacter from "@/hooks/useCharacter";
 import useContentLibrary from "@/hooks/useContentLibrary";
 import { 
-  Home, User, Bot, Library
+  Home, User, Bot, Library, Sparkles
 } from "lucide-react";
 
 const MobileDashboard = () => {
@@ -20,6 +20,7 @@ const MobileDashboard = () => {
   const { contents, getContentsByStatus } = useContentLibrary();
   const [activeTab, setActiveTab] = useState("home");
   const [userStars, setUserStars] = useState(100);
+  const [isAICoachOpen, setIsAICoachOpen] = useState(false);
 
   useEffect(() => {
     if (window.location.pathname === "/dashboard") {
@@ -30,6 +31,7 @@ const MobileDashboard = () => {
   const navIcons = [
     { id: "home", icon: <Home className="h-5 w-5" />, label: "Home" },
     { id: "library", icon: <Library className="h-5 w-5" />, label: "Library" },
+    { id: "ai-assistant", icon: <Sparkles className="h-6 w-6" />, label: "AI Assistant", isCenter: true },
     { id: "tools", icon: <Bot className="h-5 w-5" />, label: "AI Tools" },
     { id: "profile", icon: <User className="h-5 w-5" />, label: "Profile" }
   ];
@@ -42,7 +44,11 @@ const MobileDashboard = () => {
   };
 
   const handleTabClick = (tabId: string) => {
-    setActiveTab(tabId);
+    if (tabId === "ai-assistant") {
+      setIsAICoachOpen(true);
+    } else {
+      setActiveTab(tabId);
+    }
   };
 
   const renderTabContent = () => {
@@ -74,8 +80,8 @@ const MobileDashboard = () => {
         {renderTabContent()}
       </div>
 
-      {/* AI Coach Floating Button */}
-      <AICoach />
+      {/* AI Coach */}
+      <AICoach isOpen={isAICoachOpen} onOpenChange={setIsAICoachOpen} />
 
       {/* Bottom Navigation */}
       <BottomNavigation 
