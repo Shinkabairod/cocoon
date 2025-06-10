@@ -57,6 +57,7 @@ export interface OnboardingData {
   niche?: Niche;
   contentCategories?: ContentCategory[];
   socialMediaAccounts?: { [key in Platform]?: string };
+  socialAccounts?: SocialMediaAccount[];
   impactGoals?: ImpactGoal[];
   contentChallenge?: ContentChallenge;
   contentChallenges?: ContentChallenge[];

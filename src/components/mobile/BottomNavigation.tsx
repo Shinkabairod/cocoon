@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { cn } from "@/lib/utils";
 
 interface NavIcon {
@@ -10,15 +10,18 @@ interface NavIcon {
 
 interface BottomNavigationProps {
   icons: NavIcon[];
+  activeIcon?: string;
+  onIconClick?: (id: string) => void;
 }
 
-const BottomNavigation = ({ icons }: BottomNavigationProps) => {
-  const [activeIcon, setActiveIcon] = useState("home");
-
+const BottomNavigation = ({ icons, activeIcon = "home", onIconClick }: BottomNavigationProps) => {
   const handleNavClick = (id: string) => {
-    setActiveIcon(id);
-    // Here we would add navigation logic
-    console.log(`Navigating to ${id}`);
+    if (onIconClick) {
+      onIconClick(id);
+    } else {
+      // Fallback for existing usage
+      console.log(`Navigating to ${id}`);
+    }
   };
 
   return (
@@ -28,7 +31,7 @@ const BottomNavigation = ({ icons }: BottomNavigationProps) => {
           key={item.id}
           onClick={() => handleNavClick(item.id)}
           className={cn(
-            "flex flex-col items-center justify-center w-16 h-full",
+            "flex flex-col items-center justify-center w-16 h-full transition-colors",
             activeIcon === item.id ? "text-coach-primary" : "text-muted-foreground"
           )}
         >
