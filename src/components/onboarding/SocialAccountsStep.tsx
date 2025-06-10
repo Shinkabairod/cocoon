@@ -1,68 +1,60 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useOnboarding } from "@/contexts/OnboardingContext";
-import { Platform, SocialMediaAccount } from "@/types/onboarding";
-import OnboardingLayout from "./OnboardingLayout";
 import { Card } from "@/components/ui/card";
+import { useOnboarding } from "@/contexts/OnboardingContext";
+import { Platform } from "@/types/onboarding";
+import OnboardingLayout from "./OnboardingLayout";
+import { Instagram, Twitter, Youtube, Linkedin, Globe, Mic } from "lucide-react";
 import { useState } from "react";
-import { Youtube, Instagram, MessageCircle, Twitter, Linkedin, Globe, Mic } from "lucide-react";
 
 const SocialAccountsStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
-  const [accounts, setAccounts] = useState<SocialMediaAccount[]>(onboardingData.socialAccounts || []);
+  const [socialAccounts, setSocialAccounts] = useState<{ [key in Platform]?: string }>(
+    onboardingData.socialMediaAccounts || {}
+  );
 
   const platforms: { platform: Platform; icon: JSX.Element; placeholder: string }[] = [
-    { platform: 'YouTube', icon: <Youtube className="h-5 w-5" />, placeholder: '@username' },
     { platform: 'Instagram', icon: <Instagram className="h-5 w-5" />, placeholder: '@username' },
-    { platform: 'TikTok', icon: <MessageCircle className="h-5 w-5" />, placeholder: '@username' },
+    { platform: 'YouTube', icon: <Youtube className="h-5 w-5" />, placeholder: 'Channel name' },
+    { platform: 'TikTok', icon: <Globe className="h-5 w-5" />, placeholder: '@username' },
     { platform: 'Twitter', icon: <Twitter className="h-5 w-5" />, placeholder: '@username' },
     { platform: 'LinkedIn', icon: <Linkedin className="h-5 w-5" />, placeholder: 'Profile URL' },
     { platform: 'Blog', icon: <Globe className="h-5 w-5" />, placeholder: 'Blog URL' },
-    { platform: 'Podcast', icon: <Mic className="h-5 w-5" />, placeholder: 'Podcast Name' }
+    { platform: 'Podcast', icon: <Mic className="h-5 w-5" />, placeholder: 'Podcast name' }
   ];
 
-  const updateAccount = (platform: Platform, username: string) => {
-    const updatedAccounts = accounts.filter(acc => acc.platform !== platform);
-    if (username.trim()) {
-      updatedAccounts.push({ platform, username: username.trim() });
-    }
-    setAccounts(updatedAccounts);
-  };
-
-  const getAccountUsername = (platform: Platform) => {
-    return accounts.find(acc => acc.platform === platform)?.username || '';
+  const handleAccountChange = (platform: Platform, value: string) => {
+    const updated = { ...socialAccounts, [platform]: value };
+    setSocialAccounts(updated);
+    updateOnboardingData({ socialMediaAccounts: updated });
   };
 
   const handleContinue = () => {
-    updateOnboardingData({ socialAccounts: accounts });
     nextStep();
   };
 
   return (
     <OnboardingLayout 
-      title="Vos Comptes Existants" 
-      subtitle="Connectez vos comptes sociaux existants (optionnel)"
+      title="Social Media Accounts" 
+      subtitle="Connect your existing social media accounts (optional)"
     >
-      <div className="space-y-6">
-        <p className="text-muted-foreground">
-          Cette information nous aide à mieux comprendre votre présence actuelle et à personnaliser nos recommandations.
+      <div className="space-y-4">
+        <p className="text-sm text-muted-foreground">
+          This helps us understand your current presence and provide personalized recommendations.
         </p>
         
-        <div className="grid gap-4">
+        <div className="space-y-3">
           {platforms.map(({ platform, icon, placeholder }) => (
             <Card key={platform} className="p-4">
               <div className="flex items-center space-x-3">
-                <div className="flex items-center justify-center w-10 h-10 rounded-full bg-muted">
-                  {icon}
-                </div>
+                <div className="text-primary">{icon}</div>
                 <div className="flex-1">
-                  <label className="text-sm font-medium">{platform}</label>
+                  <div className="font-medium text-sm mb-1">{platform}</div>
                   <Input
                     placeholder={placeholder}
-                    value={getAccountUsername(platform)}
-                    onChange={(e) => updateAccount(platform, e.target.value)}
-                    className="mt-1"
+                    value={socialAccounts[platform] || ''}
+                    onChange={(e) => handleAccountChange(platform, e.target.value)}
                   />
                 </div>
               </div>
@@ -72,10 +64,10 @@ const SocialAccountsStep = () => {
         
         <div className="pt-4 flex justify-center">
           <Button 
-            className="gradient-bg w-full max-w-xs"
+            className="gradient-bg w-full"
             onClick={handleContinue}
           >
-            Continuer
+            Continue
           </Button>
         </div>
       </div>
