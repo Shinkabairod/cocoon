@@ -6,10 +6,10 @@ const useContentLibrary = () => {
   const [contents, setContents] = useState<ContentItem[]>([
     {
       id: '1',
-      title: 'My Personal Story',
+      title: 'Personal Story',
       type: 'script',
-      description: 'Script for sharing my journey',
-      content: 'Intro: Hello, I am... [develop]',
+      description: 'Script for sharing journey',
+      content: 'Script content here...',
       status: 'draft',
       createdAt: new Date(),
       tags: ['personal', 'story'],
@@ -17,14 +17,14 @@ const useContentLibrary = () => {
     },
     {
       id: '2',
-      title: 'Creativity Tips',
+      title: 'Creative Video',
       type: 'concept',
-      description: 'Series on creative techniques',
-      content: '5 techniques to unlock your creativity...',
+      description: 'Video concept idea',
+      content: 'Concept details...',
       status: 'planned',
       createdAt: new Date(),
       scheduledAt: new Date(Date.now() + 24 * 60 * 60 * 1000),
-      tags: ['tips', 'creativity'],
+      tags: ['video', 'creative'],
       platform: ['YouTube']
     }
   ]);

@@ -44,12 +44,6 @@ const MobileDashboard = () => {
     { id: "profile", icon: <User className="h-5 w-5" />, label: "Profile" }
   ];
 
-  const homeQuickActions = [
-    { id: "character", icon: <Star className="h-6 w-6" />, label: "My Avatar" },
-    { id: "daily", icon: <Target className="h-6 w-6" />, label: "Daily Challenge" },
-    { id: "calendar", icon: <Calendar className="h-6 w-6" />, label: "Planning" }
-  ];
-
   const aiToolCategories = [
     {
       title: "Content Creation",
@@ -133,48 +127,6 @@ const MobileDashboard = () => {
                 Start Challenge
               </Button>
             </Card>
-
-            {/* Quick Actions - Improved Layout */}
-            <div>
-              <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                <Zap className="h-5 w-5 text-coach-primary" />
-                Quick Actions
-              </h3>
-              <div className="grid grid-cols-2 gap-4">
-                {homeQuickActions.map((action) => (
-                  <Card key={action.id} className="p-4 hover:shadow-md transition-shadow cursor-pointer" onClick={() => handleIconClick(action.id)}>
-                    <div className="flex flex-col items-center text-center space-y-2">
-                      <div className="p-3 bg-soft-blue rounded-full text-coach-primary">
-                        {action.icon}
-                      </div>
-                      <span className="text-sm font-medium">{action.label}</span>
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            </div>
-
-            {/* Quick Stats */}
-            <Card className="p-4">
-              <h3 className="font-semibold mb-3 flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-coach-primary" />
-                Your Progress
-              </h3>
-              <div className="grid grid-cols-3 gap-4 text-center">
-                <div>
-                  <div className="text-2xl font-bold text-coach-primary">{character.contentCreated}</div>
-                  <div className="text-xs text-muted-foreground">Content Created</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-green-600">{character.level}</div>
-                  <div className="text-xs text-muted-foreground">Current Level</div>
-                </div>
-                <div>
-                  <div className="text-2xl font-bold text-blue-600">{character.followers}</div>
-                  <div className="text-xs text-muted-foreground">Followers</div>
-                </div>
-              </div>
-            </Card>
           </div>
         );
 
@@ -219,37 +171,6 @@ const MobileDashboard = () => {
                 onEdit={(content) => console.log('Edit:', content)}
                 onSchedule={(content) => console.log('Schedule:', content)}
               />
-            </Card>
-
-            {/* Recent Activity */}
-            <Card className="p-6">
-              <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                <Clock className="h-5 w-5 text-coach-primary" />
-                Recent Activity
-              </h3>
-              <div className="space-y-3">
-                <div className="flex items-center gap-3 p-3 bg-soft-blue rounded-lg">
-                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">New script created</p>
-                    <p className="text-xs text-muted-foreground">2 hours ago</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-soft-green rounded-lg">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">Content published to Instagram</p>
-                    <p className="text-xs text-muted-foreground">5 hours ago</p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 p-3 bg-soft-purple rounded-lg">
-                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium">Video concept saved</p>
-                    <p className="text-xs text-muted-foreground">1 day ago</p>
-                  </div>
-                </div>
-              </div>
             </Card>
 
             {/* Editorial Calendar */}
