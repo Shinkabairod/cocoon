@@ -13,7 +13,9 @@ import {
   Eye,
   Copy,
   ExternalLink,
-  Crown
+  Crown,
+  CreditCard,
+  CheckCircle
 } from 'lucide-react';
 
 const BotSharingSection = () => {
@@ -21,12 +23,20 @@ const BotSharingSection = () => {
   const [monthlyPrice, setMonthlyPrice] = useState('9.99');
   const [subscriberCount, setSubscriberCount] = useState(12);
   const [totalRevenue, setTotalRevenue] = useState(119.88);
+  const [isStripeConnected, setIsStripeConnected] = useState(false);
 
   const botUrl = `https://ai-coach.app/bot/john-creator-bot`;
 
   const handleCopyUrl = () => {
     navigator.clipboard.writeText(botUrl);
     // You could add a toast notification here
+  };
+
+  const handleConnectStripe = () => {
+    // Here you would integrate with Stripe Connect
+    console.log('Connecting to Stripe...');
+    // For demo purposes, we'll simulate connection
+    setIsStripeConnected(true);
   };
 
   return (
@@ -57,8 +67,42 @@ const BotSharingSection = () => {
         </div>
       </Card>
 
-      {/* Bot Configuration */}
+      {/* Stripe Connection */}
       {isPublic && (
+        <Card className="p-4">
+          <h3 className="font-semibold mb-4 flex items-center gap-2">
+            <CreditCard className="h-5 w-5" />
+            Payment Setup
+          </h3>
+          
+          {!isStripeConnected ? (
+            <div className="space-y-4">
+              <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
+                <p className="text-sm text-orange-800 mb-3">
+                  Connect your Stripe account to receive payments from subscribers
+                </p>
+                <Button onClick={handleConnectStripe} className="gradient-bg">
+                  <CreditCard className="h-4 w-4 mr-2" />
+                  Connect Stripe Account
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
+              <div className="flex items-center gap-2 text-green-800">
+                <CheckCircle className="h-5 w-5" />
+                <span className="font-medium">Stripe Connected</span>
+              </div>
+              <p className="text-sm text-green-700 mt-1">
+                Ready to receive payments from subscribers
+              </p>
+            </div>
+          )}
+        </Card>
+      )}
+
+      {/* Bot Configuration */}
+      {isPublic && isStripeConnected && (
         <Card className="p-4">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
             <Settings className="h-5 w-5" />
@@ -108,7 +152,6 @@ const BotSharingSection = () => {
               <ul className="text-sm text-blue-700 space-y-1">
                 <li>• Your personalized AI assistant</li>
                 <li>• All your curated resources</li>
-                <li>• Your content templates & scripts</li>
                 <li>• Your expertise and knowledge base</li>
                 <li>• Priority support from your bot</li>
               </ul>
@@ -118,7 +161,7 @@ const BotSharingSection = () => {
       )}
 
       {/* Statistics */}
-      {isPublic && (
+      {isPublic && isStripeConnected && (
         <Card className="p-4">
           <h3 className="font-semibold mb-4 flex items-center gap-2">
             <Users className="h-5 w-5" />
@@ -181,7 +224,7 @@ const BotSharingSection = () => {
       </Card>
 
       {/* Quick Actions */}
-      {isPublic && (
+      {isPublic && isStripeConnected && (
         <div className="grid grid-cols-2 gap-3">
           <Button variant="outline" className="flex items-center gap-2">
             <Share2 className="h-4 w-4" />
