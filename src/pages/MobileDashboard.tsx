@@ -95,12 +95,6 @@ const MobileDashboard = () => {
       case "home":
         return (
           <div className="space-y-6">
-            {/* Welcome Section */}
-            <div className="text-center py-4">
-              <h2 className="text-2xl font-bold mb-2">Welcome back, {character.name}!</h2>
-              <p className="text-muted-foreground">Ready to create amazing content today?</p>
-            </div>
-
             {/* Character Evolution - More Prominent */}
             <CharacterEvolution character={character} />
             
@@ -179,49 +173,91 @@ const MobileDashboard = () => {
       case "library":
         return (
           <div className="space-y-6">
-            {/* Library Header */}
+            {/* Header with action button */}
             <div className="flex items-center justify-between">
               <div>
-                <h2 className="text-xl font-bold">Content Library</h2>
-                <p className="text-sm text-muted-foreground">Manage and organize your content</p>
+                <h2 className="text-2xl font-bold text-coach-primary">Content Library</h2>
+                <p className="text-sm text-muted-foreground mt-1">Manage and organize your content</p>
               </div>
-              <Button size="sm" className="gradient-bg">
+              <Button className="gradient-bg shadow-lg">
                 <Plus className="h-4 w-4 mr-2" />
                 Create
               </Button>
             </div>
 
-            {/* Quick Stats for Library */}
-            <div className="grid grid-cols-3 gap-3">
-              <Card className="p-3 text-center">
-                <div className="text-lg font-bold text-blue-600">{getContentsByStatus('draft').length}</div>
-                <div className="text-xs text-muted-foreground">Drafts</div>
+            {/* Enhanced Stats Cards */}
+            <div className="grid grid-cols-3 gap-4">
+              <Card className="p-4 text-center bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+                <div className="text-2xl font-bold text-blue-600 mb-1">{getContentsByStatus('draft').length}</div>
+                <div className="text-xs text-blue-700 font-medium">Drafts</div>
+                <div className="text-xs text-blue-600 mt-1">Ready to edit</div>
               </Card>
-              <Card className="p-3 text-center">
-                <div className="text-lg font-bold text-yellow-600">{getContentsByStatus('planned').length}</div>
-                <div className="text-xs text-muted-foreground">Planned</div>
+              <Card className="p-4 text-center bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200">
+                <div className="text-2xl font-bold text-yellow-600 mb-1">{getContentsByStatus('planned').length}</div>
+                <div className="text-xs text-yellow-700 font-medium">Planned</div>
+                <div className="text-xs text-yellow-600 mt-1">Scheduled</div>
               </Card>
-              <Card className="p-3 text-center">
-                <div className="text-lg font-bold text-green-600">{getContentsByStatus('published').length}</div>
-                <div className="text-xs text-muted-foreground">Published</div>
+              <Card className="p-4 text-center bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+                <div className="text-2xl font-bold text-green-600 mb-1">{getContentsByStatus('published').length}</div>
+                <div className="text-xs text-green-700 font-medium">Published</div>
+                <div className="text-xs text-green-600 mt-1">Live content</div>
               </Card>
             </div>
 
-            {/* Content Library Component */}
-            <ContentLibrary 
-              contents={contents}
-              onEdit={(content) => console.log('Edit:', content)}
-              onSchedule={(content) => console.log('Schedule:', content)}
-            />
+            {/* Content Library Component - Enhanced */}
+            <Card className="p-1 bg-gradient-to-r from-coach-primary/5 to-coach-secondary/5">
+              <ContentLibrary 
+                contents={contents}
+                onEdit={(content) => console.log('Edit:', content)}
+                onSchedule={(content) => console.log('Schedule:', content)}
+              />
+            </Card>
 
-            {/* Calendar Section - Improved */}
-            <div>
+            {/* Recent Activity */}
+            <Card className="p-6">
               <h3 className="font-semibold text-lg mb-4 flex items-center gap-2">
-                <Calendar className="h-5 w-5 text-coach-primary" />
-                Editorial Calendar
+                <Clock className="h-5 w-5 text-coach-primary" />
+                Recent Activity
               </h3>
+              <div className="space-y-3">
+                <div className="flex items-center gap-3 p-3 bg-soft-blue rounded-lg">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">New script created</p>
+                    <p className="text-xs text-muted-foreground">2 hours ago</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-3 bg-soft-green rounded-lg">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Content published to Instagram</p>
+                    <p className="text-xs text-muted-foreground">5 hours ago</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3 p-3 bg-soft-purple rounded-lg">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full"></div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium">Video concept saved</p>
+                    <p className="text-xs text-muted-foreground">1 day ago</p>
+                  </div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Editorial Calendar - Improved */}
+            <Card className="p-6 bg-gradient-to-br from-coach-primary/5 to-coach-secondary/10">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold text-lg flex items-center gap-2">
+                  <Calendar className="h-5 w-5 text-coach-primary" />
+                  Editorial Calendar
+                </h3>
+                <Button variant="outline" size="sm">
+                  <Plus className="h-3 w-3 mr-1" />
+                  Schedule
+                </Button>
+              </div>
               <ContentCalendar contents={contents} />
-            </div>
+            </Card>
           </div>
         );
 
