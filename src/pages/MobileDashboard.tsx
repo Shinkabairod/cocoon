@@ -1,553 +1,312 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { 
-  Target, BookOpen, FileText, Calendar, BarChart2, 
-  Brain, Camera, Settings, Home, MessageCircle, Plus,
-  Github, Database, Cloud, Users, Video, Lightbulb,
-  CheckCircle, ExternalLink, Bell, TrendingUp, Zap,
-  Star, Clock, Award, BookmarkPlus, Share2, Eye
-} from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Progress } from "@/components/ui/progress";
-import AICoach from "@/components/mobile/AICoach";
 import BottomNavigation from "@/components/mobile/BottomNavigation";
-import { useIsMobile } from "@/hooks/use-mobile";
+import IconGrid from "@/components/mobile/IconGrid";
+import AICoach from "@/components/mobile/AICoach";
+import CharacterEvolution from "@/components/character/CharacterEvolution";
+import useCharacter from "@/hooks/useCharacter";
+import { Card } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+import { 
+  Home, User, Bot, Library, 
+  Target, Lightbulb, FileText, Calendar, 
+  MessageSquare, Github, BookOpen, Users,
+  TrendingUp, Star, Trophy, Zap,
+  Video, Mic, Camera
+} from "lucide-react";
 
 const MobileDashboard = () => {
   const navigate = useNavigate();
-  const isMobile = useIsMobile();
+  const { character, addXP, completeContent } = useCharacter();
   const [activeTab, setActiveTab] = useState("home");
 
-  // External resources connections
-  const externalResources = [
-    { 
-      id: "github", 
-      name: "GitHub", 
-      icon: <Github className="h-5 w-5" />, 
-      connected: true,
-      description: "Code repositories and documentation",
-      lastSync: "2 hours ago"
-    },
-    { 
-      id: "notion", 
-      name: "Notion", 
-      icon: <FileText className="h-5 w-5" />, 
-      connected: false,
-      description: "Knowledge base and notes",
-      lastSync: "Never"
-    },
-    { 
-      id: "discord", 
-      name: "Discord", 
-      icon: <Users className="h-5 w-5" />, 
-      connected: true,
-      description: "Community discussions",
-      lastSync: "5 minutes ago"
-    },
-    { 
-      id: "obsidian", 
-      name: "Obsidian", 
-      icon: <Brain className="h-5 w-5" />, 
-      connected: false,
-      description: "Personal knowledge management",
-      lastSync: "Never"
+  // Fix navigation warning by using useEffect
+  useEffect(() => {
+    if (window.location.pathname === "/dashboard") {
+      navigate("/mobile", { replace: true });
     }
-  ];
+  }, [navigate]);
 
-  // AI Assistant tools
-  const aiTools = [
-    {
-      id: "concept-finding",
-      title: "Find Concepts",
-      icon: <Lightbulb className="h-4 w-4" />,
-      description: "Video, blog, post ideas",
-      count: "12 generated",
-      trending: true
-    },
-    {
-      id: "idea-generation",
-      title: "Generate Ideas",
-      icon: <Brain className="h-4 w-4" />,
-      description: "Creative content ideas",
-      count: "8 saved",
-      trending: false
-    },
-    {
-      id: "script-creation",
-      title: "Create Scripts",
-      icon: <FileText className="h-4 w-4" />,
-      description: "AI-powered scripts",
-      count: "24 created",
-      trending: true
-    },
-    {
-      id: "content-calendar",
-      title: "Plan Calendar",
-      icon: <Calendar className="h-4 w-4" />,
-      description: "Content scheduling",
-      count: "Next 7 days",
-      trending: false
-    },
-    {
-      id: "script-feedback",
-      title: "Script Feedback",
-      icon: <CheckCircle className="h-4 w-4" />,
-      description: "AI analysis & tips",
-      count: "3 reviews",
-      trending: false
-    },
-    {
-      id: "content-analytics",
-      title: "Analytics Insights",
-      icon: <TrendingUp className="h-4 w-4" />,
-      description: "Performance tracking",
-      count: "New insights",
-      trending: true
-    }
-  ];
-
-  // User stats with progress
-  const userStats = [
-    { label: "Scripts", value: "24", icon: <FileText className="h-4 w-4" />, progress: 75 },
-    { label: "Ideas", value: "48", icon: <Lightbulb className="h-4 w-4" />, progress: 60 },
-    { label: "Videos", value: "12", icon: <Video className="h-4 w-4" />, progress: 40 }
-  ];
-
-  // Daily challenges
-  const dailyChallenges = [
-    { id: 1, title: "Create 3 content ideas", reward: "10 XP", completed: true },
-    { id: 2, title: "Write a script", reward: "15 XP", completed: false },
-    { id: 3, title: "Connect a new resource", reward: "20 XP", completed: false }
-  ];
-
-  // Recent activity
-  const recentActivity = [
-    { action: "Generated script", item: "YouTube Tutorial", time: "2h ago", type: "script" },
-    { action: "Connected", item: "GitHub", time: "1d ago", type: "connection" },
-    { action: "Created ideas", item: "5 video concepts", time: "2d ago", type: "ideas" }
-  ];
-
-  // Bottom navigation icons
   const navIcons = [
-    { id: "home", icon: <Home />, label: "Home" },
-    { id: "resources", icon: <BookOpen />, label: "Resources" },
-    { id: "ai-tools", icon: <Brain />, label: "AI Tools" },
-    { id: "profile", icon: <Settings />, label: "Profile" },
+    { id: "home", icon: <Home className="h-5 w-5" />, label: "Accueil" },
+    { id: "resources", icon: <Library className="h-5 w-5" />, label: "Ressources" },
+    { id: "tools", icon: <Bot className="h-5 w-5" />, label: "IA Tools" },
+    { id: "profile", icon: <User className="h-5 w-5" />, label: "Profil" }
   ];
 
-  const handleResourceConnect = (resourceId: string) => {
-    console.log(`Connecting to ${resourceId}`);
-    // Here would be the actual connection logic
+  const homeIcons = [
+    { id: "character", icon: <Star className="h-6 w-6" />, label: "Mon Avatar" },
+    { id: "daily", icon: <Target className="h-6 w-6" />, label: "Défis" },
+    { id: "create", icon: <Video className="h-6 w-6" />, label: "Créer" },
+    { id: "achievements", icon: <Trophy className="h-6 w-6" />, label: "Succès" }
+  ];
+
+  const resourceIcons = [
+    { id: "github", icon: <Github className="h-6 w-6" />, label: "GitHub" },
+    { id: "notion", icon: <BookOpen className="h-6 w-6" />, label: "Notion" },
+    { id: "community", icon: <Users className="h-6 w-6" />, label: "Communauté" },
+    { id: "training", icon: <TrendingUp className="h-6 w-6" />, label: "Formation" }
+  ];
+
+  const aiToolIcons = [
+    { id: "concept", icon: <Lightbulb className="h-6 w-6" />, label: "Concepts" },
+    { id: "ideas", icon: <Zap className="h-6 w-6" />, label: "Idées" },
+    { id: "script", icon: <FileText className="h-6 w-6" />, label: "Scripts" },
+    { id: "calendar", icon: <Calendar className="h-6 w-6" />, label: "Planning" },
+    { id: "feedback", icon: <MessageSquare className="h-6 w-6" />, label: "Feedback" },
+    { id: "shoot", icon: <Camera className="h-6 w-6" />, label: "Tournage" }
+  ];
+
+  const handleIconClick = (id: string) => {
+    console.log(`Icon clicked: ${id}`);
+    // Here you would handle navigation to specific features
+    if (id === "create") {
+      completeContent(); // Award XP for content creation
+    }
   };
 
-  const handleToolClick = (toolId: string) => {
-    console.log(`Opening AI tool: ${toolId}`);
-    // Here would open the specific AI tool
+  const handleTabClick = (tabId: string) => {
+    setActiveTab(tabId);
   };
 
-  // Redirect to desktop dashboard if not mobile
-  if (!isMobile) {
-    navigate("/dashboard");
-    return null;
-  }
-
-  const HomeTab = () => (
-    <div className="space-y-4">
-      {/* User Welcome */}
-      <Card className="gradient-bg text-white">
-        <CardContent className="p-4">
-          <div className="flex items-center space-x-3">
-            <Avatar className="h-12 w-12 border-2 border-white/20">
-              <AvatarImage src="" />
-              <AvatarFallback className="bg-white/20 text-white">
-                JD
-              </AvatarFallback>
-            </Avatar>
-            <div>
-              <h2 className="font-bold text-lg">Welcome back, John!</h2>
-              <p className="text-sm text-white/80">Level 5 Creator • 245 XP</p>
-            </div>
-            <div className="ml-auto">
-              <Award className="h-6 w-6 text-yellow-300" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Quick Stats with Progress */}
-      <div className="grid grid-cols-3 gap-3">
-        {userStats.map((stat, index) => (
-          <Card key={index}>
-            <CardContent className="p-3 text-center">
-              <div className="flex justify-center mb-2">
-                {stat.icon}
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "home":
+        return (
+          <div className="space-y-6">
+            {/* Character Evolution Card */}
+            <CharacterEvolution character={character} />
+            
+            {/* Daily Challenge */}
+            <Card className="p-4">
+              <div className="flex items-center justify-between mb-3">
+                <h3 className="font-semibold flex items-center gap-2">
+                  <Target className="h-5 w-5 text-coach-primary" />
+                  Défi du Jour
+                </h3>
+                <Badge variant="outline">+100 XP</Badge>
               </div>
-              <div className="font-bold text-lg">{stat.value}</div>
-              <div className="text-xs text-muted-foreground mb-2">{stat.label}</div>
-              <Progress value={stat.progress} className="h-1" />
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Daily Challenges */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center">
-            <Target className="h-5 w-5 mr-2" />
-            Daily Challenges
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {dailyChallenges.map((challenge) => (
-            <div key={challenge.id} className="flex items-center justify-between p-2 rounded-lg bg-muted/30">
-              <div className="flex items-center space-x-2">
-                <CheckCircle className={`h-4 w-4 ${challenge.completed ? 'text-green-500' : 'text-muted-foreground'}`} />
-                <div>
-                  <div className="font-medium text-sm">{challenge.title}</div>
-                  <div className="text-xs text-muted-foreground">{challenge.reward}</div>
-                </div>
-              </div>
-              {!challenge.completed && (
-                <Button size="sm" variant="outline">
-                  Start
-                </Button>
-              )}
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-
-      {/* Quick AI Tools */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center">
-            <Zap className="h-5 w-5 mr-2" />
-            Quick Actions
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {aiTools.slice(0, 3).map((tool) => (
-            <div key={tool.id} className="flex items-center justify-between p-2 rounded-lg bg-muted/30">
-              <div className="flex items-center space-x-2">
-                {tool.icon}
-                <div>
-                  <div className="font-medium text-sm flex items-center gap-1">
-                    {tool.title}
-                    {tool.trending && <TrendingUp className="h-3 w-3 text-orange-500" />}
-                  </div>
-                  <div className="text-xs text-muted-foreground">{tool.count}</div>
-                </div>
-              </div>
-              <Button size="sm" className="gradient-bg" onClick={() => handleToolClick(tool.id)}>
-                Use
+              <p className="text-sm text-muted-foreground mb-3">
+                Créez un script de 30 secondes sur votre passion principale
+              </p>
+              <Progress value={0} className="h-2 mb-3" />
+              <Button 
+                size="sm" 
+                className="w-full gradient-bg"
+                onClick={() => addXP(100, 'content')}
+              >
+                Commencer le Défi
               </Button>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+            </Card>
 
-      {/* Recent Activity */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center">
-            <Clock className="h-5 w-5 mr-2" />
-            Recent Activity
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          {recentActivity.map((activity, index) => (
-            <div key={index} className="flex items-center space-x-3 p-2">
-              <div className="h-2 w-2 rounded-full bg-coach-primary"></div>
-              <div className="flex-1">
-                <div className="text-sm">
-                  <span className="font-medium">{activity.action}</span> {activity.item}
+            {/* Quick Actions */}
+            <div>
+              <h3 className="font-semibold mb-4">Actions Rapides</h3>
+              <IconGrid icons={homeIcons} onIconClick={handleIconClick} />
+            </div>
+
+            {/* Recent Activity */}
+            <Card className="p-4">
+              <h3 className="font-semibold mb-3">Activité Récente</h3>
+              <div className="space-y-2">
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span>Script "Mon Histoire" créé</span>
+                  <span className="text-xs text-muted-foreground ml-auto">+50 XP</span>
                 </div>
-                <div className="text-xs text-muted-foreground">{activity.time}</div>
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-    </div>
-  );
-
-  const ResourcesTab = () => (
-    <div className="space-y-4">
-      {/* Connection Status */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center">
-            <ExternalLink className="h-5 w-5 mr-2" />
-            External Resources
-          </CardTitle>
-          <CardDescription>Connect to boost your AI assistant's power</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {externalResources.map((resource) => (
-            <div key={resource.id} className="flex items-center justify-between p-3 rounded-lg border">
-              <div className="flex items-center space-x-3">
-                {resource.icon}
-                <div>
-                  <div className="font-medium">{resource.name}</div>
-                  <div className="text-sm text-muted-foreground">{resource.description}</div>
-                  <div className="text-xs text-muted-foreground">Last sync: {resource.lastSync}</div>
+                <div className="flex items-center gap-3 text-sm">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
+                  <span>Défi quotidien complété</span>
+                  <span className="text-xs text-muted-foreground ml-auto">+100 XP</span>
                 </div>
               </div>
-              <div className="flex items-center space-x-2">
-                {resource.connected ? (
-                  <Badge variant="secondary" className="bg-green-100 text-green-700">
-                    <div className="flex items-center gap-1">
-                      <div className="h-2 w-2 rounded-full bg-green-500"></div>
-                      Connected
+            </Card>
+          </div>
+        );
+
+      case "resources":
+        return (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-xl font-bold mb-4">Mes Ressources</h2>
+              
+              {/* External Connections */}
+              <Card className="p-4 mb-4">
+                <h3 className="font-semibold mb-3">Connexions Externes</h3>
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between p-2 border rounded">
+                    <div className="flex items-center gap-2">
+                      <Github className="h-5 w-5" />
+                      <span>GitHub</span>
                     </div>
-                  </Badge>
-                ) : (
-                  <Button 
-                    size="sm" 
-                    variant="outline"
-                    onClick={() => handleResourceConnect(resource.id)}
-                  >
-                    Connect
-                  </Button>
-                )}
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-
-      {/* Skills Progress */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg">Skills Development</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">Video Editing</span>
-              <span className="text-sm text-muted-foreground">65%</span>
-            </div>
-            <Progress value={65} className="h-2" />
-          </div>
-          <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">Storytelling</span>
-              <span className="text-sm text-muted-foreground">85%</span>
-            </div>
-            <Progress value={85} className="h-2" />
-          </div>
-          <div className="space-y-2">
-            <div className="flex justify-between items-center">
-              <span className="text-sm font-medium">SEO</span>
-              <span className="text-sm text-muted-foreground">30%</span>
-            </div>
-            <Progress value={30} className="h-2" />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Learning Resources */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center">
-            <BookOpen className="h-5 w-5 mr-2" />
-            Recommended Learning
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <div className="p-2 rounded-lg border border-dashed border-coach-primary bg-coach-primary/5">
-            <div className="flex items-center justify-between">
-              <div>
-                <div className="font-medium text-sm">Advanced Video Editing</div>
-                <div className="text-xs text-muted-foreground">Based on your GitHub projects</div>
-              </div>
-              <BookmarkPlus className="h-4 w-4 text-coach-primary" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-
-  const AIToolsTab = () => (
-    <div className="space-y-4">
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center">
-            <Brain className="h-5 w-5 mr-2" />
-            AI Content Tools
-          </CardTitle>
-          <CardDescription>Powered by your connected resources</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {aiTools.map((tool) => (
-            <div key={tool.id} className="p-3 rounded-lg border hover:shadow-md transition-shadow">
-              <div className="flex items-center justify-between mb-2">
-                <div className="flex items-center space-x-2">
-                  {tool.icon}
-                  <span className="font-medium flex items-center gap-1">
-                    {tool.title}
-                    {tool.trending && <TrendingUp className="h-3 w-3 text-orange-500" />}
-                  </span>
+                    <Badge variant="outline">Connecté</Badge>
+                  </div>
+                  <div className="flex items-center justify-between p-2 border rounded">
+                    <div className="flex items-center gap-2">
+                      <BookOpen className="h-5 w-5" />
+                      <span>Notion</span>
+                    </div>
+                    <Button variant="outline" size="sm">Connecter</Button>
+                  </div>
                 </div>
-                <Button size="sm" className="gradient-bg" onClick={() => handleToolClick(tool.id)}>
-                  Open
+              </Card>
+
+              <IconGrid icons={resourceIcons} onIconClick={handleIconClick} />
+            </div>
+
+            {/* Skills & Knowledge */}
+            <Card className="p-4">
+              <h3 className="font-semibold mb-3">Compétences & Connaissances</h3>
+              <div className="space-y-3">
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span>Créativité</span>
+                    <span>{character.stats.creativity}/100</span>
+                  </div>
+                  <Progress value={character.stats.creativity} className="h-2" />
+                </div>
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span>Technique</span>
+                    <span>{character.stats.technical}/100</span>
+                  </div>
+                  <Progress value={character.stats.technical} className="h-2" />
+                </div>
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span>Marketing</span>
+                    <span>{character.stats.marketing}/100</span>
+                  </div>
+                  <Progress value={character.stats.marketing} className="h-2" />
+                </div>
+              </div>
+            </Card>
+          </div>
+        );
+
+      case "tools":
+        return (
+          <div className="space-y-6">
+            <div>
+              <h2 className="text-xl font-bold mb-4">Outils IA</h2>
+              <p className="text-muted-foreground mb-6">
+                Utilisez l'intelligence artificielle pour booster votre création de contenu
+              </p>
+              
+              <IconGrid icons={aiToolIcons} onIconClick={handleIconClick} />
+            </div>
+
+            {/* AI Insights */}
+            <Card className="p-4">
+              <h3 className="font-semibold mb-3">Insights IA du Jour</h3>
+              <div className="space-y-3">
+                <div className="p-3 bg-soft-blue rounded-lg">
+                  <p className="text-sm text-blue-800">
+                    💡 Les vidéos courtes (30-60s) génèrent 3x plus d'engagement cette semaine
+                  </p>
+                </div>
+                <div className="p-3 bg-soft-green rounded-lg">
+                  <p className="text-sm text-green-800">
+                    🎯 Votre audience est plus active entre 18h-21h
+                  </p>
+                </div>
+              </div>
+            </Card>
+          </div>
+        );
+
+      case "profile":
+        return (
+          <div className="space-y-6">
+            <Card className="p-6">
+              <div className="text-center space-y-4">
+                <div className="w-20 h-20 bg-gradient-to-br from-coach-primary to-coach-secondary rounded-full mx-auto flex items-center justify-center text-white text-2xl font-bold">
+                  {character.name[0]}
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold">{character.name}</h2>
+                  <p className="text-muted-foreground">{character.type} • Niveau {character.level}</p>
+                </div>
+              </div>
+            </Card>
+
+            {/* Stats Overview */}
+            <Card className="p-4">
+              <h3 className="font-semibold mb-4">Mes Statistiques</h3>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-3 bg-soft-purple rounded-lg">
+                  <div className="text-2xl font-bold text-coach-primary">{character.contentCreated}</div>
+                  <div className="text-sm text-muted-foreground">Contenus Créés</div>
+                </div>
+                <div className="text-center p-3 bg-soft-green rounded-lg">
+                  <div className="text-2xl font-bold text-green-600">${character.revenue}</div>
+                  <div className="text-sm text-muted-foreground">Revenus Générés</div>
+                </div>
+                <div className="text-center p-3 bg-soft-blue rounded-lg">
+                  <div className="text-2xl font-bold text-blue-600">{character.followers}</div>
+                  <div className="text-sm text-muted-foreground">Followers</div>
+                </div>
+                <div className="text-center p-3 bg-soft-orange rounded-lg">
+                  <div className="text-2xl font-bold text-orange-600">{character.level}</div>
+                  <div className="text-sm text-muted-foreground">Niveau Atteint</div>
+                </div>
+              </div>
+            </Card>
+
+            {/* Settings */}
+            <Card className="p-4">
+              <h3 className="font-semibold mb-3">Paramètres</h3>
+              <div className="space-y-2">
+                <Button variant="ghost" className="w-full justify-start">
+                  Modifier le Profil
+                </Button>
+                <Button variant="ghost" className="w-full justify-start">
+                  Connexions Externes
+                </Button>
+                <Button variant="ghost" className="w-full justify-start">
+                  Notifications
                 </Button>
               </div>
-              <p className="text-sm text-muted-foreground mb-1">{tool.description}</p>
-              <p className="text-xs text-coach-primary">{tool.count}</p>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+            </Card>
+          </div>
+        );
 
-      {/* AI Insights */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center">
-            <Eye className="h-5 w-5 mr-2" />
-            AI Insights
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <div className="p-3 rounded-lg bg-blue-50 border border-blue-200">
-            <div className="flex items-start space-x-2">
-              <Lightbulb className="h-4 w-4 text-blue-600 mt-0.5" />
-              <div>
-                <div className="text-sm font-medium text-blue-900">Content Opportunity</div>
-                <div className="text-xs text-blue-700">Your GitHub activity suggests you could create tutorials on React hooks</div>
-              </div>
-            </div>
-          </div>
-          <div className="p-3 rounded-lg bg-green-50 border border-green-200">
-            <div className="flex items-start space-x-2">
-              <TrendingUp className="h-4 w-4 text-green-600 mt-0.5" />
-              <div>
-                <div className="text-sm font-medium text-green-900">Trending Topic</div>
-                <div className="text-xs text-green-700">AI development is trending in your networks - perfect timing!</div>
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
-  );
-
-  const ProfileTab = () => (
-    <div className="space-y-4">
-      {/* User Profile */}
-      <Card>
-        <CardContent className="p-4 text-center">
-          <Avatar className="h-20 w-20 mx-auto mb-3">
-            <AvatarImage src="" />
-            <AvatarFallback className="bg-gradient-to-br from-coach-primary to-coach-secondary text-white text-2xl">
-              JD
-            </AvatarFallback>
-          </Avatar>
-          <h2 className="font-bold text-xl">John Doe</h2>
-          <p className="text-muted-foreground">Content Creator</p>
-          <div className="flex items-center justify-center gap-2 mt-2">
-            <Badge variant="secondary">Free Plan</Badge>
-            <Badge variant="outline" className="border-coach-primary text-coach-primary">
-              Level 5
-            </Badge>
-          </div>
-          <div className="mt-3">
-            <div className="text-sm text-muted-foreground mb-1">Next level in 55 XP</div>
-            <Progress value={78} className="h-2" />
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Achievements */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center">
-            <Award className="h-5 w-5 mr-2" />
-            Achievements
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-3 gap-3">
-          <div className="text-center">
-            <div className="h-12 w-12 mx-auto rounded-full bg-yellow-100 flex items-center justify-center mb-2">
-              <Star className="h-6 w-6 text-yellow-600" />
-            </div>
-            <div className="text-xs font-medium">First Script</div>
-          </div>
-          <div className="text-center">
-            <div className="h-12 w-12 mx-auto rounded-full bg-blue-100 flex items-center justify-center mb-2">
-              <Users className="h-6 w-6 text-blue-600" />
-            </div>
-            <div className="text-xs font-medium">Community</div>
-          </div>
-          <div className="text-center opacity-50">
-            <div className="h-12 w-12 mx-auto rounded-full bg-gray-100 flex items-center justify-center mb-2">
-              <Share2 className="h-6 w-6 text-gray-400" />
-            </div>
-            <div className="text-xs font-medium">Viral Content</div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Settings */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg">Settings</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          <Button variant="outline" className="w-full justify-start">
-            <Settings className="h-4 w-4 mr-2" />
-            Account Settings
-          </Button>
-          <Button variant="outline" className="w-full justify-start">
-            <Bell className="h-4 w-4 mr-2" />
-            Notifications
-          </Button>
-          <Button variant="outline" className="w-full justify-start">
-            <Database className="h-4 w-4 mr-2" />
-            Export Data
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
-  );
+      default:
+        return null;
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto p-4 pb-20">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsContent value="home" className="mt-0">
-            <HomeTab />
-          </TabsContent>
-          
-          <TabsContent value="resources" className="mt-0">
-            <ResourcesTab />
-          </TabsContent>
-          
-          <TabsContent value="ai-tools" className="mt-0">
-            <AIToolsTab />
-          </TabsContent>
-          
-          <TabsContent value="profile" className="mt-0">
-            <ProfileTab />
-          </TabsContent>
-        </Tabs>
+    <div className="min-h-screen bg-background pb-20">
+      {/* Header */}
+      <div className="sticky top-0 z-10 bg-background border-b p-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-bold">AI Content Coach</h1>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-muted-foreground">Niveau {character.level}</span>
+            <div className="w-8 h-8 bg-gradient-to-br from-coach-primary to-coach-secondary rounded-full flex items-center justify-center text-white text-sm font-bold">
+              {character.name[0]}
+            </div>
+          </div>
+        </div>
       </div>
-      
-      {/* Floating AI Coach */}
+
+      {/* Content */}
+      <div className="p-4">
+        {renderTabContent()}
+      </div>
+
+      {/* AI Coach Floating Button */}
       <AICoach />
-      
+
       {/* Bottom Navigation */}
       <BottomNavigation 
         icons={navIcons} 
-        activeIcon={activeTab} 
-        onIconClick={setActiveTab}
+        activeIcon={activeTab}
+        onIconClick={handleTabClick}
       />
     </div>
   );
