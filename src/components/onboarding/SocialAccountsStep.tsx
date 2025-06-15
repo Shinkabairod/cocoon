@@ -5,8 +5,15 @@ import { Card } from "@/components/ui/card";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import { Platform } from "@/types/onboarding";
 import OnboardingLayout from "./OnboardingLayout";
-import { Instagram, Twitter, Youtube, Linkedin, Globe, Mic, ExternalLink } from "lucide-react";
+import { Instagram, Youtube, Linkedin, Globe, Mic, ExternalLink } from "lucide-react";
 import { useState } from "react";
+
+// X (Twitter) logo component
+const XLogo = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" className={className} fill="currentColor">
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+  </svg>
+);
 
 const SocialAccountsStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
@@ -44,10 +51,10 @@ const SocialAccountsStep = () => {
     },
     { 
       platform: 'Twitter', 
-      icon: <Twitter className="h-5 w-5" />, 
+      icon: <XLogo className="h-5 w-5" />, 
       placeholder: '@username',
       connectUrl: 'https://twitter.com/',
-      color: 'text-blue-500'
+      color: 'text-black'
     },
     { 
       platform: 'LinkedIn', 
@@ -86,12 +93,12 @@ const SocialAccountsStep = () => {
 
   return (
     <OnboardingLayout 
-      title="Comptes Réseaux Sociaux" 
-      subtitle="Connectez vos comptes existants (optionnel)"
+      title="Social Media Accounts" 
+      subtitle="Connect your existing accounts (optional)"
     >
       <div className="space-y-4">
         <p className="text-sm text-muted-foreground">
-          Cela nous aide à comprendre votre présence actuelle et à fournir des recommandations personnalisées.
+          This helps us understand your current presence and provide personalized recommendations.
         </p>
         
         <div className="space-y-3">
@@ -110,7 +117,7 @@ const SocialAccountsStep = () => {
                         className="h-6 px-2 text-xs"
                       >
                         <ExternalLink className="h-3 w-3 mr-1" />
-                        Se connecter
+                        Connect
                       </Button>
                     )}
                   </div>
@@ -127,7 +134,7 @@ const SocialAccountsStep = () => {
 
         <div className="bg-blue-50 p-4 rounded-md">
           <p className="text-sm text-blue-800">
-            💡 <strong>Astuce :</strong> Cliquez sur "Se connecter" pour ouvrir directement l'application si vous êtes déjà connecté sur votre téléphone !
+            💡 <strong>Tip:</strong> Click "Connect" to open the app directly if you're already logged in on your phone!
           </p>
         </div>
         
@@ -136,7 +143,7 @@ const SocialAccountsStep = () => {
             className="gradient-bg w-full"
             onClick={handleContinue}
           >
-            Continuer
+            Continue
           </Button>
         </div>
       </div>
