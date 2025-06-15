@@ -16,8 +16,8 @@ const initialData: OnboardingData = {
   onboardingStage: 'Initial Guidance'
 };
 
-// Total number of steps in the onboarding process (added pricing step)
-const TOTAL_STEPS = 23;
+// Total number of steps in the reorganized onboarding process
+const TOTAL_STEPS = 22;
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 

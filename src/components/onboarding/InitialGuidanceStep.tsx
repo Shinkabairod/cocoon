@@ -7,14 +7,14 @@ import { Compass, HelpCircle, Lightbulb, Smartphone } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
 const InitialGuidanceStep = () => {
-  const { onboardingData, updateOnboardingData } = useOnboarding();
+  const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
   const isMobile = useIsMobile();
   
   const handleDirectionChoice = (hasDirection: boolean) => {
     updateOnboardingData({ 
-      hasContentDirection: hasDirection,
-      step: 2 // Move to the next step - either experience or creator discovery
+      hasContentDirection: hasDirection
     });
+    nextStep();
   };
   
   return (

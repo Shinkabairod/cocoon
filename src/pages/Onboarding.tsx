@@ -8,7 +8,7 @@ import LearningStep from "@/components/onboarding/LearningStep";
 import MonetizationStep from "@/components/onboarding/MonetizationStep";
 import SummaryStep from "@/components/onboarding/SummaryStep";
 
-// New decomposed steps
+// Personal & Profile Steps
 import ExperienceLevelStep from "@/components/onboarding/steps/ExperienceLevelStep";
 import ContentGoalStep from "@/components/onboarding/steps/ContentGoalStep";
 import CountrySelectionStep from "@/components/onboarding/steps/CountrySelectionStep";
@@ -17,14 +17,20 @@ import BusinessTypeStep from "@/components/onboarding/steps/BusinessTypeStep";
 import BusinessDescriptionStep from "@/components/onboarding/steps/BusinessDescriptionStep";
 import AudienceGenerationStep from "@/components/onboarding/steps/AudienceGenerationStep";
 import ImpactGoalsStep from "@/components/onboarding/steps/ImpactGoalsStep";
+
+// Creator Discovery Steps (optional path)
 import CreatorPassionsStep from "@/components/onboarding/steps/CreatorPassionsStep";
 import CreatorPersonalityStep from "@/components/onboarding/steps/CreatorPersonalityStep";
 import CreatorValuesStep from "@/components/onboarding/steps/CreatorValuesStep";
 import CreatorPathSummaryStep from "@/components/onboarding/steps/CreatorPathSummaryStep";
+
+// Content & Platform Steps
 import ContentTypesStep from "@/components/onboarding/steps/ContentTypesStep";
 import PlatformsStep from "@/components/onboarding/steps/PlatformsStep";
 import ContentCategoriesStep from "@/components/onboarding/steps/ContentCategoriesStep";
 import FilmingLocationsStep from "@/components/onboarding/steps/FilmingLocationsStep";
+
+// Learning & Growth Steps
 import ResourcesTagsStep from "@/components/onboarding/steps/ResourcesTagsStep";
 import LearningStyleStep from "@/components/onboarding/steps/LearningStyleStep";
 import SkillsSelectionStep from "@/components/onboarding/steps/SkillsSelectionStep";
@@ -35,8 +41,8 @@ const Onboarding = () => {
   const { onboardingData } = useOnboarding();
   
   const renderStep = () => {
-    // Check if user is taking the creator path discovery flow
-    if (onboardingData.hasContentDirection === false && onboardingData.step > 1 && onboardingData.step < 6) {
+    // Creator Path Discovery Flow (steps 2-5 for users without clear direction)
+    if (onboardingData.hasContentDirection === false && onboardingData.step >= 2 && onboardingData.step <= 5) {
       switch (onboardingData.step) {
         case 2:
           return <CreatorPassionsStep />;
@@ -46,21 +52,30 @@ const Onboarding = () => {
           return <CreatorValuesStep />;
         case 5:
           return <CreatorPathSummaryStep />;
+        default:
+          return <InitialGuidanceStep />;
       }
     }
     
-    // Main onboarding flow
+    // Main Onboarding Flow (reorganized for better coherence)
     switch (onboardingData.step) {
+      // 1. Welcome & Direction
       case 1:
         return <InitialGuidanceStep />;
+      
+      // 2-3. Personal Profile
       case 2:
         return <ExperienceLevelStep />;
       case 3:
         return <ContentGoalStep />;
+      
+      // 4-5. Location & Business Context
       case 4:
         return <CountrySelectionStep />;
       case 5:
         return <CitySelectionStep />;
+      
+      // 6-9. Business & Audience Profile
       case 6:
         return <BusinessTypeStep />;
       case 7:
@@ -69,18 +84,24 @@ const Onboarding = () => {
         return <AudienceGenerationStep />;
       case 9:
         return <ImpactGoalsStep />;
+      
+      // 10-14. Content Strategy
       case 10:
-        return <SocialAccountsStep />;
-      case 11:
         return <ContentTypesStep />;
-      case 12:
+      case 11:
         return <PlatformsStep />;
-      case 13:
+      case 12:
         return <ContentCategoriesStep />;
-      case 14:
+      case 13:
         return <FilmingLocationsStep />;
+      case 14:
+        return <SocialAccountsStep />;
+      
+      // 15. Technical Challenges & Resources
       case 15:
         return <ChallengesStep />;
+      
+      // 16-19. Learning & Development
       case 16:
         return <ResourcesStep />;
       case 17:
@@ -89,14 +110,16 @@ const Onboarding = () => {
         return <LearningStyleStep />;
       case 19:
         return <SkillsSelectionStep />;
+      
+      // 20-22. Goals & Finalization
       case 20:
         return <SuccessMetricsStep />;
       case 21:
         return <MonetizationStep />;
       case 22:
         return <SummaryStep />;
-      case 23:
-        return <PricingStep />;
+      
+      // Fallback
       default:
         return <InitialGuidanceStep />;
     }
