@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import OnboardingLayout from "../OnboardingLayout";
@@ -15,11 +14,11 @@ const successMetricsCategories = {
     title: "Audience Growth",
     icon: Users,
     metrics: [
-      "Reach 1K followers",
-      "Reach 10K followers", 
-      "Reach 100K followers",
-      "Reach 1M followers",
-      "Get 100K views per month",
+      "0 to 10K followers",
+      "10K to 100K followers", 
+      "100K to 1M followers",
+      "Reach 1M+ followers",
+      "Faire du viral content",
       "Build an engaged community"
     ]
   },
@@ -27,8 +26,9 @@ const successMetricsCategories = {
     title: "Revenue Goals",
     icon: DollarSign,
     metrics: [
-      "Generate $1K monthly revenue",
-      "Generate $5K monthly revenue",
+      "Generate $1K-5K monthly revenue",
+      "Generate $5K-20K monthly revenue",
+      "Generate $20K+ monthly revenue",
       "Get brand partnerships",
       "Launch my own product/service",
       "Quit my day job"
@@ -39,9 +39,9 @@ const successMetricsCategories = {
     icon: TrendingUp,
     metrics: [
       "Become a recognized expert",
-      "Create viral content",
       "Help 1000+ people",
-      "Inspire others in my field"
+      "Inspire others in my field",
+      "Create educational content"
     ]
   }
 };
