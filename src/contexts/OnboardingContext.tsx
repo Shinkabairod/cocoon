@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { OnboardingData } from '@/types/onboarding';
 
@@ -16,8 +15,8 @@ const initialData: OnboardingData = {
   onboardingStage: 'Initial Guidance'
 };
 
-// Total number of steps in the reorganized onboarding process
-const TOTAL_STEPS = 22;
+// Total number of steps in the reorganized onboarding process (removed Educational Resources step)
+const TOTAL_STEPS = 21;
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 

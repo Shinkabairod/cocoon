@@ -3,7 +3,6 @@ import { useOnboarding } from "@/contexts/OnboardingContext";
 import InitialGuidanceStep from "@/components/onboarding/InitialGuidanceStep";
 import SocialAccountsStep from "@/components/onboarding/SocialAccountsStep";
 import ChallengesStep from "@/components/onboarding/challenges/ChallengesStep";
-import ResourcesStep from "@/components/onboarding/ResourcesStep";
 import LearningStep from "@/components/onboarding/LearningStep";
 import MonetizationStep from "@/components/onboarding/MonetizationStep";
 import SummaryStep from "@/components/onboarding/SummaryStep";
@@ -101,22 +100,20 @@ const Onboarding = () => {
       case 15:
         return <ChallengesStep />;
       
-      // 16-19. Learning & Development
+      // 16-18. Learning & Development (removed Educational Resources step)
       case 16:
-        return <ResourcesStep />;
-      case 17:
         return <ResourcesTagsStep />;
-      case 18:
+      case 17:
         return <LearningStyleStep />;
-      case 19:
+      case 18:
         return <SkillsSelectionStep />;
       
-      // 20-22. Goals & Finalization
-      case 20:
+      // 19-21. Goals & Finalization
+      case 19:
         return <SuccessMetricsStep />;
-      case 21:
+      case 20:
         return <MonetizationStep />;
-      case 22:
+      case 21:
         return <SummaryStep />;
       
       // Fallback
