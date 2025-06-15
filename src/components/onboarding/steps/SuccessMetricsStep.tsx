@@ -18,7 +18,7 @@ const successMetricsCategories = {
       "10K to 100K followers", 
       "100K to 1M followers",
       "Reach 1M+ followers",
-      "Faire du viral content",
+      "Create viral content",
       "Build an engaged community"
     ]
   },
