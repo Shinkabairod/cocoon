@@ -5,8 +5,23 @@ import OnboardingLayout from "../OnboardingLayout";
 import { Badge } from "@/components/ui/badge";
 import { Target } from "lucide-react";
 import { useState } from "react";
-import { successMetrics } from "@/components/onboarding/content-type/contentTypeData";
 import { Textarea } from "@/components/ui/textarea";
+
+// More focused and diverse success metrics
+const successMetrics = [
+  "Reach 1K followers",
+  "Reach 10K followers", 
+  "Get 100K views per month",
+  "Generate $1K monthly revenue",
+  "Generate $5K monthly revenue",
+  "Build an engaged community",
+  "Get brand partnerships",
+  "Launch my own product/service",
+  "Become a recognized expert",
+  "Create viral content",
+  "Quit my day job",
+  "Help 1000+ people"
+];
 
 const SuccessMetricsStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
@@ -35,7 +50,7 @@ const SuccessMetricsStep = () => {
   return (
     <OnboardingLayout 
       title="Your Definition of Success" 
-      subtitle="What would success look like for you in the next 6 months?"
+      subtitle="What would success look like for you in the next 6-12 months?"
     >
       <div className="space-y-6">
         <div className="flex justify-center mb-4">
@@ -43,9 +58,9 @@ const SuccessMetricsStep = () => {
         </div>
         
         <div>
-          <p className="text-sm mb-3">Select all that apply to your goals</p>
+          <p className="text-sm mb-4 text-center">Select your main goals (choose 1-3)</p>
           
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="grid grid-cols-1 gap-2 mb-6">
             {successMetrics.map((metric) => {
               const isSelected = selectedMetrics.includes(metric);
               return (
@@ -53,8 +68,11 @@ const SuccessMetricsStep = () => {
                   key={metric}
                   variant={isSelected ? "default" : "outline"}
                   className={`
-                    px-3 py-1.5 text-sm cursor-pointer 
-                    ${isSelected ? 'bg-primary hover:bg-primary/80' : 'hover:bg-muted'}
+                    px-4 py-3 text-sm cursor-pointer transition-all duration-200 justify-center
+                    ${isSelected 
+                      ? 'bg-primary hover:bg-primary/90 text-primary-foreground shadow-md' 
+                      : 'hover:bg-muted hover:border-primary/50'
+                    }
                   `}
                   onClick={() => toggleMetric(metric)}
                 >
@@ -65,12 +83,12 @@ const SuccessMetricsStep = () => {
           </div>
           
           <div>
-            <p className="text-sm mb-2">Or describe your own success metric:</p>
+            <p className="text-sm mb-2 font-medium">Or describe your own success goal:</p>
             <Textarea
-              placeholder="E.g., Creating a content library of 50 videos, Building a community of like-minded creators..."
+              placeholder="E.g., Create educational content that helps students learn faster, Build a personal brand around sustainable living..."
               value={customGoal}
               onChange={(e) => setCustomGoal(e.target.value)}
-              className="h-24"
+              className="h-20"
             />
           </div>
         </div>
