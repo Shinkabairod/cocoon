@@ -23,13 +23,13 @@ const BusinessDescriptionStep = () => {
   
   const examplesByType: Record<string, string> = {
     'Personal Brand': "I'm a fitness coach specializing in home workouts and nutrition for busy professionals. I want to create content that motivates people to stay fit despite their busy schedules.",
-    'Small Business': "We run a local bakery that specializes in gluten-free and vegan treats. We want to showcase our process, share recipes, and connect with health-conscious customers.",
-    'Startup': "Our tech startup has developed an app that helps people track their carbon footprint. We want to create educational content around sustainability and promote our solution.",
-    'Established Company': "We're a furniture retailer with 5 locations across the country. We want to showcase our designs, share interior design tips, and connect with customers online.",
-    'Agency': "We're a digital marketing agency that helps small businesses grow their online presence. We want to create content that educates entrepreneurs about marketing strategies.",
-    'Educational Institution': "We're a language school that offers online courses. We want to create engaging content that helps people learn languages and showcases our teaching methods.",
-    'Non-Profit': "We're a non-profit focused on ocean conservation. We want to create awareness about marine pollution and inspire people to take action.",
-    'Other': "I create content about sustainable living and zero-waste lifestyle tips to help people reduce their environmental impact."
+    'Small Business': "We run a local bakery that specializes in gluten-free and vegan treats. We want to showcase our baking process, share recipes, and connect with health-conscious customers in our community.",
+    'Startup': "Our tech startup has developed an AI-powered app that helps remote workers maintain work-life balance. We want to create educational content around productivity and mental health while building awareness for our solution.",
+    'Established Company': "We're a furniture retailer with 5 locations across the country. We want to showcase our designs, share interior design tips, and connect with customers online to drive both online and in-store sales.",
+    'Agency': "We're a digital marketing agency that helps small businesses grow their online presence. We want to create content that educates entrepreneurs about marketing strategies and showcases our expertise to attract new clients.",
+    'Educational Institution': "We're a language school that offers online courses. We want to create engaging content that helps people learn languages faster and showcases our innovative teaching methods.",
+    'Non-Profit': "We're a non-profit focused on ocean conservation. We want to create awareness about marine pollution and inspire people to take action in their daily lives to protect our oceans.",
+    'Other': "I'm a content creator focused on sustainable living and zero-waste lifestyle tips. I want to help people reduce their environmental impact through practical advice and inspiring examples."
   };
   
   return (
