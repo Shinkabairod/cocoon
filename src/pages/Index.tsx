@@ -1,10 +1,12 @@
-
 import Layout from "@/components/layout/Layout";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Book, Video, Mic, Sparkles, Zap, Target, Users, ArrowRight } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Index = () => {
+  const { user } = useAuth();
+  
   const quickFeatures = [
     {
       icon: <Zap className="h-6 w-6 text-white" />,
@@ -42,9 +44,15 @@ const Index = () => {
           <Link to="/about">
             <Button variant="ghost">About</Button>
           </Link>
-          <Link to="/onboarding">
-            <Button className="gradient-bg">Get Started</Button>
-          </Link>
+          {user ? (
+            <Link to="/dashboard">
+              <Button className="gradient-bg">Dashboard</Button>
+            </Link>
+          ) : (
+            <Link to="/auth">
+              <Button className="gradient-bg">Get Started</Button>
+            </Link>
+          )}
         </div>
       </nav>
 
@@ -67,12 +75,21 @@ const Index = () => {
             </p>
             
             <div className="space-y-3">
-              <Link to="/onboarding" className="block">
-                <Button size="lg" className="gradient-bg text-white w-full">
-                  Start Creating
-                  <ArrowRight className="h-4 w-4 ml-2" />
-                </Button>
-              </Link>
+              {user ? (
+                <Link to="/dashboard" className="block">
+                  <Button size="lg" className="gradient-bg text-white w-full">
+                    Go to Dashboard
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </Link>
+              ) : (
+                <Link to="/auth" className="block">
+                  <Button size="lg" className="gradient-bg text-white w-full">
+                    Start Creating
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
+                </Link>
+              )}
               <Link to="/about" className="block">
                 <Button size="lg" variant="outline" className="w-full">
                   Learn More
@@ -132,12 +149,21 @@ const Index = () => {
               Join creators who are using AI to create better content faster.
             </p>
             
-            <Link to="/onboarding">
-              <Button size="lg" className="gradient-bg text-white w-full">
-                Start Your Journey
-                <Sparkles className="h-4 w-4 ml-2" />
-              </Button>
-            </Link>
+            {user ? (
+              <Link to="/dashboard">
+                <Button size="lg" className="gradient-bg text-white w-full">
+                  Go to Dashboard
+                  <Sparkles className="h-4 w-4 ml-2" />
+                </Button>
+              </Link>
+            ) : (
+              <Link to="/auth">
+                <Button size="lg" className="gradient-bg text-white w-full">
+                  Start Your Journey
+                  <Sparkles className="h-4 w-4 ml-2" />
+                </Button>
+              </Link>
+            )}
             
             <p className="text-xs text-muted-foreground mt-4">
               No credit card required • Get started in 2 minutes

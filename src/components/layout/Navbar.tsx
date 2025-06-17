@@ -2,8 +2,12 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Sparkles } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import UserMenu from "@/components/auth/UserMenu";
 
 const Navbar = () => {
+  const { user } = useAuth();
+
   return (
     <nav className="border-b w-full py-4 px-6 flex justify-between items-center">
       <Link to="/" className="flex items-center gap-2">
@@ -19,9 +23,18 @@ const Navbar = () => {
         <Link to="/pricing">
           <Button variant="ghost">Pricing</Button>
         </Link>
-        <Link to="/onboarding">
-          <Button className="gradient-bg">Get Started</Button>
-        </Link>
+        {user ? (
+          <div className="flex items-center gap-4">
+            <Link to="/dashboard">
+              <Button variant="ghost">Dashboard</Button>
+            </Link>
+            <UserMenu />
+          </div>
+        ) : (
+          <Link to="/auth">
+            <Button className="gradient-bg">Get Started</Button>
+          </Link>
+        )}
       </div>
     </nav>
   );
