@@ -1,10 +1,15 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { useAITools } from '@/hooks/useAITools';
 import { 
   Lightbulb, FileText, Zap, MessageSquare, BarChart3, 
-  TrendingUp, Plus, Eye, Github, BookOpen, Shield
+  TrendingUp, Plus, Eye, Github, BookOpen, Shield, Loader2
 } from 'lucide-react';
 
 interface ToolsTabProps {
@@ -12,6 +17,90 @@ interface ToolsTabProps {
 }
 
 const ToolsTab = ({ onIconClick }: ToolsTabProps) => {
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogType, setDialogType] = useState<string>('');
+  const [inputValue, setInputValue] = useState('');
+  const [result, setResult] = useState<string>('');
+  
+  const { 
+    loading, 
+    generateConcepts, 
+    generateScript, 
+    generateIdeas, 
+    getFeedback, 
+    analyzePerformance, 
+    optimizeContent 
+  } = useAITools();
+
+  const handleToolClick = async (toolId: string) => {
+    setDialogType(toolId);
+    setResult('');
+    setInputValue('');
+    
+    if (toolId === 'concept') {
+      setDialogOpen(true);
+      const concepts = await generateConcepts();
+      setResult(concepts);
+    } else if (toolId === 'analytics') {
+      setDialogOpen(true);
+      const analysis = await analyzePerformance();
+      setResult(analysis);
+    } else if (toolId === 'script' || toolId === 'ideas' || toolId === 'feedback' || toolId === 'optimize') {
+      setDialogOpen(true);
+    } else {
+      onIconClick(toolId);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!inputValue.trim()) return;
+    
+    try {
+      let response = '';
+      
+      switch (dialogType) {
+        case 'script':
+          response = await generateScript(inputValue);
+          break;
+        case 'ideas':
+          response = await generateIdeas(inputValue);
+          break;
+        case 'feedback':
+          response = await getFeedback(inputValue);
+          break;
+        case 'optimize':
+          response = await optimizeContent(inputValue);
+          break;
+      }
+      
+      setResult(response);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const getDialogTitle = () => {
+    switch (dialogType) {
+      case 'concept': return 'Concepts Instagram';
+      case 'script': return 'Générateur de Script';
+      case 'ideas': return 'Générateur d\'Idées';
+      case 'feedback': return 'Feedback IA';
+      case 'analytics': return 'Analyse de Performance';
+      case 'optimize': return 'Optimisation de Contenu';
+      default: return 'Outil IA';
+    }
+  };
+
+  const getInputPlaceholder = () => {
+    switch (dialogType) {
+      case 'script': return 'Décrivez le sujet de votre vidéo...';
+      case 'ideas': return 'Quelle catégorie de contenu vous intéresse ?';
+      case 'feedback': return 'Collez votre contenu ici pour obtenir un feedback...';
+      case 'optimize': return 'Collez le contenu à optimiser...';
+      default: return 'Entrez votre demande...';
+    }
+  };
+
   const aiToolCategories = [
     {
       title: "Content Creation",
@@ -62,10 +151,16 @@ const ToolsTab = ({ onIconClick }: ToolsTabProps) => {
             {category.icons.map((tool) => (
               <button
                 key={tool.id}
-                onClick={() => onIconClick(tool.id)}
-                className="flex flex-col items-center p-4 rounded-lg bg-soft-blue hover:bg-soft-blue/80 transition-colors"
+                onClick={() => handleToolClick(tool.id)}
+                disabled={loading}
+                className="flex flex-col items-center p-4 rounded-lg bg-soft-blue hover:bg-soft-blue/80 transition-colors disabled:opacity-50"
               >
-                <div className="text-coach-primary mb-2">{tool.icon}</div>
+                <div className="text-coach-primary mb-2">
+                  {loading && ['concept', 'script', 'ideas', 'feedback', 'analytics', 'optimize'].includes(tool.id) ? 
+                    <Loader2 className="h-6 w-6 animate-spin" /> : 
+                    tool.icon
+                  }
+                </div>
                 <span className="text-xs font-medium text-center">{tool.label}</span>
               </button>
             ))}
@@ -96,6 +191,70 @@ const ToolsTab = ({ onIconClick }: ToolsTabProps) => {
           ))}
         </div>
       </Card>
+
+      {/* AI Tool Dialog */}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{getDialogTitle()}</DialogTitle>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            {(dialogType === 'script' || dialogType === 'ideas' || dialogType === 'feedback' || dialogType === 'optimize') && !result && (
+              <div className="space-y-4">
+                {dialogType === 'script' || dialogType === 'ideas' ? (
+                  <Input
+                    placeholder={getInputPlaceholder()}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                  />
+                ) : (
+                  <Textarea
+                    placeholder={getInputPlaceholder()}
+                    value={inputValue}
+                    onChange={(e) => setInputValue(e.target.value)}
+                    rows={4}
+                  />
+                )}
+                <Button onClick={handleSubmit} disabled={loading || !inputValue.trim()}>
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Génération...
+                    </>
+                  ) : (
+                    'Générer'
+                  )}
+                </Button>
+              </div>
+            )}
+            
+            {result && (
+              <div className="space-y-4">
+                <div className="bg-muted p-4 rounded-lg">
+                  <pre className="whitespace-pre-wrap text-sm">{result}</pre>
+                </div>
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setResult('');
+                    setInputValue('');
+                  }}
+                >
+                  Nouveau
+                </Button>
+              </div>
+            )}
+            
+            {loading && (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin" />
+                <span className="ml-2">Génération en cours...</span>
+              </div>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
