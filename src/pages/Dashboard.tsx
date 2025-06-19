@@ -1,8 +1,11 @@
-
 import { useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useAITools } from "@/hooks/useAITools";
 import { 
   User, 
   BookOpen, 
@@ -15,7 +18,8 @@ import {
   MessageSquare,
   Play,
   PenTool,
-  CheckCircle
+  CheckCircle,
+  Loader2
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +27,17 @@ import AIAssistantChat from "@/components/dashboard/AIAssistantChat";
 
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [inputValue, setInputValue] = useState('');
+  const [result, setResult] = useState<string>('');
+  
+  const { 
+    loading, 
+    generateConcepts, 
+    generateScript, 
+    generateIdeas, 
+    getFeedback 
+  } = useAITools();
   
   // User resources sections
   const userResourcesSections = [
@@ -95,10 +110,63 @@ const Dashboard = () => {
     }
   ];
 
-  const handleToolClick = (toolId: string) => {
+  const handleToolClick = async (toolId: string) => {
     setActiveSection(toolId);
-    // Here we would open the specific AI tool
-    console.log(`Opening AI tool: ${toolId}`);
+    setResult('');
+    setInputValue('');
+    
+    if (toolId === 'concept-finding') {
+      setDialogOpen(true);
+      const concepts = await generateConcepts();
+      setResult(concepts);
+    } else if (toolId === 'script-creation' || toolId === 'idea-generation' || toolId === 'script-feedback') {
+      setDialogOpen(true);
+    } else {
+      console.log(`Opening AI tool: ${toolId}`);
+    }
+  };
+
+  const handleSubmit = async () => {
+    if (!inputValue.trim()) return;
+    
+    try {
+      let response = '';
+      
+      switch (activeSection) {
+        case 'script-creation':
+          response = await generateScript(inputValue);
+          break;
+        case 'idea-generation':
+          response = await generateIdeas(inputValue);
+          break;
+        case 'script-feedback':
+          response = await getFeedback(inputValue);
+          break;
+      }
+      
+      setResult(response);
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const getDialogTitle = () => {
+    switch (activeSection) {
+      case 'concept-finding': return 'Concepts générés';
+      case 'script-creation': return 'Générateur de Script';
+      case 'idea-generation': return 'Générateur d\'Idées';
+      case 'script-feedback': return 'Feedback IA';
+      default: return 'Outil IA';
+    }
+  };
+
+  const getInputPlaceholder = () => {
+    switch (activeSection) {
+      case 'script-creation': return 'Décrivez le sujet de votre vidéo...';
+      case 'idea-generation': return 'Quelle catégorie de contenu vous intéresse ?';
+      case 'script-feedback': return 'Collez votre contenu ici pour obtenir un feedback...';
+      default: return 'Entrez votre demande...';
+    }
   };
 
   return (
@@ -162,7 +230,10 @@ const Dashboard = () => {
                 <CardHeader className="pb-2">
                   <CardTitle className="flex items-center text-lg">
                     <div className="h-10 w-10 rounded-full bg-gradient-to-br from-coach-primary to-coach-secondary flex items-center justify-center mr-3 text-white group-hover:scale-110 transition-transform">
-                      {tool.icon}
+                      {loading && ['concept-finding', 'script-creation', 'idea-generation', 'script-feedback'].includes(tool.id) ? 
+                        <Loader2 className="h-5 w-5 animate-spin" /> : 
+                        tool.icon
+                      }
                     </div>
                     {tool.title}
                   </CardTitle>
@@ -173,6 +244,7 @@ const Dashboard = () => {
                     onClick={() => handleToolClick(tool.id)}
                     className="w-full gradient-bg"
                     variant="default"
+                    disabled={loading}
                   >
                     {tool.action}
                   </Button>
@@ -221,6 +293,70 @@ const Dashboard = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* AI Tool Dialog */}
+        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>{getDialogTitle()}</DialogTitle>
+            </DialogHeader>
+            
+            <div className="space-y-4">
+              {(activeSection === 'script-creation' || activeSection === 'idea-generation' || activeSection === 'script-feedback') && !result && (
+                <div className="space-y-4">
+                  {activeSection === 'script-creation' || activeSection === 'idea-generation' ? (
+                    <Input
+                      placeholder={getInputPlaceholder()}
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                    />
+                  ) : (
+                    <Textarea
+                      placeholder={getInputPlaceholder()}
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      rows={4}
+                    />
+                  )}
+                  <Button onClick={handleSubmit} disabled={loading || !inputValue.trim()}>
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Génération...
+                      </>
+                    ) : (
+                      'Générer'
+                    )}
+                  </Button>
+                </div>
+              )}
+              
+              {result && (
+                <div className="space-y-4">
+                  <div className="bg-muted p-4 rounded-lg">
+                    <pre className="whitespace-pre-wrap text-sm">{result}</pre>
+                  </div>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => {
+                      setResult('');
+                      setInputValue('');
+                    }}
+                  >
+                    Nouveau
+                  </Button>
+                </div>
+              )}
+              
+              {loading && (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin" />
+                  <span className="ml-2">Génération en cours...</span>
+                </div>
+              )}
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </DashboardLayout>
   );
