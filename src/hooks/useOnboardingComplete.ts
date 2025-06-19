@@ -14,8 +14,21 @@ export const useOnboardingComplete = () => {
   const [isCompleted, setIsCompleted] = useState(false);
 
   const completeOnboarding = async () => {
-    if (!user || isProcessing || isCompleted) {
-      console.log('❌ Conditions non réunies:', { user: !!user, isProcessing, isCompleted });
+    console.log('🔍 Vérification conditions onboarding...');
+    console.log('User:', !!user, 'Processing:', isProcessing, 'Completed:', isCompleted);
+    
+    if (!user) {
+      console.log('❌ Pas d\'utilisateur connecté');
+      toast({
+        title: "Erreur d'authentification",
+        description: "Vous devez être connecté pour finaliser l'onboarding.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (isProcessing || isCompleted) {
+      console.log('❌ Déjà en cours ou terminé');
       return;
     }
 
@@ -107,10 +120,10 @@ Votre espace personnel Cocoon AI est maintenant configuré. Voici ce qui a été
       
       let errorMessage = "Une erreur est survenue lors de la finalisation.";
       if (error instanceof Error) {
-        if (error.message.includes('Failed to fetch')) {
-          errorMessage = "Problème de connectivité avec Hugging Face. Vérifiez votre connexion.";
-        } else if (error.message.includes('User not authenticated')) {
+        if (error.message.includes('not authenticated')) {
           errorMessage = "Session expirée. Veuillez vous reconnecter.";
+        } else if (error.message.includes('Network error') || error.message.includes('fetch')) {
+          errorMessage = "Problème de connectivité avec Hugging Face. Vérifiez votre connexion internet.";
         } else {
           errorMessage = error.message;
         }

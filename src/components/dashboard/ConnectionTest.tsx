@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { huggingfaceService } from '@/services/huggingfaceService';
-import { CheckCircle, XCircle, Loader2, TestTube, Database, MessageSquare } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { CheckCircle, XCircle, Loader2, TestTube, Database, MessageSquare, AlertTriangle } from 'lucide-react';
 
 const ConnectionTest = () => {
+  const { user } = useAuth();
   const [testing, setTesting] = useState(false);
   const [results, setResults] = useState<{
     connection: boolean | null;
@@ -27,8 +29,16 @@ const ConnectionTest = () => {
     setResults({ connection: null, aiTest: null, timestamp: null, error: null, details: null });
 
     try {
+      // Vérification préalable de l'authentification
+      if (!user) {
+        throw new Error('Vous devez être connecté pour effectuer ce test');
+      }
+
+      console.log('🔗 Début du test de connectivité...');
+      console.log('👤 Utilisateur connecté:', user.id, user.email);
+
       // Test 1: Connectivité de base
-      console.log('🔗 Test de connectivité...');
+      console.log('🔗 Test de connectivité Hugging Face...');
       await huggingfaceService.testConnection();
       
       setResults(prev => ({ 
@@ -37,12 +47,16 @@ const ConnectionTest = () => {
         details: 'Connectivité Hugging Face confirmée'
       }));
 
+      console.log('✅ Connectivité OK, test IA...');
+
       // Test 2: Test de l'IA
       console.log('🤖 Test IA...');
       const aiResponse = await huggingfaceService.askAI(
         "Test de connectivité - réponds juste 'OK' stp",
-        "Test technique"
+        "Test technique de connectivité"
       );
+      
+      console.log('🤖 Réponse IA reçue:', aiResponse);
       
       setResults({
         connection: true,
@@ -51,6 +65,8 @@ const ConnectionTest = () => {
         error: null,
         details: `IA fonctionnelle. Réponse: "${aiResponse?.substring(0, 50)}..."`
       });
+      
+      console.log('✅ Tous les tests réussis !');
       
     } catch (error) {
       const errorMessage = error instanceof Error ? error.message : 'Erreur inconnue';
@@ -77,9 +93,18 @@ const ConnectionTest = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {!user && (
+          <div className="flex items-center space-x-2 p-3 bg-orange-50 rounded-lg">
+            <AlertTriangle className="h-4 w-4 text-orange-600" />
+            <span className="text-sm text-orange-700">
+              Vous devez être connecté pour tester
+            </span>
+          </div>
+        )}
+
         <Button 
           onClick={runTest} 
-          disabled={testing}
+          disabled={testing || !user}
           className="w-full"
         >
           {testing ? (
