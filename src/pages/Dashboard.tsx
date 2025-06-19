@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { useAITools } from "@/hooks/useAITools";
@@ -8,6 +7,7 @@ import UserResourcesSection from "@/components/dashboard/UserResourcesSection";
 import AIToolsSection from "@/components/dashboard/AIToolsSection";
 import QuickStatsSection from "@/components/dashboard/QuickStatsSection";
 import AIToolDialog from "@/components/dashboard/AIToolDialog";
+import ConnectionTest from "@/components/dashboard/ConnectionTest";
 
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -78,6 +78,11 @@ const Dashboard = () => {
               JD
             </AvatarFallback>
           </Avatar>
+        </div>
+
+        {/* Test de connectivité (temporaire pour validation) */}
+        <div className="flex justify-end">
+          <ConnectionTest />
         </div>
 
         {/* User Resources Section */}

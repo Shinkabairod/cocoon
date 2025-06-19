@@ -35,6 +35,30 @@ export const huggingfaceService = {
     }
   },
 
+  async saveObsidianFile(userId: string, filePath: string, content: string) {
+    try {
+      // Utiliser l'endpoint /obsidian pour sauvegarder directement dans la structure de vault
+      const response = await fetch(`${HF_SPACE_URL}/obsidian`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: userId,
+          file_path: `vaults/user_${userId}/${filePath}`,
+          content: content
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to save Obsidian file: ${filePath}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error(`Error saving Obsidian file ${filePath}:`, error);
+      throw error;
+    }
+  },
+
   async saveProfile(profileData: any) {
     try {
       const user = await supabase.auth.getUser();
@@ -184,6 +208,38 @@ export const huggingfaceService = {
     }
   },
 
+  async testConnection() {
+    try {
+      const user = await supabase.auth.getUser();
+      const userId = user.data.user?.id;
+      
+      if (!userId) {
+        throw new Error('User not authenticated');
+      }
+
+      // Test de la connectivité avec l'endpoint /test
+      const response = await fetch(`${HF_SPACE_URL}/test`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: userId,
+          message: "Test de connectivité depuis Lovable"
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to test connection');
+      }
+
+      const data = await response.json();
+      console.log('✅ Test de connectivité Hugging Face réussi:', data);
+      return data;
+    } catch (error) {
+      console.error('❌ Erreur de connectivité Hugging Face:', error);
+      throw error;
+    }
+  },
+
   async saveOnboardingData(onboardingData: any) {
     try {
       const user = await supabase.auth.getUser();
@@ -198,7 +254,7 @@ export const huggingfaceService = {
       
       // Également sauvegarder comme note pour référence
       const content = JSON.stringify(onboardingData, null, 2);
-      return await this.saveNote('onboarding', content, 'onboarding');
+      return await this.saveNote('onboarding_raw_data', content, 'onboarding');
     } catch (error) {
       console.error('Error saving onboarding data:', error);
       throw error;
