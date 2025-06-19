@@ -15,7 +15,7 @@ const OnboardingTester = () => {
     updateOnboardingData({
       step: 21,
       experienceLevel: 'Beginner',
-      contentGoal: 'Grow audience',
+      contentGoal: 'Grow an audience',
       country: 'France',
       city: 'Paris',
       businessType: 'Personal Brand',
