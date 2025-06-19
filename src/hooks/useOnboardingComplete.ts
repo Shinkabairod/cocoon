@@ -14,22 +14,34 @@ export const useOnboardingComplete = () => {
   const [isCompleted, setIsCompleted] = useState(false);
 
   const completeOnboarding = async () => {
-    if (!user || isProcessing || isCompleted) return;
+    if (!user || isProcessing || isCompleted) {
+      console.log('❌ Conditions non réunies:', { user: !!user, isProcessing, isCompleted });
+      return;
+    }
 
     setIsProcessing(true);
     
     try {
       console.log('🚀 Début de la finalisation de l\'onboarding pour user:', user.id);
+      console.log('📋 Données onboarding à traiter:', onboardingData);
       
-      // 1. Sauvegarder les données d'onboarding standard
+      // Étape 1: Test de connectivité
+      console.log('🔗 Test de connectivité Hugging Face...');
+      await huggingfaceService.testConnection();
+      console.log('✅ Connectivité confirmée');
+
+      // Étape 2: Sauvegarder les données d'onboarding standard
+      console.log('💾 Sauvegarde des données d\'onboarding...');
       await huggingfaceService.saveOnboardingData(onboardingData);
       console.log('✅ Données d\'onboarding sauvegardées');
 
-      // 2. Créer la structure Obsidian complète
+      // Étape 3: Créer la structure Obsidian complète
+      console.log('🗂️ Création de la structure Obsidian...');
       await obsidianStructureService.createUserVault(user.id, onboardingData);
       console.log('✅ Structure Obsidian créée');
 
-      // 3. Créer un fichier de bienvenue personnalisé
+      // Étape 4: Créer un fichier de bienvenue personnalisé
+      console.log('📝 Création du guide de bienvenue...');
       const welcomeContent = `# Bienvenue ${user.email?.split('@')[0] || 'Créateur'} !
 
 Votre espace personnel Cocoon AI est maintenant configuré. Voici ce qui a été créé pour vous :
@@ -52,6 +64,12 @@ Votre espace personnel Cocoon AI est maintenant configuré. Voici ce qui a été
 - **Niche** : ${onboardingData.niche || 'Contenu général'}
 - **Défi principal** : ${onboardingData.contentChallenges?.[0] || 'À identifier'}
 
+## 🔧 Configuration technique
+- **Vault ID** : user_${user.id}
+- **Fichiers créés** : 15+ fichiers organisés
+- **Stockage** : Hugging Face Spaces
+- **IA** : Contexte personnalisé configuré
+
 *Créé automatiquement le ${new Date().toLocaleDateString('fr-FR')}*
 `;
 
@@ -60,23 +78,47 @@ Votre espace personnel Cocoon AI est maintenant configuré. Voici ce qui a été
         welcomeContent,
         'welcome'
       );
+      console.log('✅ Guide de bienvenue créé');
 
-      // 4. Marquer l'onboarding comme terminé
+      // Étape 5: Test final avec l'IA
+      console.log('🤖 Test de l\'IA avec le contexte utilisateur...');
+      try {
+        const aiResponse = await huggingfaceService.askAI(
+          "Salut ! Je viens de terminer mon onboarding. Peux-tu me faire un résumé de mon profil ?",
+          "L'utilisateur vient de terminer son onboarding et teste la connectivité IA"
+        );
+        console.log('✅ Test IA réussi:', aiResponse);
+      } catch (aiError) {
+        console.warn('⚠️ Test IA échoué (non bloquant):', aiError);
+      }
+
+      // Étape 6: Marquer comme terminé
       setIsCompleted(true);
 
       toast({
         title: "🎉 Onboarding terminé !",
-        description: "Votre espace Cocoon AI est prêt. Votre structure Obsidian a été créée.",
+        description: `Votre espace Cocoon AI est prêt. ${obsidianStructureService.getFileCount(onboardingData)} fichiers créés dans votre vault.`,
       });
 
-      console.log('🎯 Onboarding finalisé avec succès');
+      console.log('🎯 Onboarding finalisé avec succès pour user:', user.id);
 
     } catch (error) {
       console.error('❌ Erreur lors de la finalisation de l\'onboarding:', error);
       
+      let errorMessage = "Une erreur est survenue lors de la finalisation.";
+      if (error instanceof Error) {
+        if (error.message.includes('Failed to fetch')) {
+          errorMessage = "Problème de connectivité avec Hugging Face. Vérifiez votre connexion.";
+        } else if (error.message.includes('User not authenticated')) {
+          errorMessage = "Session expirée. Veuillez vous reconnecter.";
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors de la finalisation. Veuillez réessayer.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {

@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import DashboardLayout from "@/components/dashboard/DashboardLayout";
 import { useAITools } from "@/hooks/useAITools";
@@ -8,6 +9,7 @@ import AIToolsSection from "@/components/dashboard/AIToolsSection";
 import QuickStatsSection from "@/components/dashboard/QuickStatsSection";
 import AIToolDialog from "@/components/dashboard/AIToolDialog";
 import ConnectionTest from "@/components/dashboard/ConnectionTest";
+import OnboardingTester from "@/components/dashboard/OnboardingTester";
 
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -80,9 +82,10 @@ const Dashboard = () => {
           </Avatar>
         </div>
 
-        {/* Test de connectivité (temporaire pour validation) */}
-        <div className="flex justify-end">
+        {/* Tests de connectivité et fonctionnalité */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <ConnectionTest />
+          <OnboardingTester />
         </div>
 
         {/* User Resources Section */}

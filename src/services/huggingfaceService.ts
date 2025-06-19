@@ -15,7 +15,10 @@ export const huggingfaceService = {
 
       const response = await fetch(`${HF_SPACE_URL}/note`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer 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`
+        },
         body: JSON.stringify({
           user_id: userId,
           title: title,
@@ -25,7 +28,9 @@ export const huggingfaceService = {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save note');
+        const errorText = await response.text();
+        console.error('Failed to save note:', errorText);
+        throw new Error(`Failed to save note: ${response.status}`);
       }
 
       return await response.json();
@@ -37,10 +42,12 @@ export const huggingfaceService = {
 
   async saveObsidianFile(userId: string, filePath: string, content: string) {
     try {
-      // Utiliser l'endpoint /obsidian pour sauvegarder directement dans la structure de vault
       const response = await fetch(`${HF_SPACE_URL}/obsidian`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer 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`
+        },
         body: JSON.stringify({
           user_id: userId,
           file_path: `vaults/user_${userId}/${filePath}`,
@@ -49,7 +56,9 @@ export const huggingfaceService = {
       });
 
       if (!response.ok) {
-        throw new Error(`Failed to save Obsidian file: ${filePath}`);
+        const errorText = await response.text();
+        console.error(`Failed to save Obsidian file ${filePath}:`, errorText);
+        throw new Error(`Failed to save Obsidian file: ${filePath} - ${response.status}`);
       }
 
       return await response.json();
@@ -70,7 +79,10 @@ export const huggingfaceService = {
 
       const response = await fetch(`${HF_SPACE_URL}/profile`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer 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`
+        },
         body: JSON.stringify({
           user_id: userId,
           profile_data: profileData
@@ -78,7 +90,9 @@ export const huggingfaceService = {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to save profile');
+        const errorText = await response.text();
+        console.error('Failed to save profile:', errorText);
+        throw new Error(`Failed to save profile: ${response.status}`);
       }
 
       return await response.json();
@@ -99,7 +113,10 @@ export const huggingfaceService = {
 
       const response = await fetch(`${HF_SPACE_URL}/ask`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer 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`
+        },
         body: JSON.stringify({
           user_id: userId,
           question: question,
@@ -108,7 +125,9 @@ export const huggingfaceService = {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to get AI response');
+        const errorText = await response.text();
+        console.error('Failed to get AI response:', errorText);
+        throw new Error(`Failed to get AI response: ${response.status}`);
       }
 
       const data = await response.json();
@@ -130,7 +149,10 @@ export const huggingfaceService = {
 
       const response = await fetch(`${HF_SPACE_URL}/script`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer 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`
+        },
         body: JSON.stringify({
           user_id: userId,
           topic: topic
@@ -138,7 +160,9 @@ export const huggingfaceService = {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate script');
+        const errorText = await response.text();
+        console.error('Failed to generate script:', errorText);
+        throw new Error(`Failed to generate script: ${response.status}`);
       }
 
       const data = await response.json();
@@ -160,14 +184,19 @@ export const huggingfaceService = {
 
       const response = await fetch(`${HF_SPACE_URL}/concepts`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer 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`
+        },
         body: JSON.stringify({
           user_id: userId
         })
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate concepts');
+        const errorText = await response.text();
+        console.error('Failed to generate concepts:', errorText);
+        throw new Error(`Failed to generate concepts: ${response.status}`);
       }
 
       const data = await response.json();
@@ -189,7 +218,10 @@ export const huggingfaceService = {
 
       const response = await fetch(`${HF_SPACE_URL}/ideas`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer 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`
+        },
         body: JSON.stringify({
           user_id: userId,
           category: category
@@ -197,7 +229,9 @@ export const huggingfaceService = {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to generate ideas');
+        const errorText = await response.text();
+        console.error('Failed to generate ideas:', errorText);
+        throw new Error(`Failed to generate ideas: ${response.status}`);
       }
 
       const data = await response.json();
@@ -217,10 +251,12 @@ export const huggingfaceService = {
         throw new Error('User not authenticated');
       }
 
-      // Test de la connectivité avec l'endpoint /test
       const response = await fetch(`${HF_SPACE_URL}/test`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer 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`
+        },
         body: JSON.stringify({
           user_id: userId,
           message: "Test de connectivité depuis Lovable"
@@ -228,7 +264,9 @@ export const huggingfaceService = {
       });
 
       if (!response.ok) {
-        throw new Error('Failed to test connection');
+        const errorText = await response.text();
+        console.error('Failed to test connection:', errorText);
+        throw new Error(`Failed to test connection: ${response.status}`);
       }
 
       const data = await response.json();
@@ -249,10 +287,12 @@ export const huggingfaceService = {
         throw new Error('User not authenticated');
       }
 
-      // Sauvegarder dans Obsidian via HF backend
+      console.log('🚀 Sauvegarde données onboarding pour user:', userId);
+      
+      // Sauvegarder via le profil structuré
       await this.saveProfile(onboardingData);
       
-      // Également sauvegarder comme note pour référence
+      // Sauvegarder comme note de référence brute
       const content = JSON.stringify(onboardingData, null, 2);
       return await this.saveNote('onboarding_raw_data', content, 'onboarding');
     } catch (error) {

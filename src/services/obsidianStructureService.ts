@@ -13,22 +13,42 @@ export const obsidianStructureService = {
     console.log(`🗂️ Création de ${files.length} fichiers Obsidian pour user ${userId}`);
     
     // Créer chaque fichier dans la structure vaults/user_{userId}/
+    let successCount = 0;
+    let errorCount = 0;
+    
     for (const file of files) {
       try {
         await huggingfaceService.saveObsidianFile(userId, file.path, file.content);
         console.log(`✅ Fichier créé: ${file.path}`);
+        successCount++;
       } catch (error) {
         console.error(`❌ Erreur création fichier ${file.path}:`, error);
+        errorCount++;
+        
         // Fallback vers la méthode note standard
-        await huggingfaceService.saveNote(
-          file.path.replace('.md', '').replace(/\//g, '_'),
-          file.content,
-          'obsidian_vault'
-        );
+        try {
+          await huggingfaceService.saveNote(
+            file.path.replace('.md', '').replace(/\//g, '_'),
+            file.content,
+            'obsidian_vault'
+          );
+          console.log(`🔄 Fallback réussi pour: ${file.path}`);
+          successCount++;
+        } catch (fallbackError) {
+          console.error(`❌ Fallback échoué pour ${file.path}:`, fallbackError);
+        }
       }
     }
     
-    console.log(`🎯 Structure Obsidian complète créée pour user ${userId}`);
+    console.log(`🎯 Structure Obsidian complète pour user ${userId} - ${successCount} succès, ${errorCount} erreurs`);
+    
+    if (errorCount > 0) {
+      throw new Error(`Création partielle: ${successCount}/${files.length} fichiers créés`);
+    }
+  },
+
+  getFileCount(onboardingData: OnboardingData): number {
+    return this.generateObsidianFiles(onboardingData).length;
   },
 
   generateObsidianFiles(data: OnboardingData): ObsidianFile[] {
