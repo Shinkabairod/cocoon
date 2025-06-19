@@ -10,9 +10,7 @@ export const useAITools = () => {
   const generateConcepts = async () => {
     setLoading(true);
     try {
-      const response = await huggingfaceService.askAI(
-        "Generate 5 creative Instagram content concepts based on my profile and interests"
-      );
+      const response = await huggingfaceService.generateConcepts();
       
       toast({
         title: "Concepts générés !",
@@ -35,9 +33,7 @@ export const useAITools = () => {
   const generateScript = async (topic: string) => {
     setLoading(true);
     try {
-      const response = await huggingfaceService.askAI(
-        `Generate a video script for: ${topic}. Make it engaging and suitable for my target audience.`
-      );
+      const response = await huggingfaceService.generateScript(topic);
       
       toast({
         title: "Script généré !",
@@ -60,9 +56,7 @@ export const useAITools = () => {
   const generateIdeas = async (category: string) => {
     setLoading(true);
     try {
-      const response = await huggingfaceService.askAI(
-        `Generate content ideas for ${category} that would resonate with my audience and align with my brand values.`
-      );
+      const response = await huggingfaceService.generateIdeas(category);
       
       toast({
         title: "Idées générées !",
