@@ -4,130 +4,122 @@ import { supabase } from '@/integrations/supabase/client';
 const HF_SPACE_URL = "https://cocoonai-cocoon-ai-assistant.hf.space";
 const HF_TOKEN = "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";
 
+// Helper pour vérifier l'auth
+const ensureAuth = async () => {
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+  
+  if (authError) {
+    console.error('❌ Erreur auth:', authError);
+    throw new Error(`Authentication error: ${authError.message}`);
+  }
+  
+  if (!user) {
+    console.error('❌ Utilisateur non connecté');
+    throw new Error('User not authenticated - please log in');
+  }
+
+  console.log('✅ Utilisateur authentifié:', user.id);
+  return user;
+};
+
+// Helper pour les requêtes HF
+const makeHFRequest = async (endpoint: string, payload: any) => {
+  const url = `${HF_SPACE_URL}${endpoint}`;
+  console.log('📤 Requête HF:', url, payload);
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: { 
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${HF_TOKEN}`
+    },
+    body: JSON.stringify(payload)
+  });
+
+  console.log('📥 Réponse HF:', response.status, response.statusText);
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error('❌ Erreur HF:', errorText);
+    throw new Error(`Hugging Face API error (${response.status}): ${errorText}`);
+  }
+
+  return await response.json();
+};
+
 export const huggingfaceService = {
+  async testConnection() {
+    try {
+      console.log('🔗 Test de connectivité HF...');
+      
+      const user = await ensureAuth();
+
+      const result = await makeHFRequest('/test', {
+        user_id: user.id,
+        message: "Test de connectivité depuis Lovable"
+      });
+
+      console.log('✅ Test de connectivité réussi:', result);
+      return result;
+    } catch (error) {
+      console.error('❌ Erreur test connectivité:', error);
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new Error('Network error: Cannot reach Hugging Face service. Check if the service is running.');
+      }
+      throw error;
+    }
+  },
+
   async saveNote(title: string, content: string, noteType: string = 'general') {
     try {
-      console.log('🔍 Tentative de sauvegarde note:', { title, noteType });
+      console.log('📝 Sauvegarde note:', { title, noteType });
       
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if (authError) {
-        console.error('❌ Erreur auth:', authError);
-        throw new Error(`Authentication error: ${authError.message}`);
-      }
-      
-      if (!user) {
-        console.error('❌ Utilisateur non connecté');
-        throw new Error('User not authenticated - please log in');
-      }
+      const user = await ensureAuth();
 
-      console.log('✅ Utilisateur authentifié:', user.id);
-
-      const payload = {
+      const result = await makeHFRequest('/note', {
         user_id: user.id,
         title: title,
         content: content,
         note_type: noteType
-      };
-
-      console.log('📤 Envoi vers HF:', `${HF_SPACE_URL}/note`, payload);
-
-      const response = await fetch(`${HF_SPACE_URL}/note`, {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${HF_TOKEN}`
-        },
-        body: JSON.stringify(payload)
       });
 
-      console.log('📥 Réponse HF status:', response.status, response.statusText);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ Erreur HF response:', errorText);
-        throw new Error(`Hugging Face API error (${response.status}): ${errorText}`);
-      }
-
-      const result = await response.json();
-      console.log('✅ Note sauvegardée avec succès:', result);
+      console.log('✅ Note sauvegardée:', result);
       return result;
     } catch (error) {
-      console.error('❌ Erreur complète saveNote:', error);
-      if (error instanceof TypeError && error.message.includes('fetch')) {
-        throw new Error('Network error: Unable to connect to Hugging Face service. Please check your internet connection.');
-      }
+      console.error('❌ Erreur saveNote:', error);
       throw error;
     }
   },
 
   async saveObsidianFile(userId: string, filePath: string, content: string) {
     try {
-      console.log('🔍 Sauvegarde fichier Obsidian:', { userId, filePath });
-      
-      const payload = {
+      console.log('🗂️ Sauvegarde fichier Obsidian:', { userId, filePath });
+
+      const result = await makeHFRequest('/obsidian', {
         user_id: userId,
         file_path: `vaults/user_${userId}/${filePath}`,
         content: content
-      };
-
-      console.log('📤 Envoi fichier vers HF:', payload);
-
-      const response = await fetch(`${HF_SPACE_URL}/obsidian`, {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${HF_TOKEN}`
-        },
-        body: JSON.stringify(payload)
       });
 
-      console.log('📥 Réponse fichier HF:', response.status, response.statusText);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error(`❌ Erreur fichier ${filePath}:`, errorText);
-        throw new Error(`Failed to save Obsidian file: ${filePath} - Status: ${response.status} - ${errorText}`);
-      }
-
-      const result = await response.json();
       console.log(`✅ Fichier ${filePath} sauvegardé:`, result);
       return result;
     } catch (error) {
-      console.error(`❌ Erreur sauvegarde fichier ${filePath}:`, error);
+      console.error(`❌ Erreur fichier ${filePath}:`, error);
       throw error;
     }
   },
 
   async saveProfile(profileData: any) {
     try {
-      console.log('🔍 Sauvegarde profil:', profileData);
+      console.log('👤 Sauvegarde profil:', profileData);
       
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if (authError || !user) {
-        throw new Error('User not authenticated for profile save');
-      }
+      const user = await ensureAuth();
 
-      const response = await fetch(`${HF_SPACE_URL}/profile`, {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${HF_TOKEN}`
-        },
-        body: JSON.stringify({
-          user_id: user.id,
-          profile_data: profileData
-        })
+      const result = await makeHFRequest('/profile', {
+        user_id: user.id,
+        profile_data: profileData
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ Erreur profil:', errorText);
-        throw new Error(`Failed to save profile: ${response.status} - ${errorText}`);
-      }
-
-      const result = await response.json();
       console.log('✅ Profil sauvegardé:', result);
       return result;
     } catch (error) {
@@ -140,34 +132,16 @@ export const huggingfaceService = {
     try {
       console.log('🤖 Question IA:', { question, context });
       
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if (authError || !user) {
-        throw new Error('User not authenticated for AI query');
-      }
+      const user = await ensureAuth();
 
-      const response = await fetch(`${HF_SPACE_URL}/ask`, {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${HF_TOKEN}`
-        },
-        body: JSON.stringify({
-          user_id: user.id,
-          question: question,
-          context: context
-        })
+      const result = await makeHFRequest('/ask', {
+        user_id: user.id,
+        question: question,
+        context: context
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ Erreur IA:', errorText);
-        throw new Error(`AI query failed: ${response.status} - ${errorText}`);
-      }
-
-      const data = await response.json();
-      console.log('✅ Réponse IA reçue:', data);
-      return data.answer;
+      console.log('✅ Réponse IA reçue:', result);
+      return result.answer;
     } catch (error) {
       console.error('❌ Erreur askAI:', error);
       throw error;
@@ -176,31 +150,14 @@ export const huggingfaceService = {
 
   async generateScript(topic: string) {
     try {
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if (authError || !user) {
-        throw new Error('User not authenticated');
-      }
+      const user = await ensureAuth();
 
-      const response = await fetch(`${HF_SPACE_URL}/script`, {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${HF_TOKEN}`
-        },
-        body: JSON.stringify({
-          user_id: user.id,
-          topic: topic
-        })
+      const result = await makeHFRequest('/script', {
+        user_id: user.id,
+        topic: topic
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Script generation failed: ${response.status} - ${errorText}`);
-      }
-
-      const data = await response.json();
-      return data.script;
+      return result.script;
     } catch (error) {
       console.error('❌ Erreur generateScript:', error);
       throw error;
@@ -209,30 +166,13 @@ export const huggingfaceService = {
 
   async generateConcepts() {
     try {
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if (authError || !user) {
-        throw new Error('User not authenticated');
-      }
+      const user = await ensureAuth();
 
-      const response = await fetch(`${HF_SPACE_URL}/concepts`, {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${HF_TOKEN}`
-        },
-        body: JSON.stringify({
-          user_id: user.id
-        })
+      const result = await makeHFRequest('/concepts', {
+        user_id: user.id
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Concept generation failed: ${response.status} - ${errorText}`);
-      }
-
-      const data = await response.json();
-      return data.concepts;
+      return result.concepts;
     } catch (error) {
       console.error('❌ Erreur generateConcepts:', error);
       throw error;
@@ -241,86 +181,16 @@ export const huggingfaceService = {
 
   async generateIdeas(category: string) {
     try {
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if (authError || !user) {
-        throw new Error('User not authenticated');
-      }
+      const user = await ensureAuth();
 
-      const response = await fetch(`${HF_SPACE_URL}/ideas`, {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${HF_TOKEN}`
-        },
-        body: JSON.stringify({
-          user_id: user.id,
-          category: category
-        })
+      const result = await makeHFRequest('/ideas', {
+        user_id: user.id,
+        category: category
       });
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Idea generation failed: ${response.status} - ${errorText}`);
-      }
-
-      const data = await response.json();
-      return data.ideas;
+      return result.ideas;
     } catch (error) {
       console.error('❌ Erreur generateIdeas:', error);
-      throw error;
-    }
-  },
-
-  async testConnection() {
-    try {
-      console.log('🔗 Test de connectivité HF...');
-      
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if (authError) {
-        console.error('❌ Erreur auth test:', authError);
-        throw new Error(`Authentication error: ${authError.message}`);
-      }
-      
-      if (!user) {
-        console.error('❌ Pas d\'utilisateur pour test');
-        throw new Error('User not authenticated - please log in first');
-      }
-
-      console.log('✅ User OK pour test:', user.id);
-
-      const testUrl = `${HF_SPACE_URL}/test`;
-      console.log('📤 Test URL:', testUrl);
-
-      const response = await fetch(testUrl, {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${HF_TOKEN}`
-        },
-        body: JSON.stringify({
-          user_id: user.id,
-          message: "Test de connectivité depuis Lovable"
-        })
-      });
-
-      console.log('📥 Test response status:', response.status, response.statusText);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('❌ Test échec response:', errorText);
-        throw new Error(`Connection test failed: ${response.status} - ${errorText}`);
-      }
-
-      const data = await response.json();
-      console.log('✅ Test de connectivité réussi:', data);
-      return data;
-    } catch (error) {
-      console.error('❌ Erreur test connectivité complète:', error);
-      if (error instanceof TypeError && error.message.includes('fetch')) {
-        throw new Error('Network error: Cannot reach Hugging Face service. Check if the service is running.');
-      }
       throw error;
     }
   },
@@ -329,12 +199,6 @@ export const huggingfaceService = {
     try {
       console.log('💾 Début sauvegarde onboarding data...');
       
-      const { data: { user }, error: authError } = await supabase.auth.getUser();
-      
-      if (authError || !user) {
-        throw new Error('User not authenticated for onboarding save');
-      }
-
       console.log('📊 Sauvegarde profil structuré...');
       await this.saveProfile(onboardingData);
       

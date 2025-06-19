@@ -6,6 +6,7 @@ import { useOnboardingComplete } from '@/hooks/useOnboardingComplete';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { useAuth } from '@/contexts/AuthContext';
 import { Play, CheckCircle, Loader2, AlertTriangle } from 'lucide-react';
+import type { OnboardingData, ContentType, Platform } from '@/types/onboarding';
 
 const OnboardingTester = () => {
   const { user } = useAuth();
@@ -15,7 +16,7 @@ const OnboardingTester = () => {
   const setupTestData = () => {
     console.log('🎯 Configuration des données de test...');
     // Simuler des données d'onboarding complètes pour le test
-    const testData = {
+    const testData: Partial<OnboardingData> = {
       step: 21,
       experienceLevel: 'Beginner' as const,
       contentGoal: 'Grow an audience' as const,
@@ -23,8 +24,8 @@ const OnboardingTester = () => {
       city: 'Paris',
       businessType: 'Personal Brand' as const,
       businessDescription: 'Créateur de contenu tech et lifestyle',
-      platforms: ['YouTube', 'Instagram', 'TikTok'],
-      contentTypes: ['Videos', 'Social Media Posts'],
+      platforms: ['YouTube', 'Instagram', 'TikTok'] as Platform[],
+      contentTypes: ['Videos', 'Social Media Posts'] as ContentType[],
       niche: 'Tech & Lifestyle',
       contentChallenges: ['Script writing', 'Editing', 'Promotion'],
       timeAvailable: '3-5 hours' as const,
