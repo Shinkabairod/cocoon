@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -22,7 +21,9 @@ import {
   Users, 
   Video,
   RefreshCw,
-  Settings
+  Settings,
+  AlertTriangle,
+  CheckCircle2
 } from "lucide-react";
 import type { OnboardingData } from "@/types/onboarding";
 
@@ -34,32 +35,93 @@ const OnboardingDataSection = () => {
   const [editData, setEditData] = useState<Partial<OnboardingData>>(onboardingData);
   const [isSaving, setIsSaving] = useState(false);
   const [isUpdatingObsidian, setIsUpdatingObsidian] = useState(false);
+  const [lastSyncStatus, setLastSyncStatus] = useState<'success' | 'error' | 'partial' | null>(null);
+  const [syncDetails, setSyncDetails] = useState<string>('');
 
   useEffect(() => {
     setEditData(onboardingData);
   }, [onboardingData]);
 
   const handleSave = async () => {
-    if (!user) return;
+    if (!user) {
+      toast({
+        title: "❌ Erreur d'authentification",
+        description: "Vous devez être connecté pour sauvegarder.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setIsSaving(true);
+    setLastSyncStatus(null);
+    setSyncDetails('');
+    
     try {
-      updateOnboardingData(editData);
-      await huggingfaceService.saveOnboardingData(editData);
-      setIsUpdatingObsidian(true);
-      await obsidianStructureService.createUserVault(user.id, editData as OnboardingData);
+      console.log('🚀 Début sauvegarde pour user:', user.id);
+      console.log('📋 Données à sauvegarder:', editData);
 
-      toast({
-        title: "✅ Données mises à jour",
-        description: "Vos données d'onboarding et votre espace Obsidian ont été synchronisés.",
-      });
+      // Étape 1: Mise à jour du contexte local
+      console.log('1️⃣ Mise à jour contexte local...');
+      updateOnboardingData(editData);
+
+      // Étape 2: Test de connectivité HF
+      console.log('2️⃣ Test connectivité Hugging Face...');
+      try {
+        await huggingfaceService.testConnection();
+        console.log('✅ Connectivité HF confirmée');
+      } catch (hfError) {
+        console.error('❌ Problème connectivité HF:', hfError);
+        throw new Error(`Impossible de se connecter à Hugging Face: ${hfError.message}`);
+      }
+
+      // Étape 3: Sauvegarde sur Hugging Face
+      console.log('3️⃣ Sauvegarde sur Hugging Face...');
+      try {
+        await huggingfaceService.saveOnboardingData(editData);
+        console.log('✅ Données sauvegardées sur HF');
+      } catch (hfSaveError) {
+        console.error('❌ Erreur sauvegarde HF:', hfSaveError);
+        throw new Error(`Échec sauvegarde Hugging Face: ${hfSaveError.message}`);
+      }
+
+      // Étape 4: Synchronisation Obsidian
+      console.log('4️⃣ Synchronisation Obsidian...');
+      setIsUpdatingObsidian(true);
+      try {
+        await obsidianStructureService.createUserVault(user.id, editData as OnboardingData);
+        const fileCount = obsidianStructureService.getFileCount(editData as OnboardingData);
+        console.log(`✅ Structure Obsidian créée: ${fileCount} fichiers`);
+        
+        setLastSyncStatus('success');
+        setSyncDetails(`${fileCount} fichiers synchronisés avec succès`);
+        
+        toast({
+          title: "✅ Sauvegarde complète réussie",
+          description: `Données mises à jour et ${fileCount} fichiers synchronisés avec Obsidian.`,
+        });
+
+      } catch (obsidianError) {
+        console.error('❌ Erreur sync Obsidian:', obsidianError);
+        setLastSyncStatus('partial');
+        setSyncDetails(`Données sauvegardées mais erreur Obsidian: ${obsidianError.message}`);
+        
+        toast({
+          title: "⚠️ Sauvegarde partielle",
+          description: "Données sauvegardées sur HF mais erreur de synchronisation Obsidian.",
+          variant: "destructive",
+        });
+      }
 
       setIsEditing(false);
+
     } catch (error) {
-      console.error('Erreur sauvegarde:', error);
+      console.error('❌ Erreur globale sauvegarde:', error);
+      setLastSyncStatus('error');
+      setSyncDetails(error instanceof Error ? error.message : 'Erreur inconnue');
+      
       toast({
-        title: "Erreur",
-        description: "Impossible de sauvegarder les modifications.",
+        title: "❌ Échec de sauvegarde",
+        description: error instanceof Error ? error.message : 'Une erreur est survenue.',
         variant: "destructive",
       });
     } finally {
@@ -74,20 +136,49 @@ const OnboardingDataSection = () => {
   };
 
   const updateObsidianOnly = async () => {
-    if (!user) return;
+    if (!user) {
+      toast({
+        title: "❌ Erreur d'authentification",
+        description: "Vous devez être connecté pour synchroniser.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     setIsUpdatingObsidian(true);
+    setLastSyncStatus(null);
+    setSyncDetails('');
+
     try {
+      console.log('🔄 Synchronisation Obsidian uniquement...');
+      
+      // Test de connectivité d'abord
+      try {
+        await huggingfaceService.testConnection();
+        console.log('✅ Connectivité HF confirmée pour sync');
+      } catch (hfError) {
+        throw new Error(`Service Hugging Face indisponible: ${hfError.message}`);
+      }
+
       await obsidianStructureService.createUserVault(user.id, onboardingData);
+      const fileCount = obsidianStructureService.getFileCount(onboardingData);
+      
+      setLastSyncStatus('success');
+      setSyncDetails(`${fileCount} fichiers synchronisés`);
+      
       toast({
         title: "🗂️ Obsidian synchronisé",
-        description: "Votre espace Obsidian a été mis à jour avec les dernières données.",
+        description: `${fileCount} fichiers mis à jour dans votre espace Obsidian.`,
       });
+
     } catch (error) {
-      console.error('Erreur sync Obsidian:', error);
+      console.error('❌ Erreur sync Obsidian seul:', error);
+      setLastSyncStatus('error');
+      setSyncDetails(error instanceof Error ? error.message : 'Erreur de synchronisation');
+      
       toast({
-        title: "Erreur",
-        description: "Impossible de synchroniser avec Obsidian.",
+        title: "❌ Erreur de synchronisation",
+        description: error instanceof Error ? error.message : 'Impossible de synchroniser avec Obsidian.',
         variant: "destructive",
       });
     } finally {
@@ -240,7 +331,7 @@ const OnboardingDataSection = () => {
           <Button
             variant="outline"
             onClick={updateObsidianOnly}
-            disabled={isUpdatingObsidian}
+            disabled={isUpdatingObsidian || isSaving}
           >
             {isUpdatingObsidian ? (
               <>
@@ -256,17 +347,17 @@ const OnboardingDataSection = () => {
           </Button>
           
           {!isEditing ? (
-            <Button onClick={() => setIsEditing(true)}>
+            <Button onClick={() => setIsEditing(true)} disabled={isSaving}>
               <Edit className="h-4 w-4 mr-2" />
               Modifier
             </Button>
           ) : (
             <div className="flex gap-2">
-              <Button onClick={handleCancel} variant="outline">
+              <Button onClick={handleCancel} variant="outline" disabled={isSaving}>
                 <X className="h-4 w-4 mr-2" />
                 Annuler
               </Button>
-              <Button onClick={handleSave} disabled={isSaving}>
+              <Button onClick={handleSave} disabled={isSaving || isUpdatingObsidian}>
                 {isSaving ? (
                   <>
                     <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
@@ -283,6 +374,43 @@ const OnboardingDataSection = () => {
           )}
         </div>
       </div>
+
+      {/* Status de synchronisation */}
+      {lastSyncStatus && (
+        <Card className={`border-l-4 ${
+          lastSyncStatus === 'success' ? 'border-l-green-500 bg-green-50' :
+          lastSyncStatus === 'partial' ? 'border-l-orange-500 bg-orange-50' :
+          'border-l-red-500 bg-red-50'
+        }`}>
+          <CardContent className="pt-4">
+            <div className="flex items-start gap-2">
+              {lastSyncStatus === 'success' ? (
+                <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5" />
+              ) : (
+                <AlertTriangle className="h-5 w-5 text-orange-600 mt-0.5" />
+              )}
+              <div>
+                <p className={`font-medium ${
+                  lastSyncStatus === 'success' ? 'text-green-800' :
+                  lastSyncStatus === 'partial' ? 'text-orange-800' :
+                  'text-red-800'
+                }`}>
+                  {lastSyncStatus === 'success' ? 'Synchronisation réussie' :
+                   lastSyncStatus === 'partial' ? 'Synchronisation partielle' :
+                   'Erreur de synchronisation'}
+                </p>
+                <p className={`text-sm ${
+                  lastSyncStatus === 'success' ? 'text-green-600' :
+                  lastSyncStatus === 'partial' ? 'text-orange-600' :
+                  'text-red-600'
+                }`}>
+                  {syncDetails}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {sections.map((section) => (
