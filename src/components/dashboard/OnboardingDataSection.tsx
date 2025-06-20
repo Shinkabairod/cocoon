@@ -108,20 +108,20 @@ const OnboardingDataSection = () => {
 
       console.log("✅ Profile saved successfully:", data);
 
-      // Step 4: Obsidian sync
-      console.log('4️⃣ Obsidian synchronization...');
+      // Step 4: Update Obsidian files with new data
+      console.log('4️⃣ Updating Obsidian files...');
       setIsUpdatingObsidian(true);
       try {
         await obsidianStructureService.createUserVault(user.id, editData as OnboardingData);
         const fileCount = obsidianStructureService.getFileCount(editData as OnboardingData);
-        console.log(`✅ Obsidian structure created: ${fileCount} files`);
+        console.log(`✅ Obsidian files updated: ${fileCount} files`);
         
         setLastSyncStatus('success');
-        setSyncDetails(`Profile saved and ${fileCount} files synchronized successfully`);
+        setSyncDetails(`Profile saved and ${fileCount} files updated in Obsidian`);
         
         toast({
           title: "✅ Save successful",
-          description: `Profile saved and ${fileCount} files synchronized with Obsidian.`,
+          description: `Profile saved and ${fileCount} files updated in your Obsidian space.`,
         });
 
       } catch (obsidianError) {
