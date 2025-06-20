@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import { useOnboardingComplete } from "@/hooks/useOnboardingComplete";
@@ -6,6 +5,7 @@ import OnboardingLayout from "./OnboardingLayout";
 import { Card, CardContent } from "@/components/ui/card";
 import { Check, FileText, Users, Target, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import GenerateObsidianButton from "@/components/shared/GenerateObsidianButton";
 
 const SummaryStep = () => {
   const { onboardingData } = useOnboarding();
@@ -15,10 +15,15 @@ const SummaryStep = () => {
   const handleComplete = async () => {
     await completeOnboarding();
     
-    // Rediriger vers le dashboard après completion
+    // Redirect to dashboard after completion
     setTimeout(() => {
       navigate('/dashboard');
     }, 2000);
+  };
+
+  const handleObsidianGenerated = () => {
+    // Optional: you can add any additional logic after Obsidian generation
+    console.log('✅ Obsidian space generated successfully from onboarding');
   };
 
   const getHighlights = () => {
@@ -62,8 +67,8 @@ const SummaryStep = () => {
   if (isCompleted) {
     return (
       <OnboardingLayout 
-        title="🎉 Bienvenue dans Cocoon AI !" 
-        subtitle="Votre espace personnalisé a été créé avec succès"
+        title="🎉 Welcome to Cocoon AI!" 
+        subtitle="Your personalized space has been created successfully"
       >
         <div className="space-y-6 text-center">
           <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
@@ -71,10 +76,10 @@ const SummaryStep = () => {
           </div>
           
           <div>
-            <h3 className="text-xl font-semibold mb-2">Configuration terminée !</h3>
+            <h3 className="text-xl font-semibold mb-2">Setup Complete!</h3>
             <p className="text-muted-foreground">
-              Votre structure Obsidian personnalisée a été créée et vos données sont sauvegardées.
-              Redirection vers votre dashboard...
+              Your personalized Obsidian structure has been created and your data is saved.
+              Redirecting to your dashboard...
             </p>
           </div>
         </div>
@@ -84,11 +89,11 @@ const SummaryStep = () => {
   
   return (
     <OnboardingLayout 
-      title="Récapitulatif de votre profil" 
-      subtitle="Vérifiez vos informations avant de finaliser votre configuration"
+      title="Your Profile Summary" 
+      subtitle="Review your information before finalizing your setup"
     >
       <div className="space-y-6">
-        {/* Highlights du profil */}
+        {/* Profile highlights */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {getHighlights().map((highlight, index) => (
             <Card key={index}>
@@ -107,40 +112,40 @@ const SummaryStep = () => {
           ))}
         </div>
 
-        {/* Informations sur ce qui sera créé */}
+        {/* Information about what will be created */}
         <Card className="border-coach-primary/20">
           <CardContent className="p-6">
             <h3 className="font-semibold mb-4 flex items-center">
               <FileText className="h-5 w-5 mr-2 text-coach-primary" />
-              Ce qui sera créé pour vous
+              What will be created for you
             </h3>
             
             <div className="space-y-3">
               <div className="flex items-center space-x-2">
                 <Check className="h-4 w-4 text-green-600" />
-                <span className="text-sm">Structure Obsidian personnalisée (15+ fichiers organisés)</span>
+                <span className="text-sm">Personalized Obsidian structure (15+ organized files)</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Check className="h-4 w-4 text-green-600" />
-                <span className="text-sm">Sauvegarde sécurisée sur Hugging Face (vaults/user_{'{user_id}'})</span>
+                <span className="text-sm">Secure backup on Hugging Face (vaults/user_{'{user_id}'})</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Check className="h-4 w-4 text-green-600" />
-                <span className="text-sm">Configuration IA optimisée pour vos besoins</span>
+                <span className="text-sm">AI configuration optimized for your needs</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Check className="h-4 w-4 text-green-600" />
-                <span className="text-sm">Dashboard personnalisé avec recommandations</span>
+                <span className="text-sm">Personalized dashboard with recommendations</span>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        {/* Défis identifiés */}
+        {/* Identified challenges */}
         {onboardingData.contentChallenges && onboardingData.contentChallenges.length > 0 && (
           <Card>
             <CardContent className="p-4">
-              <h4 className="font-medium mb-2">Défis à résoudre en priorité</h4>
+              <h4 className="font-medium mb-2">Priority challenges to solve</h4>
               <div className="space-y-1">
                 {onboardingData.contentChallenges.map((challenge, index) => (
                   <div key={index} className="text-sm text-muted-foreground">
@@ -152,22 +157,34 @@ const SummaryStep = () => {
           </Card>
         )}
         
-        {/* Bouton de finalisation */}
-        <div className="pt-4 flex justify-center">
-          <Button 
-            className="gradient-bg w-full max-w-sm"
-            onClick={handleComplete}
-            disabled={isProcessing}
-          >
-            {isProcessing ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Création de votre espace...
-              </>
-            ) : (
-              'Finaliser mon onboarding'
-            )}
-          </Button>
+        {/* Buttons section */}
+        <div className="pt-4 space-y-3">
+          {/* Generate Obsidian Button */}
+          <div className="flex justify-center">
+            <GenerateObsidianButton
+              userProfileData={onboardingData}
+              onSuccess={handleObsidianGenerated}
+              className="w-full max-w-sm"
+            />
+          </div>
+          
+          {/* Complete Onboarding Button */}
+          <div className="flex justify-center">
+            <Button 
+              className="gradient-bg w-full max-w-sm"
+              onClick={handleComplete}
+              disabled={isProcessing}
+            >
+              {isProcessing ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Creating your space...
+                </>
+              ) : (
+                'Finalize my onboarding'
+              )}
+            </Button>
+          </div>
         </div>
       </div>
     </OnboardingLayout>

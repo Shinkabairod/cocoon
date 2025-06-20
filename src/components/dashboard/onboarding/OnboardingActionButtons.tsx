@@ -1,6 +1,7 @@
 
 import { Button } from "@/components/ui/button";
-import { Edit, Save, X, RefreshCw } from "lucide-react";
+import { Edit, Save, X, RefreshCw, FileText } from "lucide-react";
+import GenerateObsidianButton from "@/components/shared/GenerateObsidianButton";
 
 interface OnboardingActionButtonsProps {
   isEditing: boolean;
@@ -10,6 +11,7 @@ interface OnboardingActionButtonsProps {
   onSave: () => void;
   onCancel: () => void;
   onSyncObsidian: () => void;
+  userProfileData?: any;
 }
 
 const OnboardingActionButtons = ({
@@ -19,10 +21,19 @@ const OnboardingActionButtons = ({
   onEdit,
   onSave,
   onCancel,
-  onSyncObsidian
+  onSyncObsidian,
+  userProfileData
 }: OnboardingActionButtonsProps) => {
   return (
-    <div className="flex gap-2">
+    <div className="flex flex-wrap gap-2">
+      {/* Generate Obsidian Button */}
+      {userProfileData && (
+        <GenerateObsidianButton
+          userProfileData={userProfileData}
+          variant="outline"
+        />
+      )}
+      
       <Button
         variant="outline"
         onClick={onSyncObsidian}

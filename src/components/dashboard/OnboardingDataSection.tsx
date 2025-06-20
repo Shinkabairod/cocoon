@@ -270,6 +270,7 @@ const OnboardingDataSection = () => {
           onSave={handleSave}
           onCancel={handleCancel}
           onSyncObsidian={updateObsidianOnly}
+          userProfileData={formatProfileData(onboardingData)}
         />
       </div>
 
