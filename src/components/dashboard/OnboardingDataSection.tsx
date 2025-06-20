@@ -19,6 +19,8 @@ import OnboardingSyncStatus from "./onboarding/OnboardingSyncStatus";
 import OnboardingSectionCard from "./onboarding/OnboardingSectionCard";
 import OnboardingUpdateIndicator from "./onboarding/OnboardingUpdateIndicator";
 
+const HF_SPACE_URL = "https://Cocoonai-cocoon-ai-assistant.hf.space";
+
 const OnboardingDataSection = () => {
   const { onboardingData, updateOnboardingData } = useOnboarding();
   const { user } = useAuth();
@@ -79,32 +81,32 @@ const OnboardingDataSection = () => {
       console.log('1️⃣ Updating local context...');
       updateOnboardingData(editData);
 
-      // Step 2: Test HF connectivity
-      console.log('2️⃣ Testing Hugging Face connectivity...');
-      try {
-        await huggingfaceService.testConnection();
-        console.log('✅ HF connectivity confirmed');
-      } catch (hfError) {
-        console.error('❌ HF connectivity issue:', hfError);
-        throw new Error(`Unable to connect to Hugging Face: ${hfError.message}`);
+      // Step 2: Prepare payload for /profile API
+      const formattedData = formatProfileData(editData);
+      const payload = {
+        user_id: user.id,
+        profile_data: formattedData
+      };
+      
+      console.log('📤 Sending payload to /profile API:', payload);
+
+      // Step 3: POST to /profile API
+      const res = await fetch(`${HF_SPACE_URL}/profile`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        console.error("❌ API Error:", data);
+        throw new Error(`API error (${res.status}): ${data?.error || 'Unknown error'}`);
       }
 
-      // Step 3: Save to Hugging Face with formatted data
-      console.log('3️⃣ Saving to Hugging Face...');
-      try {
-        const formattedData = formatProfileData(editData);
-        const payload = {
-          user_id: user.id,
-          profile_data: formattedData
-        };
-        console.log('📤 Sending formatted payload:', payload);
-        
-        await huggingfaceService.saveProfile(formattedData);
-        console.log('✅ Data saved to HF');
-      } catch (hfSaveError) {
-        console.error('❌ HF save error:', hfSaveError);
-        throw new Error(`HF save failed: ${hfSaveError.message}`);
-      }
+      console.log("✅ Profile saved successfully:", data);
 
       // Step 4: Obsidian sync
       console.log('4️⃣ Obsidian synchronization...');
@@ -115,21 +117,21 @@ const OnboardingDataSection = () => {
         console.log(`✅ Obsidian structure created: ${fileCount} files`);
         
         setLastSyncStatus('success');
-        setSyncDetails(`${fileCount} files synchronized successfully`);
+        setSyncDetails(`Profile saved and ${fileCount} files synchronized successfully`);
         
         toast({
-          title: "✅ Complete save successful",
-          description: `Data updated and ${fileCount} files synchronized with Obsidian.`,
+          title: "✅ Save successful",
+          description: `Profile saved and ${fileCount} files synchronized with Obsidian.`,
         });
 
       } catch (obsidianError) {
         console.error('❌ Obsidian sync error:', obsidianError);
         setLastSyncStatus('partial');
-        setSyncDetails(`Data saved but Obsidian error: ${obsidianError.message}`);
+        setSyncDetails(`Profile saved but Obsidian sync error: ${obsidianError.message}`);
         
         toast({
           title: "⚠️ Partial save",
-          description: "Data saved to HF but Obsidian sync error.",
+          description: "Profile saved but Obsidian sync error.",
           variant: "destructive",
         });
       }
@@ -137,13 +139,13 @@ const OnboardingDataSection = () => {
       setIsEditing(false);
 
     } catch (error) {
-      console.error('❌ Global save error:', error);
+      console.error('❌ Save error:', error);
       setLastSyncStatus('error');
       setSyncDetails(error instanceof Error ? error.message : 'Unknown error');
       
       toast({
         title: "❌ Save failed",
-        description: error instanceof Error ? error.message : 'An error occurred.',
+        description: error instanceof Error ? error.message : 'An error occurred during save.',
         variant: "destructive",
       });
     } finally {
