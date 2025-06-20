@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import type { OnboardingData } from "@/types/onboarding";
 
-// Composants refactorisés
+// Refactored components
 import OnboardingActionButtons from "./onboarding/OnboardingActionButtons";
 import OnboardingSyncStatus from "./onboarding/OnboardingSyncStatus";
 import OnboardingSectionCard from "./onboarding/OnboardingSectionCard";
