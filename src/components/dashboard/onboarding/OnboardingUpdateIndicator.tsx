@@ -14,7 +14,7 @@ const OnboardingUpdateIndicator = ({ isUpdating }: OnboardingUpdateIndicatorProp
       <CardContent className="pt-6">
         <div className="flex items-center gap-2 text-blue-700">
           <RefreshCw className="h-5 w-5 animate-spin" />
-          <span>Synchronisation avec votre espace Obsidian en cours...</span>
+          <span>Synchronizing with your Obsidian workspace...</span>
         </div>
       </CardContent>
     </Card>

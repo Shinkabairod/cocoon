@@ -47,7 +47,7 @@ const OnboardingFieldRenderer = ({
       );
     }
 
-    return <span className="text-sm text-gray-600">{String(value) || 'Non défini'}</span>;
+    return <span className="text-sm text-gray-600">{String(value) || 'Not defined'}</span>;
   };
 
   if (!isEditing) {
@@ -81,7 +81,7 @@ const OnboardingFieldRenderer = ({
           onValueChange={(newValue) => onChange(fieldKey, newValue)}
         >
           <SelectTrigger>
-            <SelectValue placeholder={`Choisir ${label.toLowerCase()}`} />
+            <SelectValue placeholder={`Choose ${label.toLowerCase()}`} />
           </SelectTrigger>
           <SelectContent>
             {options.map((option) => (

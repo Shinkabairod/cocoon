@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useToast } from "@/hooks/use-toast";
 import { useOnboarding } from "@/contexts/OnboardingContext";
@@ -35,6 +34,25 @@ const OnboardingDataSection = () => {
     setEditData(onboardingData);
   }, [onboardingData]);
 
+  const formatProfileData = (data: Partial<OnboardingData>) => {
+    return {
+      experienceLevel: data.experienceLevel,
+      contentGoal: data.contentGoal,
+      country: data.country,
+      city: data.city,
+      businessType: data.businessType,
+      businessDescription: data.businessDescription,
+      niche: data.niche,
+      targetGeneration: data.targetGeneration,
+      timeAvailable: data.timeAvailable,
+      monetizationIntent: data.monetization,
+      platforms: data.platforms,
+      contentTypes: data.contentTypes,
+      mainChallenges: Array.isArray(data.contentChallenges) ? data.contentChallenges.join(', ') : data.contentChallenge,
+      resources: `Equipment: ${data.equipmentOwned?.join(', ') || 'Not specified'}, Time: ${data.timeAvailable || 'Not specified'}`
+    };
+  };
+
   const handleFieldChange = (key: keyof OnboardingData, value: any) => {
     setEditData(prev => ({ ...prev, [key]: value }));
   };
@@ -42,8 +60,8 @@ const OnboardingDataSection = () => {
   const handleSave = async () => {
     if (!user) {
       toast({
-        title: "❌ Erreur d'authentification",
-        description: "Vous devez être connecté pour sauvegarder.",
+        title: "❌ Authentication Error",
+        description: "You must be logged in to save.",
         variant: "destructive",
       });
       return;
@@ -54,57 +72,64 @@ const OnboardingDataSection = () => {
     setSyncDetails('');
     
     try {
-      console.log('🚀 Début sauvegarde pour user:', user.id);
-      console.log('📋 Données à sauvegarder:', editData);
+      console.log('🚀 Starting save for user:', user.id);
+      console.log('📋 Data to save:', editData);
 
-      // Étape 1: Mise à jour du contexte local
-      console.log('1️⃣ Mise à jour contexte local...');
+      // Step 1: Update local context
+      console.log('1️⃣ Updating local context...');
       updateOnboardingData(editData);
 
-      // Étape 2: Test de connectivité HF
-      console.log('2️⃣ Test connectivité Hugging Face...');
+      // Step 2: Test HF connectivity
+      console.log('2️⃣ Testing Hugging Face connectivity...');
       try {
         await huggingfaceService.testConnection();
-        console.log('✅ Connectivité HF confirmée');
+        console.log('✅ HF connectivity confirmed');
       } catch (hfError) {
-        console.error('❌ Problème connectivité HF:', hfError);
-        throw new Error(`Impossible de se connecter à Hugging Face: ${hfError.message}`);
+        console.error('❌ HF connectivity issue:', hfError);
+        throw new Error(`Unable to connect to Hugging Face: ${hfError.message}`);
       }
 
-      // Étape 3: Sauvegarde sur Hugging Face
-      console.log('3️⃣ Sauvegarde sur Hugging Face...');
+      // Step 3: Save to Hugging Face with formatted data
+      console.log('3️⃣ Saving to Hugging Face...');
       try {
-        await huggingfaceService.saveOnboardingData(editData);
-        console.log('✅ Données sauvegardées sur HF');
+        const formattedData = formatProfileData(editData);
+        const payload = {
+          user_id: user.id,
+          profile_data: formattedData
+        };
+        console.log('📤 Sending formatted payload:', payload);
+        
+        await huggingfaceService.saveProfile(formattedData);
+        console.log('✅ Data saved to HF');
       } catch (hfSaveError) {
-        console.error('❌ Erreur sauvegarde HF:', hfSaveError);
-        throw new Error(`Échec sauvegarde Hugging Face: ${hfSaveError.message}`);
+        console.error('❌ HF save error:', hfSaveError);
+        throw new Error(`HF save failed: ${hfSaveError.message}`);
       }
 
-      // Étape 4: Synchronisation Obsidian
-      console.log('4️⃣ Synchronisation Obsidian...');
+      // Step 4: Obsidian sync
+      console.log('4️⃣ Obsidian synchronization...');
       setIsUpdatingObsidian(true);
       try {
         await obsidianStructureService.createUserVault(user.id, editData as OnboardingData);
         const fileCount = obsidianStructureService.getFileCount(editData as OnboardingData);
-        console.log(`✅ Structure Obsidian créée: ${fileCount} fichiers`);
+        console.log(`✅ Obsidian structure created: ${fileCount} files`);
         
         setLastSyncStatus('success');
-        setSyncDetails(`${fileCount} fichiers synchronisés avec succès`);
+        setSyncDetails(`${fileCount} files synchronized successfully`);
         
         toast({
-          title: "✅ Sauvegarde complète réussie",
-          description: `Données mises à jour et ${fileCount} fichiers synchronisés avec Obsidian.`,
+          title: "✅ Complete save successful",
+          description: `Data updated and ${fileCount} files synchronized with Obsidian.`,
         });
 
       } catch (obsidianError) {
-        console.error('❌ Erreur sync Obsidian:', obsidianError);
+        console.error('❌ Obsidian sync error:', obsidianError);
         setLastSyncStatus('partial');
-        setSyncDetails(`Données sauvegardées mais erreur Obsidian: ${obsidianError.message}`);
+        setSyncDetails(`Data saved but Obsidian error: ${obsidianError.message}`);
         
         toast({
-          title: "⚠️ Sauvegarde partielle",
-          description: "Données sauvegardées sur HF mais erreur de synchronisation Obsidian.",
+          title: "⚠️ Partial save",
+          description: "Data saved to HF but Obsidian sync error.",
           variant: "destructive",
         });
       }
@@ -112,13 +137,13 @@ const OnboardingDataSection = () => {
       setIsEditing(false);
 
     } catch (error) {
-      console.error('❌ Erreur globale sauvegarde:', error);
+      console.error('❌ Global save error:', error);
       setLastSyncStatus('error');
-      setSyncDetails(error instanceof Error ? error.message : 'Erreur inconnue');
+      setSyncDetails(error instanceof Error ? error.message : 'Unknown error');
       
       toast({
-        title: "❌ Échec de sauvegarde",
-        description: error instanceof Error ? error.message : 'Une erreur est survenue.',
+        title: "❌ Save failed",
+        description: error instanceof Error ? error.message : 'An error occurred.',
         variant: "destructive",
       });
     } finally {
@@ -135,8 +160,8 @@ const OnboardingDataSection = () => {
   const updateObsidianOnly = async () => {
     if (!user) {
       toast({
-        title: "❌ Erreur d'authentification",
-        description: "Vous devez être connecté pour synchroniser.",
+        title: "❌ Authentication Error",
+        description: "You must be logged in to synchronize.",
         variant: "destructive",
       });
       return;
@@ -147,12 +172,12 @@ const OnboardingDataSection = () => {
     setSyncDetails('');
 
     try {
-      console.log('🔄 Synchronisation Obsidian uniquement...');
+      console.log('🔄 Synchronizing Obsidian only...');
       
-      // Test de connectivité d'abord
+      // Test of HF connectivity first
       try {
         await huggingfaceService.testConnection();
-        console.log('✅ Connectivité HF confirmée pour sync');
+        console.log('✅ HF connectivity confirmed for sync');
       } catch (hfError) {
         throw new Error(`Service Hugging Face indisponible: ${hfError.message}`);
       }
@@ -161,21 +186,21 @@ const OnboardingDataSection = () => {
       const fileCount = obsidianStructureService.getFileCount(onboardingData);
       
       setLastSyncStatus('success');
-      setSyncDetails(`${fileCount} fichiers synchronisés`);
+      setSyncDetails(`${fileCount} files synchronized`);
       
       toast({
-        title: "🗂️ Obsidian synchronisé",
-        description: `${fileCount} fichiers mis à jour dans votre espace Obsidian.`,
+        title: "🗂️ Obsidian synchronized",
+        description: `${fileCount} files updated in your Obsidian space.`,
       });
 
     } catch (error) {
-      console.error('❌ Erreur sync Obsidian seul:', error);
+      console.error('❌ Obsidian sync error:', error);
       setLastSyncStatus('error');
-      setSyncDetails(error instanceof Error ? error.message : 'Erreur de synchronisation');
+      setSyncDetails(error instanceof Error ? error.message : 'Sync error');
       
       toast({
-        title: "❌ Erreur de synchronisation",
-        description: error instanceof Error ? error.message : 'Impossible de synchroniser avec Obsidian.',
+        title: "❌ Sync error",
+        description: error instanceof Error ? error.message : 'Unable to synchronize with Obsidian.',
         variant: "destructive",
       });
     } finally {
@@ -185,41 +210,41 @@ const OnboardingDataSection = () => {
 
   const sections = [
     {
-      title: "Profil Personnel",
+      title: "Personal Profile",
       icon: <User className="h-5 w-5" />,
       fields: [
-        { key: 'experienceLevel' as keyof OnboardingData, label: 'Niveau d\'expérience', type: 'select' as const, options: ['Beginner', 'Intermediate', 'Experienced'] },
-        { key: 'contentGoal' as keyof OnboardingData, label: 'Objectif principal', type: 'select' as const, options: ['Grow an audience', 'Share knowledge', 'Make money', 'Build a brand', 'Have fun'] },
-        { key: 'country' as keyof OnboardingData, label: 'Pays' },
-        { key: 'city' as keyof OnboardingData, label: 'Ville' },
+        { key: 'experienceLevel' as keyof OnboardingData, label: 'Experience Level', type: 'select' as const, options: ['Beginner', 'Intermediate', 'Experienced'] },
+        { key: 'contentGoal' as keyof OnboardingData, label: 'Main Goal', type: 'select' as const, options: ['Grow an audience', 'Share knowledge', 'Make money', 'Build a brand', 'Have fun'] },
+        { key: 'country' as keyof OnboardingData, label: 'Country' },
+        { key: 'city' as keyof OnboardingData, label: 'City' },
       ]
     },
     {
       title: "Business",
       icon: <Building className="h-5 w-5" />,
       fields: [
-        { key: 'businessType' as keyof OnboardingData, label: 'Type d\'activité', type: 'select' as const, options: ['Personal Brand', 'Small Business', 'Startup', 'Established Company', 'Educational Institution', 'Non-Profit', 'Agency', 'Other'] },
-        { key: 'businessDescription' as keyof OnboardingData, label: 'Description de votre activité', type: 'textarea' as const },
-        { key: 'niche' as keyof OnboardingData, label: 'Niche/Domaine' },
+        { key: 'businessType' as keyof OnboardingData, label: 'Business Type', type: 'select' as const, options: ['Personal Brand', 'Small Business', 'Startup', 'Established Company', 'Educational Institution', 'Non-Profit', 'Agency', 'Other'] },
+        { key: 'businessDescription' as keyof OnboardingData, label: 'Business Description', type: 'textarea' as const },
+        { key: 'niche' as keyof OnboardingData, label: 'Niche/Domain' },
       ]
     },
     {
       title: "Audience & Impact",
       icon: <Users className="h-5 w-5" />,
       fields: [
-        { key: 'targetGeneration' as keyof OnboardingData, label: 'Génération cible', type: 'select' as const, options: ['Gen Z', 'Millennials', 'Gen X', 'Baby Boomers', 'All Ages'] },
-        { key: 'timeAvailable' as keyof OnboardingData, label: 'Temps disponible', type: 'select' as const, options: ['Less than 1 hour', '1-3 hours', '3-5 hours', '5+ hours'] },
-        { key: 'monetization' as keyof OnboardingData, label: 'Monétisation', type: 'select' as const, options: ['Yes', 'No', 'Not sure yet'] },
+        { key: 'targetGeneration' as keyof OnboardingData, label: 'Target Generation', type: 'select' as const, options: ['Gen Z', 'Millennials', 'Gen X', 'Baby Boomers', 'All Ages'] },
+        { key: 'timeAvailable' as keyof OnboardingData, label: 'Available Time', type: 'select' as const, options: ['Less than 1 hour', '1-3 hours', '3-5 hours', '5+ hours'] },
+        { key: 'monetization' as keyof OnboardingData, label: 'Monetization', type: 'select' as const, options: ['Yes', 'No', 'Not sure yet'] },
       ]
     },
     {
-      title: "Contenu & Plateformes",
+      title: "Content & Platforms",
       icon: <Video className="h-5 w-5" />,
       fields: [
-        { key: 'platforms' as keyof OnboardingData, label: 'Plateformes' },
-        { key: 'contentTypes' as keyof OnboardingData, label: 'Types de contenu' },
-        { key: 'contentChallenges' as keyof OnboardingData, label: 'Défis principaux' },
-        { key: 'impactGoals' as keyof OnboardingData, label: 'Objectifs d\'impact' },
+        { key: 'platforms' as keyof OnboardingData, label: 'Platforms' },
+        { key: 'contentTypes' as keyof OnboardingData, label: 'Content Types' },
+        { key: 'contentChallenges' as keyof OnboardingData, label: 'Main Challenges' },
+        { key: 'impactGoals' as keyof OnboardingData, label: 'Impact Goals' },
       ]
     }
   ];
@@ -230,10 +255,10 @@ const OnboardingDataSection = () => {
         <div>
           <h2 className="text-2xl font-semibold flex items-center gap-2">
             <Settings className="h-6 w-6" />
-            Mes Données d'Onboarding
+            My Onboarding Data
           </h2>
           <p className="text-muted-foreground">
-            Visualisez et modifiez vos informations personnelles
+            View and edit your personal information
           </p>
         </div>
         

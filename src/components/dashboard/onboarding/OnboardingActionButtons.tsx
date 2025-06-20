@@ -31,7 +31,7 @@ const OnboardingActionButtons = ({
         {isUpdatingObsidian ? (
           <>
             <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-            Sync en cours...
+            Syncing...
           </>
         ) : (
           <>
@@ -44,24 +44,24 @@ const OnboardingActionButtons = ({
       {!isEditing ? (
         <Button onClick={onEdit} disabled={isSaving}>
           <Edit className="h-4 w-4 mr-2" />
-          Modifier
+          Edit
         </Button>
       ) : (
         <div className="flex gap-2">
           <Button onClick={onCancel} variant="outline" disabled={isSaving}>
             <X className="h-4 w-4 mr-2" />
-            Annuler
+            Cancel
           </Button>
           <Button onClick={onSave} disabled={isSaving || isUpdatingObsidian}>
             {isSaving ? (
               <>
                 <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                Sauvegarde...
+                Saving...
               </>
             ) : (
               <>
                 <Save className="h-4 w-4 mr-2" />
-                Sauvegarder
+                Save
               </>
             )}
           </Button>

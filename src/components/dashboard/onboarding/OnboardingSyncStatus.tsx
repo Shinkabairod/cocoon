@@ -29,9 +29,9 @@ const OnboardingSyncStatus = ({ status, details }: OnboardingSyncStatusProps) =>
               status === 'partial' ? 'text-orange-800' :
               'text-red-800'
             }`}>
-              {status === 'success' ? 'Synchronisation réussie' :
-               status === 'partial' ? 'Synchronisation partielle' :
-               'Erreur de synchronisation'}
+              {status === 'success' ? 'Synchronization successful' :
+               status === 'partial' ? 'Partial synchronization' :
+               'Synchronization error'}
             </p>
             <p className={`text-sm ${
               status === 'success' ? 'text-green-600' :
