@@ -1,31 +1,24 @@
+
 import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { huggingfaceService } from "@/services/huggingfaceService";
 import { obsidianStructureService } from "@/services/obsidianStructureService";
 import { 
-  Edit, 
-  Save, 
-  X, 
   User, 
-  Target, 
-  Globe, 
   Building, 
   Users, 
   Video,
-  RefreshCw,
-  Settings,
-  AlertTriangle,
-  CheckCircle2
+  Settings
 } from "lucide-react";
 import type { OnboardingData } from "@/types/onboarding";
+
+// Composants refactorisés
+import OnboardingActionButtons from "./onboarding/OnboardingActionButtons";
+import OnboardingSyncStatus from "./onboarding/OnboardingSyncStatus";
+import OnboardingSectionCard from "./onboarding/OnboardingSectionCard";
+import OnboardingUpdateIndicator from "./onboarding/OnboardingUpdateIndicator";
 
 const OnboardingDataSection = () => {
   const { onboardingData, updateOnboardingData } = useOnboarding();
@@ -41,6 +34,10 @@ const OnboardingDataSection = () => {
   useEffect(() => {
     setEditData(onboardingData);
   }, [onboardingData]);
+
+  const handleFieldChange = (key: keyof OnboardingData, value: any) => {
+    setEditData(prev => ({ ...prev, [key]: value }));
+  };
 
   const handleSave = async () => {
     if (!user) {
@@ -186,94 +183,6 @@ const OnboardingDataSection = () => {
     }
   };
 
-  const renderValue = (value: any) => {
-    if (Array.isArray(value)) {
-      return (
-        <div className="flex flex-wrap gap-1">
-          {value.map((item, index) => (
-            <Badge key={index} variant="secondary">{item}</Badge>
-          ))}
-        </div>
-      );
-    }
-
-    if (typeof value === 'object' && value !== null) {
-      return (
-        <div className="space-y-1">
-          {Object.entries(value).map(([key, val]) => (
-            <div key={key} className="text-sm">
-              <span className="font-medium">{key}:</span> {String(val)}
-            </div>
-          ))}
-        </div>
-      );
-    }
-
-    return <span className="text-sm text-gray-600">{String(value) || 'Non défini'}</span>;
-  };
-
-  const renderField = (
-    key: keyof OnboardingData,
-    label: string,
-    type: 'text' | 'textarea' | 'select' = 'text',
-    options?: string[]
-  ) => {
-    const value = isEditing ? editData[key] : onboardingData[key];
-
-    if (!isEditing) {
-      return (
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">{label}</label>
-          {renderValue(value)}
-        </div>
-      );
-    }
-
-    if (type === 'textarea') {
-      return (
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">{label}</label>
-          <Textarea
-            value={String(value || '')}
-            onChange={(e) => setEditData(prev => ({ ...prev, [key]: e.target.value }))}
-            rows={3}
-          />
-        </div>
-      );
-    }
-
-    if (type === 'select' && options) {
-      return (
-        <div className="space-y-2">
-          <label className="text-sm font-medium text-gray-700">{label}</label>
-          <Select
-            value={String(value || '')}
-            onValueChange={(newValue) => setEditData(prev => ({ ...prev, [key]: newValue }))}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder={`Choisir ${label.toLowerCase()}`} />
-            </SelectTrigger>
-            <SelectContent>
-              {options.map((option) => (
-                <SelectItem key={option} value={option}>{option}</SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-      );
-    }
-
-    return (
-      <div className="space-y-2">
-        <label className="text-sm font-medium text-gray-700">{label}</label>
-        <Input
-          value={String(value || '')}
-          onChange={(e) => setEditData(prev => ({ ...prev, [key]: e.target.value }))}
-        />
-      </div>
-    );
-  };
-
   const sections = [
     {
       title: "Profil Personnel",
@@ -327,122 +236,39 @@ const OnboardingDataSection = () => {
             Visualisez et modifiez vos informations personnelles
           </p>
         </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            onClick={updateObsidianOnly}
-            disabled={isUpdatingObsidian || isSaving}
-          >
-            {isUpdatingObsidian ? (
-              <>
-                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                Sync en cours...
-              </>
-            ) : (
-              <>
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Sync Obsidian
-              </>
-            )}
-          </Button>
-          
-          {!isEditing ? (
-            <Button onClick={() => setIsEditing(true)} disabled={isSaving}>
-              <Edit className="h-4 w-4 mr-2" />
-              Modifier
-            </Button>
-          ) : (
-            <div className="flex gap-2">
-              <Button onClick={handleCancel} variant="outline" disabled={isSaving}>
-                <X className="h-4 w-4 mr-2" />
-                Annuler
-              </Button>
-              <Button onClick={handleSave} disabled={isSaving || isUpdatingObsidian}>
-                {isSaving ? (
-                  <>
-                    <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                    Sauvegarde...
-                  </>
-                ) : (
-                  <>
-                    <Save className="h-4 w-4 mr-2" />
-                    Sauvegarder
-                  </>
-                )}
-              </Button>
-            </div>
-          )}
-        </div>
+        
+        <OnboardingActionButtons
+          isEditing={isEditing}
+          isSaving={isSaving}
+          isUpdatingObsidian={isUpdatingObsidian}
+          onEdit={() => setIsEditing(true)}
+          onSave={handleSave}
+          onCancel={handleCancel}
+          onSyncObsidian={updateObsidianOnly}
+        />
       </div>
 
-      {/* Status de synchronisation */}
-      {lastSyncStatus && (
-        <Card className={`border-l-4 ${
-          lastSyncStatus === 'success' ? 'border-l-green-500 bg-green-50' :
-          lastSyncStatus === 'partial' ? 'border-l-orange-500 bg-orange-50' :
-          'border-l-red-500 bg-red-50'
-        }`}>
-          <CardContent className="pt-4">
-            <div className="flex items-start gap-2">
-              {lastSyncStatus === 'success' ? (
-                <CheckCircle2 className="h-5 w-5 text-green-600 mt-0.5" />
-              ) : (
-                <AlertTriangle className="h-5 w-5 text-orange-600 mt-0.5" />
-              )}
-              <div>
-                <p className={`font-medium ${
-                  lastSyncStatus === 'success' ? 'text-green-800' :
-                  lastSyncStatus === 'partial' ? 'text-orange-800' :
-                  'text-red-800'
-                }`}>
-                  {lastSyncStatus === 'success' ? 'Synchronisation réussie' :
-                   lastSyncStatus === 'partial' ? 'Synchronisation partielle' :
-                   'Erreur de synchronisation'}
-                </p>
-                <p className={`text-sm ${
-                  lastSyncStatus === 'success' ? 'text-green-600' :
-                  lastSyncStatus === 'partial' ? 'text-orange-600' :
-                  'text-red-600'
-                }`}>
-                  {syncDetails}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <OnboardingSyncStatus 
+        status={lastSyncStatus} 
+        details={syncDetails} 
+      />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {sections.map((section) => (
-          <Card key={section.title}>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                {section.icon}
-                {section.title}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {section.fields.map((field) => renderField(
-                field.key,
-                field.label,
-                field.type,
-                field.options
-              ))}
-            </CardContent>
-          </Card>
+          <OnboardingSectionCard
+            key={section.title}
+            title={section.title}
+            icon={section.icon}
+            fields={section.fields}
+            data={onboardingData}
+            editData={editData}
+            isEditing={isEditing}
+            onChange={handleFieldChange}
+          />
         ))}
       </div>
 
-      {isUpdatingObsidian && (
-        <Card className="border-blue-200 bg-blue-50">
-          <CardContent className="pt-6">
-            <div className="flex items-center gap-2 text-blue-700">
-              <RefreshCw className="h-5 w-5 animate-spin" />
-              <span>Synchronisation avec votre espace Obsidian en cours...</span>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      <OnboardingUpdateIndicator isUpdating={isUpdatingObsidian} />
     </div>
   );
 };
