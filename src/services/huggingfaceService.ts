@@ -1,7 +1,7 @@
 
 import { supabase } from '@/integrations/supabase/client';
 
-const HF_SPACE_URL = "https://cocoonai-cocoon-ai-assistant.hf.space";
+const HF_SPACE_URL = "https://Cocoonai-cocoon-ai-assistant.hf.space";
 const HF_TOKEN = "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";
 
 // Helper pour vérifier l'auth
