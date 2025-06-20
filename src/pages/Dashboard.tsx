@@ -11,6 +11,7 @@ import AIToolDialog from "@/components/dashboard/AIToolDialog";
 import ConnectionTest from "@/components/dashboard/ConnectionTest";
 import OnboardingTester from "@/components/dashboard/OnboardingTester";
 import OnboardingDataSection from "@/components/dashboard/OnboardingDataSection";
+import UserSettingsSection from "@/components/dashboard/UserSettingsSection";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Dashboard = () => {
@@ -86,10 +87,11 @@ const Dashboard = () => {
 
         {/* Main Content with Tabs */}
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
-            <TabsTrigger value="onboarding">Mes Données</TabsTrigger>
-            <TabsTrigger value="tools">Outils IA</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-5">
+            <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="onboarding">My Data</TabsTrigger>
+            <TabsTrigger value="tools">AI Tools</TabsTrigger>
+            <TabsTrigger value="settings">Settings</TabsTrigger>
             <TabsTrigger value="tests">Tests</TabsTrigger>
           </TabsList>
 
@@ -111,6 +113,10 @@ const Dashboard = () => {
           <TabsContent value="tools" className="space-y-6">
             {/* AI Assistant Tools Section */}
             <AIToolsSection loading={loading} onToolClick={handleToolClick} />
+          </TabsContent>
+
+          <TabsContent value="settings" className="space-y-6">
+            <UserSettingsSection />
           </TabsContent>
 
           <TabsContent value="tests" className="space-y-6">
