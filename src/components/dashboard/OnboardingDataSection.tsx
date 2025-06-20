@@ -44,13 +44,8 @@ const OnboardingDataSection = () => {
 
     setIsSaving(true);
     try {
-      // Mettre à jour le contexte local
       updateOnboardingData(editData);
-
-      // Sauvegarder sur Hugging Face
       await huggingfaceService.saveOnboardingData(editData);
-
-      // Mettre à jour la structure Obsidian
       setIsUpdatingObsidian(true);
       await obsidianStructureService.createUserVault(user.id, editData as OnboardingData);
 
@@ -100,6 +95,32 @@ const OnboardingDataSection = () => {
     }
   };
 
+  const renderValue = (value: any) => {
+    if (Array.isArray(value)) {
+      return (
+        <div className="flex flex-wrap gap-1">
+          {value.map((item, index) => (
+            <Badge key={index} variant="secondary">{item}</Badge>
+          ))}
+        </div>
+      );
+    }
+
+    if (typeof value === 'object' && value !== null) {
+      return (
+        <div className="space-y-1">
+          {Object.entries(value).map(([key, val]) => (
+            <div key={key} className="text-sm">
+              <span className="font-medium">{key}:</span> {String(val)}
+            </div>
+          ))}
+        </div>
+      );
+    }
+
+    return <span className="text-sm text-gray-600">{String(value) || 'Non défini'}</span>;
+  };
+
   const renderField = (
     key: keyof OnboardingData,
     label: string,
@@ -109,23 +130,10 @@ const OnboardingDataSection = () => {
     const value = isEditing ? editData[key] : onboardingData[key];
 
     if (!isEditing) {
-      if (Array.isArray(value)) {
-        return (
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-700">{label}</label>
-            <div className="flex flex-wrap gap-1">
-              {value.map((item, index) => (
-                <Badge key={index} variant="secondary">{item}</Badge>
-              ))}
-            </div>
-          </div>
-        );
-      }
-
       return (
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-700">{label}</label>
-          <p className="text-sm text-gray-600">{value || 'Non défini'}</p>
+          {renderValue(value)}
         </div>
       );
     }
@@ -135,7 +143,7 @@ const OnboardingDataSection = () => {
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-700">{label}</label>
           <Textarea
-            value={value as string || ''}
+            value={String(value || '')}
             onChange={(e) => setEditData(prev => ({ ...prev, [key]: e.target.value }))}
             rows={3}
           />
@@ -148,7 +156,7 @@ const OnboardingDataSection = () => {
         <div className="space-y-2">
           <label className="text-sm font-medium text-gray-700">{label}</label>
           <Select
-            value={value as string || ''}
+            value={String(value || '')}
             onValueChange={(newValue) => setEditData(prev => ({ ...prev, [key]: newValue }))}
           >
             <SelectTrigger>
@@ -168,7 +176,7 @@ const OnboardingDataSection = () => {
       <div className="space-y-2">
         <label className="text-sm font-medium text-gray-700">{label}</label>
         <Input
-          value={value as string || ''}
+          value={String(value || '')}
           onChange={(e) => setEditData(prev => ({ ...prev, [key]: e.target.value }))}
         />
       </div>
