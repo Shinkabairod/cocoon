@@ -10,6 +10,8 @@ import QuickStatsSection from "@/components/dashboard/QuickStatsSection";
 import AIToolDialog from "@/components/dashboard/AIToolDialog";
 import ConnectionTest from "@/components/dashboard/ConnectionTest";
 import OnboardingTester from "@/components/dashboard/OnboardingTester";
+import OnboardingDataSection from "@/components/dashboard/OnboardingDataSection";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Dashboard = () => {
   const [activeSection, setActiveSection] = useState<string | null>(null);
@@ -82,23 +84,43 @@ const Dashboard = () => {
           </Avatar>
         </div>
 
-        {/* Tests de connectivité et fonctionnalité */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <ConnectionTest />
-          <OnboardingTester />
-        </div>
+        {/* Main Content with Tabs */}
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="grid w-full grid-cols-4">
+            <TabsTrigger value="overview">Vue d'ensemble</TabsTrigger>
+            <TabsTrigger value="onboarding">Mes Données</TabsTrigger>
+            <TabsTrigger value="tools">Outils IA</TabsTrigger>
+            <TabsTrigger value="tests">Tests</TabsTrigger>
+          </TabsList>
 
-        {/* User Resources Section */}
-        <UserResourcesSection />
+          <TabsContent value="overview" className="space-y-6">
+            {/* User Resources Section */}
+            <UserResourcesSection />
 
-        {/* AI Assistant Tools Section */}
-        <AIToolsSection loading={loading} onToolClick={handleToolClick} />
+            {/* AI Assistant Chat */}
+            <AIAssistantChat />
 
-        {/* AI Assistant Chat */}
-        <AIAssistantChat />
+            {/* Quick Stats */}
+            <QuickStatsSection />
+          </TabsContent>
 
-        {/* Quick Stats */}
-        <QuickStatsSection />
+          <TabsContent value="onboarding" className="space-y-6">
+            <OnboardingDataSection />
+          </TabsContent>
+
+          <TabsContent value="tools" className="space-y-6">
+            {/* AI Assistant Tools Section */}
+            <AIToolsSection loading={loading} onToolClick={handleToolClick} />
+          </TabsContent>
+
+          <TabsContent value="tests" className="space-y-6">
+            {/* Tests de connectivité et fonctionnalité */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <ConnectionTest />
+              <OnboardingTester />
+            </div>
+          </TabsContent>
+        </Tabs>
 
         {/* AI Tool Dialog */}
         <AIToolDialog
