@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import { useOnboardingComplete } from "@/hooks/useOnboardingComplete";
@@ -311,7 +310,7 @@ const SummaryStep = () => {
               ) : (
                 <>
                   <Sparkles className="h-4 w-4 mr-2" />
-                  🚀 Finaliser ma configuration
+                  🚀 Launch My AI Workspace
                 </>
               )}
             </Button>
