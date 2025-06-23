@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -47,7 +46,9 @@ const Auth = () => {
   // Redirect if already authenticated
   useEffect(() => {
     if (user) {
-      navigate('/dashboard');
+      // Rediriger vers onboarding au lieu du dashboard
+      // OnboardingGuard se chargera de rediriger vers dashboard si onboarding déjà terminé
+      navigate('/onboarding');
     }
   }, [user, navigate]);
 
@@ -116,7 +117,8 @@ const Auth = () => {
         title: "Bienvenue !",
         description: "Vous êtes maintenant connecté.",
       });
-      navigate('/dashboard');
+      // OnboardingGuard s'occupera de la redirection appropriée
+      navigate('/onboarding');
     }
     
     setIsLoading(false);

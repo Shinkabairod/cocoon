@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { OnboardingProvider } from "@/contexts/OnboardingContext";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
+import OnboardingGuard from "@/components/auth/OnboardingGuard";
 import Index from "./pages/Index";
 import About from "./pages/About";
 import Pricing from "./pages/Pricing";
@@ -43,17 +44,23 @@ const App = () => {
                   } />
                   <Route path="/dashboard" element={
                     <ProtectedRoute>
-                      {isMobile ? <MobileDashboard /> : <Dashboard />}
+                      <OnboardingGuard>
+                        {isMobile ? <MobileDashboard /> : <Dashboard />}
+                      </OnboardingGuard>
                     </ProtectedRoute>
                   } />
                   <Route path="/mobile" element={
                     <ProtectedRoute>
-                      <MobileDashboard />
+                      <OnboardingGuard>
+                        <MobileDashboard />
+                      </OnboardingGuard>
                     </ProtectedRoute>
                   } />
                   <Route path="/dashboard/*" element={
                     <ProtectedRoute>
-                      {isMobile ? <MobileDashboard /> : <Dashboard />}
+                      <OnboardingGuard>
+                        {isMobile ? <MobileDashboard /> : <Dashboard />}
+                      </OnboardingGuard>
                     </ProtectedRoute>
                   } />
                   <Route path="*" element={<NotFound />} />
