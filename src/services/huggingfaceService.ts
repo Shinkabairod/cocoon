@@ -91,6 +91,25 @@ export const huggingfaceService = {
     }
   },
 
+  async getNote(title: string) {
+    try {
+      console.log('📖 Récupération note:', title);
+      
+      const user = await ensureAuth();
+
+      const result = await makeHFRequest('/get_note', {
+        user_id: user.id,
+        title: title
+      });
+
+      console.log('✅ Note récupérée:', result);
+      return result;
+    } catch (error) {
+      console.error('❌ Erreur getNote:', error);
+      throw error;
+    }
+  },
+
   async saveObsidianFile(userId: string, filePath: string, content: string) {
     try {
       console.log('🗂️ Sauvegarde fichier Obsidian:', { userId, filePath });
