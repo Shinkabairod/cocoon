@@ -4,14 +4,23 @@ import { useOnboarding } from "@/contexts/OnboardingContext";
 import { useOnboardingComplete } from "@/hooks/useOnboardingComplete";
 import OnboardingLayout from "./OnboardingLayout";
 import { Card, CardContent } from "@/components/ui/card";
-import { Check, FileText, Users, Target, Loader2 } from "lucide-react";
+import { Check, FileText, Users, Target, Loader2, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { obsidianStructureService } from "@/services/obsidianStructureService";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const HF_SPACE_URL = "https://Cocoonai-cocoon-ai-assistant.hf.space";
+
+const loadingMessages = [
+  "🧠 Analyzing your profile and preferences...",
+  "🎯 Creating your personalized AI coaching strategy...",
+  "📊 Setting up your content optimization system...",
+  "🔥 Configuring your growth accelerator tools...",
+  "✨ Finalizing your personalized workspace...",
+  "🚀 Almost ready to launch your creator journey!"
+];
 
 const SummaryStep = () => {
   const { onboardingData } = useOnboarding();
@@ -19,25 +28,37 @@ const SummaryStep = () => {
   const { user } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
-  const [isCreatingObsidian, setIsCreatingObsidian] = useState(false);
+  const [isCreatingWorkspace, setIsCreatingWorkspace] = useState(false);
+  const [currentLoadingMessage, setCurrentLoadingMessage] = useState(0);
   
+  // Cycle through loading messages
+  useEffect(() => {
+    if (isCreatingWorkspace) {
+      const interval = setInterval(() => {
+        setCurrentLoadingMessage(prev => (prev + 1) % loadingMessages.length);
+      }, 2000);
+      
+      return () => clearInterval(interval);
+    }
+  }, [isCreatingWorkspace]);
+
   const handleComplete = async () => {
     if (!user) {
       toast({
-        title: "❌ Authentication Error",
-        description: "You must be logged in to complete onboarding.",
+        title: "❌ Erreur d'authentification",
+        description: "Vous devez être connecté pour finaliser votre configuration.",
         variant: "destructive",
       });
       return;
     }
 
-    setIsCreatingObsidian(true);
+    setIsCreatingWorkspace(true);
 
     try {
       console.log('🚀 Starting complete onboarding process for user:', user.id);
 
       // Step 1: Save profile data to /profile API
-      console.log('📤 Saving profile data...');
+      console.log('📤 Saving your personalized profile...');
       const payload = {
         user_id: user.id,
         profile_data: {
@@ -77,21 +98,21 @@ const SummaryStep = () => {
 
       console.log("✅ Profile saved successfully:", data);
 
-      // Step 2: Create complete Obsidian structure
-      console.log('🗂️ Creating complete Obsidian structure...');
+      // Step 2: Create personalized workspace structure
+      console.log('🗂️ Creating your personalized workspace...');
       await obsidianStructureService.createUserVault(user.id, onboardingData);
       const fileCount = obsidianStructureService.getFileCount(onboardingData);
-      console.log(`✅ Obsidian structure created: ${fileCount} files`);
+      console.log(`✅ Workspace structure created: ${fileCount} files`);
 
       // Step 3: Complete onboarding process
       await completeOnboarding();
 
       toast({
-        title: "🎉 Onboarding Complete!",
-        description: `Profile saved and ${fileCount} files created in your Obsidian space.`,
+        title: "🎉 Configuration terminée !",
+        description: `Votre espace personnalisé Cocoon AI est prêt avec ${fileCount} éléments configurés.`,
       });
 
-      // Redirect to dashboard after completion
+      // Redirect to dashboard after a short delay to show success
       setTimeout(() => {
         navigate('/dashboard');
       }, 2000);
@@ -100,12 +121,12 @@ const SummaryStep = () => {
       console.error('❌ Complete onboarding error:', error);
       
       toast({
-        title: "❌ Setup failed",
-        description: error instanceof Error ? error.message : 'An error occurred during setup.',
+        title: "❌ Erreur de configuration",
+        description: error instanceof Error ? error.message : 'Une erreur est survenue lors de la configuration.',
         variant: "destructive",
       });
     } finally {
-      setIsCreatingObsidian(false);
+      setIsCreatingWorkspace(false);
     }
   };
 
@@ -147,11 +168,45 @@ const SummaryStep = () => {
     return highlights;
   };
 
+  // Loading state during workspace creation
+  if (isCreatingWorkspace) {
+    return (
+      <OnboardingLayout 
+        title="✨ Configuration de votre espace personnalisé" 
+        subtitle="Nous créons votre environnement de travail optimisé..."
+      >
+        <div className="space-y-8 text-center">
+          <div className="mx-auto w-20 h-20 bg-gradient-to-r from-coach-primary to-blue-500 rounded-full flex items-center justify-center animate-pulse">
+            <Sparkles className="h-10 w-10 text-white animate-spin" />
+          </div>
+          
+          <div className="space-y-4">
+            <h3 className="text-xl font-semibold">Configuration en cours...</h3>
+            <div className="min-h-[60px] flex items-center justify-center">
+              <p className="text-muted-foreground text-lg animate-fade-in">
+                {loadingMessages[currentLoadingMessage]}
+              </p>
+            </div>
+            
+            <div className="w-full bg-gray-200 rounded-full h-2">
+              <div className="bg-gradient-to-r from-coach-primary to-blue-500 h-2 rounded-full animate-pulse" style={{width: '75%'}}></div>
+            </div>
+            
+            <p className="text-sm text-muted-foreground">
+              Cela ne prendra que quelques instants...
+            </p>
+          </div>
+        </div>
+      </OnboardingLayout>
+    );
+  }
+
+  // Success state after completion
   if (isCompleted) {
     return (
       <OnboardingLayout 
-        title="🎉 Welcome to Cocoon AI!" 
-        subtitle="Your personalized space has been created successfully"
+        title="🎉 Bienvenue dans Cocoon AI !" 
+        subtitle="Votre espace personnalisé est prêt"
       >
         <div className="space-y-6 text-center">
           <div className="mx-auto w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
@@ -159,10 +214,10 @@ const SummaryStep = () => {
           </div>
           
           <div>
-            <h3 className="text-xl font-semibold mb-2">Setup Complete!</h3>
+            <h3 className="text-xl font-semibold mb-2">Configuration terminée !</h3>
             <p className="text-muted-foreground">
-              Your personalized Obsidian structure has been created and your data is saved.
-              Redirecting to your dashboard...
+              Votre espace de travail personnalisé a été créé avec succès.
+              Redirection vers votre dashboard...
             </p>
           </div>
         </div>
@@ -172,8 +227,8 @@ const SummaryStep = () => {
   
   return (
     <OnboardingLayout 
-      title="Your Profile Summary" 
-      subtitle="Review your information before finalizing your setup"
+      title="Récapitulatif de votre profil" 
+      subtitle="Vérifiez vos informations avant de finaliser votre configuration"
     >
       <div className="space-y-6">
         {/* Profile highlights */}
@@ -199,26 +254,26 @@ const SummaryStep = () => {
         <Card className="border-coach-primary/20">
           <CardContent className="p-6">
             <h3 className="font-semibold mb-4 flex items-center">
-              <FileText className="h-5 w-5 mr-2 text-coach-primary" />
-              What will be created for you
+              <Sparkles className="h-5 w-5 mr-2 text-coach-primary" />
+              Ce qui sera créé pour vous
             </h3>
             
             <div className="space-y-3">
               <div className="flex items-center space-x-2">
                 <Check className="h-4 w-4 text-green-600" />
-                <span className="text-sm">Personalized Obsidian structure (15+ organized files)</span>
+                <span className="text-sm">Assistant IA personnalisé selon votre profil</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Check className="h-4 w-4 text-green-600" />
-                <span className="text-sm">Secure backup on Hugging Face (vaults/user_{'{user_id}'})</span>
+                <span className="text-sm">Outils optimisés pour vos plateformes et objectifs</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Check className="h-4 w-4 text-green-600" />
-                <span className="text-sm">AI configuration optimized for your needs</span>
+                <span className="text-sm">Recommandations personnalisées basées sur vos défis</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Check className="h-4 w-4 text-green-600" />
-                <span className="text-sm">Personalized dashboard with recommendations</span>
+                <span className="text-sm">Dashboard adapté à votre niveau et vos besoins</span>
               </div>
             </div>
           </CardContent>
@@ -228,7 +283,7 @@ const SummaryStep = () => {
         {onboardingData.contentChallenges && onboardingData.contentChallenges.length > 0 && (
           <Card>
             <CardContent className="p-4">
-              <h4 className="font-medium mb-2">Priority challenges to solve</h4>
+              <h4 className="font-medium mb-2">Défis prioritaires à résoudre</h4>
               <div className="space-y-1">
                 {onboardingData.contentChallenges.map((challenge, index) => (
                   <div key={index} className="text-sm text-muted-foreground">
@@ -240,27 +295,31 @@ const SummaryStep = () => {
           </Card>
         )}
         
-        {/* Complete Onboarding Button */}
+        {/* Complete Setup Button */}
         <div className="pt-4 space-y-3">
           <div className="flex justify-center">
             <Button 
               className="gradient-bg w-full max-w-sm"
               onClick={handleComplete}
-              disabled={isProcessing || isCreatingObsidian}
+              disabled={isProcessing || isCreatingWorkspace}
             >
-              {isProcessing || isCreatingObsidian ? (
+              {isProcessing || isCreatingWorkspace ? (
                 <>
                   <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  Creating your complete space...
+                  Configuration en cours...
                 </>
               ) : (
                 <>
-                  <FileText className="h-4 w-4 mr-2" />
-                  🚀 Create My Complete Obsidian Space
+                  <Sparkles className="h-4 w-4 mr-2" />
+                  🚀 Finaliser ma configuration
                 </>
               )}
             </Button>
           </div>
+          
+          <p className="text-center text-sm text-muted-foreground">
+            Votre espace sera prêt en quelques secondes
+          </p>
         </div>
       </div>
     </OnboardingLayout>
