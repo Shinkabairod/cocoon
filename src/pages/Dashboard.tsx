@@ -12,6 +12,7 @@ import ConnectionTest from "@/components/dashboard/ConnectionTest";
 import OnboardingTester from "@/components/dashboard/OnboardingTester";
 import OnboardingDataSection from "@/components/dashboard/OnboardingDataSection";
 import UserSettingsSection from "@/components/dashboard/UserSettingsSection";
+import UserWorkspace from "@/components/dashboard/UserWorkspace";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const Dashboard = () => {
@@ -87,8 +88,9 @@ const Dashboard = () => {
 
         {/* Main Content with Tabs */}
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-5">
+          <TabsList className="grid w-full grid-cols-6">
             <TabsTrigger value="overview">Overview</TabsTrigger>
+            <TabsTrigger value="workspace">Workspace</TabsTrigger>
             <TabsTrigger value="onboarding">My Data</TabsTrigger>
             <TabsTrigger value="tools">AI Tools</TabsTrigger>
             <TabsTrigger value="settings">Settings</TabsTrigger>
@@ -104,6 +106,10 @@ const Dashboard = () => {
 
             {/* Quick Stats */}
             <QuickStatsSection />
+          </TabsContent>
+
+          <TabsContent value="workspace" className="space-y-6">
+            <UserWorkspace />
           </TabsContent>
 
           <TabsContent value="onboarding" className="space-y-6">
