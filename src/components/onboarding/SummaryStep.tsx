@@ -10,7 +10,6 @@ import { useToast } from "@/hooks/use-toast";
 import { obsidianStructureService } from "@/services/obsidianStructureService";
 import { useState, useEffect } from "react";
 
-// Utilisation de la variable d'environnement
 const HF_SPACE_URL = import.meta.env.VITE_HF_SPACE_URL || "https://cocoonai-cocoon-ai-assistant.hf.space";
 
 const loadingMessages = [
@@ -31,7 +30,6 @@ const SummaryStep = () => {
   const [isCreatingWorkspace, setIsCreatingWorkspace] = useState(false);
   const [currentLoadingMessage, setCurrentLoadingMessage] = useState(0);
   
-  // Cycle through loading messages
   useEffect(() => {
     if (isCreatingWorkspace) {
       const interval = setInterval(() => {
@@ -57,8 +55,6 @@ const SummaryStep = () => {
     try {
       console.log('🚀 Starting complete onboarding process for user:', user.id);
 
-      // Step 1: Save profile data to /profile API
-      console.log('📤 Saving your personalized profile...');
       const payload = {
         user_id: user.id,
         profile_data: {
@@ -98,9 +94,6 @@ const SummaryStep = () => {
 
       console.log("✅ Profile saved successfully:", data);
 
-      // Step 2: Create personalized workspace structure (avec gestion d'erreur)
-      console.log('🗂️ Creating your personalized workspace...');
-      
       let fileCount = 0;
       let workspaceSuccess = false;
       
@@ -115,10 +108,8 @@ const SummaryStep = () => {
         workspaceSuccess = false;
       }
 
-      // Step 3: Complete onboarding process (même si workspace partiellement)
       await completeOnboarding();
 
-      // Messages différents selon le succès
       if (workspaceSuccess && fileCount > 0) {
         toast({
           title: "🎉 Configuration terminée !",
@@ -136,7 +127,6 @@ const SummaryStep = () => {
         });
       }
 
-      // Redirect to dashboard after a short delay to show success
       setTimeout(() => {
         navigate('/dashboard');
       }, 2000);
@@ -144,7 +134,6 @@ const SummaryStep = () => {
     } catch (error) {
       console.error('❌ Complete onboarding error:', error);
       
-      // Essayer quand même de terminer l'onboarding basique
       try {
         await completeOnboarding();
         toast({
@@ -205,7 +194,6 @@ const SummaryStep = () => {
     return highlights;
   };
 
-  // Loading state during workspace creation
   if (isCreatingWorkspace) {
     return (
       <OnboardingLayout 
@@ -238,7 +226,6 @@ const SummaryStep = () => {
     );
   }
 
-  // Success state after completion
   if (isCompleted) {
     return (
       <OnboardingLayout 
@@ -268,7 +255,6 @@ const SummaryStep = () => {
       subtitle="Vérifiez vos informations avant de finaliser votre configuration"
     >
       <div className="space-y-6">
-        {/* Profile highlights */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {getHighlights().map((highlight, index) => (
             <Card key={index}>
@@ -283,11 +269,10 @@ const SummaryStep = () => {
                   </div>
                 </div>
               </CardContent>
-            </div>
+            </Card>
           ))}
         </div>
 
-        {/* Information about what will be created */}
         <Card className="border-coach-primary/20">
           <CardContent className="p-6">
             <h3 className="font-semibold mb-4 flex items-center">
@@ -316,7 +301,6 @@ const SummaryStep = () => {
           </CardContent>
         </Card>
 
-        {/* Identified challenges */}
         {onboardingData.contentChallenges && onboardingData.contentChallenges.length > 0 && (
           <Card>
             <CardContent className="p-4">
@@ -332,7 +316,6 @@ const SummaryStep = () => {
           </Card>
         )}
         
-        {/* Complete Setup Button */}
         <div className="pt-4 space-y-3">
           <div className="flex justify-center">
             <Button 
