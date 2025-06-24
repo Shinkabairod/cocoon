@@ -1,4 +1,3 @@
-
 // src/hooks/useUserStats.ts
 // Hook pour récupérer et calculer les vraies stats utilisateur
 
@@ -171,7 +170,7 @@ export const useUserStats = (userId: string | undefined) => {
         id: file.id.toString(),
         name: file.path?.split('/').pop() || 'Fichier sans nom',
         type: file.file_type || 'unknown',
-        size: formatFileSize(file.metadata?.size || 0),
+        size: formatFileSize(getFileSize(file.metadata)),
         uploadedAt: formatRelativeTime(file.created_at)
       })) || [];
 
@@ -230,6 +229,15 @@ export const useUserStats = (userId: string | undefined) => {
     staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: true
   });
+};
+
+// Helper function to safely get file size
+const getFileSize = (metadata: any): number => {
+  if (!metadata) return 0;
+  if (typeof metadata === 'object' && 'size' in metadata) {
+    return typeof metadata.size === 'number' ? metadata.size : 0;
+  }
+  return 0;
 };
 
 // Fonctions utilitaires
