@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import { useOnboardingComplete } from "@/hooks/useOnboardingComplete";
@@ -43,21 +44,26 @@ const SummaryStep = () => {
 
   useEffect(() => {
     if (isCompleted && !hasRedirected) {
-      console.log('✅ Onboarding completed, redirecting to dashboard...');
+      console.log('✅ Onboarding completed, preparing redirection...');
       setHasRedirected(true);
       
-      // Marquer l'onboarding comme complété dans les données
-      updateOnboardingData({ step: 22, onboardingCompleted: true });
+      // Marquer définitivement l'onboarding comme complété
+      const completedData = { 
+        ...onboardingData,
+        step: 22, 
+        onboardingCompleted: true 
+      };
       
-      // Redirection après un court délai pour permettre l'affichage du succès
-      const redirectTimer = setTimeout(() => {
-        console.log('🚀 Redirecting to dashboard...');
+      updateOnboardingData(completedData);
+      console.log('📝 Onboarding data updated with completion flag');
+      
+      // Redirection immédiate mais avec un petit délai pour permettre l'affichage
+      setTimeout(() => {
+        console.log('🚀 Redirecting to dashboard now...');
         navigate('/dashboard', { replace: true });
-      }, 1500);
-      
-      return () => clearTimeout(redirectTimer);
+      }, 2000);
     }
-  }, [isCompleted, hasRedirected, navigate, updateOnboardingData]);
+  }, [isCompleted, hasRedirected, navigate, updateOnboardingData, onboardingData]);
 
   const handleComplete = async () => {
     if (!user) {
@@ -138,12 +144,12 @@ const SummaryStep = () => {
       } else if (data.sync_status === "synced") {
         toast({
           title: "🎉 Configuration terminée !",
-          description: "Votre profil est sauvegardé. L'espace de travail sera créé progressivement.",
+          description: "Votre profil est sauvegardé. Redirection vers votre dashboard...",
         });
       } else {
         toast({
           title: "⚠️ Configuration partiellement terminée",
-          description: "Votre profil est sauvegardé, mais certains éléments seront créés au fur et à mesure.",
+          description: "Votre profil est sauvegardé. Redirection vers votre dashboard...",
         });
       }
 
@@ -154,7 +160,7 @@ const SummaryStep = () => {
         await completeOnboarding();
         toast({
           title: "⚠️ Configuration basique terminée",
-          description: "Votre compte est créé. Certaines fonctionnalités seront configurées automatiquement.",
+          description: "Votre compte est créé. Redirection vers votre dashboard...",
         });
       } catch (finalError) {
         toast({
