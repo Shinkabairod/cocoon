@@ -90,114 +90,155 @@ const SummaryStep = () => {
     }
   }, [isCompleted, hasRedirected, navigate, updateOnboardingData, onboardingData, user]);
 
-  const handleComplete = async () => {
-    if (!user) {
+const handleComplete = async () => {
+  if (!user) {
+    toast({
+      title: "❌ Erreur d'authentification",
+      description: "Vous devez être connecté pour finaliser votre configuration.",
+      variant: "destructive",
+    });
+    return;
+  }
+
+  setIsCreatingWorkspace(true);
+
+  try {
+    console.log('🚀 Starting complete onboarding process for user:', user.id);
+
+    // Step 1: Save profile data to /profile API
+    console.log('📤 Saving your personalized profile...');
+    const payload = {
+      user_id: user.id,
+      profile_data: {
+        experienceLevel: onboardingData.experienceLevel,
+        contentGoal: onboardingData.contentGoal,
+        country: onboardingData.country,
+        city: onboardingData.city,
+        businessType: onboardingData.businessType,
+        businessDescription: onboardingData.businessDescription,
+        niche: onboardingData.niche,
+        targetGeneration: onboardingData.targetGeneration,
+        timeAvailable: onboardingData.timeAvailable,
+        monetizationIntent: onboardingData.monetization,
+        platforms: onboardingData.platforms,
+        contentTypes: onboardingData.contentTypes,
+        mainChallenges: Array.isArray(onboardingData.contentChallenges) 
+          ? onboardingData.contentChallenges.join(', ') 
+          : onboardingData.contentChallenge,
+        resources: `Equipment: ${onboardingData.equipmentOwned?.join(', ') || 'Not specified'}, Time: ${onboardingData.timeAvailable || 'Not specified'}`
+      }
+    };
+
+    const res = await fetch(`${HF_SPACE_URL}/profile`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      console.error("❌ API Error:", data);
+      throw new Error(`API error (${res.status}): ${data?.error || 'Unknown error'}`);
+    }
+
+    console.log("✅ Profile saved successfully:", data);
+
+    // Step 2: Create personalized workspace structure (avec gestion d'erreur)
+    console.log('🗂️ Creating your personalized workspace...');
+    
+    let fileCount = 0;
+    let workspaceSuccess = false;
+    
+    try {
+      await obsidianStructureService.createUserVault(user.id, onboardingData);
+      fileCount = obsidianStructureService.getFileCount(onboardingData);
+      workspaceSuccess = true;
+      console.log(`✅ Workspace structure created: ${fileCount} files`);
+    } catch (workspaceError) {
+      console.warn('⚠️ Workspace creation partial:', workspaceError);
+      fileCount = 0;
+      workspaceSuccess = false;
+    }
+
+    // Step 3: Marquer l'onboarding comme terminé dans Supabase
+    console.log('✅ Marking onboarding as completed...');
+    const { error: updateError } = await supabase
+      .from('user_profiles')
+      .upsert({
+        user_id: user.id,
+        onboarding_completed: true,
+        profile_data: payload.profile_data,
+        updated_at: new Date().toISOString()
+      });
+
+    if (updateError) {
+      console.warn('⚠️ Erreur mise à jour profil:', updateError);
+    } else {
+      console.log('✅ Onboarding marked as completed in database');
+    }
+
+    // Step 4: Complete onboarding process
+    await completeOnboarding();
+
+    // Messages différents selon le succès
+    if (workspaceSuccess && fileCount > 0) {
       toast({
-        title: "❌ Erreur d'authentification",
-        description: "Vous devez être connecté pour finaliser votre configuration.",
+        title: "🎉 Configuration terminée !",
+        description: `Votre espace personnalisé Cocoon AI est prêt avec ${fileCount} éléments configurés.`,
+      });
+    } else if (data.sync_status === "synced") {
+      toast({
+        title: "🎉 Configuration terminée !",
+        description: "Votre profil est sauvegardé. L'espace de travail sera créé progressivement.",
+      });
+    } else {
+      toast({
+        title: "⚠️ Configuration partiellement terminée",
+        description: "Votre profil est sauvegardé, mais certains éléments seront créés au fur et à mesure.",
+      });
+    }
+
+    // Redirection immédiate vers le dashboard
+    console.log('🎯 Redirecting to dashboard...');
+    navigate('/dashboard', { replace: true });
+
+  } catch (error) {
+    console.error('❌ Complete onboarding error:', error);
+    
+    // Essayer quand même de terminer l'onboarding basique
+    try {
+      await completeOnboarding();
+      
+      // Marquer comme terminé même en cas d'erreur partielle
+      await supabase
+        .from('user_profiles')
+        .upsert({
+          user_id: user.id,
+          onboarding_completed: true,
+          profile_data: payload.profile_data,
+          updated_at: new Date().toISOString()
+        });
+      
+      toast({
+        title: "⚠️ Configuration basique terminée",
+        description: "Votre compte est créé. Certaines fonctionnalités seront configurées automatiquement.",
+      });
+      
+      navigate('/dashboard', { replace: true });
+    } catch (finalError) {
+      toast({
+        title: "❌ Erreur de configuration",
+        description: error instanceof Error ? error.message : 'Une erreur est survenue lors de la configuration.',
         variant: "destructive",
       });
-      return;
     }
-
-    setIsCreatingWorkspace(true);
-
-    try {
-      console.log('🚀 Starting complete onboarding process for user:', user.id);
-
-      const payload = {
-        user_id: user.id,
-        profile_data: {
-          experienceLevel: onboardingData.experienceLevel,
-          contentGoal: onboardingData.contentGoal,
-          country: onboardingData.country,
-          city: onboardingData.city,
-          businessType: onboardingData.businessType,
-          businessDescription: onboardingData.businessDescription,
-          niche: onboardingData.niche,
-          targetGeneration: onboardingData.targetGeneration,
-          timeAvailable: onboardingData.timeAvailable,
-          monetizationIntent: onboardingData.monetization,
-          platforms: onboardingData.platforms,
-          contentTypes: onboardingData.contentTypes,
-          mainChallenges: Array.isArray(onboardingData.contentChallenges) 
-            ? onboardingData.contentChallenges.join(', ') 
-            : onboardingData.contentChallenge,
-          resources: `Equipment: ${onboardingData.equipmentOwned?.join(', ') || 'Not specified'}, Time: ${onboardingData.timeAvailable || 'Not specified'}`
-        }
-      };
-
-      const res = await fetch(`${HF_SPACE_URL}/profile`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        console.error("❌ API Error:", data);
-        throw new Error(`API error (${res.status}): ${data?.error || 'Unknown error'}`);
-      }
-
-      console.log("✅ Profile saved successfully:", data);
-
-      let fileCount = 0;
-      let workspaceSuccess = false;
-      
-      try {
-        await obsidianStructureService.createUserVault(user.id, onboardingData);
-        fileCount = obsidianStructureService.getFileCount(onboardingData);
-        workspaceSuccess = true;
-        console.log(`✅ Workspace structure created: ${fileCount} files`);
-      } catch (workspaceError) {
-        console.warn('⚠️ Workspace creation partial:', workspaceError);
-        fileCount = 0;
-        workspaceSuccess = false;
-      }
-
-      // Finaliser l'onboarding - cela va déclencher la redirection
-      await completeOnboarding();
-
-      if (workspaceSuccess && fileCount > 0) {
-        toast({
-          title: "🎉 Configuration terminée !",
-          description: `Votre espace personnalisé Cocoon AI est prêt avec ${fileCount} éléments configurés.`,
-        });
-      } else if (data.sync_status === "synced") {
-        toast({
-          title: "🎉 Configuration terminée !",
-          description: "Votre profil est sauvegardé. Redirection vers votre dashboard...",
-        });
-      } else {
-        toast({
-          title: "⚠️ Configuration partiellement terminée",
-          description: "Votre profil est sauvegardé. Redirection vers votre dashboard...",
-        });
-      }
-
-    } catch (error) {
-      console.error('❌ Complete onboarding error:', error);
-      
-      try {
-        await completeOnboarding();
-        toast({
-          title: "⚠️ Configuration basique terminée",
-          description: "Votre compte est créé. Redirection vers votre dashboard...",
-        });
-      } catch (finalError) {
-        toast({
-          title: "❌ Erreur de configuration",
-          description: error instanceof Error ? error.message : 'Une erreur est survenue lors de la configuration.',
-          variant: "destructive",
-        });
-      }
-    } finally {
-      setIsCreatingWorkspace(false);
-    }
-  };
+  } finally {
+    setIsCreatingWorkspace(false);
+  }
+};
 
   const getHighlights = () => {
     const highlights = [];
