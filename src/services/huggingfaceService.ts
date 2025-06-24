@@ -100,14 +100,35 @@ export const huggingfaceService = {
     }
   },
 
-  // Poser une question à l'IA
-  async askAI(question: string) {
+  // Sauvegarder les données d'onboarding
+  async saveOnboardingData(onboardingData: any) {
     try {
       const user = await ensureAuth();
 
       const payload = {
         user_id: user.id,
-        question: question
+        onboarding_data: onboardingData
+      };
+
+      console.log('💾 Sauvegarde données onboarding...');
+      const result = await makeBackendRequest('/onboarding', payload);
+      console.log('✅ Données onboarding sauvegardées:', result);
+      return result;
+    } catch (error) {
+      console.error('❌ Erreur sauvegarde onboarding:', error);
+      throw error;
+    }
+  },
+
+  // Poser une question à l'IA (signature flexible)
+  async askAI(question: string, context?: string) {
+    try {
+      const user = await ensureAuth();
+
+      const payload = {
+        user_id: user.id,
+        question: question,
+        context: context
       };
 
       console.log('🤖 Question à l\'IA:', question);
@@ -120,15 +141,16 @@ export const huggingfaceService = {
     }
   },
 
-  // Sauvegarder une note
-  async saveNote(title: string, content: string) {
+  // Sauvegarder une note (signature flexible)
+  async saveNote(title: string, content: string, noteType?: string) {
     try {
       const user = await ensureAuth();
 
       const payload = {
         user_id: user.id,
         title: title,
-        content: content
+        content: content,
+        note_type: noteType || 'note'
       };
 
       console.log('📝 Sauvegarde note:', title);
@@ -137,6 +159,100 @@ export const huggingfaceService = {
       return result;
     } catch (error) {
       console.error('❌ Erreur sauvegarde note:', error);
+      throw error;
+    }
+  },
+
+  // Récupérer une note
+  async getNote(noteId: string) {
+    try {
+      const user = await ensureAuth();
+      
+      console.log('📖 Récupération note:', noteId);
+      const result = await makeBackendRequest(`/note/${noteId}?user_id=${user.id}`, null, 'GET');
+      console.log('✅ Note récupérée');
+      return result;
+    } catch (error) {
+      console.error('❌ Erreur récupération note:', error);
+      throw error;
+    }
+  },
+
+  // Sauvegarder un fichier Obsidian
+  async saveObsidianFile(userId: string, filePath: string, content: string) {
+    try {
+      const payload = {
+        user_id: userId,
+        file_path: filePath,
+        content: content
+      };
+
+      console.log('🗂️ Sauvegarde fichier Obsidian:', filePath);
+      const result = await makeBackendRequest('/obsidian/file', payload);
+      console.log('✅ Fichier Obsidian sauvegardé');
+      return result;
+    } catch (error) {
+      console.error('❌ Erreur sauvegarde fichier Obsidian:', error);
+      throw error;
+    }
+  },
+
+  // Générer des concepts
+  async generateConcepts() {
+    try {
+      const user = await ensureAuth();
+
+      const payload = {
+        user_id: user.id,
+        type: 'concepts'
+      };
+
+      console.log('🎨 Génération de concepts...');
+      const result = await makeBackendRequest('/generate/concepts', payload);
+      console.log('✅ Concepts générés');
+      return result;
+    } catch (error) {
+      console.error('❌ Erreur génération concepts:', error);
+      throw error;
+    }
+  },
+
+  // Générer un script
+  async generateScript(topic: string) {
+    try {
+      const user = await ensureAuth();
+
+      const payload = {
+        user_id: user.id,
+        topic: topic
+      };
+
+      console.log('📝 Génération script pour:', topic);
+      const result = await makeBackendRequest('/generate/script', payload);
+      console.log('✅ Script généré');
+      return result;
+    } catch (error) {
+      console.error('❌ Erreur génération script:', error);
+      throw error;
+    }
+  },
+
+  // Générer des idées
+  async generateIdeas(category: string) {
+    try {
+      const user = await ensureAuth();
+
+      const payload = {
+        user_id: user.id,
+        category: category
+      };
+
+      console.log('💡 Génération idées pour:', category);
+      const result = await makeBackendRequest('/generate/ideas', payload);
+      console.log('✅ Idées générées');
+      return result;
+    } catch (error) {
+      console.error('❌ Erreur génération idées:', error);
       throw error;
     }
   },
