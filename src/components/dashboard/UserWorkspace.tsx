@@ -2,18 +2,20 @@
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FolderOpen, FileText, Search, Filter } from 'lucide-react';
+import { FolderOpen, FileText, Search, Filter, Link, Upload, Plus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import FolderTree from './FolderTree';
 import FileEditor from './FileEditor';
 import { FileContent, FolderItem } from '@/types/folders';
+import { useFolderSystem } from '@/hooks/useFolderSystem';
 
 const UserWorkspace = () => {
   const [selectedFile, setSelectedFile] = useState<FileContent | null>(null);
   const [selectedFolder, setSelectedFolder] = useState<FolderItem | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeView, setActiveView] = useState<'tree' | 'editor'>('tree');
+  const { folderStructure } = useFolderSystem();
 
   const handleFileSelect = (file: FileContent) => {
     setSelectedFile(file);
@@ -29,6 +31,11 @@ const UserWorkspace = () => {
     setActiveView('tree');
   };
 
+  const totalFolders = folderStructure.folders.length;
+  const totalFiles = folderStructure.files.length;
+  const resourceFiles = folderStructure.files.filter(f => f.contentType === 'resource').length;
+  const videoFiles = folderStructure.files.filter(f => f.contentType === 'video').length;
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -38,7 +45,7 @@ const UserWorkspace = () => {
             My Workspace
           </h2>
           <p className="text-muted-foreground">
-            Organize your content, notes, and resources in custom folders
+            Organize your content, notes, links, and resources in custom folders synced with Obsidian
           </p>
         </div>
         
@@ -57,6 +64,57 @@ const UserWorkspace = () => {
             Filter
           </Button>
         </div>
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card className="hover: hover:shadow-md transition-shadow cursor-pointer">
+          <CardContent className="pt-6">
+            <div className="flex items-center">
+              <Plus className="h-8 w-8 text-blue-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium">New Note</p>
+                <p className="text-xs text-muted-foreground">Create a new note</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="hover:shadow-md transition-shadow cursor-pointer">
+          <CardContent className="pt-6">
+            <div className="flex items-center">
+              <Link className="h-8 w-8 text-green-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium">Add Link</p>
+                <p className="text-xs text-muted-foreground">Save web resources</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="hover:shadow-md transition-shadow cursor-pointer">
+          <CardContent className="pt-6">
+            <div className="flex items-center">
+              <Upload className="h-8 w-8 text-purple-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium">Upload Files</p>
+                <p className="text-xs text-muted-foreground">PDFs, videos, docs</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="hover:shadow-md transition-shadow cursor-pointer">
+          <CardContent className="pt-6">
+            <div className="flex items-center">
+              <FolderOpen className="h-8 w-8 text-orange-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium">New Folder</p>
+                <p className="text-xs text-muted-foreground">Organize content</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -92,14 +150,14 @@ const UserWorkspace = () => {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center">
               <FolderOpen className="h-8 w-8 text-blue-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-muted-foreground">Total Folders</p>
-                <p className="text-2xl font-bold">0</p>
+                <p className="text-2xl font-bold">{totalFolders}</p>
               </div>
             </div>
           </CardContent>
@@ -111,7 +169,7 @@ const UserWorkspace = () => {
               <FileText className="h-8 w-8 text-green-600" />
               <div className="ml-4">
                 <p className="text-sm font-medium text-muted-foreground">Total Files</p>
-                <p className="text-2xl font-bold">0</p>
+                <p className="text-2xl font-bold">{totalFiles}</p>
               </div>
             </div>
           </CardContent>
@@ -120,10 +178,22 @@ const UserWorkspace = () => {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center">
-              <Search className="h-8 w-8 text-purple-600" />
+              <Link className="h-8 w-8 text-purple-600" />
               <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Recent Activity</p>
-                <p className="text-2xl font-bold">Today</p>
+                <p className="text-sm font-medium text-muted-foreground">Saved Links</p>
+                <p className="text-2xl font-bold">{resourceFiles}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardContent className="pt-6">
+            <div className="flex items-center">
+              <Upload className="h-8 w-8 text-orange-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-muted-foreground">Video Files</p>
+                <p className="text-2xl font-bold">{videoFiles}</p>
               </div>
             </div>
           </CardContent>

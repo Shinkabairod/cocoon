@@ -13,7 +13,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Save, FileText, Clock, BookOpen } from 'lucide-react';
+import { Save, FileText, Clock, BookOpen, Link, FileVideo, Play } from 'lucide-react';
 import { FileContent } from '@/types/folders';
 import { useFolderSystem } from '@/hooks/useFolderSystem';
 import { useToast } from '@/hooks/use-toast';
@@ -73,6 +73,24 @@ const FileEditor = ({ file, onClose }: FileEditorProps) => {
     }
   };
 
+  const getContentTypeIcon = (type: FileContent['contentType']) => {
+    switch (type) {
+      case 'resource':
+        return <Link className="h-5 w-5 text-blue-600" />;
+      case 'video':
+        return <FileVideo className="h-5 w-5 text-purple-600" />;
+      case 'script':
+        return <Play className="h-5 w-5 text-green-600" />;
+      default:
+        return <FileText className="h-5 w-5" />;
+    }
+  };
+
+  const extractLinkFromContent = (content: string) => {
+    const urlMatch = content.match(/\*\*URL:\*\*\s*(https?:\/\/[^\s\n]+)/);
+    return urlMatch ? urlMatch[1] : null;
+  };
+
   if (!file) {
     return (
       <Card className="h-full">
@@ -86,12 +104,14 @@ const FileEditor = ({ file, onClose }: FileEditorProps) => {
     );
   }
 
+  const isLinkResource = file.contentType === 'resource' && extractLinkFromContent(file.content);
+
   return (
     <Card className="h-full">
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
+            {getContentTypeIcon(file.contentType)}
             File Editor
             {isModified && (
               <Badge variant="secondary" className="ml-2">
@@ -100,6 +120,16 @@ const FileEditor = ({ file, onClose }: FileEditorProps) => {
             )}
           </CardTitle>
           <div className="flex items-center gap-2">
+            {isLinkResource && (
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => window.open(extractLinkFromContent(file.content)!, '_blank')}
+              >
+                <Link className="h-4 w-4 mr-1" />
+                Open Link
+              </Button>
+            )}
             <Button 
               onClick={handleSave} 
               disabled={!isModified}
@@ -136,10 +166,11 @@ const FileEditor = ({ file, onClose }: FileEditorProps) => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="note">Note</SelectItem>
-                <SelectItem value="resource">Resource</SelectItem>
+                <SelectItem value="resource">Resource/Link</SelectItem>
                 <SelectItem value="script">Script</SelectItem>
                 <SelectItem value="idea">Idea</SelectItem>
                 <SelectItem value="concept">Concept</SelectItem>
+                <SelectItem value="video">Video</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -169,6 +200,11 @@ const FileEditor = ({ file, onClose }: FileEditorProps) => {
             {file.metadata.lastModified && (
               <div className="flex items-center gap-1">
                 <span>Last modified: {new Date(file.metadata.lastModified).toLocaleDateString()}</span>
+              </div>
+            )}
+            {file.metadata.fileSize && (
+              <div className="flex items-center gap-1">
+                <span>Size: {(file.metadata.fileSize / 1024 / 1024).toFixed(2)} MB</span>
               </div>
             )}
           </div>

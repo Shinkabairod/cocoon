@@ -18,11 +18,14 @@ export interface FileContent {
   folderId: string;
   title: string;
   content: string;
-  contentType: 'note' | 'resource' | 'script' | 'idea' | 'concept';
+  contentType: 'note' | 'resource' | 'script' | 'idea' | 'concept' | 'video';
   metadata?: {
     wordCount?: number;
     readingTime?: number;
     lastModified?: Date;
+    url?: string; // For link resources
+    fileType?: string; // For uploaded files
+    fileSize?: number; // For uploaded files
   };
 }
 
