@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useOnboarding } from '@/contexts/OnboardingContext';
@@ -6,12 +7,8 @@ import { Button } from "@/components/ui/button"
 import { CheckCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 
-interface SummaryStepProps {
-  data: any;
-}
-
 const SummaryStep = () => {
-  const { data, setIsOnboardingComplete } = useOnboarding();
+  const { onboardingData, setIsOnboardingComplete } = useOnboarding();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [isCompleting, setIsCompleting] = useState(false);
@@ -31,11 +28,11 @@ const SummaryStep = () => {
       const completePayload = {
         user_id: user.id,
         onboarding_completed: true,
-        profile_data: data,
+        profile_data: onboardingData,
         preferences: {
-          content_types: data.contentTypes || [],
-          platforms: data.platforms || [],
-          experience_level: data.experienceLevel || 'beginner'
+          content_types: onboardingData.contentTypes || [],
+          platforms: onboardingData.platforms || [],
+          experience_level: onboardingData.experienceLevel || 'beginner'
         },
         updated_at: new Date().toISOString()
       };
@@ -73,19 +70,19 @@ const SummaryStep = () => {
       <div className="space-y-4">
         <div>
           <h3 className="text-lg font-semibold">Informations Personnelles</h3>
-          <p>Nom: {data.fullName}</p>
+          <p>Nom: {onboardingData.fullName}</p>
           <p>Email: {user?.email}</p>
         </div>
         
         <div>
           <h3 className="text-lg font-semibold">Votre Objectif Principal</h3>
-          <p>{data.mainGoal}</p>
+          <p>{onboardingData.mainGoal}</p>
         </div>
         
         <div>
           <h3 className="text-lg font-semibold">Types de Contenu</h3>
           <ul>
-            {data.contentTypes?.map((type: string) => (
+            {onboardingData.contentTypes?.map((type: string) => (
               <li key={type}>{type}</li>
             ))}
           </ul>
@@ -94,7 +91,7 @@ const SummaryStep = () => {
         <div>
           <h3 className="text-lg font-semibold">Plateformes</h3>
           <ul>
-            {data.platforms?.map((platform: string) => (
+            {onboardingData.platforms?.map((platform: string) => (
               <li key={platform}>{platform}</li>
             ))}
           </ul>
@@ -102,7 +99,7 @@ const SummaryStep = () => {
         
         <div>
           <h3 className="text-lg font-semibold">Niveau d'Expérience</h3>
-          <p>{data.experienceLevel}</p>
+          <p>{onboardingData.experienceLevel}</p>
         </div>
       </div>
       

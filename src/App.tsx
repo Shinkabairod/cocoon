@@ -14,6 +14,7 @@ import Pricing from "./pages/Pricing";
 import Auth from "./pages/Auth";
 import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
+import FunctionalDashboard from "./pages/FunctionalDashboard";
 import MobileDashboard from "./pages/MobileDashboard";
 import NotFound from "./pages/NotFound";
 import { useIsMobile } from "./hooks/use-mobile";
@@ -46,6 +47,13 @@ const App = () => {
                     <ProtectedRoute>
                       <OnboardingGuard>
                         {isMobile ? <MobileDashboard /> : <Dashboard />}
+                      </OnboardingGuard>
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/functional-dashboard" element={
+                    <ProtectedRoute>
+                      <OnboardingGuard>
+                        <FunctionalDashboard />
                       </OnboardingGuard>
                     </ProtectedRoute>
                   } />
