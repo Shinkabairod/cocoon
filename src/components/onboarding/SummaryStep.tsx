@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import { useOnboardingComplete } from "@/hooks/useOnboardingComplete";
@@ -10,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { obsidianStructureService } from "@/services/obsidianStructureService";
 import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 const HF_SPACE_URL = import.meta.env.VITE_HF_SPACE_URL || "https://cocoonai-cocoon-ai-assistant.hf.space";
 
@@ -57,13 +57,26 @@ const SummaryStep = () => {
       updateOnboardingData(completedData);
       console.log('📝 Onboarding data updated with completion flag');
       
+      // Sauvegarder également en base de données pour persistance
+      if (user) {
+        supabase
+          .from('user_profiles')
+          .upsert({
+            user_id: user.id,
+            onboarding_completed: true,
+            updated_at: new Date().toISOString()
+          })
+          .then(() => console.log('💾 Onboarding completion saved to database'))
+          .catch(error => console.warn('⚠️ Failed to save completion to DB:', error));
+      }
+      
       // Redirection immédiate mais avec un petit délai pour permettre l'affichage
       setTimeout(() => {
         console.log('🚀 Redirecting to dashboard now...');
         navigate('/dashboard', { replace: true });
       }, 2000);
     }
-  }, [isCompleted, hasRedirected, navigate, updateOnboardingData, onboardingData]);
+  }, [isCompleted, hasRedirected, navigate, updateOnboardingData, onboardingData, user]);
 
   const handleComplete = async () => {
     if (!user) {
