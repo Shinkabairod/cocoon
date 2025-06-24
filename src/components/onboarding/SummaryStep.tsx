@@ -22,7 +22,7 @@ const loadingMessages = [
 ];
 
 const SummaryStep = () => {
-  const { onboardingData } = useOnboarding();
+  const { onboardingData, updateOnboardingData } = useOnboarding();
   const { completeOnboarding, isProcessing, isCompleted } = useOnboardingComplete();
   const { user } = useAuth();
   const { toast } = useToast();
@@ -39,6 +39,22 @@ const SummaryStep = () => {
       return () => clearInterval(interval);
     }
   }, [isCreatingWorkspace]);
+
+  useEffect(() => {
+    if (isCompleted) {
+      console.log('✅ Onboarding completed, redirecting to dashboard...');
+      // Marquer l'onboarding comme complété dans les données
+      updateOnboardingData({ step: 22, onboardingCompleted: true });
+      
+      // Redirection après un court délai pour permettre l'affichage du succès
+      const redirectTimer = setTimeout(() => {
+        console.log('🚀 Redirecting to dashboard...');
+        navigate('/dashboard', { replace: true });
+      }, 1500);
+      
+      return () => clearTimeout(redirectTimer);
+    }
+  }, [isCompleted, navigate, updateOnboardingData]);
 
   const handleComplete = async () => {
     if (!user) {
@@ -108,6 +124,7 @@ const SummaryStep = () => {
         workspaceSuccess = false;
       }
 
+      // Finaliser l'onboarding - cela va déclencher la redirection
       await completeOnboarding();
 
       if (workspaceSuccess && fileCount > 0) {
@@ -127,10 +144,6 @@ const SummaryStep = () => {
         });
       }
 
-      setTimeout(() => {
-        navigate('/dashboard');
-      }, 2000);
-
     } catch (error) {
       console.error('❌ Complete onboarding error:', error);
       
@@ -140,10 +153,6 @@ const SummaryStep = () => {
           title: "⚠️ Configuration basique terminée",
           description: "Votre compte est créé. Certaines fonctionnalités seront configurées automatiquement.",
         });
-        
-        setTimeout(() => {
-          navigate('/dashboard');
-        }, 2000);
       } catch (finalError) {
         toast({
           title: "❌ Erreur de configuration",
@@ -243,6 +252,10 @@ const SummaryStep = () => {
               Votre espace de travail personnalisé a été créé avec succès.
               Redirection vers votre dashboard...
             </p>
+          </div>
+          
+          <div className="w-full bg-gray-200 rounded-full h-2">
+            <div className="bg-green-500 h-2 rounded-full animate-pulse" style={{width: '100%'}}></div>
           </div>
         </div>
       </OnboardingLayout>
