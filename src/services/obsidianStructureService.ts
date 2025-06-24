@@ -1,5 +1,6 @@
 import { OnboardingData } from '@/types/onboarding';
 import { huggingfaceService } from './huggingfaceService';
+import { CONFIG } from '@/config/constants';
 
 interface ObsidianFile {
   path: string;
@@ -18,7 +19,7 @@ export const obsidianStructureService = {
     
     for (const file of files) {
       try {
-        await huggingfaceService.saveObsidianFile(userId, file.path, file.content);
+        await saveFile(userId, file.path, file.content);
         console.log(`✅ Fichier créé: ${file.path}`);
         successCount++;
       } catch (error) {
@@ -479,3 +480,31 @@ ${challengesPriority[0] ? `Résoudre le défi "${challengesPriority[0]}" en prio
 `;
   }
 };
+
+// Helper function to save a file to the backend
+async function saveFile(userId: string, filePath: string, content: string) {
+  try {
+    const response = await fetch(`${CONFIG.HF_SPACE_URL}/obsidian/file`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        file_path: filePath,
+        content: content
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const result = await response.json();
+    console.log(`✅ Fichier sauvegardé: ${filePath}`);
+    return result;
+  } catch (error) {
+    console.error(`❌ Erreur sauvegarde ${filePath}:`, error);
+    throw error;
+  }
+}
