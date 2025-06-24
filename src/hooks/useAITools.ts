@@ -79,9 +79,9 @@ export const useAITools = () => {
   const getFeedback = async (content: string) => {
     setLoading(true);
     try {
-      // Store content in a way that the AI service can access it
-      // Since askAI expects no arguments, we'll use a different approach
-      const response = await huggingfaceService.askAI();
+      const response = await huggingfaceService.askAI(
+        `Analyze this content and provide constructive feedback: ${content}`
+      );
       
       toast({
         title: "Feedback reçu !",
@@ -104,7 +104,9 @@ export const useAITools = () => {
   const analyzePerformance = async () => {
     setLoading(true);
     try {
-      const response = await huggingfaceService.askAI();
+      const response = await huggingfaceService.askAI(
+        "Analyze my content performance and suggest optimization strategies based on my goals and audience."
+      );
       
       toast({
         title: "Analyse terminée !",
@@ -127,7 +129,9 @@ export const useAITools = () => {
   const optimizeContent = async (content: string) => {
     setLoading(true);
     try {
-      const response = await huggingfaceService.askAI();
+      const response = await huggingfaceService.askAI(
+        `Optimize this content for better engagement and reach: ${content}`
+      );
       
       toast({
         title: "Contenu optimisé !",
