@@ -1,13 +1,14 @@
+
 // src/config/constants.ts
-// Configuration sécurisée - SANS clés hardcodées
+// Configuration sécurisée - avec clés configurées
 
 export const CONFIG = {
   // URL du backend
   HF_SPACE_URL: import.meta.env.VITE_HF_SPACE_URL || "https://cocoonai-cocoon-ai-assistant.hf.space",
   
-  // Supabase - DOIT venir des variables d'environnement
-  SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
-  SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY,
+  // Supabase - Configuration directe pour résoudre l'erreur
+  SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL || "https://uwmkgkdswguferayhqbt.supabase.co",
+  SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3bWtna2Rzd2d1ZmVyYXlocWJ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NDcxNzYsImV4cCI6MjA2NjMyMzE3Nn0.68k9Pvthq02EbiL9PoT3O1u0dG36FFLGQ_JwfmTkh7M",
 };
 
 // Validation stricte
