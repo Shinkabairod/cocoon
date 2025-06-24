@@ -40,6 +40,7 @@ export interface OnboardingData {
   // Initial guidance
   hasContentDirection?: boolean;
   onboardingStage?: OnboardingStage;
+  onboardingCompleted?: boolean;
   
   // Basic info
   experienceLevel?: ExperienceLevel;

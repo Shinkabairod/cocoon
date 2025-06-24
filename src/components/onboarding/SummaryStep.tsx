@@ -29,6 +29,7 @@ const SummaryStep = () => {
   const navigate = useNavigate();
   const [isCreatingWorkspace, setIsCreatingWorkspace] = useState(false);
   const [currentLoadingMessage, setCurrentLoadingMessage] = useState(0);
+  const [hasRedirected, setHasRedirected] = useState(false);
   
   useEffect(() => {
     if (isCreatingWorkspace) {
@@ -41,8 +42,10 @@ const SummaryStep = () => {
   }, [isCreatingWorkspace]);
 
   useEffect(() => {
-    if (isCompleted) {
+    if (isCompleted && !hasRedirected) {
       console.log('✅ Onboarding completed, redirecting to dashboard...');
+      setHasRedirected(true);
+      
       // Marquer l'onboarding comme complété dans les données
       updateOnboardingData({ step: 22, onboardingCompleted: true });
       
@@ -54,7 +57,7 @@ const SummaryStep = () => {
       
       return () => clearTimeout(redirectTimer);
     }
-  }, [isCompleted, navigate, updateOnboardingData]);
+  }, [isCompleted, hasRedirected, navigate, updateOnboardingData]);
 
   const handleComplete = async () => {
     if (!user) {
