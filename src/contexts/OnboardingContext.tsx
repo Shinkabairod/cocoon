@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { OnboardingData } from '@/types/onboarding';
 
@@ -7,6 +8,7 @@ interface OnboardingContextType {
   nextStep: () => void;
   prevStep: () => void;
   resetOnboarding: () => void;
+  setIsOnboardingComplete: (completed: boolean) => void;
   totalSteps: number;
 }
 
@@ -39,6 +41,10 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
     setOnboardingData(initialData);
   };
 
+  const setIsOnboardingComplete = (completed: boolean) => {
+    setOnboardingData(prev => ({ ...prev, onboardingCompleted: completed }));
+  };
+
   return (
     <OnboardingContext.Provider value={{ 
       onboardingData, 
@@ -46,6 +52,7 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
       nextStep, 
       prevStep, 
       resetOnboarding,
+      setIsOnboardingComplete,
       totalSteps: TOTAL_STEPS
     }}>
       {children}

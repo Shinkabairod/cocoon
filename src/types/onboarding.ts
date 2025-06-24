@@ -43,8 +43,10 @@ export interface OnboardingData {
   onboardingCompleted?: boolean;
   
   // Basic info
+  fullName?: string;
   experienceLevel?: ExperienceLevel;
   contentGoal?: ContentGoal;
+  mainGoal?: string;
   contentGoals?: ContentGoal[];
   country?: Country;
   city?: City;

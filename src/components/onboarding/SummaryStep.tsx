@@ -24,16 +24,16 @@ const SummaryStep = () => {
     try {
       console.log('🚀 Starting onboarding completion...');
       
-      // Créer le payload complet
+      // Créer le payload complet avec conversion de type
       const completePayload = {
         user_id: user.id,
         onboarding_completed: true,
-        profile_data: onboardingData,
+        profile_data: onboardingData as any, // Type conversion for JSON compatibility
         preferences: {
           content_types: onboardingData.contentTypes || [],
           platforms: onboardingData.platforms || [],
           experience_level: onboardingData.experienceLevel || 'beginner'
-        },
+        } as any, // Type conversion for JSON compatibility
         updated_at: new Date().toISOString()
       };
 
@@ -70,13 +70,13 @@ const SummaryStep = () => {
       <div className="space-y-4">
         <div>
           <h3 className="text-lg font-semibold">Informations Personnelles</h3>
-          <p>Nom: {onboardingData.fullName}</p>
+          <p>Nom: {onboardingData.fullName || 'Non renseigné'}</p>
           <p>Email: {user?.email}</p>
         </div>
         
         <div>
           <h3 className="text-lg font-semibold">Votre Objectif Principal</h3>
-          <p>{onboardingData.mainGoal}</p>
+          <p>{onboardingData.mainGoal || onboardingData.contentGoal || 'Non renseigné'}</p>
         </div>
         
         <div>
