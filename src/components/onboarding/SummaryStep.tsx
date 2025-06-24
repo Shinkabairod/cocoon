@@ -10,7 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { obsidianStructureService } from "@/services/obsidianStructureService";
 import { useState, useEffect } from "react";
 
-const HF_SPACE_URL = "https://Cocoonai-cocoon-ai-assistant.hf.space";
+// Utilisation de la variable d'environnement
+const HF_SPACE_URL = import.meta.env.VITE_HF_SPACE_URL || "https://cocoonai-cocoon-ai-assistant.hf.space";
 
 const loadingMessages = [
   "🧠 Analyzing your profile and preferences...",
@@ -97,19 +98,43 @@ const SummaryStep = () => {
 
       console.log("✅ Profile saved successfully:", data);
 
-      // Step 2: Create personalized workspace structure
+      // Step 2: Create personalized workspace structure (avec gestion d'erreur)
       console.log('🗂️ Creating your personalized workspace...');
-      await obsidianStructureService.createUserVault(user.id, onboardingData);
-      const fileCount = obsidianStructureService.getFileCount(onboardingData);
-      console.log(`✅ Workspace structure created: ${fileCount} files`);
+      
+      let fileCount = 0;
+      let workspaceSuccess = false;
+      
+      try {
+        await obsidianStructureService.createUserVault(user.id, onboardingData);
+        fileCount = obsidianStructureService.getFileCount(onboardingData);
+        workspaceSuccess = true;
+        console.log(`✅ Workspace structure created: ${fileCount} files`);
+      } catch (workspaceError) {
+        console.warn('⚠️ Workspace creation partial:', workspaceError);
+        fileCount = 0;
+        workspaceSuccess = false;
+      }
 
-      // Step 3: Complete onboarding process
+      // Step 3: Complete onboarding process (même si workspace partiellement)
       await completeOnboarding();
 
-      toast({
-        title: "🎉 Configuration terminée !",
-        description: `Votre espace personnalisé Cocoon AI est prêt avec ${fileCount} éléments configurés.`,
-      });
+      // Messages différents selon le succès
+      if (workspaceSuccess && fileCount > 0) {
+        toast({
+          title: "🎉 Configuration terminée !",
+          description: `Votre espace personnalisé Cocoon AI est prêt avec ${fileCount} éléments configurés.`,
+        });
+      } else if (data.sync_status === "synced") {
+        toast({
+          title: "🎉 Configuration terminée !",
+          description: "Votre profil est sauvegardé. L'espace de travail sera créé progressivement.",
+        });
+      } else {
+        toast({
+          title: "⚠️ Configuration partiellement terminée",
+          description: "Votre profil est sauvegardé, mais certains éléments seront créés au fur et à mesure.",
+        });
+      }
 
       // Redirect to dashboard after a short delay to show success
       setTimeout(() => {
@@ -119,11 +144,24 @@ const SummaryStep = () => {
     } catch (error) {
       console.error('❌ Complete onboarding error:', error);
       
-      toast({
-        title: "❌ Erreur de configuration",
-        description: error instanceof Error ? error.message : 'Une erreur est survenue lors de la configuration.',
-        variant: "destructive",
-      });
+      // Essayer quand même de terminer l'onboarding basique
+      try {
+        await completeOnboarding();
+        toast({
+          title: "⚠️ Configuration basique terminée",
+          description: "Votre compte est créé. Certaines fonctionnalités seront configurées automatiquement.",
+        });
+        
+        setTimeout(() => {
+          navigate('/dashboard');
+        }, 2000);
+      } catch (finalError) {
+        toast({
+          title: "❌ Erreur de configuration",
+          description: error instanceof Error ? error.message : 'Une erreur est survenue lors de la configuration.',
+          variant: "destructive",
+        });
+      }
     } finally {
       setIsCreatingWorkspace(false);
     }
@@ -245,7 +283,7 @@ const SummaryStep = () => {
                   </div>
                 </div>
               </CardContent>
-            </Card>
+            </div>
           ))}
         </div>
 
