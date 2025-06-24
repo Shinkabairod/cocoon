@@ -59,15 +59,27 @@ const SummaryStep = () => {
       
       // Sauvegarder également en base de données pour persistance
       if (user) {
-        supabase
-          .from('user_profiles')
-          .upsert({
-            user_id: user.id,
-            onboarding_completed: true,
-            updated_at: new Date().toISOString()
-          })
-          .then(() => console.log('💾 Onboarding completion saved to database'))
-          .catch(error => console.warn('⚠️ Failed to save completion to DB:', error));
+        const saveCompletion = async () => {
+          try {
+            const { error } = await supabase
+              .from('user_profiles')
+              .upsert({
+                user_id: user.id,
+                onboarding_completed: true,
+                updated_at: new Date().toISOString()
+              });
+            
+            if (error) {
+              console.warn('⚠️ Failed to save completion to DB:', error);
+            } else {
+              console.log('💾 Onboarding completion saved to database');
+            }
+          } catch (error) {
+            console.warn('⚠️ Error saving completion to DB:', error);
+          }
+        };
+        
+        saveCompletion();
       }
       
       // Redirection immédiate mais avec un petit délai pour permettre l'affichage
