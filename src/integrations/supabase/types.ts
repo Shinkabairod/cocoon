@@ -9,54 +9,105 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      profiles: {
+      user_profiles: {
         Row: {
-          avatar_url: string | null
-          created_at: string
-          email: string | null
-          full_name: string | null
-          id: string
-          updated_at: string
+          created_at: string | null
+          id: number
+          onboarding_completed: boolean | null
+          preferences: Json | null
+          profile_data: Json | null
+          updated_at: string | null
+          user_id: string | null
         }
         Insert: {
-          avatar_url?: string | null
-          created_at?: string
-          email?: string | null
-          full_name?: string | null
-          id: string
-          updated_at?: string
+          created_at?: string | null
+          id?: number
+          onboarding_completed?: boolean | null
+          preferences?: Json | null
+          profile_data?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
-          avatar_url?: string | null
-          created_at?: string
-          email?: string | null
-          full_name?: string | null
-          id?: string
-          updated_at?: string
+          created_at?: string | null
+          id?: number
+          onboarding_completed?: boolean | null
+          preferences?: Json | null
+          profile_data?: Json | null
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }
-      user_files: {
+      user_resources: {
+        Row: {
+          created_at: string | null
+          file_content: string | null
+          file_type: string
+          file_url: string | null
+          id: number
+          metadata: Json | null
+          name: string
+          tags: string[] | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          file_content?: string | null
+          file_type: string
+          file_url?: string | null
+          id?: number
+          metadata?: Json | null
+          name: string
+          tags?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          file_content?: string | null
+          file_type?: string
+          file_url?: string | null
+          id?: number
+          metadata?: Json | null
+          name?: string
+          tags?: string[] | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      vault_files: {
         Row: {
           content: string | null
           created_at: string | null
+          file_type: string | null
           id: number
-          path: string | null
-          user_id: string
+          metadata: Json | null
+          path: string
+          updated_at: string | null
+          user_id: string | null
         }
         Insert: {
           content?: string | null
           created_at?: string | null
+          file_type?: string | null
           id?: number
-          path?: string | null
-          user_id: string
+          metadata?: Json | null
+          path: string
+          updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
           content?: string | null
           created_at?: string | null
+          file_type?: string | null
           id?: number
-          path?: string | null
-          user_id?: string
+          metadata?: Json | null
+          path?: string
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: []
       }

@@ -1,8 +1,5 @@
-
 import { supabase } from '@/integrations/supabase/client';
-
-const HF_SPACE_URL = "https://Cocoonai-cocoon-ai-assistant.hf.space";
-const HF_TOKEN = "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";
+import { CONFIG } from '@/config/constants';
 
 // Helper pour vérifier l'auth
 const ensureAuth = async () => {
@@ -24,14 +21,14 @@ const ensureAuth = async () => {
 
 // Helper pour les requêtes HF
 const makeHFRequest = async (endpoint: string, payload: any) => {
-  const url = `${HF_SPACE_URL}${endpoint}`;
+  const url = `${CONFIG.HF_SPACE_URL}${endpoint}`;
   console.log('📤 Requête HF:', url, payload);
 
   const response = await fetch(url, {
     method: "POST",
     headers: { 
       "Content-Type": "application/json",
-      "Authorization": `Bearer ${HF_TOKEN}`
+      "Authorization": `Bearer ${CONFIG.HF_TOKEN}`
     },
     body: JSON.stringify(payload)
   });
