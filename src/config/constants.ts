@@ -3,8 +3,8 @@
 // Fichier de configuration centralisé
 
 export const CONFIG = {
-  // URL du backend - utilise une variable d'environnement ou fallback
-  HF_SPACE_URL: import.meta.env.VITE_HF_SPACE_URL || "http://localhost:7860",
+  // URL du backend - utilise une variable d'environnement ou l'URL Hugging Face par défaut
+  HF_SPACE_URL: import.meta.env.VITE_HF_SPACE_URL || "https://cocoonai-cocoon-ai-assistant.hf.space",
   
   // Token HuggingFace - à configurer selon votre déploiement
   HF_TOKEN: import.meta.env.VITE_HF_TOKEN || "",
