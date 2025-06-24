@@ -3,7 +3,7 @@
 // Fichier de configuration centralisé
 
 export const CONFIG = {
-  HF_SPACE_URL: import.meta.env.VITE_HF_SPACE_URL || "https://huggingface.co/spaces/Cocoonai/cocoon-ai-assistant",
+  HF_SPACE_URL: import.meta.env.VITE_HF_SPACE_URL || "https://cocoonai-cocoon-ai-assistant.hf.space",
   SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
   SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY,
 };
