@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -52,18 +51,27 @@ const ConnectionTest = () => {
       // Test 2: Test de l'IA
       console.log('🤖 Test IA...');
       const aiResponse = await huggingfaceService.askAI(
-        "Test de connectivité - réponds juste 'OK' stp",
-        "Test technique de connectivité"
+        "Test de connectivité - réponds juste 'OK' stp"
       );
       
       console.log('🤖 Réponse IA reçue:', aiResponse);
+      
+      // Correction du bug : gestion correcte de la réponse IA
+      let aiAnswerText = '';
+      if (typeof aiResponse === 'string') {
+        aiAnswerText = aiResponse;
+      } else if (aiResponse && typeof aiResponse === 'object' && aiResponse.answer) {
+        aiAnswerText = aiResponse.answer;
+      } else {
+        aiAnswerText = 'Réponse reçue';
+      }
       
       setResults({
         connection: true,
         aiTest: true,
         timestamp: new Date().toLocaleString('fr-FR'),
         error: null,
-        details: `IA fonctionnelle. Réponse: "${aiResponse?.substring(0, 50)}..."`
+        details: `IA fonctionnelle. Réponse: "${aiAnswerText.substring(0, 50)}${aiAnswerText.length > 50 ? '...' : ''}"`
       });
       
       console.log('✅ Tous les tests réussis !');
@@ -146,7 +154,7 @@ const ConnectionTest = () => {
                 {results.aiTest ? (
                   <>
                     <CheckCircle className="h-5 w-5 text-green-600" />
-                    <Badge variant="default" className="bg-blue-100 text-blue-800">
+                    <Badge variant="default" className="bg-green-100 text-green-800">
                       IA OK
                     </Badge>
                   </>
@@ -154,26 +162,31 @@ const ConnectionTest = () => {
                   <>
                     <XCircle className="h-5 w-5 text-red-600" />
                     <Badge variant="destructive">
-                      IA Échec
+                      IA KO
                     </Badge>
                   </>
                 )}
               </div>
             )}
-            
-            <div className="text-sm text-muted-foreground">
-              {results.timestamp && `Testé le ${results.timestamp}`}
-            </div>
-            
+
+            {/* Détails */}
             {results.details && (
-              <div className="text-sm text-green-600 bg-green-50 p-2 rounded">
+              <div className="text-xs text-muted-foreground bg-gray-50 p-2 rounded">
                 {results.details}
               </div>
             )}
-            
+
+            {/* Erreur */}
             {results.error && (
-              <div className="text-sm text-red-600 bg-red-50 p-2 rounded">
-                <strong>Erreur:</strong> {results.error}
+              <div className="text-xs text-red-600 bg-red-50 p-2 rounded">
+                Erreur: {results.error}
+              </div>
+            )}
+
+            {/* Timestamp */}
+            {results.timestamp && (
+              <div className="text-xs text-muted-foreground text-center">
+                Testé le {results.timestamp}
               </div>
             )}
           </div>
