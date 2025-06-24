@@ -28,7 +28,7 @@ import {
   Activity
 } from 'lucide-react';
 
-const ModernDashboard = () => {
+const Dashboard = () => {
   const { user } = useAuth();
   const { data: userStats, isLoading } = useUserStats(user?.id);
   const [activeAction, setActiveAction] = useState<string | null>(null);
@@ -350,4 +350,4 @@ const DashboardSkeleton = () => {
   );
 };
 
-export default ModernDashboard;
+export default Dashboard;
