@@ -207,7 +207,7 @@ const Dashboard = () => {
     const nextSteps: NextStep[] = [
       {
         id: 'feed-chrysalis',
-        title: 'Alimentez votre Chrysalide',
+        title: 'Ajouter vos connaissances et infos',
         description: 'Ajoutez des ressources pour enrichir votre IA',
         icon: Folder,
         action: () => setActivePage('resources'),
@@ -215,7 +215,7 @@ const Dashboard = () => {
       },
       {
         id: 'first-transformation',
-        title: 'Première Transformation',
+        title: 'Créer votre premier contenu',
         description: 'Générez votre premier script personnalisé',
         icon: PlayCircle,
         action: () => setActivePage('creation'),
@@ -223,7 +223,7 @@ const Dashboard = () => {
       },
       {
         id: 'monetization',
-        title: 'Partagez votre Envol',
+        title: 'Monétiser vos connaissances,
         description: 'Configurez votre assistant pour la monétisation',
         icon: DollarSign,
         action: () => setActivePage('monetization'),
