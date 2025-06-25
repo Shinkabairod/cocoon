@@ -369,67 +369,313 @@ const Dashboard = () => {
   };
 
   // Autres pages
-  const renderResourcesPage = () => (
+  const renderResourcesPage = () => {
+  const [activeCategory, setActiveCategory] = useState('resources');
+  const [folders, setFolders] = useState({
+    resources: [
+      { id: '1', name: 'Scripts Vidéos', items: [] },
+      { id: '2', name: 'Images de marque', items: [] }
+    ],
+    personal: [
+      { id: '3', name: 'Profil créateur', items: [] },
+      { id: '4', name: 'Objectifs', items: [] }
+    ]
+  });
+  const [showNewFolderModal, setShowNewFolderModal] = useState(false);
+  const [showNewItemModal, setShowNewItemModal] = useState(false);
+  const [selectedFolder, setSelectedFolder] = useState(null);
+  const [newFolderName, setNewFolderName] = useState('');
+  const [newItemData, setNewItemData] = useState({ name: '', type: 'text', content: '' });
+
+  const addFolder = () => {
+    if (!newFolderName.trim()) return;
+    
+    const newFolder = {
+      id: Date.now().toString(),
+      name: newFolderName,
+      items: []
+    };
+    
+    setFolders(prev => ({
+      ...prev,
+      [activeCategory]: [...prev[activeCategory], newFolder]
+    }));
+    
+    setNewFolderName('');
+    setShowNewFolderModal(false);
+    
+    toast({
+      title: "✅ Dossier créé",
+      description: `Le dossier "${newFolderName}" a été ajouté.`
+    });
+  };
+
+  const deleteFolder = (folderId) => {
+    setFolders(prev => ({
+      ...prev,
+      [activeCategory]: prev[activeCategory].filter(folder => folder.id !== folderId)
+    }));
+    
+    toast({
+      title: "🗑️ Dossier supprimé",
+      description: "Le dossier a été supprimé avec succès."
+    });
+  };
+
+  const addItem = () => {
+    if (!newItemData.name.trim() || !selectedFolder) return;
+    
+    const newItem = {
+      id: Date.now().toString(),
+      name: newItemData.name,
+      type: newItemData.type,
+      content: newItemData.content,
+      createdAt: new Date().toISOString()
+    };
+    
+    setFolders(prev => ({
+      ...prev,
+      [activeCategory]: prev[activeCategory].map(folder => 
+        folder.id === selectedFolder.id 
+          ? { ...folder, items: [...folder.items, newItem] }
+          : folder
+      )
+    }));
+    
+    setNewItemData({ name: '', type: 'text', content: '' });
+    setShowNewItemModal(false);
+    setSelectedFolder(null);
+    
+    toast({
+      title: "✅ Élément ajouté",
+      description: `"${newItemData.name}" a été ajouté au dossier.`
+    });
+  };
+
+  const deleteItem = (folderId, itemId) => {
+    setFolders(prev => ({
+      ...prev,
+      [activeCategory]: prev[activeCategory].map(folder => 
+        folder.id === folderId 
+          ? { ...folder, items: folder.items.filter(item => item.id !== itemId) }
+          : folder
+      )
+    }));
+    
+    toast({
+      title: "🗑️ Élément supprimé",
+      description: "L'élément a été supprimé avec succès."
+    });
+  };
+
+  const getItemIcon = (type) => {
+    switch (type) {
+      case 'text': return <FileText className="h-4 w-4" />;
+      case 'image': return <Image className="h-4 w-4" />;
+      case 'video': return <Video className="h-4 w-4" />;
+      case 'document': return <FileText className="h-4 w-4" />;
+      default: return <FileText className="h-4 w-4" />;
+    }
+  };
+
+  return (
     <div className="p-4 md:p-8 space-y-6">
+      {/* Header */}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold">Mes Ressources</h2>
-        <Button>
-          <Upload className="h-4 w-4 mr-2" />
-          Ajouter des fichiers
+        <Button onClick={() => setShowNewFolderModal(true)}>
+          <Plus className="h-4 w-4 mr-2" />
+          Nouveau Dossier
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <FileText className="h-5 w-5 mr-2" />
-              Documents
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-500">Aucun document uploadé</p>
-            <Button variant="outline" className="mt-2 w-full">
-              <Plus className="h-4 w-4 mr-2" />
-              Ajouter
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Image className="h-5 w-5 mr-2" />
-              Images
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-500">Aucune image uploadée</p>
-            <Button variant="outline" className="mt-2 w-full">
-              <Plus className="h-4 w-4 mr-2" />
-              Ajouter
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Video className="h-5 w-5 mr-2" />
-              Vidéos
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-500">Aucune vidéo uploadée</p>
-            <Button variant="outline" className="mt-2 w-full">
-              <Plus className="h-4 w-4 mr-2" />
-              Ajouter
-            </Button>
-          </CardContent>
-        </Card>
+      {/* Onglets Catégories */}
+      <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+        <button
+          onClick={() => setActiveCategory('resources')}
+          className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+            activeCategory === 'resources'
+              ? 'bg-white text-gray-900 shadow'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          Ressources
+        </button>
+        <button
+          onClick={() => setActiveCategory('personal')}
+          className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
+            activeCategory === 'personal'
+              ? 'bg-white text-gray-900 shadow'
+              : 'text-gray-600 hover:text-gray-900'
+          }`}
+        >
+          Infos Personnelles
+        </button>
       </div>
+
+      {/* Liste des Dossiers */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {folders[activeCategory].map((folder) => (
+          <Card key={folder.id} className="hover:shadow-md transition-shadow">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center text-lg">
+                  <Folder className="h-5 w-5 mr-2 text-blue-600" />
+                  {folder.name}
+                </CardTitle>
+                <div className="flex space-x-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedFolder(folder);
+                      setShowNewItemModal(true);
+                    }}
+                  >
+                    <Plus className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => deleteFolder(folder.id)}
+                  >
+                    <Trash2 className="h-4 w-4 text-red-500" />
+                  </Button>
+                </div>
+              </div>
+              <p className="text-sm text-gray-500">
+                {folder.items.length} élément(s)
+              </p>
+            </CardHeader>
+            
+            <CardContent>
+              {folder.items.length === 0 ? (
+                <div className="text-center py-4 text-gray-400">
+                  <Folder className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <p className="text-sm">Dossier vide</p>
+                </div>
+              ) : (
+                <div className="space-y-2 max-h-40 overflow-y-auto">
+                  {folder.items.map((item) => (
+                    <div key={item.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
+                      <div className="flex items-center space-x-2 flex-1">
+                        {getItemIcon(item.type)}
+                        <span className="text-sm font-medium truncate">{item.name}</span>
+                        <Badge variant="secondary" className="text-xs">
+                          {item.type}
+                        </Badge>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => deleteItem(folder.id, item.id)}
+                      >
+                        <Trash2 className="h-3 w-3 text-red-500" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+
+        {folders[activeCategory].length === 0 && (
+          <div className="col-span-full text-center py-12">
+            <Folder className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-600 mb-2">
+              Aucun dossier dans {activeCategory === 'resources' ? 'Ressources' : 'Infos Personnelles'}
+            </h3>
+            <p className="text-gray-500 mb-4">
+              Créez votre premier dossier pour organiser vos contenus.
+            </p>
+            <Button onClick={() => setShowNewFolderModal(true)}>
+              <Plus className="h-4 w-4 mr-2" />
+              Créer un dossier
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {/* Modal Nouveau Dossier */}
+      <Dialog open={showNewFolderModal} onOpenChange={setShowNewFolderModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Créer un nouveau dossier</DialogTitle>
+            <DialogDescription>
+              Ajoutez un dossier dans {activeCategory === 'resources' ? 'Ressources' : 'Infos Personnelles'}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Input
+              value={newFolderName}
+              onChange={(e) => setNewFolderName(e.target.value)}
+              placeholder="Nom du dossier"
+              onKeyPress={(e) => e.key === 'Enter' && addFolder()}
+            />
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setShowNewFolderModal(false)}>
+                Annuler
+              </Button>
+              <Button onClick={addFolder} disabled={!newFolderName.trim()}>
+                Créer
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal Nouvel Élément */}
+      <Dialog open={showNewItemModal} onOpenChange={setShowNewItemModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Ajouter un élément</DialogTitle>
+            <DialogDescription>
+              Ajoutez du contenu dans le dossier "{selectedFolder?.name}"
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Input
+              value={newItemData.name}
+              onChange={(e) => setNewItemData(prev => ({ ...prev, name: e.target.value }))}
+              placeholder="Nom de l'élément"
+            />
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Type de contenu</label>
+              <select
+                value={newItemData.type}
+                onChange={(e) => setNewItemData(prev => ({ ...prev, type: e.target.value }))}
+                className="w-full p-2 border rounded-md"
+              >
+                <option value="text">Texte</option>
+                <option value="document">Document</option>
+                <option value="image">Image</option>
+                <option value="video">Vidéo</option>
+              </select>
+            </div>
+
+            <Textarea
+              value={newItemData.content}
+              onChange={(e) => setNewItemData(prev => ({ ...prev, content: e.target.value }))}
+              placeholder="Contenu ou description..."
+              rows={4}
+            />
+
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setShowNewItemModal(false)}>
+                Annuler
+              </Button>
+              <Button onClick={addItem} disabled={!newItemData.name.trim()}>
+                Ajouter
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
+};
 
   const renderCreationPage = () => (
     <div className="p-4 md:p-8 space-y-6">
