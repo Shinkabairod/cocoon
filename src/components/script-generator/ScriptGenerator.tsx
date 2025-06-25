@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -7,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2, Sparkles } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 
 interface ScriptGeneratorProps {
   onScriptGenerated: (script: string) => void;
@@ -32,7 +31,7 @@ const ScriptGenerator = ({ onScriptGenerated }: ScriptGeneratorProps) => {
     { value: "social", label: "Social Media Post" }
   ];
 
-  const audienceType = [
+  const audienceTypes = [
     { value: "beginners", label: "Beginners" },
     { value: "intermediate", label: "Intermediate" },
     { value: "advanced", label: "Advanced" },
@@ -136,7 +135,7 @@ const ScriptGenerator = ({ onScriptGenerated }: ScriptGeneratorProps) => {
                   <SelectValue placeholder="Select audience type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {audienceType.map(type => (
+                  {audienceTypes.map(type => (
                     <SelectItem key={type.value} value={type.value}>
                       {type.label}
                     </SelectItem>
