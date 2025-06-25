@@ -31,7 +31,7 @@ const ScriptGenerator = ({ onScriptGenerated }: ScriptGeneratorProps) => {
     { value: "social", label: "Social Media Post" }
   ];
 
-  const audienceTypes = [
+  const audienceType = [
     { value: "beginners", label: "Beginners" },
     { value: "intermediate", label: "Intermediate" },
     { value: "advanced", label: "Advanced" },
@@ -135,7 +135,7 @@ const ScriptGenerator = ({ onScriptGenerated }: ScriptGeneratorProps) => {
                   <SelectValue placeholder="Select audience type" />
                 </SelectTrigger>
                 <SelectContent>
-                  {audienceTypes.map(type => (
+                  {audienceType.map(type => (
                     <SelectItem key={type.value} value={type.value}>
                       {type.label}
                     </SelectItem>
