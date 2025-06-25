@@ -438,13 +438,44 @@ const SidebarContent: React.FC<{
 };
 
 // Page Welcome
-const WelcomePage: React.FC<{ user: any; stats: any; onAction: (action: string) => void }> = ({ user, stats, onAction }) => {
+// REMPLACEZ SEULEMENT la fonction renderWelcomePage dans votre Dashboard.tsx par ceci :
+
+const renderWelcomePage = () => {
   const currentHour = new Date().getHours();
   const greeting = currentHour < 12 ? 'Bonjour' : currentHour < 18 ? 'Bon après-midi' : 'Bonsoir';
-  const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Créateur';
+  const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Gem';
+
+  // Prochaines étapes avec boutons cliquables
+  const nextSteps = [
+    {
+      id: 'feed-chrysalis',
+      title: 'Alimentez votre Chrysalide',
+      description: 'Ajoutez des ressources pour enrichir votre IA',
+      icon: Folder,
+      action: () => setActivePage('resources'),
+      color: 'bg-blue-500'
+    },
+    {
+      id: 'first-transformation',
+      title: 'Première Transformation',
+      description: 'Générez votre premier script personnalisé',
+      icon: Sparkles,
+      action: () => setActivePage('creation'),
+      color: 'bg-purple-500'
+    },
+    {
+      id: 'monetization',
+      title: 'Partagez votre Envol',
+      description: 'Configurez votre assistant pour la monétisation',
+      icon: DollarSign,
+      action: () => setActivePage('monetization'),
+      color: 'bg-green-500'
+    }
+  ];
 
   return (
     <div className="p-4 md:p-8 space-y-8">
+      {/* En-tête de bienvenue - SANS les boutons Chat/Script */}
       <div className="bg-gradient-to-r from-purple-600 via-blue-600 to-purple-700 rounded-2xl p-6 md:p-8 text-white relative overflow-hidden">
         <div className="relative z-10">
           <h1 className="text-2xl md:text-3xl font-bold mb-2">
@@ -460,9 +491,7 @@ const WelcomePage: React.FC<{ user: any; stats: any; onAction: (action: string) 
                 <Target className="h-5 w-5" />
                 <span className="font-medium">Objectif du Jour</span>
               </div>
-              <p className="text-sm text-purple-100">
-                {stats?.todayActivity > 0 ? `${stats.todayActivity} actions réalisées` : 'Commencer votre transformation'}
-              </p>
+              <p className="text-sm text-purple-100">Commencer votre transformation</p>
             </div>
             
             <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
@@ -470,9 +499,7 @@ const WelcomePage: React.FC<{ user: any; stats: any; onAction: (action: string) 
                 <TrendingUp className="h-5 w-5" />
                 <span className="font-medium">Progression</span>
               </div>
-              <p className="text-sm text-purple-100">
-                Score créateur : {stats?.totalScore || 0}
-              </p>
+              <p className="text-sm text-purple-100">Score créateur : {userStats?.totalScore || 0}</p>
             </div>
             
             <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
@@ -480,80 +507,105 @@ const WelcomePage: React.FC<{ user: any; stats: any; onAction: (action: string) 
                 <Clock className="h-5 w-5" />
                 <span className="font-medium">Temps Économisé</span>
               </div>
-              <p className="text-sm text-purple-100">
-                {stats?.timeSaved || 0} heures ce mois
-              </p>
+              <p className="text-sm text-purple-100">{userStats?.timeSaved || 0} heures ce mois</p>
             </div>
-          </div>
-
-          <div className="flex flex-wrap gap-3 mt-6">
-            <Button 
-              onClick={() => onAction('chat')}
-              variant="secondary" 
-              size="sm"
-              className="bg-white/20 hover:bg-white/30 text-white border-white/30"
-            >
-              <MessageSquare className="h-4 w-4 mr-2" />
-              Chatter avec l'IA
-            </Button>
-            <Button 
-              onClick={() => onAction('script')}
-              variant="secondary" 
-              size="sm"
-              className="bg-white/20 hover:bg-white/30 text-white border-white/30"
-            >
-              <Sparkles className="h-4 w-4 mr-2" />
-              Créer un Script
-            </Button>
           </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatsCard title="Scripts Créés" value={stats?.scriptsGenerated || 0} change={stats?.scriptsChange || '+0%'} icon={Sparkles} color="purple" />
-        <StatsCard title="Conversations IA" value={stats?.chatConversations || 0} change={stats?.chatChange || '+0%'} icon={Users} color="blue" />
-        <StatsCard title="Ressources" value={stats?.resourcesUploaded || 0} change={stats?.resourcesChange || '+0%'} icon={Folder} color="green" />
-        <StatsCard title="Transformations" value={Math.ceil((stats?.totalScore || 0) / 10)} change="+∞%" icon={Zap} color="orange" />
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* Statistiques */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
-          <CardHeader>
-            <CardTitle>Prochaines Étapes</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <NextStepItem title="Alimentez votre Chrysalide" description="Ajoutez des ressources pour enrichir votre IA" icon={Folder} completed={stats?.resourcesUploaded > 0} />
-            <NextStepItem title="Première Transformation" description="Générez votre premier script personnalisé" icon={Sparkles} completed={stats?.scriptsGenerated > 0} />
-            <NextStepItem title="Partagez votre Envol" description="Configurez votre assistant pour la monétisation" icon={DollarSign} completed={false} />
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Évolution Récente</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {stats?.recentActivities?.slice(0, 4).map((activity: any, index: number) => (
-                <div key={index} className="flex items-start space-x-3">
-                  <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <activity.icon className="h-4 w-4 text-purple-600" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900">{activity.title}</p>
-                    <p className="text-xs text-gray-500">{activity.time}</p>
-                  </div>
-                </div>
-              )) || (
-                <div className="text-center py-6">
-                  <Sparkles className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                  <p className="text-sm text-gray-500">Votre transformation commence maintenant</p>
-                </div>
-              )}
+          <CardContent className="p-4 text-center">
+            <div className="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-full mx-auto mb-2">
+              <Sparkles className="h-6 w-6 text-purple-600" />
             </div>
+            <div className="text-2xl font-bold text-purple-700">{userStats?.scriptsGenerated || 0}</div>
+            <div className="text-sm text-gray-600">Scripts Créés</div>
+            <div className="text-xs text-green-600 mt-1">0%</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mx-auto mb-2">
+              <MessageSquare className="h-6 w-6 text-blue-600" />
+            </div>
+            <div className="text-2xl font-bold text-blue-700">{userStats?.conversations || 0}</div>
+            <div className="text-sm text-gray-600">Conversations IA</div>
+            <div className="text-xs text-green-600 mt-1">0%</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mx-auto mb-2">
+              <Folder className="h-6 w-6 text-green-600" />
+            </div>
+            <div className="text-2xl font-bold text-green-700">{userStats?.resources || 0}</div>
+            <div className="text-sm text-gray-600">Ressources</div>
+            <div className="text-xs text-green-600 mt-1">0%</div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="p-4 text-center">
+            <div className="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-full mx-auto mb-2">
+              <Zap className="h-6 w-6 text-orange-600" />
+            </div>
+            <div className="text-2xl font-bold text-orange-700">{userStats?.transformations || 0}</div>
+            <div className="text-sm text-gray-600">Transformations</div>
+            <div className="text-xs text-green-600 mt-1">+0%</div>
           </CardContent>
         </Card>
       </div>
+
+      {/* Prochaines Étapes - AVEC BOUTONS CLIQUABLES */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Prochaines Étapes</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-4">
+            {nextSteps.map((step) => {
+              const StepIcon = step.icon;
+              return (
+                <Button
+                  key={step.id}
+                  variant="ghost"
+                  className="w-full p-4 h-auto justify-start hover:bg-gray-50 transition-all duration-200"
+                  onClick={step.action}
+                >
+                  <div className="flex items-center space-x-4 w-full">
+                    <div className={`w-10 h-10 ${step.color} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                      <StepIcon className="h-5 w-5 text-white" />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <div className="font-medium text-gray-900">{step.title}</div>
+                      <div className="text-sm text-gray-500">{step.description}</div>
+                    </div>
+                    <ChevronRight className="h-5 w-5 text-gray-400" />
+                  </div>
+                </Button>
+              );
+            })}
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Évolution Récente */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Évolution Récente</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-8">
+            <div className="text-gray-400 mb-2">📈</div>
+            <p className="text-gray-500">Aucune activité récente</p>
+            <p className="text-sm text-gray-400">Commencez votre première transformation pour voir vos progrès ici</p>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
