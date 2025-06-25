@@ -738,3 +738,557 @@ const Dashboard = () => {
             
             <div className="space-y-2">
               <Label htmlFor="folderName">Nom du dossier</Label>
+              <Input
+                id="folderName"
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+                placeholder="Ex: Scripts YouTube"
+              />
+            </div>
+            
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setShowNewFolderModal(false)}>
+                Annuler
+              </Button>
+              <Button onClick={addFolder} disabled={!newFolderName.trim()}>
+                Créer
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal Renommer Dossier */}
+      <Dialog open={showRenameFolderModal} onOpenChange={setShowRenameFolderModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Renommer le dossier</DialogTitle>
+            <DialogDescription>
+              Modifiez le nom et l'emoji du dossier
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="renameEmoji">Emoji du dossier</Label>
+              <div className="flex items-center space-x-2">
+                <Input
+                  id="renameEmoji"
+                  value={renameFolderData.emoji}
+                  onChange={(e) => setRenameFolderData(prev => ({ ...prev, emoji: e.target.value }))}
+                  className="w-16 text-center text-xl"
+                  maxLength={2}
+                />
+                <div className="flex-1">
+                  <div className="grid grid-cols-8 gap-1 max-h-32 overflow-y-auto border rounded p-2">
+                    {popularEmojis.map((emoji, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => setRenameFolderData(prev => ({ ...prev, emoji }))}
+                        className="text-xl hover:bg-gray-100 rounded p-1 transition-colors"
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="renameName">Nom du dossier</Label>
+              <Input
+                id="renameName"
+                value={renameFolderData.name}
+                onChange={(e) => setRenameFolderData(prev => ({ ...prev, name: e.target.value }))}
+                placeholder="Ex: Scripts YouTube"
+              />
+            </div>
+            
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setShowRenameFolderModal(false)}>
+                Annuler
+              </Button>
+              <Button onClick={renameFolder} disabled={!renameFolderData.name.trim()}>
+                Renommer
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal Nouvel Élément */}
+      <Dialog open={showNewItemModal} onOpenChange={setShowNewItemModal}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Ajouter un élément</DialogTitle>
+            <DialogDescription>
+              Ajoutez un nouvel élément au dossier "{selectedFolder?.emoji} {selectedFolder?.name}"
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="itemName">Nom de l'élément</Label>
+              <Input
+                id="itemName"
+                value={newItemData.name}
+                onChange={(e) => setNewItemData(prev => ({ ...prev, name: e.target.value }))}
+                placeholder="Ex: Script vidéo #1"
+              />
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="itemType">Type d'élément</Label>
+              <select
+                id="itemType"
+                value={newItemData.type}
+                onChange={(e) => setNewItemData(prev => ({ ...prev, type: e.target.value }))}
+                className="w-full p-2 border border-gray-300 rounded-md"
+              >
+                <option value="text">Texte</option>
+                <option value="link">Lien</option>
+                <option value="document">Document</option>
+                <option value="image">Image</option>
+                <option value="video">Vidéo</option>
+              </select>
+            </div>
+            
+            {newItemData.type === 'text' && (
+              <div className="space-y-2">
+                <Label htmlFor="itemContent">Contenu</Label>
+                <Textarea
+                  id="itemContent"
+                  value={newItemData.content}
+                  onChange={(e) => setNewItemData(prev => ({ ...prev, content: e.target.value }))}
+                  placeholder="Saisissez votre contenu..."
+                  rows={4}
+                />
+              </div>
+            )}
+            
+            {newItemData.type === 'link' && (
+              <div className="space-y-2">
+                <Label htmlFor="itemUrl">URL</Label>
+                <Input
+                  id="itemUrl"
+                  type="url"
+                  value={newItemData.url}
+                  onChange={(e) => setNewItemData(prev => ({ ...prev, url: e.target.value }))}
+                  placeholder="https://..."
+                />
+              </div>
+            )}
+            
+            {['document', 'image', 'video'].includes(newItemData.type) && (
+              <div className="space-y-2">
+                <Label htmlFor="itemFile">Fichier</Label>
+                <Input
+                  id="itemFile"
+                  type="file"
+                  onChange={handleFileUpload}
+                  accept={
+                    newItemData.type === 'image' ? 'image/*' :
+                    newItemData.type === 'video' ? 'video/*' :
+                    '.pdf,.doc,.docx,.txt'
+                  }
+                />
+                {newItemData.file && (
+                  <p className="text-sm text-gray-600">
+                    Fichier sélectionné : {newItemData.file.name}
+                  </p>
+                )}
+              </div>
+            )}
+            
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => setShowNewItemModal(false)}>
+                Annuler
+              </Button>
+              <Button onClick={addItem} disabled={!newItemData.name.trim()}>
+                Ajouter
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+
+  // Rendu des pages
+  const renderActivePage = () => {
+    switch (activePage) {
+      case 'welcome':
+        return renderWelcomePage();
+      case 'resources':
+        return renderResourcesPage();
+      case 'creation':
+        return (
+          <div className="p-4 md:p-8">
+            <h2 className="text-2xl font-bold mb-6">Mes Créations</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveModal('script')}>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Sparkles className="h-5 w-5 mr-2 text-purple-600" />
+                    Générateur de Scripts
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">Créez des scripts personnalisés pour vos vidéos</p>
+                </CardContent>
+              </Card>
+              
+              <Card className="cursor-pointer hover:shadow-lg transition-shadow" onClick={() => setActiveModal('chat')}>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <MessageSquare className="h-5 w-5 mr-2 text-blue-600" />
+                    Assistant IA
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">Discutez avec votre assistant personnel</p>
+                </CardContent>
+              </Card>
+            </div>
+          </div>
+        );
+      case 'monetization':
+        return (
+          <div className="p-4 md:p-8">
+            <h2 className="text-2xl font-bold mb-6">Mon Bot IA</h2>
+            <div className="text-center py-12">
+              <DollarSign className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500">Fonctionnalité de monétisation en développement</p>
+            </div>
+          </div>
+        );
+      case 'settings':
+        return (
+          <div className="p-4 md:p-8">
+            <h2 className="text-2xl font-bold mb-6">Réglages</h2>
+            <div className="text-center py-12">
+              <Settings className="h-16 w-16 text-gray-300 mx-auto mb-4" />
+              <p className="text-gray-500">Paramètres en cours de développement</p>
+            </div>
+          </div>
+        );
+      default:
+        return renderWelcomePage();
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-purple-600" />
+          <p className="text-gray-600">Chargement de votre tableau de bord...</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="h-screen bg-gray-50 flex overflow-hidden">
+      {/* Sidebar Desktop */}
+      {!isMobile && (
+        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+                <Sparkles className="h-5 w-5 text-white" />
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gray-900">Cocoon AI</h1>
+                <p className="text-xs text-gray-500">Transformez vos idées</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="p-6 border-b border-gray-200">
+            <div className="flex items-center space-x-3">
+              <Avatar className="h-10 w-10">
+                <AvatarImage src={user?.user_metadata?.avatar_url} />
+                <AvatarFallback className="bg-gradient-to-r from-purple-500 to-blue-500 text-white">
+                  {user?.email?.charAt(0).toUpperCase()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-gray-900 truncate">
+                  {user?.user_metadata?.full_name || user?.email?.split('@')[0]}
+                </p>
+                <p className="text-xs text-gray-500">Créateur en Transformation</p>
+              </div>
+            </div>
+
+            <div className="mt-4 grid grid-cols-2 gap-2">
+              <div className="bg-purple-50 p-2 rounded-lg">
+                <div className="text-lg font-bold text-purple-700">{userStats?.totalScore || 0}</div>
+                <div className="text-xs text-purple-600">Score</div>
+              </div>
+              <div className="bg-blue-50 p-2 rounded-lg">
+                <div className="text-lg font-bold text-blue-700">{userStats?.scriptsGenerated || 0}</div>
+                <div className="text-xs text-blue-600">Scripts</div>
+              </div>
+            </div>
+          </div>
+
+          <nav className="flex-1 p-4 space-y-2">
+            {navigation.map((item) => {
+              const Icon = item.icon;
+              const isActive = activePage === item.id;
+              
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActivePage(item.id)}
+                  className={`w-full flex items-center space-x-3 px-3 py-3 rounded-xl transition-all duration-200 text-left ${
+                    isActive
+                      ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg'
+                      : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  }`}
+                >
+                  <Icon className={`h-5 w-5 ${isActive ? 'text-white' : 'text-gray-500'}`} />
+                  <div className="flex-1">
+                    <div className={`text-sm font-medium ${isActive ? 'text-white' : 'text-gray-900'}`}>
+                      {item.name}
+                    </div>
+                    <div className={`text-xs ${isActive ? 'text-purple-100' : 'text-gray-500'}`}>
+                      {item.description}
+                    </div>
+                  </div>
+                </button>
+              );
+            })}
+          </nav>
+
+          <div className="p-4 border-t border-gray-200">
+            <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-3 rounded-lg">
+              <div className="flex items-center space-x-2 mb-2">
+                <Shield className="h-4 w-4 text-purple-600" />
+                <span className="text-sm font-medium text-purple-900">Version Pro</span>
+              </div>
+              <p className="text-xs text-purple-700">
+                Toutes les fonctionnalités débloquées
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Sidebar Mobile */}
+      {isMobile && sidebarOpen && (
+        <div className="fixed inset-0 z-50 flex">
+          <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setSidebarOpen(false)} />
+          <div className="relative w-64 bg-white border-r border-gray-200 flex flex-col">
+            <div className="p-6 border-b border-gray-200">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+                    <Sparkles className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-xl font-bold text-gray-900">Cocoon AI</h1>
+                    <p className="text-xs text-gray-500">Transformez vos idées</p>
+                  </div>
+                </div>
+                
+                <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(false)}>
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+            </div>
+
+            <nav className="flex-1 p-4 space-y-2">
+              {navigation.map((item) => {
+                const Icon = item.icon;
+                const isActive = activePage === item.id;
+                
+                return (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      setActivePage(item.id);
+                      setSidebarOpen(false);
+                    }}
+                    className={`w-full flex items-center space-x-3 px-3 py-3 rounded-xl transition-all duration-200 text-left ${
+                      isActive
+                        ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg'
+                        : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                    }`}
+                  >
+                    <Icon className={`h-5 w-5 ${isActive ? 'text-white' : 'text-gray-500'}`} />
+                    <div className="flex-1">
+                      <div className={`text-sm font-medium ${isActive ? 'text-white' : 'text-gray-900'}`}>
+                        {item.name}
+                      </div>
+                      <div className={`text-xs ${isActive ? 'text-purple-100' : 'text-gray-500'}`}>
+                        {item.description}
+                      </div>
+                    </div>
+                  </button>
+                );
+              })}
+            </nav>
+          </div>
+        </div>
+      )}
+
+      {/* Contenu principal */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header Mobile */}
+        {isMobile && (
+          <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+            <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(true)}>
+              <Menu className="h-5 w-5" />
+            </Button>
+            
+            <div className="flex items-center space-x-2">
+              <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+                <Sparkles className="h-4 w-4 text-white" />
+              </div>
+              <h1 className="text-lg font-bold text-gray-900">Cocoon AI</h1>
+            </div>
+
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={user?.user_metadata?.avatar_url} />
+              <AvatarFallback className="bg-gradient-to-r from-purple-500 to-blue-500 text-white text-sm">
+                {user?.email?.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </div>
+        )}
+
+        {/* Page content */}
+        <main className="flex-1 overflow-y-auto">
+          {renderActivePage()}
+        </main>
+      </div>
+
+      {/* Modal Chat IA */}
+      <Dialog open={activeModal === 'chat'} onOpenChange={() => setActiveModal(null)}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Assistant IA Personnel</DialogTitle>
+            <DialogDescription>
+              Discutez avec votre assistant IA pour obtenir de l'aide créative
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="max-h-96 overflow-y-auto space-y-3 p-4 bg-gray-50 rounded-lg">
+              {chatMessages.length === 0 ? (
+                <div className="text-center text-gray-500 py-8">
+                  <MessageSquare className="h-12 w-12 mx-auto mb-3 text-gray-300" />
+                  <p>Commencez une conversation avec votre IA</p>
+                </div>
+              ) : (
+                chatMessages.map((message, index) => (
+                  <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                    <div className={`max-w-[80%] p-3 rounded-lg ${
+                      message.type === 'user' 
+                        ? 'bg-purple-600 text-white' 
+                        : 'bg-white border border-gray-200'
+                    }`}>
+                      <p className="text-sm">{message.content}</p>
+                    </div>
+                  </div>
+                ))
+              )}
+              {isGenerating && (
+                <div className="flex justify-start">
+                  <div className="bg-white border border-gray-200 p-3 rounded-lg">
+                    <div className="flex items-center space-x-2">
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <span className="text-sm text-gray-500">L'IA réfléchit...</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="flex space-x-2">
+              <Textarea
+                placeholder="Posez votre question à l'IA..."
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                className="flex-1"
+                onKeyPress={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    handleChatIA();
+                  }
+                }}
+              />
+              <Button onClick={handleChatIA} disabled={isGenerating || !chatInput.trim()}>
+                <Send className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal Générateur de Scripts */}
+      <Dialog open={activeModal === 'script'} onOpenChange={() => setActiveModal(null)}>
+        <DialogContent className="max-w-4xl">
+          <DialogHeader>
+            <DialogTitle>Générateur de Scripts IA</DialogTitle>
+            <DialogDescription>
+              Créez des scripts personnalisés pour vos vidéos
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="scriptTopic">Sujet du script</Label>
+                <Input
+                  id="scriptTopic"
+                  placeholder="Ex: Comment créer du contenu viral"
+                  value={scriptTopic}
+                  onChange={(e) => setScriptTopic(e.target.value)}
+                />
+              </div>
+              
+              <Button 
+                onClick={handleGenerateScript} 
+                disabled={isGenerating || !scriptTopic.trim()}
+                className="w-full"
+              >
+                {isGenerating ? (
+                  <>
+                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                    Génération en cours...
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Générer le script
+                  </>
+                )}
+              </Button>
+            </div>
+            
+            <div className="space-y-4">
+              <Label>Script généré</Label>
+              <Textarea
+                placeholder="Votre script apparaîtra ici..."
+                value={generatedContent}
+                readOnly
+                className="min-h-[300px] resize-none"
+              />
+              {generatedContent && (
+                <Button variant="outline" className="w-full">
+                  <Download className="h-4 w-4 mr-2" />
+                  Télécharger le script
+                </Button>
+              )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+};
+
+export default Dashboard;
