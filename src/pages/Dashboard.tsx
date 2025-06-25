@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useIsMobile } from '@/hooks/use-mobile';
 import {
   Dialog,
@@ -94,7 +95,13 @@ const Dashboard = () => {
   const [showNewItemModal, setShowNewItemModal] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [newFolderName, setNewFolderName] = useState('');
-  const [newItemData, setNewItemData] = useState({ name: '', type: 'text', content: '' });
+  const [newItemData, setNewItemData] = useState({ 
+    name: '', 
+    type: 'text', 
+    content: '', 
+    file: null,
+    url: '' 
+  });
 
   // Navigation avec thème Cocoon
   const navigation = [
@@ -129,6 +136,23 @@ const Dashboard = () => {
       description: 'Configuration'
     }
   ];
+
+  // Fonction pour gérer l'upload de fichiers
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setNewItemData(prev => ({ 
+        ...prev, 
+        file: file,
+        name: prev.name || file.name // Auto-remplir le nom si vide
+      }));
+      
+      toast({
+        title: "📁 Fichier sélectionné",
+        description: `"${file.name}" prêt à être ajouté.`
+      });
+    }
+  };
 
   // Fonctions pour les ressources
   const addFolder = () => {
@@ -169,11 +193,39 @@ const Dashboard = () => {
   const addItem = () => {
     if (!newItemData.name.trim() || !selectedFolder) return;
     
+    // Validation selon le type
+    if (newItemData.type === 'link' && !newItemData.url.trim()) {
+      toast({
+        title: "❌ URL manquante",
+        description: "Veuillez saisir une URL pour le lien.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
+    if (['document', 'image', 'video'].includes(newItemData.type) && !newItemData.file) {
+      toast({
+        title: "❌ Fichier manquant",
+        description: "Veuillez sélectionner un fichier.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     const newItem = {
       id: Date.now().toString(),
       name: newItemData.name,
       type: newItemData.type,
       content: newItemData.content,
+      file: newItemData.file ? {
+        name: newItemData.file.name,
+        size: newItemData.file.size,
+        type: newItemData.file.type,
+        // En production, ici vous uploaderiez le fichier vers votre serveur
+        // et stockeriez l'URL. Pour la démo, on simule :
+        url: URL.createObjectURL(newItemData.file)
+      } : null,
+      url: newItemData.url,
       createdAt: new Date().toISOString()
     };
     
@@ -186,7 +238,7 @@ const Dashboard = () => {
       )
     }));
     
-    setNewItemData({ name: '', type: 'text', content: '' });
+    setNewItemData({ name: '', type: 'text', content: '', file: null, url: '' });
     setShowNewItemModal(false);
     setSelectedFolder(null);
     
@@ -218,8 +270,60 @@ const Dashboard = () => {
       case 'image': return <Image className="h-4 w-4" />;
       case 'video': return <Video className="h-4 w-4" />;
       case 'document': return <FileText className="h-4 w-4" />;
+      case 'link': return <Globe className="h-4 w-4" />;
       default: return <FileText className="h-4 w-4" />;
     }
+  };
+
+  // Fonction pour afficher les éléments avec preview
+  const renderItemContent = (item) => {
+    const openFile = () => {
+      if (item.type === 'link' && item.url) {
+        window.open(item.url, '_blank');
+      } else if (item.file?.url) {
+        window.open(item.file.url, '_blank');
+      }
+    };
+
+    return (
+      <div className="flex items-center justify-between p-2 bg-gray-50 rounded group hover:bg-gray-100 transition-colors">
+        <div 
+          className="flex items-center space-x-2 flex-1 cursor-pointer" 
+          onClick={openFile}
+        >
+          {getItemIcon(item.type)}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center space-x-2">
+              <span className="text-sm font-medium truncate">{item.name}</span>
+              <Badge variant="secondary" className="text-xs">
+                {item.type}
+              </Badge>
+            </div>
+            {item.file && (
+              <p className="text-xs text-gray-500 truncate">
+                {item.file.name} ({(item.file.size / 1024).toFixed(1)} KB)
+              </p>
+            )}
+            {item.type === 'link' && item.url && (
+              <p className="text-xs text-blue-600 truncate">{item.url}</p>
+            )}
+          </div>
+          {(item.type === 'link' || item.file) && (
+            <Eye className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+          )}
+        </div>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={(e) => {
+            e.stopPropagation();
+            deleteItem(item.folderId, item.id);
+          }}
+        >
+          <Trash2 className="h-3 w-3 text-red-500" />
+        </Button>
+      </div>
+    );
   };
 
   // Fonctions d'action
@@ -440,7 +544,7 @@ const Dashboard = () => {
     );
   };
 
-  // Page Ressources COMPLÈTE
+  // Page Ressources COMPLÈTE avec Upload
   const renderResourcesPage = () => (
     <div className="p-4 md:p-8 space-y-6">
       {/* Header */}
@@ -520,21 +624,8 @@ const Dashboard = () => {
               ) : (
                 <div className="space-y-2 max-h-40 overflow-y-auto">
                   {folder.items.map((item) => (
-                    <div key={item.id} className="flex items-center justify-between p-2 bg-gray-50 rounded">
-                      <div className="flex items-center space-x-2 flex-1">
-                        {getItemIcon(item.type)}
-                        <span className="text-sm font-medium truncate">{item.name}</span>
-                        <Badge variant="secondary" className="text-xs">
-                          {item.type}
-                        </Badge>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => deleteItem(folder.id, item.id)}
-                      >
-                        <Trash2 className="h-3 w-3 text-red-500" />
-                      </Button>
+                    <div key={item.id}>
+                      {renderItemContent({ ...item, folderId: folder.id })}
                     </div>
                   ))}
                 </div>
@@ -588,9 +679,9 @@ const Dashboard = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Modal Nouvel Élément */}
+      {/* Modal Nouvel Élément avec Upload */}
       <Dialog open={showNewItemModal} onOpenChange={setShowNewItemModal}>
-        <DialogContent>
+        <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>Ajouter un élément</DialogTitle>
             <DialogDescription>
@@ -598,35 +689,112 @@ const Dashboard = () => {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <Input
-              value={newItemData.name}
-              onChange={(e) => setNewItemData(prev => ({ ...prev, name: e.target.value }))}
-              placeholder="Nom de l'élément"
-            />
-            
+            {/* Nom de l'élément */}
             <div className="space-y-2">
-              <label className="text-sm font-medium">Type de contenu</label>
+              <Label htmlFor="itemName">Nom de l'élément</Label>
+              <Input
+                id="itemName"
+                value={newItemData.name}
+                onChange={(e) => setNewItemData(prev => ({ ...prev, name: e.target.value }))}
+                placeholder="Nom de l'élément"
+              />
+            </div>
+            
+            {/* Type de contenu */}
+            <div className="space-y-2">
+              <Label htmlFor="itemType">Type de contenu</Label>
               <select
+                id="itemType"
                 value={newItemData.type}
-                onChange={(e) => setNewItemData(prev => ({ ...prev, type: e.target.value }))}
+                onChange={(e) => setNewItemData(prev => ({ 
+                  ...prev, 
+                  type: e.target.value,
+                  file: null, // Reset file when changing type
+                  url: '' // Reset URL when changing type
+                }))}
                 className="w-full p-2 border rounded-md"
               >
                 <option value="text">Texte</option>
                 <option value="document">Document</option>
                 <option value="image">Image</option>
                 <option value="video">Vidéo</option>
+                <option value="link">Lien</option>
               </select>
             </div>
 
-            <Textarea
-              value={newItemData.content}
-              onChange={(e) => setNewItemData(prev => ({ ...prev, content: e.target.value }))}
-              placeholder="Contenu ou description..."
-              rows={4}
-            />
+            {/* Upload de fichier pour document, image, video */}
+            {['document', 'image', 'video'].includes(newItemData.type) && (
+              <div className="space-y-2">
+                <Label htmlFor="fileUpload">Fichier</Label>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
+                  <input
+                    id="fileUpload"
+                    type="file"
+                    onChange={handleFileUpload}
+                    accept={
+                      newItemData.type === 'image' ? 'image/*' :
+                      newItemData.type === 'video' ? 'video/*' :
+                      newItemData.type === 'document' ? '.pdf,.doc,.docx,.txt,.xlsx,.pptx' :
+                      '*'
+                    }
+                    className="hidden"
+                  />
+                  <label htmlFor="fileUpload" className="cursor-pointer">
+                    <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                    <p className="text-sm text-gray-600">
+                      {newItemData.file ? (
+                        <span className="text-green-600 font-medium">
+                          ✅ {newItemData.file.name}
+                        </span>
+                      ) : (
+                        <>
+                          Cliquez pour sélectionner un fichier
+                          <br />
+                          <span className="text-xs text-gray-500">
+                            {newItemData.type === 'image' && 'JPG, PNG, GIF...'}
+                            {newItemData.type === 'video' && 'MP4, AVI, MOV...'}
+                            {newItemData.type === 'document' && 'PDF, DOC, TXT...'}
+                          </span>
+                        </>
+                      )}
+                    </p>
+                  </label>
+                </div>
+              </div>
+            )}
 
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setShowNewItemModal(false)}>
+            {/* Champ URL pour les liens */}
+            {newItemData.type === 'link' && (
+              <div className="space-y-2">
+                <Label htmlFor="itemUrl">URL du lien</Label>
+                <Input
+                  id="itemUrl"
+                  type="url"
+                  value={newItemData.url}
+                  onChange={(e) => setNewItemData(prev => ({ ...prev, url: e.target.value }))}
+                  placeholder="https://exemple.com"
+                />
+              </div>
+            )}
+
+            {/* Description/Contenu */}
+            <div className="space-y-2">
+              <Label htmlFor="itemContent">Description (optionnel)</Label>
+              <Textarea
+                id="itemContent"
+                value={newItemData.content}
+                onChange={(e) => setNewItemData(prev => ({ ...prev, content: e.target.value }))}
+                placeholder="Description ou notes..."
+                rows={3}
+              />
+            </div>
+
+            {/* Boutons d'action */}
+            <div className="flex justify-end space-x-2 pt-4">
+              <Button variant="outline" onClick={() => {
+                setShowNewItemModal(false);
+                setNewItemData({ name: '', type: 'text', content: '', file: null, url: '' });
+              }}>
                 Annuler
               </Button>
               <Button onClick={addItem} disabled={!newItemData.name.trim()}>
