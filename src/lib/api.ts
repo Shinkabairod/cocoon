@@ -1,4 +1,6 @@
-// src/lib/api.ts - SERVICE API COMPLET
+// src/lib/api.ts - SERVICE API CORRIGÉ
+import { useState, useCallback } from 'react';
+
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:7860';
 
 export class ApiService {
@@ -112,19 +114,88 @@ export class ApiService {
 export const apiService = new ApiService();
 
 // === HOOKS REACT ===
-import { useState, useCallback } from 'react';
-
 export const useApi = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const makeRequest = useCallback(async <T>(
-    apiCall: () => Promise<T>
-  ): Promise<T | null> => {
+  const makeRequest = useCallback(async (apiCall: () => Promise<any>) => {
     setLoading(true);
     setError(null);
     
     try {
       const result = await apiCall();
       return result;
-    } catch (err
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Une erreur est survenue';
+      setError(errorMessage);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { makeRequest, loading, error };
+};
+
+// === HOOK SPÉCIALISÉ CHAT IA ===
+export const useAIChat = (userId: string) => {
+  const [messages, setMessages] = useState<Array<{
+    role: 'user' | 'assistant';
+    content: string;
+    timestamp: Date;
+  }>>([]);
+  const { makeRequest, loading, error } = useApi();
+
+  const sendMessage = useCallback(async (message: string) => {
+    // Ajouter le message utilisateur
+    const userMessage = {
+      role: 'user' as const,
+      content: message,
+      timestamp: new Date()
+    };
+    setMessages(prev => [...prev, userMessage]);
+
+    // Envoyer à l'API et obtenir la réponse
+    const response = await makeRequest(() => 
+      apiService.askAI(userId, message)
+    );
+
+    if (response) {
+      const assistantMessage = {
+        role: 'assistant' as const,
+        content: response.answer || 'Désolé, je n\'ai pas pu traiter votre demande.',
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, assistantMessage]);
+    }
+  }, [userId, makeRequest]);
+
+  const clearMessages = useCallback(() => {
+    setMessages([]);
+  }, []);
+
+  return {
+    messages,
+    sendMessage,
+    clearMessages,
+    loading,
+    error
+  };
+};
+
+// === HOOK POUR UPLOAD ===
+export const useFileUpload = (userId: string) => {
+  const { makeRequest, loading, error } = useApi();
+
+  const uploadFile = useCallback(async (file: File) => {
+    return makeRequest(() => apiService.uploadFile(userId, file));
+  }, [userId, makeRequest]);
+
+  const uploadUrl = useCallback(async (url: string, title?: string) => {
+    return makeRequest(() => apiService.uploadUrl(userId, url, title));
+  }, [userId, makeRequest]);
+
+  return { uploadFile, uploadUrl, loading, error };
+};
+
+export default apiService;
