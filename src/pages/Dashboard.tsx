@@ -742,3 +742,91 @@ const Dashboard = () => {
             
             <div className="space-y-2">
               <Label htmlFor="folderName">Nom du dossier</Label>
+              <Input
+                id="folderName"
+                value={newFolderName}
+                onChange={(e) => setNewFolderName(e.target.value)}
+                placeholder="Nom du dossier"
+                onKeyPress={(e) => e.key === 'Enter' && addFolder()}
+              />
+            </div>
+            
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => {
+                setShowNewFolderModal(false);
+                setNewFolderName('');
+                setNewFolderEmoji('📁');
+              }}>
+                Annuler
+              </Button>
+              <Button onClick={addFolder} disabled={!newFolderName.trim()}>
+                Créer
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal Renommer Dossier */}
+      <Dialog open={showRenameFolderModal} onOpenChange={setShowRenameFolderModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Renommer le dossier</DialogTitle>
+            <DialogDescription>
+              Modifiez le nom et l'emoji de "{selectedFolder?.name}"
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="renameEmoji">Emoji du dossier</Label>
+              <div className="flex items-center space-x-2">
+                <Input
+                  id="renameEmoji"
+                  value={renameFolderData.emoji}
+                  onChange={(e) => setRenameFolderData(prev => ({ ...prev, emoji: e.target.value }))}
+                  className="w-16 text-center text-xl"
+                  maxLength={2}
+                />
+                <div className="flex-1">
+                  <div className="grid grid-cols-8 gap-1 max-h-32 overflow-y-auto border rounded p-2">
+                    {popularEmojis.map((emoji, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => setRenameFolderData(prev => ({ ...prev, emoji }))}
+                        className="text-xl hover:bg-gray-100 rounded p-1 transition-colors"
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="renameName">Nom du dossier</Label>
+              <Input
+                id="renameName"
+                value={renameFolderData.name}
+                onChange={(e) => setRenameFolderData(prev => ({ ...prev, name: e.target.value }))}
+                placeholder="Nom du dossier"
+                onKeyPress={(e) => e.key === 'Enter' && renameFolder()}
+              />
+            </div>
+            
+            <div className="flex justify-end space-x-2">
+              <Button variant="outline" onClick={() => {
+                setShowRenameFolderModal(false);
+                setRenameFolderData({ name: '', emoji: '' });
+                setSelectedFolder(null);
+              }}>
+                Annuler
+              </Button>
+              <Button onClick={renameFolder} disabled={!renameFolderData.name.trim()}>
+                Renommer
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
