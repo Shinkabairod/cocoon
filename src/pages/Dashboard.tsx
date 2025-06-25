@@ -237,10 +237,10 @@ const Dashboard = () => {
         <div className="bg-gradient-to-r from-purple-600 via-blue-600 to-purple-700 rounded-2xl p-6 md:p-8 text-white relative overflow-hidden">
           <div className="relative z-10">
             <h1 className="text-2xl md:text-3xl font-bold mb-2">
-              {greeting}, {userName} ! 🦋
+              {greeting}, {userName} ! 🔥
             </h1>
             <p className="text-purple-100 text-lg mb-6">
-              Bienvenue dans votre cocon de création. Ici, vos idées se transforment en contenu extraordinaire.
+              De l'inspiration au contenu viral, en un instant.
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
