@@ -312,7 +312,7 @@ const Dashboard = () => {
                 <Zap className="h-6 w-6 text-orange-600" />
               </div>
               <div className="text-2xl font-bold text-orange-700">{userStats?.transformations || 0}</div>
-              <div className="text-sm text-gray-600">Transformations</div>
+              <div className="text-sm text-gray-600">Créations</div>
               <div className="text-xs text-green-600 mt-1">+0%</div>
             </CardContent>
           </Card>
