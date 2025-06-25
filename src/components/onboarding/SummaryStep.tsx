@@ -50,8 +50,8 @@ const SummaryStep = () => {
       
       // Sauvegarder aussi dans Supabase pour accès rapide
       await supabase.from('user_profiles').upsert({
-        id: user.id,
-        completed_onboarding: true,
+        user_id: user.id,
+        onboarding_completed: true,
         profile_data: onboardingData,
         updated_at: new Date().toISOString()
       });
