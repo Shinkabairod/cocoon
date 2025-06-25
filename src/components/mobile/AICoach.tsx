@@ -1,9 +1,17 @@
-// Remplacez la simulation par de vrais appels API
+
+import React, { useState } from 'react';
 import { apiService } from '@/lib/api';
 import { useAuth } from '@/contexts/AuthContext';
 
+interface AICoachProps {
+  isOpen: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
 const AICoach = ({ isOpen, onOpenChange }: AICoachProps) => {
   const { user } = useAuth();
+  const [messages, setMessages] = useState<Array<{role: string, content: string, timestamp: Date}>>([]);
+  const [isLoading, setIsLoading] = useState(false);
   
   const sendMessage = async (message: string) => {
     if (!user) return;
@@ -27,3 +35,12 @@ const AICoach = ({ isOpen, onOpenChange }: AICoachProps) => {
       setIsLoading(false);
     }
   };
+
+  return (
+    <div className="ai-coach">
+      {/* Chat interface will be implemented here */}
+    </div>
+  );
+};
+
+export default AICoach;
