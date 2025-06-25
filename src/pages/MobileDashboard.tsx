@@ -12,7 +12,7 @@ import ProfileTab from "@/components/mobile/tabs/ProfileTab";
 import useCharacter from "@/hooks/useCharacter";
 import useContentLibrary from "@/hooks/useContentLibrary";
 import { 
-  Home, User, Wrench, Library, Sparkles
+  Home, User, Wrench, Library
 } from "lucide-react";
 
 const MobileDashboard = () => {
@@ -32,8 +32,7 @@ const MobileDashboard = () => {
 
   const navIcons = [
     { id: "home", icon: <Home className="h-5 w-5" />, label: "Accueil" },
-    { id: "library", icon: <Library className="h-5 w-5" />, label: "Ressources" },
-    { id: "ai-assistant", icon: <Sparkles className="h-6 w-6" />, label: "Assistant IA", isCenter: true },
+    { id: "library", icon: <Library className="h-5 w-5" />, label: "Mes Contenus" },
     { id: "tools", icon: <Wrench className="h-5 w-5" />, label: "Création" },
     { id: "profile", icon: <User className="h-5 w-5" />, label: "Paramètres" }
   ];
@@ -46,11 +45,7 @@ const MobileDashboard = () => {
   };
 
   const handleTabClick = (tabId: string) => {
-    if (tabId === "ai-assistant") {
-      setIsAICoachOpen(true);
-    } else {
-      setActiveTab(tabId);
-    }
+    setActiveTab(tabId);
   };
 
   const renderTabContent = () => {

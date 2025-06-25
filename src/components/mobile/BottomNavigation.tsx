@@ -6,7 +6,6 @@ interface NavIcon {
   id: string;
   icon: React.ReactNode;
   label: string;
-  isCenter?: boolean;
 }
 
 interface BottomNavigationProps {
@@ -32,23 +31,14 @@ const BottomNavigation = ({ icons, activeIcon = "home", onIconClick }: BottomNav
           key={item.id}
           onClick={() => handleNavClick(item.id)}
           className={cn(
-            "flex flex-col items-center justify-center transition-all duration-200 relative",
-            item.isCenter 
-              ? "w-14 h-14 rounded-full gradient-bg shadow-lg -mt-2" 
-              : "w-16 h-full",
-            item.isCenter 
-              ? "text-white" 
-              : activeIcon === item.id ? "text-coach-primary" : "text-muted-foreground"
+            "flex flex-col items-center justify-center transition-all duration-200 w-20 h-full",
+            activeIcon === item.id ? "text-coach-primary" : "text-muted-foreground"
           )}
         >
-          <div className={cn(
-            item.isCenter ? "h-6 w-6" : "h-6 w-6"
-          )}>
+          <div className="h-6 w-6 mb-1">
             {item.icon}
           </div>
-          {!item.isCenter && (
-            <span className="text-xs mt-1">{item.label}</span>
-          )}
+          <span className="text-xs font-medium">{item.label}</span>
         </button>
       ))}
     </div>
