@@ -81,25 +81,25 @@ const Dashboard = () => {
   const navigation = [
     {
       id: 'welcome',
-      name: 'Mon Cocon',
+      name: 'Mon compte',
       icon: Home,
       description: 'Votre espace personnel'
     },
     {
       id: 'resources',
-      name: 'Ma Chrysalide',
+      name: 'Mes ressources',
       icon: Folder,
       description: 'Ressources et données'
     },
     {
       id: 'creation',
-      name: 'Transformation',
+      name: 'Mes créations',
       icon: Sparkles,
       description: 'Création de contenu'
     },
     {
       id: 'monetization',
-      name: 'Envol',
+      name: 'Mon bot IA',
       icon: DollarSign,
       description: 'Partage et monétisation'
     },
