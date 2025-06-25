@@ -59,7 +59,9 @@ import {
   Save,
   ChevronRight,
   Crown,
-  PlayCircle
+  PlayCircle,
+  Edit,
+  Smile
 } from 'lucide-react';
 
 const Dashboard = () => {
@@ -83,18 +85,21 @@ const Dashboard = () => {
   const [activeCategory, setActiveCategory] = useState('resources');
   const [folders, setFolders] = useState({
     resources: [
-      { id: '1', name: 'Scripts Vidéos', items: [] },
-      { id: '2', name: 'Images de marque', items: [] }
+      { id: '1', name: 'Scripts Vidéos', emoji: '🎬', items: [] },
+      { id: '2', name: 'Images de marque', emoji: '🎨', items: [] }
     ],
     personal: [
-      { id: '3', name: 'Profil créateur', items: [] },
-      { id: '4', name: 'Objectifs', items: [] }
+      { id: '3', name: 'Profil créateur', emoji: '👤', items: [] },
+      { id: '4', name: 'Objectifs', emoji: '🎯', items: [] }
     ]
   });
   const [showNewFolderModal, setShowNewFolderModal] = useState(false);
   const [showNewItemModal, setShowNewItemModal] = useState(false);
+  const [showRenameFolderModal, setShowRenameFolderModal] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(null);
   const [newFolderName, setNewFolderName] = useState('');
+  const [newFolderEmoji, setNewFolderEmoji] = useState('📁');
+  const [renameFolderData, setRenameFolderData] = useState({ name: '', emoji: '' });
   const [newItemData, setNewItemData] = useState({ 
     name: '', 
     type: 'text', 
@@ -137,6 +142,18 @@ const Dashboard = () => {
     }
   ];
 
+  // Emojis populaires pour les dossiers (version étendue avec plus d'emojis utilisés)
+  const popularEmojis = [
+    '📁', '📂', '🎬', '🎨', '📝', '💼', '🎯', '💡', 
+    '🚀', '⭐', '📊', '🎵', '📷', '🎥', '📖', '💻',
+    '🏆', '❤️', '🔥', '✨', '🌟', '🎉', '👤', '🏠',
+    '📱', '🌐', '🔧', '📈', '💰', '🎪', '🎨', '🎭',
+    '😊', '😍', '🤔', '💪', '👍', '🎁', '⚡', '🌈',
+    '🍕', '☕', '🎸', '🎲', '🎈', '🎊', '🌺', '🌸',
+    '🦄', '🐱', '🐶', '🎀', '💝', '💎', '🔮', '🌙',
+    '☀️', '⭐', '💫', '🌊', '🔑', '🎪', '🎯', '📚'
+  ];
+
   // Fonction pour gérer l'upload de fichiers
   const handleFileUpload = (event) => {
     const file = event.target.files[0];
@@ -161,6 +178,7 @@ const Dashboard = () => {
     const newFolder = {
       id: Date.now().toString(),
       name: newFolderName,
+      emoji: newFolderEmoji,
       items: []
     };
     
@@ -170,11 +188,34 @@ const Dashboard = () => {
     }));
     
     setNewFolderName('');
+    setNewFolderEmoji('📁');
     setShowNewFolderModal(false);
     
     toast({
       title: "✅ Dossier créé",
-      description: `Le dossier "${newFolderName}" a été ajouté.`
+      description: `Le dossier "${newFolderEmoji} ${newFolderName}" a été ajouté.`
+    });
+  };
+
+  const renameFolder = () => {
+    if (!renameFolderData.name.trim() || !selectedFolder) return;
+    
+    setFolders(prev => ({
+      ...prev,
+      [activeCategory]: prev[activeCategory].map(folder => 
+        folder.id === selectedFolder.id 
+          ? { ...folder, name: renameFolderData.name, emoji: renameFolderData.emoji }
+          : folder
+      )
+    }));
+    
+    setShowRenameFolderModal(false);
+    setSelectedFolder(null);
+    setRenameFolderData({ name: '', emoji: '' });
+    
+    toast({
+      title: "✅ Dossier renommé",
+      description: `Dossier mis à jour : "${renameFolderData.emoji} ${renameFolderData.name}"`
     });
   };
 
@@ -334,8 +375,8 @@ const Dashboard = () => {
     setChatMessages(prev => [...prev, { type: 'user', content: chatInput }]);
     
     try {
-      const response = await huggingfaceService.askQuestion(user?.id || '', chatInput);
-      setChatMessages(prev => [...prev, { type: 'ai', content: response.answer }]);
+      const response = await huggingfaceService.askAI(chatInput);
+      setChatMessages(prev => [...prev, { type: 'ai', content: response.answer || response }]);
       setChatInput('');
       toast({
         title: "✅ Réponse générée",
@@ -357,8 +398,8 @@ const Dashboard = () => {
     
     setIsGenerating(true);
     try {
-      const response = await huggingfaceService.generateScript(user?.id || '', scriptTopic);
-      setGeneratedContent(response.script);
+      const response = await huggingfaceService.generateScript(scriptTopic);
+      setGeneratedContent(response.script || response);
       toast({
         title: "✅ Script généré",
         description: "Votre script a été créé avec succès"
@@ -465,7 +506,7 @@ const Dashboard = () => {
               <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mx-auto mb-2">
                 <MessageSquare className="h-6 w-6 text-blue-600" />
               </div>
-              <div className="text-2xl font-bold text-blue-700">{userStats?.conversations || 0}</div>
+              <div className="text-2xl font-bold text-blue-700">{userStats?.chatConversations || 0}</div>
               <div className="text-sm text-gray-600">Conversations IA</div>
               <div className="text-xs text-green-600 mt-1">0%</div>
             </CardContent>
@@ -476,7 +517,7 @@ const Dashboard = () => {
               <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mx-auto mb-2">
                 <Folder className="h-6 w-6 text-green-600" />
               </div>
-              <div className="text-2xl font-bold text-green-700">{userStats?.resources || 0}</div>
+              <div className="text-2xl font-bold text-green-700">{userStats?.totalResources || 0}</div>
               <div className="text-sm text-gray-600">Ressources</div>
               <div className="text-xs text-green-600 mt-1">0%</div>
             </CardContent>
@@ -487,7 +528,7 @@ const Dashboard = () => {
               <div className="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-full mx-auto mb-2">
                 <Zap className="h-6 w-6 text-orange-600" />
               </div>
-              <div className="text-2xl font-bold text-orange-700">{userStats?.transformations || 0}</div>
+              <div className="text-2xl font-bold text-orange-700">{userStats?.contentGenerated || 0}</div>
               <div className="text-sm text-gray-600">Transformations</div>
               <div className="text-xs text-green-600 mt-1">+0%</div>
             </CardContent>
@@ -544,7 +585,7 @@ const Dashboard = () => {
     );
   };
 
-  // Page Ressources COMPLÈTE avec Upload
+  // Page Ressources COMPLÈTE avec Upload et Renommage
   const renderResourcesPage = () => (
     <div className="p-4 md:p-8 space-y-6">
       {/* Header */}
@@ -587,10 +628,21 @@ const Dashboard = () => {
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center text-lg">
-                  <Folder className="h-5 w-5 mr-2 text-blue-600" />
-                  {folder.name}
+                  <span className="text-2xl mr-2">{folder.emoji}</span>
+                  <span className="truncate">{folder.name}</span>
                 </CardTitle>
                 <div className="flex space-x-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      setSelectedFolder(folder);
+                      setRenameFolderData({ name: folder.name, emoji: folder.emoji });
+                      setShowRenameFolderModal(true);
+                    }}
+                  >
+                    <Edit className="h-4 w-4" />
+                  </Button>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -618,7 +670,7 @@ const Dashboard = () => {
             <CardContent>
               {folder.items.length === 0 ? (
                 <div className="text-center py-4 text-gray-400">
-                  <Folder className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <span className="text-3xl block mb-2">{folder.emoji}</span>
                   <p className="text-sm">Dossier vide</p>
                 </div>
               ) : (
@@ -661,517 +713,32 @@ const Dashboard = () => {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <Input
-              value={newFolderName}
-              onChange={(e) => setNewFolderName(e.target.value)}
-              placeholder="Nom du dossier"
-              onKeyPress={(e) => e.key === 'Enter' && addFolder()}
-            />
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setShowNewFolderModal(false)}>
-                Annuler
-              </Button>
-              <Button onClick={addFolder} disabled={!newFolderName.trim()}>
-                Créer
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal Nouvel Élément avec Upload */}
-      <Dialog open={showNewItemModal} onOpenChange={setShowNewItemModal}>
-        <DialogContent className="max-w-lg">
-          <DialogHeader>
-            <DialogTitle>Ajouter un élément</DialogTitle>
-            <DialogDescription>
-              Ajoutez du contenu dans le dossier "{selectedFolder?.name}"
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            {/* Nom de l'élément */}
             <div className="space-y-2">
-              <Label htmlFor="itemName">Nom de l'élément</Label>
-              <Input
-                id="itemName"
-                value={newItemData.name}
-                onChange={(e) => setNewItemData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="Nom de l'élément"
-              />
+              <Label htmlFor="folderEmoji">Emoji du dossier</Label>
+              <div className="flex items-center space-x-2">
+                <Input
+                  id="folderEmoji"
+                  value={newFolderEmoji}
+                  onChange={(e) => setNewFolderEmoji(e.target.value)}
+                  className="w-16 text-center text-xl"
+                  maxLength={2}
+                />
+                <div className="flex-1">
+                  <div className="grid grid-cols-8 gap-1 max-h-32 overflow-y-auto border rounded p-2">
+                    {popularEmojis.map((emoji, index) => (
+                      <button
+                        key={index}
+                        type="button"
+                        onClick={() => setNewFolderEmoji(emoji)}
+                        className="text-xl hover:bg-gray-100 rounded p-1 transition-colors"
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
             
-            {/* Type de contenu */}
             <div className="space-y-2">
-              <Label htmlFor="itemType">Type de contenu</Label>
-              <select
-                id="itemType"
-                value={newItemData.type}
-                onChange={(e) => setNewItemData(prev => ({ 
-                  ...prev, 
-                  type: e.target.value,
-                  file: null, // Reset file when changing type
-                  url: '' // Reset URL when changing type
-                }))}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="text">Texte</option>
-                <option value="document">Document</option>
-                <option value="image">Image</option>
-                <option value="video">Vidéo</option>
-                <option value="link">Lien</option>
-              </select>
-            </div>
-
-            {/* Upload de fichier pour document, image, video */}
-            {['document', 'image', 'video'].includes(newItemData.type) && (
-              <div className="space-y-2">
-                <Label htmlFor="fileUpload">Fichier</Label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
-                  <input
-                    id="fileUpload"
-                    type="file"
-                    onChange={handleFileUpload}
-                    accept={
-                      newItemData.type === 'image' ? 'image/*' :
-                      newItemData.type === 'video' ? 'video/*' :
-                      newItemData.type === 'document' ? '.pdf,.doc,.docx,.txt,.xlsx,.pptx' :
-                      '*'
-                    }
-                    className="hidden"
-                  />
-                  <label htmlFor="fileUpload" className="cursor-pointer">
-                    <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
-                    <p className="text-sm text-gray-600">
-                      {newItemData.file ? (
-                        <span className="text-green-600 font-medium">
-                          ✅ {newItemData.file.name}
-                        </span>
-                      ) : (
-                        <>
-                          Cliquez pour sélectionner un fichier
-                          <br />
-                          <span className="text-xs text-gray-500">
-                            {newItemData.type === 'image' && 'JPG, PNG, GIF...'}
-                            {newItemData.type === 'video' && 'MP4, AVI, MOV...'}
-                            {newItemData.type === 'document' && 'PDF, DOC, TXT...'}
-                          </span>
-                        </>
-                      )}
-                    </p>
-                  </label>
-                </div>
-              </div>
-            )}
-
-            {/* Champ URL pour les liens */}
-            {newItemData.type === 'link' && (
-              <div className="space-y-2">
-                <Label htmlFor="itemUrl">URL du lien</Label>
-                <Input
-                  id="itemUrl"
-                  type="url"
-                  value={newItemData.url}
-                  onChange={(e) => setNewItemData(prev => ({ ...prev, url: e.target.value }))}
-                  placeholder="https://exemple.com"
-                />
-              </div>
-            )}
-
-            {/* Description/Contenu */}
-            <div className="space-y-2">
-              <Label htmlFor="itemContent">Description (optionnel)</Label>
-              <Textarea
-                id="itemContent"
-                value={newItemData.content}
-                onChange={(e) => setNewItemData(prev => ({ ...prev, content: e.target.value }))}
-                placeholder="Description ou notes..."
-                rows={3}
-              />
-            </div>
-
-            {/* Boutons d'action */}
-            <div className="flex justify-end space-x-2 pt-4">
-              <Button variant="outline" onClick={() => {
-                setShowNewItemModal(false);
-                setNewItemData({ name: '', type: 'text', content: '', file: null, url: '' });
-              }}>
-                Annuler
-              </Button>
-              <Button onClick={addItem} disabled={!newItemData.name.trim()}>
-                Ajouter
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-
-  // Autres pages
-  const renderCreationPage = () => (
-    <div className="p-4 md:p-8 space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Mes Créations</h2>
-        <div className="space-x-2">
-          <Button onClick={() => setActiveModal('chat')}>
-            <MessageSquare className="h-4 w-4 mr-2" />
-            Chat IA
-          </Button>
-          <Button onClick={() => setActiveModal('script')}>
-            <Sparkles className="h-4 w-4 mr-2" />
-            Nouveau Script
-          </Button>
-        </div>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card className="border-dashed border-2 border-gray-300 flex items-center justify-center h-48">
-          <div className="text-center">
-            <Plus className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-500">Créez votre premier contenu</p>
-            <Button variant="outline" className="mt-2" onClick={() => setActiveModal('script')}>
-              Commencer
-            </Button>
-          </div>
-        </Card>
-      </div>
-    </div>
-  );
-
-  const renderMonetizationPage = () => (
-    <div className="p-4 md:p-8 space-y-6">
-      <h2 className="text-2xl font-bold">Mon Bot IA</h2>
-      
-      <Card>
-        <CardHeader>
-          <CardTitle>Configuration de votre assistant IA</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-gray-500 mb-4">
-            Configurez votre assistant IA personnalisé pour partager vos connaissances et générer des revenus.
-          </p>
-          <Button>
-            <Settings className="h-4 w-4 mr-2" />
-            Configurer l'assistant
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
-  );
-
-  const renderSettingsPage = () => (
-    <div className="p-4 md:p-8 space-y-6">
-      <h2 className="text-2xl font-bold">Réglages</h2>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Crown className="h-5 w-5 mr-2 text-purple-600" />
-              Abonnement
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600 mb-4">Gérez votre abonnement et accédez aux fonctionnalités premium.</p>
-            <Button className="bg-purple-600 hover:bg-purple-700">
-              <Crown className="h-4 w-4 mr-2" />
-              Passer à Pro
-            </Button>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Settings className="h-5 w-5 mr-2" />
-              Paramètres
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-600 mb-4">Configurez vos préférences et paramètres de compte.</p>
-            <Button variant="outline">
-              Modifier les paramètres
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
-
-  // Fonction de rendu des pages
-  const renderActivePage = () => {
-    switch (activePage) {
-      case 'welcome':
-        return renderWelcomePage();
-      case 'resources':
-        return renderResourcesPage();
-      case 'creation':
-        return renderCreationPage();
-      case 'monetization':
-        return renderMonetizationPage();
-      case 'settings':
-        return renderSettingsPage();
-      default:
-        return renderWelcomePage();
-    }
-  };
-
-  // Composant Sidebar
-  const SidebarContent = ({ isMobile = false, onClose }) => (
-    <>
-      {/* En-tête simplifié SANS profil utilisateur */}
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
-              <Sparkles className="h-5 w-5 text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-gray-900">Cocoon AI</h1>
-              <p className="text-xs text-gray-500">Transformez vos idées</p>
-            </div>
-          </div>
-          
-          {isMobile && onClose && (
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="h-5 w-5" />
-            </Button>
-          )}
-        </div>
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2">
-        {navigation.map((item) => {
-          const Icon = item.icon;
-          const isActive = activePage === item.id;
-          
-          return (
-            <button
-              key={item.id}
-              onClick={() => {
-                setActivePage(item.id);
-                if (isMobile && onClose) onClose();
-              }}
-              className={`w-full flex items-center space-x-3 px-3 py-3 rounded-xl transition-all duration-200 text-left ${
-                isActive
-                  ? 'bg-gradient-to-r from-purple-500 to-blue-500 text-white shadow-lg'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
-              }`}
-            >
-              <Icon className={`h-5 w-5 ${isActive ? 'text-white' : 'text-gray-500'}`} />
-              <div className="flex-1">
-                <div className={`text-sm font-medium ${isActive ? 'text-white' : 'text-gray-900'}`}>
-                  {item.name}
-                </div>
-                <div className={`text-xs ${isActive ? 'text-purple-100' : 'text-gray-500'}`}>
-                  {item.description}
-                </div>
-              </div>
-            </button>
-          );
-        })}
-      </nav>
-
-      {/* Version Pro - CLIQUABLE */}
-      <div className="p-4 border-t border-gray-200">
-        <Button
-          variant="ghost"
-          className="w-full justify-start space-x-2 text-purple-600 hover:bg-purple-50"
-          onClick={() => {
-            setActivePage('settings');
-            if (isMobile && onClose) onClose();
-          }}
-        >
-          <Crown className="h-4 w-4" />
-          <span>Version Pro</span>
-        </Button>
-        <p className="text-xs text-gray-500 mt-1 px-2">
-          Toutes les fonctionnalités débloquées
-        </p>
-      </div>
-    </>
-  );
-
-  // Modales
-  const ChatModal = ({ open, onClose }) => (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col">
-        <DialogHeader>
-          <DialogTitle>Chat avec l'IA</DialogTitle>
-          <DialogDescription>Posez vos questions sur la création de contenu</DialogDescription>
-        </DialogHeader>
-        
-        <div className="flex-1 overflow-y-auto space-y-4">
-          {chatMessages.map((message, index) => (
-            <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-              <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                message.type === 'user' 
-                  ? 'bg-purple-500 text-white' 
-                  : 'bg-gray-100 text-gray-900'
-              }`}>
-                {message.content}
-              </div>
-            </div>
-          ))}
-        </div>
-        
-        <div className="flex space-x-2">
-          <Input
-            value={chatInput}
-            onChange={(e) => setChatInput(e.target.value)}
-            placeholder="Tapez votre question..."
-            onKeyPress={(e) => e.key === 'Enter' && handleChatIA()}
-          />
-          <Button onClick={handleChatIA} disabled={isGenerating}>
-            {isGenerating ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
-            ) : (
-              <Send className="h-4 w-4" />
-            )}
-          </Button>
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
-
-  const ScriptModal = ({ open, onClose }) => (
-    <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col">
-        <DialogHeader>
-          <DialogTitle>Générateur de Script</DialogTitle>
-          <DialogDescription>Créez un script personnalisé pour vos vidéos</DialogDescription>
-        </DialogHeader>
-        
-        <div className="space-y-4">
-          <Textarea
-            value={scriptTopic}
-            onChange={(e) => setScriptTopic(e.target.value)}
-            placeholder="Décrivez le sujet de votre vidéo..."
-            rows={3}
-          />
-          <Button onClick={handleGenerateScript} disabled={isGenerating} className="w-full">
-            {isGenerating ? (
-              <>
-                <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                Génération en cours...
-              </>
-            ) : (
-              <>
-                <Sparkles className="h-4 w-4 mr-2" />
-                Générer le Script
-              </>
-            )}
-          </Button>
-        </div>
-        
-        {generatedContent && (
-          <div className="flex-1 overflow-y-auto">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h4 className="font-medium mb-2">Script généré :</h4>
-              <div className="whitespace-pre-wrap text-sm">{generatedContent}</div>
-            </div>
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
-  );
-
-  if (isLoading) {
-    return (
-      <div className="h-screen bg-gray-50 flex animate-pulse">
-        <div className="w-64 bg-white border-r border-gray-200 p-6 space-y-4">
-          <div className="h-8 bg-gray-200 rounded"></div>
-          <div className="space-y-2">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-12 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-        </div>
-        <div className="flex-1 p-8 space-y-6">
-          <div className="h-32 bg-gray-200 rounded-2xl"></div>
-          <div className="grid grid-cols-4 gap-4">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="h-24 bg-gray-200 rounded"></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="h-screen bg-gray-50 flex">
-      {/* Sidebar Desktop */}
-      {!isMobile && (
-        <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-          <SidebarContent />
-        </div>
-      )}
-
-      {/* Sidebar Mobile */}
-      {isMobile && sidebarOpen && (
-        <div className="fixed inset-0 z-50 flex">
-          <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setSidebarOpen(false)} />
-          <div className="relative w-64 bg-white border-r border-gray-200 flex flex-col">
-            <SidebarContent isMobile={true} onClose={() => setSidebarOpen(false)} />
-          </div>
-        </div>
-      )}
-
-      {/* Contenu principal */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Header avec profil en haut à droite */}
-        <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-          {/* Bouton menu mobile */}
-          <div className="md:hidden">
-            <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(true)}>
-              <Menu className="h-5 w-5" />
-            </Button>
-          </div>
-          
-          {/* Titre desktop */}
-          <div className="hidden md:block">
-            <h2 className="text-lg font-semibold text-gray-900">
-              {navigation.find(nav => nav.id === activePage)?.name || 'Dashboard'}
-            </h2>
-          </div>
-
-          {/* Profil utilisateur en haut à droite */}
-          <div className="flex items-center space-x-3">
-            <div className="text-right hidden sm:block">
-              <p className="text-sm font-medium text-gray-900">
-                {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Gem'}
-              </p>
-              <p className="text-xs text-gray-500">Créateur en Transformation</p>
-            </div>
-            <Avatar className="h-8 w-8">
-              <AvatarImage src={user?.user_metadata?.avatar_url} />
-              <AvatarFallback className="bg-gradient-to-r from-purple-500 to-blue-500 text-white text-sm">
-                {user?.email?.charAt(0).toUpperCase() || 'G'}
-              </AvatarFallback>
-            </Avatar>
-          </div>
-        </div>
-
-        {/* Contenu de la page */}
-        <main className="flex-1 overflow-y-auto">
-          {renderActivePage()}
-        </main>
-      </div>
-
-      {/* Modales */}
-      <ChatModal 
-        open={activeModal === 'chat'} 
-        onClose={() => setActiveModal(null)}
-      />
-
-      <ScriptModal 
-        open={activeModal === 'script'} 
-        onClose={() => setActiveModal(null)}
-      />
-    </div>
-  );
-};
-
-export default Dashboard;
+              <Label htmlFor="folderName">Nom du dossier</Label>
