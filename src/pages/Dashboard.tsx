@@ -744,4 +744,87 @@ const Dashboard = () => {
       {/* Sidebar Mobile */}
       {isMobile && sidebarOpen && (
         <div className="fixed inset-0 z-50 flex">
-          <div className="fixed in
+          <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setSidebarOpen(false)} />
+          <div className="relative w-64 bg-white border-r border-gray-200 flex flex-col">
+            <SidebarContent 
+              navigation={navigation}
+              activePage={activePage}
+              setActivePage={(page) => {
+                setActivePage(page);
+                setSidebarOpen(false);
+              }}
+              user={user}
+              stats={userStats}
+              isMobile={true}
+              onClose={() => setSidebarOpen(false)}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* Contenu principal */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Header avec profil en haut à droite */}
+        <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+          {/* Bouton menu mobile */}
+          <div className="md:hidden">
+            <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(true)}>
+              <Menu className="h-5 w-5" />
+            </Button>
+          </div>
+          
+          {/* Titre desktop */}
+          <div className="hidden md:block">
+            <h2 className="text-lg font-semibold text-gray-900">
+              {navigation.find(nav => nav.id === activePage)?.name || 'Dashboard'}
+            </h2>
+          </div>
+
+          {/* Profil utilisateur en haut à droite */}
+          <div className="flex items-center space-x-3">
+            <div className="text-right hidden sm:block">
+              <p className="text-sm font-medium text-gray-900">
+                {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Gem'}
+              </p>
+              <p className="text-xs text-gray-500">Créateur en Transformation</p>
+            </div>
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={user?.user_metadata?.avatar_url} />
+              <AvatarFallback className="bg-gradient-to-r from-purple-500 to-blue-500 text-white text-sm">
+                {user?.email?.charAt(0).toUpperCase() || 'G'}
+              </AvatarFallback>
+            </Avatar>
+          </div>
+        </div>
+
+        {/* Contenu de la page */}
+        <main className="flex-1 overflow-y-auto">
+          {renderActivePage()}
+        </main>
+      </div>
+
+      {/* Modales */}
+      <ChatModal 
+        open={activeModal === 'chat'} 
+        onClose={() => setActiveModal(null)}
+        chatInput={chatInput}
+        setChatInput={setChatInput}
+        chatMessages={chatMessages}
+        isGenerating={isGenerating}
+        onSend={handleChatIA}
+      />
+
+      <ScriptModal 
+        open={activeModal === 'script'} 
+        onClose={() => setActiveModal(null)}
+        scriptTopic={scriptTopic}
+        setScriptTopic={setScriptTopic}
+        generatedContent={generatedContent}
+        isGenerating={isGenerating}
+        onGenerate={handleGenerateScript}
+      />
+    </div>
+  );
+};
+
+export default Dashboard;
