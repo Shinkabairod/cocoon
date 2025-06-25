@@ -58,6 +58,8 @@ import {
   Globe,
   Lock,
   Save
+  ChevronRight,
+  Crown
 } from 'lucide-react';
 
 const Dashboard = () => {
@@ -282,37 +284,25 @@ const Dashboard = () => {
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header Mobile */}
         {isMobile && (
-<div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-  {/* Bouton menu mobile */}
-  <div className="md:hidden">
-    <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(true)}>
-      <Menu className="h-5 w-5" />
-    </Button>
-  </div>
-  
-  {/* Titre desktop */}
-  <div className="hidden md:block">
-    <h2 className="text-lg font-semibold text-gray-900">
-      {navigation.find(nav => nav.id === activePage)?.name || 'Dashboard'}
-    </h2>
-  </div>
+          <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
+            <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(true)}>
+              <Menu className="h-5 w-5" />
+            </Button>
+            
+            <div className="flex items-center space-x-2">
+              <div className="w-6 h-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
+                <Sparkles className="h-4 w-4 text-white" />
+              </div>
+              <h1 className="text-lg font-bold text-gray-900">Cocoon AI</h1>
+            </div>
 
-  {/* Profil utilisateur en haut à droite */}
-  <div className="flex items-center space-x-3">
-    <div className="text-right hidden sm:block">
-      <p className="text-sm font-medium text-gray-900">
-        {user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Gem'}
-      </p>
-      <p className="text-xs text-gray-500">Créateur en Transformation</p>
-    </div>
-    <Avatar className="h-8 w-8">
-      <AvatarImage src={user?.user_metadata?.avatar_url} />
-      <AvatarFallback className="bg-gradient-to-r from-purple-500 to-blue-500 text-white text-sm">
-        {user?.email?.charAt(0).toUpperCase() || 'G'}
-      </AvatarFallback>
-    </Avatar>
-  </div>
-</div>
+            <Avatar className="h-8 w-8">
+              <AvatarImage src={user?.user_metadata?.avatar_url} />
+              <AvatarFallback className="bg-gradient-to-r from-purple-500 to-blue-500 text-white text-sm">
+                {user?.email?.charAt(0).toUpperCase()}
+              </AvatarFallback>
+            </Avatar>
+          </div>
         )}
 
         {/* Page content */}
