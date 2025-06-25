@@ -1,6 +1,3 @@
-// src/pages/Dashboard.tsx
-// Remplacez TOUT le contenu de votre Dashboard.tsx par ce code
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserStats } from '@/hooks/useUserStats';
