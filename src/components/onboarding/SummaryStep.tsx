@@ -1,128 +1,134 @@
+// src/components/onboarding/SummaryStep.tsx
+import { Button } from "@/components/ui/button";
+import { useOnboarding } from "@/contexts/OnboardingContext";
+import OnboardingLayout from "./OnboardingLayout";
+import { Card, CardContent } from "@/components/ui/card";
+import { Check, FileText, Users, Target, Loader2, Sparkles } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useToast } from "@/hooks/use-toast";
+import { useState, useEffect } from "react";
+import { apiService } from '@/lib/api'; // À AJOUTER
+import { supabase } from '@/integrations/supabase/client'; // EXISTANT
 
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useOnboarding } from '@/contexts/OnboardingContext';
-import { useAuth } from '@/contexts/AuthContext';
-import { Button } from "@/components/ui/button"
-import { CheckCircle } from 'lucide-react';
-import { supabase } from '@/integrations/supabase/client';
+const loadingMessages = [
+  "🧠 Analysing your profile and preferences...",
+  "🎯 Creating your personalized AI coaching strategy...",
+  "📊 Setting up your content optimization system...",
+  "🔥 Configuring your growth accelerator tools...",
+  "✨ Finalizing your personalized workspace...",
+  "🚀 Almost ready to launch your creator journey!"
+];
 
 const SummaryStep = () => {
-  const { onboardingData, setIsOnboardingComplete } = useOnboarding();
+  const { onboardingData } = useOnboarding();
   const { user } = useAuth();
+  const { toast } = useToast();
   const navigate = useNavigate();
-  const [isCompleting, setIsCompleting] = useState(false);
-
-  const handleCompleteOnboarding = async () => {
-    if (!user?.id) {
-      console.error('❌ User ID not available');
-      return;
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [currentLoadingMessage, setCurrentLoadingMessage] = useState(0);
+  
+  useEffect(() => {
+    if (isProcessing) {
+      const interval = setInterval(() => {
+        setCurrentLoadingMessage(prev => (prev + 1) % loadingMessages.length);
+      }, 2000);
+      
+      return () => clearInterval(interval);
     }
+  }, [isProcessing]);
 
-    setIsCompleting(true);
+  // VOTRE CODE ICI ⬇️
+  const finishOnboarding = async () => {
+    if (!user) return;
     
     try {
-      console.log('🚀 Starting onboarding completion...');
+      setIsProcessing(true);
       
-      // Créer le payload complet avec conversion de type
-      const completePayload = {
-        user_id: user.id,
-        onboarding_completed: true,
-        profile_data: onboardingData as any, // Type conversion for JSON compatibility
-        preferences: {
-          content_types: onboardingData.contentTypes || [],
-          platforms: onboardingData.platforms || [],
-          experience_level: onboardingData.experienceLevel || 'beginner'
-        } as any, // Type conversion for JSON compatibility
+      // Sauvegarder dans votre backend (Obsidian)
+      await apiService.saveProfile(user.id, onboardingData);
+      
+      // Sauvegarder aussi dans Supabase pour accès rapide
+      await supabase.from('user_profiles').upsert({
+        id: user.id,
+        completed_onboarding: true,
+        profile_data: onboardingData,
         updated_at: new Date().toISOString()
-      };
+      });
 
-      console.log('📦 Payload to save:', completePayload);
-
-      const { error } = await supabase
-        .from('user_profiles')
-        .upsert(completePayload);
-
-      if (error) {
-        console.error('❌ Supabase error:', error);
-        throw error;
-      }
-
-      console.log('✅ Onboarding data saved successfully');
+      toast({ 
+        title: "✅ Profil créé !", 
+        description: "Votre vault Obsidian est prêt !" 
+      });
       
-      // Marquer l'onboarding comme terminé dans le contexte
-      setIsOnboardingComplete(true);
-      
-      // Rediriger vers le dashboard
       navigate('/dashboard');
-      
     } catch (error) {
-      console.error('❌ Error completing onboarding:', error);
+      console.error('Erreur onboarding:', error);
+      toast({ 
+        title: "❌ Erreur", 
+        description: "Impossible de créer votre profil" 
+      });
     } finally {
-      setIsCompleting(false);
+      setIsProcessing(false);
     }
   };
 
   return (
-    <div className="flex flex-col space-y-6">
-      <h2 className="text-2xl font-bold">Résumé</h2>
-      
-      <div className="space-y-4">
-        <div>
-          <h3 className="text-lg font-semibold">Informations Personnelles</h3>
-          <p>Nom: {onboardingData.fullName || 'Non renseigné'}</p>
-          <p>Email: {user?.email}</p>
-        </div>
-        
-        <div>
-          <h3 className="text-lg font-semibold">Votre Objectif Principal</h3>
-          <p>{onboardingData.mainGoal || onboardingData.contentGoal || 'Non renseigné'}</p>
-        </div>
-        
-        <div>
-          <h3 className="text-lg font-semibold">Types de Contenu</h3>
-          <ul>
-            {onboardingData.contentTypes?.map((type: string) => (
-              <li key={type}>{type}</li>
-            ))}
-          </ul>
-        </div>
-        
-        <div>
-          <h3 className="text-lg font-semibold">Plateformes</h3>
-          <ul>
-            {onboardingData.platforms?.map((platform: string) => (
-              <li key={platform}>{platform}</li>
-            ))}
-          </ul>
-        </div>
-        
-        <div>
-          <h3 className="text-lg font-semibold">Niveau d'Expérience</h3>
-          <p>{onboardingData.experienceLevel}</p>
-        </div>
-      </div>
-      
-      <Button 
-        onClick={handleCompleteOnboarding}
-        disabled={isCompleting}
-      >
-        {isCompleting ? (
-          <>
-            <svg className="animate-spin h-5 w-5 mr-2" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            Finalisation...
-          </>
-        ) : (
-          <>
-            <CheckCircle className="w-4 h-4 mr-2" />
-            Terminer l'Onboarding
-          </>
+    <OnboardingLayout 
+      title="🎉 Votre profil est prêt !"
+      subtitle="Finalisez votre configuration"
+    >
+      <div className="space-y-6">
+        {/* Résumé existant */}
+        <Card>
+          <CardContent className="p-6">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <Check className="h-5 w-5 text-green-600" />
+                <span>Expérience: {onboardingData.experienceLevel}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Check className="h-5 w-5 text-green-600" />
+                <span>Objectif: {onboardingData.contentGoal}</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Check className="h-5 w-5 text-green-600" />
+                <span>Plateformes: {onboardingData.platforms?.length || 0}</span>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Message de loading */}
+        {isProcessing && (
+          <Card>
+            <CardContent className="p-6 text-center">
+              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+              <p>{loadingMessages[currentLoadingMessage]}</p>
+            </CardContent>
+          </Card>
         )}
-      </Button>
-    </div>
+
+        {/* Bouton final */}
+        <Button 
+          className="w-full gradient-bg"
+          onClick={finishOnboarding}
+          disabled={isProcessing}
+        >
+          {isProcessing ? (
+            <>
+              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+              Configuration en cours...
+            </>
+          ) : (
+            <>
+              <Sparkles className="h-4 w-4 mr-2" />
+              🚀 Créer mon espace IA
+            </>
+          )}
+        </Button>
+      </div>
+    </OnboardingLayout>
   );
 };
 
