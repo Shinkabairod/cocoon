@@ -57,7 +57,7 @@ import {
   Star,
   Globe,
   Lock,
-  Save
+  Save,
   ChevronRight,
   Crown
 } from 'lucide-react';
