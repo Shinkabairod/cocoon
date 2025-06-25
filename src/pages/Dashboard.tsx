@@ -1,6 +1,4 @@
 // src/pages/Dashboard.tsx
-// CODE COMPLET 100% À JOUR avec toutes les modifications demandées
-
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserStats } from '@/hooks/useUserStats';
@@ -63,6 +61,22 @@ import {
   PlayCircle
 } from 'lucide-react';
 
+interface NavigationItem {
+  id: string;
+  name: string;
+  icon: any;
+  description: string;
+}
+
+interface NextStep {
+  id: string;
+  title: string;
+  description: string;
+  icon: any;
+  action: () => void;
+  color: string;
+}
+
 const Dashboard = () => {
   const { user } = useAuth();
   const { data: userStats, isLoading, refetch } = useUserStats(user?.id);
@@ -81,7 +95,7 @@ const Dashboard = () => {
   const [uploadingFiles, setUploadingFiles] = useState(false);
 
   // Navigation avec thème Cocoon
-  const navigation = [
+  const navigation: NavigationItem[] = [
     {
       id: 'welcome',
       name: 'Mon compte',
@@ -166,7 +180,6 @@ const Dashboard = () => {
     setUploadingFiles(true);
     try {
       for (const file of Array.from(files)) {
-        // Logique d'upload des fichiers
         console.log('Uploading file:', file.name);
       }
       toast({
@@ -185,14 +198,13 @@ const Dashboard = () => {
     }
   };
 
-  // SECTION WELCOME AMÉLIORÉE - SANS Chat/Script + Boutons cliquables
+  // SECTION WELCOME AMÉLIORÉE
   const renderWelcomePage = () => {
     const currentHour = new Date().getHours();
     const greeting = currentHour < 12 ? 'Bonjour' : currentHour < 18 ? 'Bon après-midi' : 'Bonsoir';
     const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Gem';
 
-    // Prochaines étapes avec boutons cliquables
-    const nextSteps = [
+    const nextSteps: NextStep[] = [
       {
         id: 'feed-chrysalis',
         title: 'Alimentez votre Chrysalide',
@@ -221,7 +233,7 @@ const Dashboard = () => {
 
     return (
       <div className="p-4 md:p-8 space-y-8">
-        {/* En-tête de bienvenue - SANS les boutons Chat/Script */}
+        {/* En-tête de bienvenue */}
         <div className="bg-gradient-to-r from-purple-600 via-blue-600 to-purple-700 rounded-2xl p-6 md:p-8 text-white relative overflow-hidden">
           <div className="relative z-10">
             <h1 className="text-2xl md:text-3xl font-bold mb-2">
@@ -356,7 +368,7 @@ const Dashboard = () => {
     );
   };
 
-  // Page Ressources
+  // Autres pages
   const renderResourcesPage = () => (
     <div className="p-4 md:p-8 space-y-6">
       <div className="flex justify-between items-center">
@@ -419,7 +431,6 @@ const Dashboard = () => {
     </div>
   );
 
-  // Page Créations
   const renderCreationPage = () => (
     <div className="p-4 md:p-8 space-y-6">
       <div className="flex justify-between items-center">
@@ -450,7 +461,6 @@ const Dashboard = () => {
     </div>
   );
 
-  // Page Monétisation
   const renderMonetizationPage = () => (
     <div className="p-4 md:p-8 space-y-6">
       <h2 className="text-2xl font-bold">Mon Bot IA</h2>
@@ -472,7 +482,6 @@ const Dashboard = () => {
     </div>
   );
 
-  // Page Réglages
   const renderSettingsPage = () => (
     <div className="p-4 md:p-8 space-y-6">
       <h2 className="text-2xl font-bold">Réglages</h2>
@@ -530,16 +539,14 @@ const Dashboard = () => {
     }
   };
 
-  // Composant Sidebar SANS PROFIL + Version Pro cliquable
-  const SidebarContent: React.FC<{
-    navigation: any[];
-    activePage: string;
-    setActivePage: (page: string) => void;
-    user: any;
-    stats: any;
-    isMobile?: boolean;
-    onClose?: () => void;
-  }> = ({ navigation, activePage, setActivePage, user, stats, isMobile = false, onClose }) => (
+  // Composant Sidebar
+  const SidebarContent = ({ 
+    isMobile = false, 
+    onClose 
+  }: { 
+    isMobile?: boolean; 
+    onClose?: () => void; 
+  }) => (
     <>
       {/* En-tête simplifié SANS profil utilisateur */}
       <div className="p-6 border-b border-gray-200">
@@ -595,7 +602,7 @@ const Dashboard = () => {
         })}
       </nav>
 
-      {/* Version Pro - CLIQUABLE pour aller aux réglages */}
+      {/* Version Pro - CLIQUABLE */}
       <div className="p-4 border-t border-gray-200">
         <Button
           variant="ghost"
@@ -616,7 +623,13 @@ const Dashboard = () => {
   );
 
   // Modales
-  const ChatModal = ({ open, onClose, chatInput, setChatInput, chatMessages, isGenerating, onSend }: any) => (
+  const ChatModal = ({ 
+    open, 
+    onClose 
+  }: { 
+    open: boolean; 
+    onClose: () => void; 
+  }) => (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col">
         <DialogHeader>
@@ -625,7 +638,7 @@ const Dashboard = () => {
         </DialogHeader>
         
         <div className="flex-1 overflow-y-auto space-y-4">
-          {chatMessages.map((message: any, index: number) => (
+          {chatMessages.map((message, index) => (
             <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
               <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
                 message.type === 'user' 
@@ -643,9 +656,9 @@ const Dashboard = () => {
             value={chatInput}
             onChange={(e) => setChatInput(e.target.value)}
             placeholder="Tapez votre question..."
-            onKeyPress={(e) => e.key === 'Enter' && onSend()}
+            onKeyPress={(e) => e.key === 'Enter' && handleChatIA()}
           />
-          <Button onClick={onSend} disabled={isGenerating}>
+          <Button onClick={handleChatIA} disabled={isGenerating}>
             {isGenerating ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
@@ -657,7 +670,13 @@ const Dashboard = () => {
     </Dialog>
   );
 
-  const ScriptModal = ({ open, onClose, scriptTopic, setScriptTopic, generatedContent, isGenerating, onGenerate }: any) => (
+  const ScriptModal = ({ 
+    open, 
+    onClose 
+  }: { 
+    open: boolean; 
+    onClose: () => void; 
+  }) => (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl max-h-[80vh] flex flex-col">
         <DialogHeader>
@@ -672,7 +691,7 @@ const Dashboard = () => {
             placeholder="Décrivez le sujet de votre vidéo..."
             rows={3}
           />
-          <Button onClick={onGenerate} disabled={isGenerating} className="w-full">
+          <Button onClick={handleGenerateScript} disabled={isGenerating} className="w-full">
             {isGenerating ? (
               <>
                 <Loader2 className="h-4 w-4 mr-2 animate-spin" />
@@ -699,7 +718,7 @@ const Dashboard = () => {
     </Dialog>
   );
 
-  const LoadingSkeleton = () => {
+  if (isLoading) {
     return (
       <div className="h-screen bg-gray-50 flex animate-pulse">
         <div className="w-64 bg-white border-r border-gray-200 p-6 space-y-4">
@@ -720,10 +739,6 @@ const Dashboard = () => {
         </div>
       </div>
     );
-  };
-
-  if (isLoading) {
-    return <LoadingSkeleton />;
   }
 
   return (
@@ -731,13 +746,7 @@ const Dashboard = () => {
       {/* Sidebar Desktop */}
       {!isMobile && (
         <div className="w-64 bg-white border-r border-gray-200 flex flex-col">
-          <SidebarContent 
-            navigation={navigation}
-            activePage={activePage}
-            setActivePage={setActivePage}
-            user={user}
-            stats={userStats}
-          />
+          <SidebarContent />
         </div>
       )}
 
@@ -746,18 +755,7 @@ const Dashboard = () => {
         <div className="fixed inset-0 z-50 flex">
           <div className="fixed inset-0 bg-black bg-opacity-50" onClick={() => setSidebarOpen(false)} />
           <div className="relative w-64 bg-white border-r border-gray-200 flex flex-col">
-            <SidebarContent 
-              navigation={navigation}
-              activePage={activePage}
-              setActivePage={(page) => {
-                setActivePage(page);
-                setSidebarOpen(false);
-              }}
-              user={user}
-              stats={userStats}
-              isMobile={true}
-              onClose={() => setSidebarOpen(false)}
-            />
+            <SidebarContent isMobile={true} onClose={() => setSidebarOpen(false)} />
           </div>
         </div>
       )}
@@ -807,21 +805,11 @@ const Dashboard = () => {
       <ChatModal 
         open={activeModal === 'chat'} 
         onClose={() => setActiveModal(null)}
-        chatInput={chatInput}
-        setChatInput={setChatInput}
-        chatMessages={chatMessages}
-        isGenerating={isGenerating}
-        onSend={handleChatIA}
       />
 
       <ScriptModal 
         open={activeModal === 'script'} 
         onClose={() => setActiveModal(null)}
-        scriptTopic={scriptTopic}
-        setScriptTopic={setScriptTopic}
-        generatedContent={generatedContent}
-        isGenerating={isGenerating}
-        onGenerate={handleGenerateScript}
       />
     </div>
   );
