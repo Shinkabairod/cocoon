@@ -1,3 +1,4 @@
+
 // src/components/mobile/tabs/HomeTab.tsx
 import React from 'react';
 import { Card } from '@/components/ui/card';
@@ -10,7 +11,6 @@ import { CharacterData } from '@/types/character';
 interface HomeTabProps {
   character: CharacterData;
   onAddXP: (xp: number, type: string) => void;
-  // AJOUTEZ CES PROPS
   setActiveTab?: (tab: string) => void;
   setAICoachOpen?: (open: boolean) => void;
   setInitialPrompt?: (prompt: string) => void;
@@ -24,7 +24,6 @@ const HomeTab = ({
   setInitialPrompt 
 }: HomeTabProps) => {
 
-  // VOTRE CODE quickActions ICI ⬇️
   const quickActions = [
     { 
       icon: <Video className="h-5 w-5" />,
@@ -53,7 +52,7 @@ const HomeTab = ({
       color: "bg-blue-500", 
       action: () => {
         if (setActiveTab) {
-          setActiveTab('tools'); // Ou créer un onglet ressources
+          setActiveTab('library');
         }
       }
     },
@@ -72,12 +71,18 @@ const HomeTab = ({
 
   return (
     <div className="space-y-6">
-      {/* Character Evolution - Existant */}
+      {/* Header */}
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-coach-primary">Tableau de Bord</h2>
+        <p className="text-sm text-muted-foreground mt-1">Bienvenue dans votre espace créateur</p>
+      </div>
+
+      {/* Character Evolution */}
       <CharacterEvolution character={character} />
       
-      {/* Actions rapides - NOUVELLE SECTION */}
+      {/* Quick Actions */}
       <div>
-        <h3 className="text-lg font-semibold mb-4">Actions rapides</h3>
+        <h3 className="text-lg font-semibold mb-4">Actions Rapides</h3>
         <div className="grid grid-cols-2 gap-3">
           {quickActions.map((action, index) => (
             <Button
@@ -95,7 +100,7 @@ const HomeTab = ({
         </div>
       </div>
       
-      {/* Daily Challenge - Existant */}
+      {/* Daily Challenge */}
       <Card className="p-6 bg-gradient-to-r from-coach-primary/10 to-coach-secondary/10 border-coach-primary/20">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
@@ -103,8 +108,8 @@ const HomeTab = ({
               <Target className="h-6 w-6 text-coach-primary" />
             </div>
             <div>
-              <h3 className="font-semibold text-lg">Today's Challenge</h3>
-              <p className="text-sm text-muted-foreground">Complete to earn XP</p>
+              <h3 className="font-semibold text-lg">Défi du Jour</h3>
+              <p className="text-sm text-muted-foreground">Complétez pour gagner de l'XP</p>
             </div>
           </div>
           <Badge variant="outline" className="bg-green-100 text-green-700 border-green-300">
@@ -112,14 +117,14 @@ const HomeTab = ({
           </Badge>
         </div>
         <p className="text-sm mb-4 leading-relaxed">
-          Create a 30-second script about your main passion and practice your storytelling skills
+          Créez un script de 30 secondes sur votre passion principale et entraînez-vous à raconter des histoires
         </p>
         <Button 
           className="w-full gradient-bg shadow-lg"
           onClick={() => onAddXP(100, 'content')}
         >
           <Sparkles className="h-4 w-4 mr-2" />
-          Start Challenge
+          Commencer le Défi
         </Button>
       </Card>
     </div>

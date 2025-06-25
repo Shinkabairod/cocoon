@@ -81,7 +81,7 @@ const ToolsTab = ({ onIconClick }: ToolsTabProps) => {
 
   const getDialogTitle = () => {
     switch (dialogType) {
-      case 'concept': return 'Concepts Instagram';
+      case 'concept': return 'Générateur de Concepts';
       case 'script': return 'Générateur de Script';
       case 'ideas': return 'Générateur d\'Idées';
       case 'feedback': return 'Feedback IA';
@@ -103,30 +103,30 @@ const ToolsTab = ({ onIconClick }: ToolsTabProps) => {
 
   const aiToolCategories = [
     {
-      title: "Content Creation",
-      description: "Generate and enhance your content",
+      title: "Création de Contenu",
+      description: "Générez et améliorez vos contenus",
       icons: [
         { id: "concept", icon: <Lightbulb className="h-6 w-6" />, label: "Concepts" },
         { id: "script", icon: <FileText className="h-6 w-6" />, label: "Scripts" },
-        { id: "ideas", icon: <Zap className="h-6 w-6" />, label: "Ideas" }
+        { id: "ideas", icon: <Zap className="h-6 w-6" />, label: "Idées" }
       ]
     },
     {
-      title: "Analysis & Feedback",
-      description: "Improve with AI insights",
+      title: "Analyse & Feedback",
+      description: "Améliorez avec l'IA",
       icons: [
         { id: "feedback", icon: <MessageSquare className="h-6 w-6" />, label: "Feedback" },
         { id: "analytics", icon: <BarChart3 className="h-6 w-6" />, label: "Analytics" },
-        { id: "optimize", icon: <TrendingUp className="h-6 w-6" />, label: "Optimize" }
+        { id: "optimize", icon: <TrendingUp className="h-6 w-6" />, label: "Optimiser" }
       ]
     },
     {
-      title: "Creator References",
-      description: "Add and manage creator accounts for inspiration",
+      title: "Références Créateurs",
+      description: "Ajoutez et gérez des comptes pour inspiration",
       icons: [
-        { id: "add-creator", icon: <Plus className="h-6 w-6" />, label: "Add Creator" },
-        { id: "view-references", icon: <Eye className="h-6 w-6" />, label: "References" },
-        { id: "analyze-creators", icon: <BarChart3 className="h-6 w-6" />, label: "Analyze" }
+        { id: "add-creator", icon: <Plus className="h-6 w-6" />, label: "Ajouter" },
+        { id: "view-references", icon: <Eye className="h-6 w-6" />, label: "Références" },
+        { id: "analyze-creators", icon: <BarChart3 className="h-6 w-6" />, label: "Analyser" }
       ]
     }
   ];
@@ -140,6 +140,12 @@ const ToolsTab = ({ onIconClick }: ToolsTabProps) => {
 
   return (
     <div className="space-y-6">
+      {/* Header */}
+      <div className="mb-6">
+        <h2 className="text-2xl font-bold text-coach-primary">Outils de Création</h2>
+        <p className="text-sm text-muted-foreground mt-1">Créez, analysez et optimisez vos contenus</p>
+      </div>
+
       {/* Tool Categories */}
       {aiToolCategories.map((category, index) => (
         <Card key={index} className="p-6">
@@ -172,7 +178,7 @@ const ToolsTab = ({ onIconClick }: ToolsTabProps) => {
       <Card className="p-6">
         <h3 className="font-semibold mb-4 flex items-center gap-2">
           <Shield className="h-5 w-5 text-coach-primary" />
-          Connected Resources
+          Ressources Connectées
         </h3>
         <div className="space-y-3">
           {resourceIcons.map(({ id, icon, label, status }) => (
@@ -185,7 +191,7 @@ const ToolsTab = ({ onIconClick }: ToolsTabProps) => {
                 variant={status === 'connected' ? 'default' : 'outline'}
                 className={status === 'connected' ? 'bg-green-100 text-green-700' : ''}
               >
-                {status === 'connected' ? 'Connected' : 'Connect'}
+                {status === 'connected' ? 'Connecté' : 'Connecter'}
               </Badge>
             </div>
           ))}

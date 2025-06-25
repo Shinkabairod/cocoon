@@ -16,16 +16,16 @@ const DashboardSidebar = () => {
   const location = useLocation();
   
   const navItems = [
-    { icon: <Home className="h-5 w-5" />, label: "Dashboard", path: "/dashboard" },
-    { icon: <FileText className="h-5 w-5" />, label: "Scripts", path: "/dashboard/scripts" },
-    { icon: <Calendar className="h-5 w-5" />, label: "Content Calendar", path: "/dashboard/calendar" },
-    { icon: <BookOpen className="h-5 w-5" />, label: "Learning Resources", path: "/dashboard/resources" },
-    { icon: <BarChart className="h-5 w-5" />, label: "Analytics", path: "/dashboard/analytics" },
+    { icon: <Home className="h-5 w-5" />, label: "Accueil", path: "/dashboard" },
+    { icon: <FileText className="h-5 w-5" />, label: "Mes Contenus", path: "/dashboard/scripts" },
+    { icon: <Calendar className="h-5 w-5" />, label: "Calendrier", path: "/dashboard/calendar" },
+    { icon: <BookOpen className="h-5 w-5" />, label: "Ressources", path: "/dashboard/resources" },
+    { icon: <BarChart className="h-5 w-5" />, label: "Statistiques", path: "/dashboard/analytics" },
   ];
   
   const accountItems = [
-    { icon: <Settings className="h-5 w-5" />, label: "Settings", path: "/dashboard/settings" },
-    { icon: <HelpCircle className="h-5 w-5" />, label: "Help & Support", path: "/dashboard/support" },
+    { icon: <Settings className="h-5 w-5" />, label: "Paramètres", path: "/dashboard/settings" },
+    { icon: <HelpCircle className="h-5 w-5" />, label: "Aide & Support", path: "/dashboard/support" },
   ];
   
   return (
@@ -62,7 +62,7 @@ const DashboardSidebar = () => {
         
         <div className="mt-8">
           <h3 className="text-xs uppercase font-medium text-muted-foreground mb-2 px-3">
-            Account
+            Compte
           </h3>
           <ul className="space-y-1">
             {accountItems.map((item) => {
@@ -90,7 +90,7 @@ const DashboardSidebar = () => {
         <Link to="/">
           <Button variant="ghost" className="w-full justify-start text-muted-foreground">
             <LogOut className="h-5 w-5" />
-            <span className="ml-3">Log Out</span>
+            <span className="ml-3">Se déconnecter</span>
           </Button>
         </Link>
       </div>

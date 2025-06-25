@@ -1,3 +1,4 @@
+
 // src/pages/MobileDashboard.tsx
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +12,7 @@ import ProfileTab from "@/components/mobile/tabs/ProfileTab";
 import useCharacter from "@/hooks/useCharacter";
 import useContentLibrary from "@/hooks/useContentLibrary";
 import { 
-  Home, User, Bot, Library, Sparkles
+  Home, User, Wrench, Library, Sparkles
 } from "lucide-react";
 
 const MobileDashboard = () => {
@@ -21,7 +22,7 @@ const MobileDashboard = () => {
   const [activeTab, setActiveTab] = useState("home");
   const [userStars, setUserStars] = useState(100);
   const [isAICoachOpen, setIsAICoachOpen] = useState(false);
-  const [initialPrompt, setInitialPrompt] = useState(""); // AJOUTÉ
+  const [initialPrompt, setInitialPrompt] = useState("");
 
   useEffect(() => {
     if (window.location.pathname === "/dashboard") {
@@ -31,10 +32,10 @@ const MobileDashboard = () => {
 
   const navIcons = [
     { id: "home", icon: <Home className="h-5 w-5" />, label: "Accueil" },
-    { id: "library", icon: <Library className="h-5 w-5" />, label: "Bibliothèque" },
+    { id: "library", icon: <Library className="h-5 w-5" />, label: "Ressources" },
     { id: "ai-assistant", icon: <Sparkles className="h-6 w-6" />, label: "Assistant IA", isCenter: true },
-    { id: "tools", icon: <Bot className="h-5 w-5" />, label: "Outils IA" },
-    { id: "profile", icon: <User className="h-5 w-5" />, label: "Profil" }
+    { id: "tools", icon: <Wrench className="h-5 w-5" />, label: "Création" },
+    { id: "profile", icon: <User className="h-5 w-5" />, label: "Paramètres" }
   ];
 
   const handleIconClick = (id: string) => {
@@ -59,9 +60,9 @@ const MobileDashboard = () => {
           <HomeTab 
             character={character} 
             onAddXP={addXP}
-            setActiveTab={setActiveTab} // AJOUTÉ
-            setAICoachOpen={setIsAICoachOpen} // AJOUTÉ
-            setInitialPrompt={setInitialPrompt} // AJOUTÉ
+            setActiveTab={setActiveTab}
+            setAICoachOpen={setIsAICoachOpen}
+            setInitialPrompt={setInitialPrompt}
           />
         );
       case "library":
@@ -93,7 +94,7 @@ const MobileDashboard = () => {
       <AICoach 
         isOpen={isAICoachOpen} 
         onOpenChange={setIsAICoachOpen}
-        initialPrompt={initialPrompt} // AJOUTÉ si votre composant le supporte
+        initialPrompt={initialPrompt}
       />
 
       {/* Bottom Navigation */}
