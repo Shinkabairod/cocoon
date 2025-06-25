@@ -223,7 +223,7 @@ const Dashboard = () => {
       },
       {
         id: 'monetization',
-        title: 'Monétiser vos connaissances,
+        title: 'Monétiser vos connaissances',
         description: 'Configurez votre assistant pour la monétisation',
         icon: DollarSign,
         action: () => setActivePage('monetization'),
