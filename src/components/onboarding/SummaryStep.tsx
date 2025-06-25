@@ -8,8 +8,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { useState, useEffect } from "react";
-import { apiService } from '@/lib/api'; // À AJOUTER
-import { supabase } from '@/integrations/supabase/client'; // EXISTANT
+import { apiService } from '@/lib/api';
+import { supabase } from '@/integrations/supabase/client';
 
 const loadingMessages = [
   "🧠 Analysing your profile and preferences...",
@@ -38,7 +38,6 @@ const SummaryStep = () => {
     }
   }, [isProcessing]);
 
-  // VOTRE CODE ICI ⬇️
   const finishOnboarding = async () => {
     if (!user) return;
     
@@ -48,13 +47,21 @@ const SummaryStep = () => {
       // Sauvegarder dans votre backend (Obsidian)
       await apiService.saveProfile(user.id, onboardingData);
       
-      // Sauvegarder aussi dans Supabase pour accès rapide
-      await supabase.from('user_profiles').upsert({
-        user_id: user.id,
-        onboarding_completed: true,
-        profile_data: onboardingData,
-        updated_at: new Date().toISOString()
-      });
+      // Sauvegarder aussi dans Supabase pour accès rapide - CORRECTION DES TYPES
+      const { error: updateError } = await supabase
+        .from('user_profiles')
+        .upsert({
+          user_id: user.id, // Utiliser user_id au lieu de id
+          onboarding_completed: true,
+          profile_data: onboardingData as any, // Cast explicite pour Json
+          updated_at: new Date().toISOString()
+        });
+
+      if (updateError) {
+        console.warn('⚠️ Erreur lors de la sauvegarde du profil:', updateError);
+      } else {
+        console.log('✅ Profil sauvegardé en base de données');
+      }
 
       toast({ 
         title: "✅ Profil créé !", 
