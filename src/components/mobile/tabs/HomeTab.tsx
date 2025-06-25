@@ -1,7 +1,6 @@
 
 // src/components/mobile/tabs/HomeTab.tsx
 import React from 'react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import CharacterEvolution from '@/components/character/CharacterEvolution';
@@ -73,7 +72,7 @@ const HomeTab = ({
     <div className="space-y-6">
       {/* Header */}
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-coach-primary">Tableau de Bord</h2>
+        <h2 className="text-2xl font-bold text-coach-primary">Accueil</h2>
         <p className="text-sm text-muted-foreground mt-1">Bienvenue dans votre espace créateur</p>
       </div>
 
@@ -89,7 +88,7 @@ const HomeTab = ({
               key={index}
               variant="outline"
               onClick={action.action}
-              className="h-20 flex flex-col items-center gap-2 border-2 hover:shadow-md transition-all"
+              className="h-20 flex flex-col items-center gap-2 glass-button border-0 hover:shadow-md transition-all"
             >
               <div className={`${action.color} p-2 rounded-lg text-white`}>
                 {action.icon}
@@ -101,7 +100,7 @@ const HomeTab = ({
       </div>
       
       {/* Daily Challenge */}
-      <Card className="p-6 bg-gradient-to-r from-coach-primary/10 to-coach-secondary/10 border-coach-primary/20">
+      <div className="glass-card p-6 rounded-2xl">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
             <div className="p-2 bg-coach-primary/20 rounded-full">
@@ -126,7 +125,7 @@ const HomeTab = ({
           <Sparkles className="h-4 w-4 mr-2" />
           Commencer le Défi
         </Button>
-      </Card>
+      </div>
     </div>
   );
 };

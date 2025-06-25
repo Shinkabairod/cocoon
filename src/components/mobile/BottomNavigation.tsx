@@ -26,13 +26,13 @@ const BottomNavigation = ({ icons, activeIcon = "home", onIconClick }: BottomNav
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 h-16 bg-card border-t flex items-center justify-around px-4 z-10">
+    <div className="fixed bottom-0 left-0 right-0 h-16 glass-nav flex items-center justify-around px-4 z-10">
       {icons.map((item) => (
         <button 
           key={item.id}
           onClick={() => handleNavClick(item.id)}
           className={cn(
-            "flex flex-col items-center justify-center transition-colors relative",
+            "flex flex-col items-center justify-center transition-all duration-200 relative",
             item.isCenter 
               ? "w-14 h-14 rounded-full gradient-bg shadow-lg -mt-2" 
               : "w-16 h-full",

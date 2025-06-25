@@ -10,7 +10,7 @@ interface MobileDashboardHeaderProps {
 
 const MobileDashboardHeader = ({ userStars, characterName, characterLevel }: MobileDashboardHeaderProps) => {
   return (
-    <div className="sticky top-0 z-10 bg-background border-b p-4">
+    <div className="sticky top-0 z-10 glass-header p-4">
       <div className="flex items-center justify-between">
         <h1 className="text-xl font-bold">AI Content Coach</h1>
         <div className="flex items-center gap-3">
