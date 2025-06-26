@@ -1,5 +1,5 @@
 // src/pages/Dashboard.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { useUserStats } from '@/hooks/useUserStats';
@@ -74,7 +74,9 @@ import {
   MoreHorizontal,
   FolderOpen,
   Play,
-  ArrowRight
+  ArrowRight,
+  Building,
+  ExternalLink
 } from 'lucide-react';
 
 // Import des composants Dashboard
@@ -108,14 +110,21 @@ const Dashboard = () => {
       { id: '2', name: 'Images de marque', emoji: '🎨', items: [] }
     ],
     personal: [
-      { id: '3', name: 'Profil créateur', emoji: '👤', items: [] },
-      { id: '4', name: 'Objectifs', emoji: '🎯', items: [] }
+      { id: '3', name: 'Mon Profil', emoji: '👤', items: [] },
+      { id: '4', name: 'Mes Objectifs', emoji: '🎯', items: [] },
+      { id: '5', name: 'Mon Business', emoji: '🏢', items: [] },
+      { id: '6', name: 'Mes Plateformes', emoji: '📱', items: [] },
+      { id: '7', name: 'Mes Défis', emoji: '⚡', items: [] }
     ]
   });
+
+  // États pour les modales
   const [showNewFolderModal, setShowNewFolderModal] = useState(false);
   const [showNewItemModal, setShowNewItemModal] = useState(false);
   const [showRenameFolderModal, setShowRenameFolderModal] = useState(false);
+  const [showFilePreviewModal, setShowFilePreviewModal] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
   const [newFolderName, setNewFolderName] = useState('');
   const [newFolderEmoji, setNewFolderEmoji] = useState('📁');
   const [renameFolderData, setRenameFolderData] = useState({ name: '', emoji: '' });
@@ -172,6 +181,235 @@ const Dashboard = () => {
     '🦄', '🐱', '🐶', '🎀', '💝', '💎', '🔮', '🌙',
     '☀️', '⭐', '💫', '🌊', '🔑', '🎪', '🎯', '📚'
   ];
+
+  // Fonction pour auto-classer les données d'onboarding
+  const autoClassifyOnboardingData = () => {
+    if (!onboardingData || folders.personal.some(folder => folder.items.length > 0)) {
+      return; // Déjà classé ou pas de données
+    }
+
+    const updatedFolders = { ...folders };
+
+    // Classer dans "Mon Profil" - Données personnelles et professionnelles
+    const profileItems = [];
+    if (onboardingData.profession) {
+      profileItems.push({
+        id: 'profile_profession',
+        name: 'Domaine d\'activité',
+        type: 'text',
+        content: onboardingData.profession,
+        createdAt: new Date().toISOString(),
+        source: 'onboarding'
+      });
+    }
+    if (onboardingData.experienceLevel) {
+      profileItems.push({
+        id: 'profile_experience',
+        name: 'Niveau d\'expérience',
+        type: 'text',
+        content: onboardingData.experienceLevel,
+        createdAt: new Date().toISOString(),
+        source: 'onboarding'
+      });
+    }
+    if (onboardingData.timeAvailable) {
+      profileItems.push({
+        id: 'profile_time',
+        name: 'Temps disponible',
+        type: 'text',
+        content: onboardingData.timeAvailable,
+        createdAt: new Date().toISOString(),
+        source: 'onboarding'
+      });
+    }
+
+    // Classer dans "Mes Objectifs" - Objectifs et aspirations
+    const objectiveItems = [];
+    if (onboardingData.objectives && onboardingData.objectives.length > 0) {
+      objectiveItems.push({
+        id: 'obj_main_goals',
+        name: 'Objectifs principaux',
+        type: 'text',
+        content: onboardingData.objectives.join(', '),
+        createdAt: new Date().toISOString(),
+        source: 'onboarding'
+      });
+    }
+    if (onboardingData.contentGoal) {
+      objectiveItems.push({
+        id: 'obj_content_goal',
+        name: 'Objectif de contenu',
+        type: 'text',
+        content: onboardingData.contentGoal,
+        createdAt: new Date().toISOString(),
+        source: 'onboarding'
+      });
+    }
+    if (onboardingData.monetization) {
+      objectiveItems.push({
+        id: 'obj_monetization',
+        name: 'Objectifs de monétisation',
+        type: 'text',
+        content: onboardingData.monetization,
+        createdAt: new Date().toISOString(),
+        source: 'onboarding'
+      });
+    }
+
+    // Classer dans "Mon Business" - Informations business et audience
+    const businessItems = [];
+    if (onboardingData.businessType) {
+      businessItems.push({
+        id: 'biz_type',
+        name: 'Type d\'activité',
+        type: 'text',
+        content: onboardingData.businessType,
+        createdAt: new Date().toISOString(),
+        source: 'onboarding'
+      });
+    }
+    if (onboardingData.businessDescription) {
+      businessItems.push({
+        id: 'biz_desc',
+        name: 'Description de l\'activité',
+        type: 'text',
+        content: onboardingData.businessDescription,
+        createdAt: new Date().toISOString(),
+        source: 'onboarding'
+      });
+    }
+    if (onboardingData.targetGeneration) {
+      businessItems.push({
+        id: 'biz_audience',
+        name: 'Audience cible',
+        type: 'text',
+        content: onboardingData.targetGeneration,
+        createdAt: new Date().toISOString(),
+        source: 'onboarding'
+      });
+    }
+
+    // Classer dans "Mes Plateformes" - Outils et plateformes utilisés
+    const platformItems = [];
+    if (onboardingData.platforms && onboardingData.platforms.length > 0) {
+      platformItems.push({
+        id: 'platforms_list',
+        name: 'Plateformes utilisées',
+        type: 'text',
+        content: onboardingData.platforms.join(', '),
+        createdAt: new Date().toISOString(),
+        source: 'onboarding'
+      });
+    }
+    if (onboardingData.toolsPreferences && onboardingData.toolsPreferences.length > 0) {
+      platformItems.push({
+        id: 'tools_preferences',
+        name: 'Outils préférés',
+        type: 'text',
+        content: onboardingData.toolsPreferences.join(', '),
+        createdAt: new Date().toISOString(),
+        source: 'onboarding'
+      });
+    }
+    if (onboardingData.contentTypes && onboardingData.contentTypes.length > 0) {
+      platformItems.push({
+        id: 'content_types',
+        name: 'Types de contenu',
+        type: 'text',
+        content: onboardingData.contentTypes.join(', '),
+        createdAt: new Date().toISOString(),
+        source: 'onboarding'
+      });
+    }
+
+    // Classer dans "Mes Défis" - Défis et besoins d'assistance
+    const challengeItems = [];
+    if (onboardingData.challenges && onboardingData.challenges.length > 0) {
+      challengeItems.push({
+        id: 'challenges_list',
+        name: 'Défis principaux',
+        type: 'text',
+        content: onboardingData.challenges.join(', '),
+        createdAt: new Date().toISOString(),
+        source: 'onboarding'
+      });
+    }
+    if (onboardingData.aiAssistanceAreas && onboardingData.aiAssistanceAreas.length > 0) {
+      challengeItems.push({
+        id: 'ai_assistance',
+        name: 'Domaines d\'assistance IA',
+        type: 'text',
+        content: onboardingData.aiAssistanceAreas.join(', '),
+        createdAt: new Date().toISOString(),
+        source: 'onboarding'
+      });
+    }
+    if (onboardingData.learningStyle) {
+      challengeItems.push({
+        id: 'learning_style',
+        name: 'Style d\'apprentissage',
+        type: 'text',
+        content: onboardingData.learningStyle,
+        createdAt: new Date().toISOString(),
+        source: 'onboarding'
+      });
+    }
+
+    // Mettre à jour les dossiers avec les items
+    updatedFolders.personal = updatedFolders.personal.map(folder => {
+      if (folder.id === '3') return { ...folder, items: profileItems };
+      if (folder.id === '4') return { ...folder, items: objectiveItems };
+      if (folder.id === '5') return { ...folder, items: businessItems };
+      if (folder.id === '6') return { ...folder, items: platformItems };
+      if (folder.id === '7') return { ...folder, items: challengeItems };
+      return folder;
+    });
+
+    setFolders(updatedFolders);
+
+    const totalItems = profileItems.length + objectiveItems.length + businessItems.length + platformItems.length + challengeItems.length;
+    
+    if (totalItems > 0) {
+      toast({
+        title: "🎯 Profil organisé",
+        description: `${totalItems} informations classées automatiquement dans vos dossiers personnels.`
+      });
+    }
+  };
+
+  // Auto-classer au chargement
+  useEffect(() => {
+    if (onboardingData && Object.keys(onboardingData).length > 0) {
+      autoClassifyOnboardingData();
+    }
+  }, [onboardingData]);
+
+  // Fonction pour obtenir l'icône selon le type de fichier
+  const getFileIcon = (type, fileName = '') => {
+    if (type === 'file') {
+      const extension = fileName.split('.').pop()?.toLowerCase();
+      if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) return <Image className="h-4 w-4 text-blue-500" />;
+      if (['mp4', 'avi', 'mov', 'wmv'].includes(extension)) return <Video className="h-4 w-4 text-red-500" />;
+      if (['mp3', 'wav', 'flac'].includes(extension)) return <Music className="h-4 w-4 text-purple-500" />;
+      if (['pdf', 'doc', 'docx', 'txt'].includes(extension)) return <FileText className="h-4 w-4 text-green-500" />;
+    }
+    if (type === 'link') return <ExternalLink className="h-4 w-4 text-blue-500" />;
+    return <FileText className="h-4 w-4 text-gray-500" />;
+  };
+
+  // Fonction pour obtenir l'aperçu du fichier
+  const getFilePreview = (item) => {
+    if (item.type === 'text') {
+      return item.content.length > 100 ? item.content.substring(0, 100) + '...' : item.content;
+    }
+    if (item.type === 'link') {
+      return item.url;
+    }
+    if (item.type === 'file' && item.file) {
+      return `Fichier: ${item.file.name} (${(item.file.size / 1024).toFixed(1)} KB)`;
+    }
+    return 'Aucun aperçu disponible';
+  };
 
   // Fonction pour gérer l'exécution des boutons personnalisés
   const handleExecuteCustomButton = async (buttonData, placeholderValues) => {
@@ -314,6 +552,22 @@ const Dashboard = () => {
     });
   };
 
+  const deleteItem = (folderId, itemId) => {
+    setFolders(prev => ({
+      ...prev,
+      [activeCategory]: prev[activeCategory].map(folder =>
+        folder.id === folderId
+          ? { ...folder, items: folder.items.filter(item => item.id !== itemId) }
+          : folder
+      )
+    }));
+    
+    toast({
+      title: "🗑️ Élément supprimé",
+      description: "L'élément a été retiré du dossier."
+    });
+  };
+
   const addItem = () => {
     if (!newItemData.name.trim() || !selectedFolder) return;
     
@@ -341,7 +595,8 @@ const Dashboard = () => {
       content: newItemData.content,
       url: newItemData.url,
       file: newItemData.file,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      source: 'manual'
     };
 
     setFolders(prev => ({
@@ -458,6 +713,9 @@ const Dashboard = () => {
         >
           <User className="h-4 w-4" />
           Personnel
+          <Badge variant="secondary" className="ml-1">
+            {folders.personal.reduce((acc, folder) => acc + folder.items.length, 0)}
+          </Badge>
         </Button>
       </div>
 
@@ -484,6 +742,52 @@ const Dashboard = () => {
               </div>
             </CardHeader>
             <CardContent className="pt-0">
+              {/* Aperçu des éléments */}
+              {folder.items.length > 0 ? (
+                <div className="space-y-2 mb-4">
+                  {folder.items.slice(0, 3).map(item => (
+                    <div key={item.id} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg text-sm">
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        {getFileIcon(item.type, item.file?.name)}
+                        <span className="truncate">{item.name}</span>
+                        {item.source === 'onboarding' && (
+                          <Badge variant="secondary" className="text-xs">Auto</Badge>
+                        )}
+                      </div>
+                      <div className="flex gap-1">
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          onClick={() => {
+                            setSelectedFile(item);
+                            setShowFilePreviewModal(true);
+                          }}
+                        >
+                          <Eye className="h-3 w-3" />
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          variant="ghost" 
+                          onClick={() => deleteItem(folder.id, item.id)}
+                        >
+                          <Trash2 className="h-3 w-3 text-red-500" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                  {folder.items.length > 3 && (
+                    <p className="text-xs text-muted-foreground text-center">
+                      +{folder.items.length - 3} autres éléments
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-4 text-muted-foreground text-sm">
+                  <Folder className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                  <p>Dossier vide</p>
+                </div>
+              )}
+              
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -756,6 +1060,95 @@ const Dashboard = () => {
         </Dialog>
       )}
 
+      {/* Modal Aperçu Fichier */}
+      {showFilePreviewModal && selectedFile && (
+        <Dialog open={true} onOpenChange={setShowFilePreviewModal}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                {getFileIcon(selectedFile.type, selectedFile.file?.name)}
+                {selectedFile.name}
+                {selectedFile.source === 'onboarding' && (
+                  <Badge variant="secondary">Onboarding</Badge>
+                )}
+              </DialogTitle>
+            </DialogHeader>
+            
+            <div className="space-y-4">
+              {/* Informations du fichier */}
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <span className="font-medium">Type:</span> {selectedFile.type}
+                </div>
+                <div>
+                  <span className="font-medium">Créé le:</span> {new Date(selectedFile.createdAt).toLocaleDateString()}
+                </div>
+                {selectedFile.file && (
+                  <>
+                    <div>
+                      <span className="font-medium">Taille:</span> {(selectedFile.file.size / 1024).toFixed(1)} KB
+                    </div>
+                    <div>
+                      <span className="font-medium">Type de fichier:</span> {selectedFile.file.type || 'Non spécifié'}
+                    </div>
+                  </>
+                )}
+              </div>
+              
+              {/* Aperçu du contenu */}
+              <div>
+                <Label>Aperçu:</Label>
+                <div className="bg-gray-50 p-4 rounded-lg text-sm max-h-60 overflow-y-auto">
+                  {selectedFile.type === 'text' && (
+                    <p>{selectedFile.content}</p>
+                  )}
+                  {selectedFile.type === 'link' && (
+                    <div>
+                      <p className="mb-2">Lien externe:</p>
+                      <a href={selectedFile.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
+                        {selectedFile.url}
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </div>
+                  )}
+                  {selectedFile.type === 'file' && (
+                    <div>
+                      <p className="mb-2">Fichier uploadé:</p>
+                      <div className="flex items-center gap-2 p-2 bg-white rounded border">
+                        {getFileIcon(selectedFile.type, selectedFile.file?.name)}
+                        <span>{selectedFile.file?.name}</span>
+                      </div>
+                      {selectedFile.file?.type?.startsWith('image/') && (
+                        <div className="mt-2">
+                          <img 
+                            src={URL.createObjectURL(selectedFile.file)} 
+                            alt={selectedFile.name}
+                            className="max-w-full h-auto rounded border"
+                            style={{ maxHeight: '200px' }}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setShowFilePreviewModal(false)}>
+                  Fermer
+                </Button>
+                {selectedFile.type === 'link' && (
+                  <Button onClick={() => window.open(selectedFile.url, '_blank')}>
+                    <ExternalLink className="h-4 w-4 mr-2" />
+                    Ouvrir le lien
+                  </Button>
+                )}
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
       {/* Modal Nouveau Dossier */}
       {showNewFolderModal && (
         <Dialog open={true} onOpenChange={setShowNewFolderModal}>
@@ -861,6 +1254,11 @@ const Dashboard = () => {
                     type="file"
                     onChange={handleFileUpload}
                   />
+                  {newItemData.file && (
+                    <div className="mt-2 p-2 bg-gray-50 rounded text-sm">
+                      Fichier sélectionné: {newItemData.file.name}
+                    </div>
+                  )}
                 </div>
               )}
               
