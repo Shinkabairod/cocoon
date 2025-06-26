@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Sparkles, ArrowRight } from 'lucide-react';
@@ -17,12 +16,9 @@ const ScrollingButtonsSection: React.FC<ScrollingButtonsSectionProps> = ({
     <section className="py-16 bg-white overflow-hidden relative">        
       <div className="relative z-10">
         <div className="text-center mb-12">
-          <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-            Que veux-tu automatiser aujourd'hui ?
+          <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-6">
+            Examples
           </h2>
-          <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Dis-le à ton IA et regarde la magie opérer
-          </p>
         </div>
 
         {/* Premier défilement - gauche vers droite */}
@@ -80,11 +76,11 @@ const ScrollingButtonsSection: React.FC<ScrollingButtonsSectionProps> = ({
         <div className="text-center mt-12">
           <Button size="lg" className="bg-black hover:bg-gray-800 text-white px-8 py-4 text-lg font-semibold shadow-2xl transition-all group" onClick={onAuthRedirect}>
             <Sparkles className="h-5 w-5 mr-2 group-hover:animate-spin" />
-            Commencer maintenant
+            Get Started Now
             <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
           </Button>
           <p className="text-gray-600 text-sm mt-3">
-            Gratuit • Configuration en 2 minutes
+            Free • 2-minute setup
           </p>
         </div>
       </div>
