@@ -416,7 +416,7 @@ const CocoonLandingPage = () => {
               Comment ça marche ?
             </h2>
             <p className="text-xl text-gray-600 max-w-4xl mx-auto">
-              En 3 étapes simples, transforme ton expertise en assistant IA qui travaille pour toi 24/7
+              En 3 étapes simples, transforme ton expertise en assistant IA qui travaille pour toi
             </p>
           </div>
 
