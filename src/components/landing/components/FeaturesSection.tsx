@@ -1,8 +1,6 @@
 import React from 'react';
-
 const FeaturesSection: React.FC = () => {
-  return (
-    <section id="features" className="py-24 bg-white relative">
+  return <section id="features" className="py-24 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Titre aligné à gauche */}
         <div className="text-left mb-20">
@@ -44,7 +42,7 @@ const FeaturesSection: React.FC = () => {
 
           {/* Carte 2 - Réponses sur-mesure */}
           <div className="group relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-violet-50 to-violet-100 rounded-3xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-blue-100 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
             <div className="relative bg-white border-2 border-violet-600 rounded-3xl p-8 hover:border-violet-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div className="w-14 h-14 bg-violet-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-violet-100 transition-colors duration-300">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-7 h-7 text-violet-600">
@@ -62,7 +60,7 @@ const FeaturesSection: React.FC = () => {
                 reproduire ta façon unique de transmettre.
               </p>
               
-              <div className="mt-6 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-violet-100 to-violet-200 text-violet-700 text-sm font-semibold">
+              <div className="mt-6 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 text-sm font-semibold">
                 🎯 Sur-mesure
               </div>
             </div>
@@ -94,8 +92,6 @@ const FeaturesSection: React.FC = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default FeaturesSection;
