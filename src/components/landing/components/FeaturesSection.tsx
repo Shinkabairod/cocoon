@@ -3,8 +3,10 @@ const FeaturesSection: React.FC = () => {
   return <section id="features" className="py-24 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-20">
-          <h2 className="text-5xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-blue-700 bg-clip-text text-transparent mb-6">Nos bots surpassent tous les autres</h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">La différence entre un chatbot générique et un expert digital personnalisé</p>
+          <h2 className="text-5xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-blue-700 bg-clip-text text-transparent mb-6">
+            Pourquoi choisir Cocoon AI ?
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">L'IA et tes connaissances pour des résultats exceptionnels</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-12">
@@ -71,10 +73,10 @@ const FeaturesSection: React.FC = () => {
             <div className="relative bg-white border-2 border-blue-400 rounded-3xl p-8 hover:border-blue-400 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               {/* SVG 2D remplace l'emoji */}
               <div className="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-50 transition-colors duration-300">
-                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-7 h-7 text-blue-400">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 6h18" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 10a4 4 0 01-8 0" />
+                <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 19h16v2a1 1 0 01-1 1H5a1 1 0 01-1-1v-2zM6 10l6-6 6 6-2 9H8l-2-9z"/>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 19h8"/>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 15h4"/>
                 </svg>
               </div>
               
