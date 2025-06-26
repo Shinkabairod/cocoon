@@ -2,73 +2,56 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Sparkles, ArrowRight } from 'lucide-react';
 import { ScrollingButtonsData } from '../types';
-
 interface ScrollingButtonsSectionProps {
   scrollingButtons: ScrollingButtonsData;
   onAuthRedirect: () => void;
 }
-
 const ScrollingButtonsSection: React.FC<ScrollingButtonsSectionProps> = ({
   scrollingButtons,
   onAuthRedirect
 }) => {
-  return (
-    <section className="py-16 bg-white overflow-hidden relative">        
+  return <section className="bg-white overflow-hidden relative py-0">        
       <div className="relative z-10">
         <div className="text-center mb-12">
-          <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-6">
-            Examples
-          </h2>
+          
         </div>
 
         {/* Premier défilement - gauche vers droite */}
         <div className="relative overflow-hidden mb-3">
           <div className="flex animate-scroll-right space-x-4">
-            {scrollingButtons.row1.map((item, index) => (
-              <div key={index} className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}>
+            {scrollingButtons.row1.map((item, index) => <div key={index} className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}>
                 {item.text}
-              </div>
-            ))}
+              </div>)}
             {/* Duplication pour effet continu */}
-            {scrollingButtons.row1.slice(0, 6).map((item, index) => (
-              <div key={`dup-${index}`} className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}>
+            {scrollingButtons.row1.slice(0, 6).map((item, index) => <div key={`dup-${index}`} className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}>
                 {item.text}
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
 
         {/* Deuxième défilement - droite vers gauche */}
         <div className="relative overflow-hidden mb-3">
           <div className="flex animate-scroll-left space-x-4">
-            {scrollingButtons.row2.map((item, index) => (
-              <div key={index} className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}>
+            {scrollingButtons.row2.map((item, index) => <div key={index} className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}>
                 {item.text}
-              </div>
-            ))}
+              </div>)}
             {/* Duplication pour effet continu */}
-            {scrollingButtons.row2.slice(0, 6).map((item, index) => (
-              <div key={`dup2-${index}`} className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}>
+            {scrollingButtons.row2.slice(0, 6).map((item, index) => <div key={`dup2-${index}`} className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}>
                 {item.text}
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
 
         {/* Troisième défilement - gauche vers droite (plus lent) */}
         <div className="relative overflow-hidden">
           <div className="flex animate-scroll-right-slow space-x-4">
-            {scrollingButtons.row3.map((item, index) => (
-              <div key={index} className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}>
+            {scrollingButtons.row3.map((item, index) => <div key={index} className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}>
                 {item.text}
-              </div>
-            ))}
+              </div>)}
             {/* Duplication pour effet continu */}
-            {scrollingButtons.row3.slice(0, 6).map((item, index) => (
-              <div key={`dup3-${index}`} className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}>
+            {scrollingButtons.row3.slice(0, 6).map((item, index) => <div key={`dup3-${index}`} className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}>
                 {item.text}
-              </div>
-            ))}
+              </div>)}
           </div>
         </div>
 
@@ -84,8 +67,6 @@ const ScrollingButtonsSection: React.FC<ScrollingButtonsSectionProps> = ({
           </p>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default ScrollingButtonsSection;
