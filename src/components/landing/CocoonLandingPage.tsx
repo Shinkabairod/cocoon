@@ -582,7 +582,7 @@ const CocoonLandingPage = () => {
             borderColor: "border-rose-200",
             textColor: "text-rose-700",
             iconBg: "bg-rose-100/70"
-          }].map((feature, index) => <div key={index} className="relative bg-white border-2 border-red-300 rounded-3xl p-8 hover:border-red-400 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+          }].map((feature, index) => <div key={index} className="relative bg-white border-2 border-from-gray-900 to-orange-700 rounded-3xl p-8 hover:border-red-400 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                 {/* Icône principale */}
                 <div className="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-red-100 transition-colors duration-300">
                   {feature.icon}
