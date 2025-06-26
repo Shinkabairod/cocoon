@@ -14,7 +14,7 @@ const HowItWorksSection: React.FC = () => {
         <div className="space-y-8">
           {/* Étape 1 */}
           <div className="group relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-50 to-purple-100 rounded-3xl transform rotate-1 group-hover:rotate-3 transition-transform duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-50 to-purple-100 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
             <div className="relative bg-white border-2 border-purple-300 rounded-3xl p-8 hover:border-purple-400 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div className="flex items-start gap-6">
                 {/* Numéro plus gros */}
@@ -59,7 +59,7 @@ const HowItWorksSection: React.FC = () => {
                 
                 <div className="flex-1">
                   {/* Icon 2D simple */}
-                  <div className="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-purple-100 transition-colors duration-300">
+                  <div className="w-14 h-14 bg-purple-80 rounded-xl flex items-center justify-center mb-4 group-hover:bg-purple-200 transition-colors duration-300">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-8 h-8 text-purple-600">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
@@ -92,7 +92,7 @@ const HowItWorksSection: React.FC = () => {
                 
                 <div className="flex-1">
                   {/* Icon 2D simple */}
-                  <div className="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-purple-100 transition-colors duration-300">
+                  <div className="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-purple-300 transition-colors duration-300">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" className="w-10 h-10 text-purple-800">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
                     </svg>
