@@ -386,7 +386,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* Titre principal avec logo animé centré */}
-          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight">
             <span className="text-gray-900">
               Boost and monetize
             </span>
@@ -442,28 +442,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             icon: <Bot className="h-6 w-6" />
           }, {
             value: animatedStats.revenue,
-            suffix: '
-            <div key={index} className="text-center transform hover:scale-110 transition-all duration-300 group cursor-pointer">
-              <div className="relative p-6 rounded-2xl bg-white/50 backdrop-blur-sm border border-gray-200/50 shadow-lg hover:shadow-xl">
-                <div className={`${stat.color} mb-2 flex justify-center opacity-60 group-hover:opacity-100 transition-opacity`}>
-                  {stat.icon}
-                </div>
-                <div className="text-3xl lg:text-4xl font-bold text-gray-900 mb-2">
-                  {stat.value.toLocaleString()}{stat.suffix}
-                </div>
-                <div className="text-gray-600 text-sm lg:text-base">{stat.label}</div>
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-600/5 to-blue-600/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
-              </div>
-            </div>
-          ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-};
-
-export default HeroSection;,
+            suffix: '$',
             label: 'Revenue generated',
             color: 'text-blue-600',
             icon: <DollarSign className="h-6 w-6" />
