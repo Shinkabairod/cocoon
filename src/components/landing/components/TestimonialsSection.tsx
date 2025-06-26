@@ -10,7 +10,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials 
   return (
     <section className="py-24 bg-gradient-to-br from-gray-50 to-orange-50/30">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Titre aligné à gauche */}
+        {/* Left-aligned title */}
         <div className="text-left mb-20">
           <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-6">
             Testimonials
@@ -21,7 +21,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials 
           {testimonials.map((testimonial, index) => (
             <div key={index} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
               
-              {/* Header avec avatar et info */}
+              {/* Header with avatar and info */}
               <div className="flex items-center gap-4 mb-6">
                 <div className={`w-16 h-16 ${
                   index % 3 === 0 
@@ -38,19 +38,19 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials 
                 </div>
               </div>
               
-              {/* Étoiles */}
+              {/* Stars */}
               <div className="flex items-center gap-1 mb-4">
                 {[...Array(5)].map((_, i) => (
                   <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
                 ))}
               </div>
               
-              {/* Citation */}
+              {/* Quote */}
               <p className="text-gray-700 text-base leading-relaxed mb-4 italic">
                 "{testimonial.content}"
               </p>
               
-              {/* Badge revenus */}
+              {/* Revenue badge */}
               <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
                 {testimonial.revenue}
               </div>
