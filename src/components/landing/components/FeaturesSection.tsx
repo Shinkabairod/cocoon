@@ -4,7 +4,7 @@ const FeaturesSection: React.FC = () => {
   return (
     <section id="features" className="py-24 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Titre aligné à gauche */}
+        {/* Title aligned to the left */}
         <div className="text-left mb-20">
           <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-6">
             Features
@@ -12,7 +12,7 @@ const FeaturesSection: React.FC = () => {
         </div>
 
         <div className="grid md:grid-cols-3 gap-12">
-          {/* Carte 1 - Expertise authentique */}
+          {/* Card 1 - Authentic Expertise */}
           <div className="group relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-blue-100 rounded-3xl transform rotate-1 group-hover:rotate-3 transition-transform duration-300"></div>
             <div className="relative bg-white border-2 border-blue-600 rounded-3xl p-8 hover:border-blue-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
@@ -25,21 +25,21 @@ const FeaturesSection: React.FC = () => {
               </div>
               
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Expertise 100% authentique
+                100% Authentic Expertise
               </h3>
               
               <p className="text-gray-700 leading-relaxed mb-6">
-                Ton bot s'appuie sur tes vraies méthodes, ton contenu, ton savoir-faire. 
-                Pas d'IA générique : chaque réponse reflète ta voix, ton expérience, ta valeur.
+                Your bot relies on your real methods, content, and know-how. 
+                No generic AI: every response reflects your voice, experience, and value.
               </p>
               
               <div className="mt-6 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 text-sm font-semibold">
-                ✨ Qualité Premium
+                ✨ Premium Quality
               </div>
             </div>
           </div>
 
-          {/* Carte 2 - Réponses sur-mesure */}
+          {/* Card 2 - Tailored Responses */}
           <div className="group relative">
             <div className="absolute inset-0 bg-gradient-to-r from-violet-50 to-violet-100 rounded-3xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300"></div>
             <div className="relative bg-white border-2 border-violet-600 rounded-3xl p-8 hover:border-violet-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
@@ -51,21 +51,20 @@ const FeaturesSection: React.FC = () => {
               </div>
               
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Réponses sur-mesure
+                Tailored Responses
               </h3>
               
               <p className="text-gray-700 leading-relaxed mb-6">
-                Nos algorithmes adaptent ton ton, ton style, tes mots. Chaque échange est optimisé pour 
-                reproduire ta façon unique de transmettre.
+                Our algorithms adapt your tone, style, and vocabulary. Each interaction is optimized to replicate your unique way of communicating.
               </p>
               
               <div className="mt-6 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-violet-100 to-violet-200 text-violet-700 text-sm font-semibold">
-                🎯 Sur-mesure
+                🎯 Custom-Fit
               </div>
             </div>
           </div>
 
-          {/* Carte 3 - Automatisation intelligente */}
+          {/* Card 3 - Smart Automation */}
           <div className="group relative">
             <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-blue-100 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
             <div className="relative bg-white border-2 border-blue-600 rounded-3xl p-8 hover:border-blue-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
@@ -76,16 +75,16 @@ const FeaturesSection: React.FC = () => {
               </div>
               
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                Automatisation intelligente
+                Smart Automation
               </h3>
               
               <p className="text-gray-700 leading-relaxed mb-6">
-                Délègue tes tâches répétitives tout en gardant ta qualité. 
-                Économise des heures chaque semaine sans perdre en authenticité.
+                Delegate repetitive tasks while maintaining quality. 
+                Save hours every week without sacrificing authenticity.
               </p>
               
               <div className="mt-6 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-blue-100 to-blue-200 text-blue-700 text-sm font-semibold">
-                ⚡ Automatisé
+                ⚡ Automated
               </div>
             </div>
           </div>
