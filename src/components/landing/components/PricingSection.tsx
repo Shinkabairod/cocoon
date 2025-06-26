@@ -25,7 +25,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
         <div className="grid md:grid-cols-3 gap-10">
           {pricingPlans.map((plan, index) => <Card key={index} className={`transition-all duration-500 hover:scale-105 ${plan.popular ? 'border-black shadow-2xl shadow-black/25' : 'border-gray-200 hover:shadow-xl'} relative bg-white/90 backdrop-blur-sm`}>
               {plan.popular && <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-black text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg ">
+                  <span className="bg-blue text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg ">
                     Plus populaire
                   </span>
                 </div>}
