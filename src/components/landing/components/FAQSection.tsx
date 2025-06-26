@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
@@ -33,10 +32,10 @@ const FAQSection: React.FC = () => {
   ];
 
   return (
-    <section className="py-24 bg-gradient-to-br from-gray-50 to-blue-50/30 relative">
+    <section className="py-24 bg-gradient-to-br from-gray-50 to-orange-50/30 relative">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-20">
-          <h2 className="text-5xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-blue-700 bg-clip-text text-transparent mb-6">
+          <h2 className="text-5xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-orange-700 bg-clip-text text-transparent mb-6">
             Questions fréquentes
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -44,22 +43,24 @@ const FAQSection: React.FC = () => {
           </p>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           {faqs.map((faq, index) => (
             <div key={index} className="group relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-blue-100 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
-              <div className="relative bg-white border-2 border-blue-600 rounded-3xl hover:border-blue-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-50 to-orange-100 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
+              {/* Ombre rouge dessous */}
+              <div className="absolute inset-0 bg-red-400/20 rounded-2xl transform translate-y-2 translate-x-1 blur-sm"></div>
+              <div className="relative bg-white border border-orange-200 rounded-2xl hover:border-orange-400 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-red-200/30">
                 <button
-                  className="w-full p-8 text-left flex items-center justify-between"
+                  className="w-full p-6 text-left flex items-center justify-between"
                   onClick={() => setOpenQuestion(openQuestion === index ? null : index)}
                 >
-                  <h3 className="text-2xl font-bold text-gray-900 pr-4">
+                  <h3 className="text-xl font-bold text-gray-900 pr-4">
                     {faq.question}
                   </h3>
                   <div className="flex-shrink-0">
-                    <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors duration-300">
+                    <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center group-hover:bg-orange-100 transition-colors duration-300">
                       <ChevronDown 
-                        className={`w-6 h-6 text-blue-600 transition-transform duration-300 ${
+                        className={`w-5 h-5 text-orange-600 transition-transform duration-300 ${
                           openQuestion === index ? 'rotate-180' : ''
                         }`}
                       />
@@ -68,13 +69,13 @@ const FAQSection: React.FC = () => {
                 </button>
                 
                 {openQuestion === index && (
-                  <div className="px-8 pb-8">
-                    <div className="border-t border-blue-100 pt-6">
-                      <p className="text-gray-700 text-lg leading-relaxed">
+                  <div className="px-6 pb-6">
+                    <div className="border-t border-orange-100 pt-4">
+                      <p className="text-gray-700 text-base leading-relaxed">
                         {faq.answer}
                       </p>
                       
-                      <div className="mt-6 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-blue-200 to-blue-100 text-blue-700 text-sm font-semibold">
+                      <div className="mt-4 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-orange-200 to-red-200 text-orange-800 text-sm font-semibold">
                         ✨ Qualité Premium
                       </div>
                     </div>
