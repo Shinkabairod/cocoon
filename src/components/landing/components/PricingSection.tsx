@@ -25,13 +25,13 @@ const PricingSection: React.FC<PricingSectionProps> = ({
         <div className="grid md:grid-cols-3 gap-10">
           {pricingPlans.map((plan, index) => <Card key={index} className={`transition-all duration-500 hover:scale-105 ${plan.popular ? 'border-black shadow-2xl shadow-black/25' : 'border-gray-200 hover:shadow-xl'} relative bg-white/90 backdrop-blur-sm`}>
               {plan.popular && <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                  <span className="bg-blue text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg ">
+                  <span className="bg-blue-500 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg ">
                     Plus populaire
                   </span>
                 </div>}
-              <CardContent className="p-10">
+              <CardContent className="p-10 rounded-md blue - border-blue-600 ">
                 <div className="text-center">
-                  <h3 className="text-3xl font-bold text-gray-900 mb-4">{plan.name}</h3>
+                  <h3 className="text-3xl font-bold text-grey-900 mb-4">{plan.name}</h3>
                   <div className="mb-8">
                     <span className="text-5xl font-bold text-black">{plan.price}</span>
                     <span className="text-gray-600 text-xl">{plan.period}</span>
