@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Play, Sparkles, Crown, Rocket, Bot, DollarSign, Clock, Users } from 'lucide-react';
@@ -20,7 +19,89 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   onAuthRedirect
 }) => {
   return (
-    <section className="pt-20 pb-32 px-4 sm:px-6 lg:px-8 relative">
+    <section className="pt-20 pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Fond géométrique subtil */}
+      <div className="absolute inset-0 opacity-20">
+        <svg 
+          width="100%" 
+          height="100%" 
+          viewBox="0 0 1200 800" 
+          className="absolute inset-0 w-full h-full"
+          preserveAspectRatio="xMidYMid slice"
+        >
+          <defs>
+            {/* Dégradés subtils */}
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style={{stopColor:'#f3f4f6', stopOpacity:0.3}} />
+              <stop offset="100%" style={{stopColor:'#e5e7eb', stopOpacity:0.1}} />
+            </linearGradient>
+            <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style={{stopColor:'#d1d5db', stopOpacity:0.2}} />
+              <stop offset="100%" style={{stopColor:'#f9fafb', stopOpacity:0.1}} />
+            </linearGradient>
+          </defs>
+          
+          {/* Formes géométriques */}
+          {/* Cercles en arrière-plan */}
+          <circle cx="150" cy="100" r="80" fill="url(#grad1)" />
+          <circle cx="1000" cy="150" r="120" fill="url(#grad2)" />
+          <circle cx="800" cy="600" r="90" fill="url(#grad1)" />
+          <circle cx="300" cy="650" r="60" fill="url(#grad2)" />
+          
+          {/* Rectangles arrondis */}
+          <rect x="900" y="400" width="200" height="100" rx="20" fill="url(#grad1)" />
+          <rect x="50" y="350" width="150" height="80" rx="15" fill="url(#grad2)" />
+          <rect x="700" y="50" width="100" height="120" rx="10" fill="url(#grad1)" />
+          
+          {/* Triangles */}
+          <polygon points="500,200 600,350 400,350" fill="url(#grad2)" />
+          <polygon points="1100,500 1150,600 1050,600" fill="url(#grad1)" />
+          
+          {/* Lignes connectant les éléments */}
+          <path d="M150,100 Q400,200 500,200" stroke="#e5e7eb" strokeWidth="1" fill="none" opacity="0.3" />
+          <path d="M800,600 Q600,400 500,200" stroke="#d1d5db" strokeWidth="1" fill="none" opacity="0.2" />
+          <path d="M1000,150 Q800,300 700,170" stroke="#f3f4f6" strokeWidth="1" fill="none" opacity="0.3" />
+          
+          {/* Grille de points subtile */}
+          {Array.from({length: 15}, (_, i) => 
+            Array.from({length: 10}, (_, j) => (
+              <circle 
+                key={`${i}-${j}`}
+                cx={80 * i + 40} 
+                cy={80 * j + 40} 
+                r="1.5" 
+                fill="#d1d5db" 
+                opacity="0.15"
+              />
+            ))
+          )}
+          
+          {/* Formes hexagonales */}
+          <polygon points="200,450 230,430 260,450 260,490 230,510 200,490" fill="url(#grad1)" />
+          <polygon points="950,250 980,230 1010,250 1010,290 980,310 950,290" fill="url(#grad2)" />
+          
+          {/* Éléments flottants animés */}
+          <g className="animate-pulse" style={{animationDuration: '4s'}}>
+            <rect x="600" y="500" width="40" height="40" rx="8" fill="url(#grad1)" />
+          </g>
+          <g className="animate-pulse" style={{animationDuration: '3s', animationDelay: '1s'}}>
+            <circle cx="400" cy="100" r="25" fill="url(#grad2)" />
+          </g>
+          <g className="animate-pulse" style={{animationDuration: '5s', animationDelay: '2s'}}>
+            <polygon points="850,350 870,330 890,350 870,370" fill="url(#grad1)" />
+          </g>
+        </svg>
+      </div>
+
+      {/* Effet de particules flottantes */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/3 w-2 h-2 bg-gray-300 rounded-full animate-bounce opacity-30" style={{animationDelay: '0s', animationDuration: '3s'}} />
+        <div className="absolute top-3/4 right-1/4 w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce opacity-25" style={{animationDelay: '1s', animationDuration: '4s'}} />
+        <div className="absolute top-1/2 left-1/5 w-1 h-1 bg-gray-300 rounded-full animate-bounce opacity-20" style={{animationDelay: '2s', animationDuration: '5s'}} />
+        <div className="absolute top-1/3 right-1/3 w-2.5 h-2.5 bg-gray-200 rounded-full animate-bounce opacity-35" style={{animationDelay: '0.5s', animationDuration: '3.5s'}} />
+        <div className="absolute bottom-1/4 left-2/3 w-1.5 h-1.5 bg-gray-350 rounded-full animate-bounce opacity-30" style={{animationDelay: '1.5s', animationDuration: '4.5s'}} />
+      </div>
+
       <div className="max-w-7xl mx-auto relative z-10">
         <div className={`text-center transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
           
