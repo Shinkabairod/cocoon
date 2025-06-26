@@ -143,3 +143,5 @@ const PricingSection: React.FC<PricingSectionProps> = ({
     </section>
   );
 };
+
+export default PricingSection;
