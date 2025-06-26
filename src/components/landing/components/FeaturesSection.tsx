@@ -3,7 +3,7 @@ const FeaturesSection: React.FC = () => {
   return <section id="features" className="py-24 bg-white relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-20">
-          <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-b from-gray-900 to-blue-700 bg-clip-text text-transparent mb-6">
+          <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-blue-700 bg-clip-text text-transparent mb-6">
             Pourquoi choisir Cocoon AI ?
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
