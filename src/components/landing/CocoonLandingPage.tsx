@@ -694,150 +694,205 @@ const activities = [
         </div>
       </section>
 
-      {/* Pourquoi choisir Cocoon AI - 3 mini sections */}
-      <section id="features" className="py-24 bg-white relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-orange-700 bg-clip-text text-transparent mb-6">
-              Pourquoi choisir Cocoon AI ?
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Automatise ton expertise et génère des revenus sans effort
-            </p>
-          </div>
+      // Section "Pourquoi choisir Cocoon AI" améliorée
+<section id="features" className="py-24 bg-white relative">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div className="text-center mb-20">
+      <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+        Pourquoi choisir Cocoon AI ?
+      </h2>
+      <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+        Une technologie de pointe pour des résultats exceptionnels
+      </p>
+    </div>
 
-          <div className="grid md:grid-cols-3 gap-12">
-            {features.map((feature, index) => (
-              <div key={index} className="text-center group">
-                <div className={`w-20 h-20 bg-gradient-to-br ${feature.gradient} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-all duration-300`}>
-                  <div className={feature.iconColor}>
-                    {feature.icon}
-                  </div>
-                </div>
-                
-                <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-orange-700 transition-colors">
-                  {feature.title}
-                </h3>
-                
-                <p className="text-gray-600 text-lg leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
+    <div className="grid md:grid-cols-3 gap-12">
+      {/* Carte 1 - Expertise authentique */}
+      <div className="group relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-100 to-slate-50 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
+        <div className="relative bg-white border-2 border-slate-200 rounded-3xl p-8 hover:border-slate-300 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+          {/* Icône plus petite */}
+          <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-slate-200 transition-colors">
+            <Database className="h-6 w-6 text-slate-700" />
+          </div>
+          
+          <h3 className="text-2xl font-bold text-slate-900 mb-4">
+            Expertise 100% authentique
+          </h3>
+          
+          <p className="text-slate-600 leading-relaxed mb-6">
+            Ton bot s'appuie sur tes vraies méthodes, ton contenu, ton savoir-faire. 
+            Pas d'IA générique : chaque réponse reflète ta voix, ton expérience, ta valeur.
+          </p>
+          
+          {/* Badge noir */}
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-black text-white text-sm font-semibold">
+            ✨ Qualité Premium
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* Comment ça marche */}
-      <section className="py-24 bg-gradient-to-br from-gray-50 to-orange-50/30 relative">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-orange-700 bg-clip-text text-transparent mb-6">
-              Comment ça marche ?
-            </h2>
-            <p className="text-xl text-gray-600">
-              3 étapes simples pour transformer ton expertise en revenus automatisés
-            </p>
+      {/* Carte 2 - Réponses sur-mesure */}
+      <div className="group relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-100 to-gray-50 rounded-3xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300"></div>
+        <div className="relative bg-white border-2 border-gray-200 rounded-3xl p-8 hover:border-gray-300 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+          {/* Icône plus petite */}
+          <div className="w-12 h-12 bg-gray-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-gray-200 transition-colors">
+            <Code className="h-6 w-6 text-gray-700" />
           </div>
+          
+          <h3 className="text-2xl font-bold text-gray-900 mb-4">
+            Réponses sur-mesure
+          </h3>
+          
+          <p className="text-gray-600 leading-relaxed mb-6">
+            Nos algorithmes adaptent ton ton, ton style, tes mots. Chaque échange est optimisé pour 
+            reproduire ta façon unique de transmettre.
+          </p>
+          
+          {/* Badge noir */}
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-black text-white text-sm font-semibold">
+            ✨ Qualité Premium
+          </div>
+        </div>
+      </div>
 
-          {/* Fil d'Ariane horizontal */}
-          <div className="flex justify-center mb-16">
-            <div className="flex items-center space-x-8">
-              {/* Étape 1 */}
-              <div className="flex flex-col items-center">
-                <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg">
-                  1
-                </div>
-                <div className="mt-3 text-black font-bold text-lg">Crée</div>
-              </div>
-              
-              {/* Ligne de connexion */}
-              <div className="w-16 h-1 bg-gradient-to-r from-orange-400 to-teal-400 rounded-full"></div>
-              
-              {/* Étape 2 */}
-              <div className="flex flex-col items-center">
-                <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg">
-                  2
-                </div>
-                <div className="mt-3 text-black font-bold text-lg">Personnalise</div>
-              </div>
-              
-              {/* Ligne de connexion */}
-              <div className="w-16 h-1 bg-gradient-to-r from-teal-400 to-rose-400 rounded-full"></div>
-              
-              {/* Étape 3 */}
-              <div className="flex flex-col items-center">
-                <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg">
-                  3
-                </div>
-                <div className="mt-3 text-black font-bold text-lg">Génère</div>
+      {/* Carte 3 - Fiabilité garantie */}
+      <div className="group relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-neutral-100 to-neutral-50 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
+        <div className="relative bg-white border-2 border-neutral-200 rounded-3xl p-8 hover:border-neutral-300 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
+          {/* Icône plus petite */}
+          <div className="w-12 h-12 bg-neutral-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-neutral-200 transition-colors">
+            <Award className="h-6 w-6 text-neutral-700" />
+          </div>
+          
+          <h3 className="text-2xl font-bold text-neutral-900 mb-4">
+            Fiabilité garantie
+          </h3>
+          
+          <p className="text-neutral-600 leading-relaxed mb-6">
+            Aucune info inventée. Tout est analysé, structuré et vérifié avant d'être utilisé. 
+            Tu gardes le contrôle total sur ce que ton bot délivre.
+          </p>
+          
+          {/* Badge noir */}
+          <div className="inline-flex items-center px-3 py-1 rounded-full bg-black text-white text-sm font-semibold">
+            ✨ Qualité Premium
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{/* Section "Comment ça marche" améliorée */}
+<section className="py-24 bg-gradient-to-br from-gray-50 to-neutral-50 relative">
+  <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div className="text-center mb-20">
+      <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+        Comment ça marche ?
+      </h2>
+      <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+        Trois étapes simples pour transformer votre expertise en revenus automatiques
+      </p>
+    </div>
+
+    <div className="space-y-8">
+      {/* Étape 1 */}
+      <div className="group relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-50 to-slate-100 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
+        <div className="relative bg-white border border-slate-200 rounded-3xl p-8 hover:border-slate-300 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+          <div className="flex items-start gap-6">
+            {/* Numéro plus gros */}
+            <div className="flex-shrink-0">
+              <div className="w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-2xl font-bold">01</span>
               </div>
             </div>
-          </div>
-
-          {/* Trois sections verticales */}
-          <div className="space-y-12">
-            {[
-              {
-                step: "01",
-                title: "Crée ton profil",
-                description: "Renseigne tes compétences, ton domaine d'expertise et ajoute tes ressources (PDF, vidéos, textes). Notre IA analyse tout pour comprendre parfaitement ton univers et tes méthodes de travail.",
-                icon: <Settings className="h-10 w-10" />,
-                bgColor: "bg-orange-50/50",
-                borderColor: "border-orange-200",
-                textColor: "text-orange-700",
-                iconBg: "bg-orange-100/70"
-              },
-              {
-                step: "02", 
-                title: "Personnalise ton bot",
-                description: "Notre IA analyse tes données et crée un assistant parfaitement adapté à ton expertise. Configure ses réponses, son style de communication et ses domaines d'intervention selon tes préférences.",
-                icon: <Bot className="h-10 w-10" />,
-                bgColor: "bg-teal-50/50",
-                borderColor: "border-teal-200",
-                textColor: "text-teal-700",
-                iconBg: "bg-teal-100/70"
-              },
-              {
-                step: "03",
-                title: "Génère des revenus", 
-                description: "Ton bot gère tes clients 24/7, vend tes services et génère du contenu automatiquement. Il répond aux questions, propose tes solutions et convertit tes visiteurs en clients payants sans que tu aies à intervenir.",
-                icon: <DollarSign className="h-10 w-10" />,
-                bgColor: "bg-rose-50/50",
-                borderColor: "border-rose-200",
-                textColor: "text-rose-700",
-                iconBg: "bg-rose-100/70"
-              }
-            ].map((step, index) => (
-              <div key={index} className={`relative p-8 rounded-3xl ${step.bgColor} border-2 ${step.borderColor} hover:scale-105 transition-all duration-300 group shadow-lg`}>
-                {/* Numéro en badge */}
-                <div className="absolute -top-4 left-8">
-                  <div className={`w-12 h-12 bg-black rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg`}>
-                    {step.step}
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-6 pt-4">
-                  {/* Icône principale */}
-                  <div className={`w-20 h-20 ${step.iconBg} border-2 ${step.borderColor} rounded-3xl flex items-center justify-center ${step.textColor} group-hover:scale-110 transition-all duration-300 shadow-md`}>
-                    {step.icon}
-                  </div>
-                  
-                  <div className="flex-1">
-                    <h3 className={`text-3xl font-bold ${step.textColor} mb-4`}>
-                      {step.title}
-                    </h3>
-                    
-                    <p className="text-gray-700 text-lg leading-relaxed">
-                      {step.description}
-                    </p>
-                  </div>
-                </div>
+            
+            <div className="flex-1">
+              {/* Icône plus petite */}
+              <div className="w-12 h-12 bg-slate-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-slate-200 transition-colors">
+                <Settings className="h-6 w-6 text-slate-700" />
               </div>
-            ))}
+              
+              <h3 className="text-2xl font-bold text-slate-900 mb-4">
+                Crée ton profil
+              </h3>
+              
+              <p className="text-slate-600 leading-relaxed">
+                Renseigne tes compétences, ton domaine d'expertise et ajoute tes ressources (PDF, vidéos, textes). 
+                Notre IA analyse tout pour comprendre parfaitement ton univers et tes méthodes de travail.
+              </p>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
+
+      {/* Étape 2 */}
+      <div className="group relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-gray-50 to-gray-100 rounded-3xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300"></div>
+        <div className="relative bg-white border border-gray-200 rounded-3xl p-8 hover:border-gray-300 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+          <div className="flex items-start gap-6">
+            {/* Numéro plus gros */}
+            <div className="flex-shrink-0">
+              <div className="w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-2xl font-bold">02</span>
+              </div>
+            </div>
+            
+            <div className="flex-1">
+              {/* Icône plus petite */}
+              <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-gray-200 transition-colors">
+                <Bot className="h-6 w-6 text-gray-700" />
+              </div>
+              
+              <h3 className="text-2xl font-bold text-gray-900 mb-4">
+                Personnalise ton bot
+              </h3>
+              
+              <p className="text-gray-600 leading-relaxed">
+                Notre IA analyse tes données et crée un assistant parfaitement adapté à ton expertise. 
+                Configure ses réponses, son style de communication et ses domaines d'intervention selon tes préférences.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Étape 3 */}
+      <div className="group relative">
+        <div className="absolute inset-0 bg-gradient-to-r from-neutral-50 to-neutral-100 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
+        <div className="relative bg-white border border-neutral-200 rounded-3xl p-8 hover:border-neutral-300 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+          <div className="flex items-start gap-6">
+            {/* Numéro plus gros */}
+            <div className="flex-shrink-0">
+              <div className="w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center shadow-lg">
+                <span className="text-2xl font-bold">03</span>
+              </div>
+            </div>
+            
+            <div className="flex-1">
+              {/* Icône plus petite */}
+              <div className="w-12 h-12 bg-neutral-100 rounded-xl flex items-center justify-center mb-4 group-hover:bg-neutral-200 transition-colors">
+                <DollarSign className="h-6 w-6 text-neutral-700" />
+              </div>
+              
+              <h3 className="text-2xl font-bold text-neutral-900 mb-4">
+                Génère des revenus
+              </h3>
+              
+              <p className="text-neutral-600 leading-relaxed">
+                Ton bot gère tes clients 24/7, vend tes services et génère du contenu automatiquement. 
+                Il répond aux questions, propose tes solutions et convertit les visiteurs en clients payants sans que tu aies à intervenir.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
       {/* Pricing */}
       <section id="pricing" className="py-24 bg-white">
