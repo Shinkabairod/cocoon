@@ -31,7 +31,7 @@ const FeaturesSection: React.FC = () => {
               </p>
               
               {/* Badge noir */}
-              <div className="mt-6 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-blue-100 to-blue-100 text-blue-700 text-sm font-semibold">
+              <div className="mt-6 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-blue-400 to-blue-100 text-blue-700 text-sm font-semibold">
                 ✨ Qualité Premium
               </div>
             </div>
