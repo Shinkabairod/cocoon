@@ -6,8 +6,8 @@ import { useNavigate } from 'react-router-dom';
 import Header from './components/Header';
 import HeroSection from './components/HeroSection';
 import ScrollingButtonsSection from './components/ScrollingButtonsSection';
-import TestimonialsSection from './components/TestimonialsSection';
 import FeaturesSection from './components/FeaturesSection';
+import TestimonialsSection from './components/TestimonialsSection';
 import HowItWorksSection from './components/HowItWorksSection';
 import PricingSection from './components/PricingSection';
 import CTASection from './components/CTASection';
@@ -77,9 +77,9 @@ const CocoonLandingPage = () => {
         onAuthRedirect={handleAuthRedirect}
       />
 
-      <TestimonialsSection testimonials={testimonials} />
-
       <FeaturesSection />
+
+      <TestimonialsSection testimonials={testimonials} />
 
       <HowItWorksSection />
 
