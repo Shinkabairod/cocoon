@@ -416,7 +416,7 @@ const CocoonLandingPage = () => {
               Comment ça marche ?
             </h2>
             <p className="text-xl text-gray-600 max-w-4xl mx-auto">
-              En 3 étapes simples, transforme ton expertise en assistant IA qui travaille pour toi
+              En 3 étapes simples, transforme ton expertise en assistant IA qui travaille pour toi 24/7
             </p>
           </div>
 
@@ -466,7 +466,7 @@ const CocoonLandingPage = () => {
               Pourquoi choisir Cocoon AI ?
             </h2>
             <p className="text-xl text-gray-600 max-w-4xl mx-auto">
-              Une solution complète pour automatiser et monétiser ton expertise
+              Une solution complète pour optimiser, automatiser et monétiser ton expertise
             </p>
           </div>
 
