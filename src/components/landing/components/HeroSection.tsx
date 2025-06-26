@@ -234,7 +234,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 
           {/* Titre principal avec logo animé centré */}
           <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
-            <span className="bg-gradient-to-r from-gray-900 via-gray-900 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-gray-900 via-gray-900 bg-clip-text">
               Boost et monétise
             </span>
             <span className="block mt-4">
