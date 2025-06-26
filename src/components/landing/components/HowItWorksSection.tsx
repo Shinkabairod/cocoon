@@ -28,9 +28,7 @@ const HowItWorksSection: React.FC = () => {
                     </svg>
                   </div>
                   
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                    Crée ton profil
-                  </h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Crée ton profil</h3>
                   
                   <p className="text-gray-700 leading-relaxed">
                     Renseigne tes compétences, ton domaine d'expertise et ajoute tes ressources (PDF, vidéos, textes). 
@@ -61,9 +59,7 @@ const HowItWorksSection: React.FC = () => {
                     </svg>
                   </div>
                   
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                    Personnalise ton bot
-                  </h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Personnalise tes automations & bots</h3>
                   
                   <p className="text-gray-700 leading-relaxed">
                     Notre IA analyse tes données et crée un assistant parfaitement adapté à ton expertise. 
@@ -94,9 +90,7 @@ const HowItWorksSection: React.FC = () => {
                     </svg>
                   </div>
                   
-                  <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                    Génère des revenus
-                  </h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-4">Génère tes premiers revenus</h3>
                   
                   <p className="text-gray-700 leading-relaxed">
                     Ton bot gère tes clients 24/7, vend tes services et génère du contenu automatiquement. 
