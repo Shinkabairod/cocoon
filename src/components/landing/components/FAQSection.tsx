@@ -24,7 +24,7 @@ const FAQSection: React.FC = () => {
   return <section className="py-24 bg-gradient-to-br from-gray-50 to-orange-50/30 relative">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-20">
-          <h2 className="text-5xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-grey-700 bg-clip-text text-transparent mb-6">
+          <h2 className="text-5xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-grey-800 bg-clip-text text-transparent mb-6">
             Questions fréquentes
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
