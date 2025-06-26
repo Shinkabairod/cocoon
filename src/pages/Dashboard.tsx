@@ -1,14 +1,13 @@
 // src/pages/Dashboard.tsx
 import React, { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useOnboarding } from '@/contexts/OnboardingContext';
 import { useUserStats } from '@/hooks/useUserStats';
 import { huggingfaceService } from '@/services/huggingfaceService';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import CreationsSection from '@/components/dashboard/CreationsSection';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
@@ -22,6 +21,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import {
   Home,
   Folder,
@@ -63,11 +69,22 @@ import {
   Crown,
   PlayCircle,
   Edit,
-  Smile
+  Smile,
+  User,
+  MoreHorizontal,
+  FolderOpen,
+  Play,
+  ArrowRight
 } from 'lucide-react';
+
+// Import des composants Dashboard
+import UserSettingsSection from '@/components/dashboard/UserSettingsSection';
+import OnboardingDataSection from '@/components/dashboard/OnboardingDataSection';
+import CreationsSection from '@/components/dashboard/CreationsSection';
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const { onboardingData } = useOnboarding();
   const { data: userStats, isLoading, refetch } = useUserStats(user?.id);
   const { toast } = useToast();
   const [activePage, setActivePage] = useState('welcome');
@@ -144,7 +161,7 @@ const Dashboard = () => {
     }
   ];
 
-  // Emojis populaires pour les dossiers (version étendue avec plus d'emojis utilisés)
+  // Emojis populaires pour les dossiers
   const popularEmojis = [
     '📁', '📂', '🎬', '🎨', '📝', '💼', '🎯', '💡', 
     '🚀', '⭐', '📊', '🎵', '📷', '🎥', '📖', '💻',
@@ -155,6 +172,70 @@ const Dashboard = () => {
     '🦄', '🐱', '🐶', '🎀', '💝', '💎', '🔮', '🌙',
     '☀️', '⭐', '💫', '🌊', '🔑', '🎪', '🎯', '📚'
   ];
+
+  // Fonction pour gérer l'exécution des boutons personnalisés
+  const handleExecuteCustomButton = async (buttonData, placeholderValues) => {
+    console.log('🚀 Exécution du bouton:', buttonData.name);
+    console.log('📝 Prompt:', buttonData.prompt);
+    console.log('🔧 Paramètres:', placeholderValues);
+    console.log('📁 Dossiers connectés:', buttonData.connectedFolders);
+
+    try {
+      setIsGenerating(true);
+      
+      // 1. Remplacer les placeholders dans le prompt
+      let finalPrompt = buttonData.prompt;
+      Object.entries(placeholderValues).forEach(([key, value]) => {
+        finalPrompt = finalPrompt.replace(new RegExp(`{${key}}`, 'g'), value);
+      });
+      
+      // 2. Récupérer le contenu des dossiers connectés
+      const connectedContent = [];
+      buttonData.connectedFolders.forEach(folderId => {
+        const folder = [...folders.resources, ...folders.personal].find(f => f.id === folderId);
+        if (folder && folder.items.length > 0) {
+          connectedContent.push(`\n## Ressources de "${folder.name}" :\n`);
+          folder.items.forEach(item => {
+            connectedContent.push(`- ${item.name}: ${item.content || item.description || 'Contenu disponible'}\n`);
+          });
+        }
+      });
+      
+      // 3. Créer le prompt final avec le contexte
+      const contextualPrompt = `${finalPrompt}\n\n${connectedContent.length > 0 ? 'Contexte et ressources disponibles :' + connectedContent.join('') : ''}`;
+      
+      // 4. Simuler l'appel à l'IA (tu pourras connecter ton API ici)
+      console.log('🤖 Prompt final envoyé à l'IA:', contextualPrompt);
+      
+      // Simulation de génération (remplace par ton appel API réel)
+      setTimeout(() => {
+        const generatedContent = `✨ Contenu généré par "${buttonData.name}":\n\n` +
+          `Prompt utilisé: ${finalPrompt}\n\n` +
+          `Paramètres:\n${Object.entries(placeholderValues).map(([k,v]) => `- ${k}: ${v}`).join('\n')}\n\n` +
+          `Ressources utilisées: ${buttonData.connectedFolders.length} dossier(s)\n\n` +
+          `[Ici serait le contenu généré par l'IA basé sur ton prompt et tes ressources]`;
+        
+        setGeneratedContent(generatedContent);
+        setIsGenerating(false);
+        
+        toast({
+          title: `✅ ${buttonData.name} terminé`,
+          description: "Le contenu a été généré avec succès!"
+        });
+        
+        // Tu peux aussi ouvrir automatiquement le modal de chat ou de résultats
+        setActiveModal('chat');
+      }, 3000);
+      
+    } catch (error) {
+      console.error('❌ Erreur lors de l\'exécution:', error);
+      setIsGenerating(false);
+      toast({
+        title: "❌ Erreur",
+        description: "Une erreur s'est produite lors de la génération."
+      });
+    }
+  };
 
   // Fonction pour gérer l'upload de fichiers
   const handleFileUpload = (event) => {
@@ -240,497 +321,250 @@ const Dashboard = () => {
     if (newItemData.type === 'link' && !newItemData.url.trim()) {
       toast({
         title: "❌ URL manquante",
-        description: "Veuillez saisir une URL pour le lien.",
-        variant: "destructive"
+        description: "Veuillez saisir une URL pour le lien."
       });
       return;
     }
-    
-    if (['document', 'image', 'video'].includes(newItemData.type) && !newItemData.file) {
+
+    if (newItemData.type === 'file' && !newItemData.file) {
       toast({
         title: "❌ Fichier manquant",
-        description: "Veuillez sélectionner un fichier.",
-        variant: "destructive"
+        description: "Veuillez sélectionner un fichier."
       });
       return;
     }
-    
+
     const newItem = {
       id: Date.now().toString(),
       name: newItemData.name,
       type: newItemData.type,
       content: newItemData.content,
-      file: newItemData.file ? {
-        name: newItemData.file.name,
-        size: newItemData.file.size,
-        type: newItemData.file.type,
-        // En production, ici vous uploaderiez le fichier vers votre serveur
-        // et stockeriez l'URL. Pour la démo, on simule :
-        url: URL.createObjectURL(newItemData.file)
-      } : null,
       url: newItemData.url,
+      file: newItemData.file,
       createdAt: new Date().toISOString()
     };
-    
+
     setFolders(prev => ({
       ...prev,
-      [activeCategory]: prev[activeCategory].map(folder => 
-        folder.id === selectedFolder.id 
+      [activeCategory]: prev[activeCategory].map(folder =>
+        folder.id === selectedFolder.id
           ? { ...folder, items: [...folder.items, newItem] }
           : folder
       )
     }));
-    
+
     setNewItemData({ name: '', type: 'text', content: '', file: null, url: '' });
     setShowNewItemModal(false);
     setSelectedFolder(null);
-    
+
     toast({
       title: "✅ Élément ajouté",
-      description: `"${newItemData.name}" a été ajouté au dossier.`
+      description: `"${newItem.name}" a été ajouté au dossier.`
     });
   };
 
-  const deleteItem = (folderId, itemId) => {
-    setFolders(prev => ({
-      ...prev,
-      [activeCategory]: prev[activeCategory].map(folder => 
-        folder.id === folderId 
-          ? { ...folder, items: folder.items.filter(item => item.id !== itemId) }
-          : folder
-      )
-    }));
-    
-    toast({
-      title: "🗑️ Élément supprimé",
-      description: "L'élément a été supprimé avec succès."
-    });
-  };
-
-  const getItemIcon = (type) => {
-    switch (type) {
-      case 'text': return <FileText className="h-4 w-4" />;
-      case 'image': return <Image className="h-4 w-4" />;
-      case 'video': return <Video className="h-4 w-4" />;
-      case 'document': return <FileText className="h-4 w-4" />;
-      case 'link': return <Globe className="h-4 w-4" />;
-      default: return <FileText className="h-4 w-4" />;
-    }
-  };
-
-  // Fonction pour afficher les éléments avec preview
-  const renderItemContent = (item) => {
-    const openFile = () => {
-      if (item.type === 'link' && item.url) {
-        window.open(item.url, '_blank');
-      } else if (item.file?.url) {
-        window.open(item.file.url, '_blank');
-      }
-    };
-
-    return (
-      <div className="flex items-center justify-between p-2 bg-gray-50 rounded group hover:bg-gray-100 transition-colors">
-        <div 
-          className="flex items-center space-x-2 flex-1 cursor-pointer" 
-          onClick={openFile}
-        >
-          {getItemIcon(item.type)}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center space-x-2">
-              <span className="text-sm font-medium truncate">{item.name}</span>
-              <Badge variant="secondary" className="text-xs">
-                {item.type}
-              </Badge>
-            </div>
-            {item.file && (
-              <p className="text-xs text-gray-500 truncate">
-                {item.file.name} ({(item.file.size / 1024).toFixed(1)} KB)
-              </p>
-            )}
-            {item.type === 'link' && item.url && (
-              <p className="text-xs text-blue-600 truncate">{item.url}</p>
-            )}
-          </div>
-          {(item.type === 'link' || item.file) && (
-            <Eye className="h-3 w-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
-          )}
-        </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={(e) => {
-            e.stopPropagation();
-            deleteItem(item.folderId, item.id);
-          }}
-        >
-          <Trash2 className="h-3 w-3 text-red-500" />
-        </Button>
-      </div>
-    );
-  };
-
-  // Fonctions d'action
-  const handleChatIA = async () => {
+  // Fonction pour le chat IA
+  const handleChatSubmit = async () => {
     if (!chatInput.trim()) return;
-    
-    setIsGenerating(true);
-    setChatMessages(prev => [...prev, { type: 'user', content: chatInput }]);
-    
+
+    const userMessage = chatInput;
+    setChatInput('');
+    setChatMessages(prev => [...prev, { type: 'user', content: userMessage }]);
+
     try {
-      const response = await huggingfaceService.askAI(chatInput);
-      setChatMessages(prev => [...prev, { type: 'ai', content: response.answer || response }]);
-      setChatInput('');
-      toast({
-        title: "✅ Réponse générée",
-        description: "L'IA a répondu à votre question"
-      });
+      setIsGenerating(true);
+      
+      // Simuler réponse IA (remplace par ton service réel)
+      setTimeout(() => {
+        const aiResponse = `Voici ma réponse à "${userMessage}" basée sur vos ressources et profil créateur...`;
+        setChatMessages(prev => [...prev, { type: 'ai', content: aiResponse }]);
+        setIsGenerating(false);
+      }, 2000);
+      
     } catch (error) {
+      console.error('Erreur chat:', error);
+      setIsGenerating(false);
       toast({
         title: "❌ Erreur",
-        description: "Impossible de générer une réponse",
-        variant: "destructive"
+        description: "Erreur lors de la conversation avec l'IA."
       });
-    } finally {
+    }
+  };
+
+  // Fonction pour générer un script
+  const handleScriptGeneration = async () => {
+    if (!scriptTopic.trim()) {
+      toast({
+        title: "❌ Sujet manquant",
+        description: "Veuillez entrer un sujet pour le script."
+      });
+      return;
+    }
+
+    try {
+      setIsGenerating(true);
+      
+      // Simuler génération de script
+      setTimeout(() => {
+        const script = `# Script pour "${scriptTopic}"\n\n## Introduction\nBonjour et bienvenue dans cette nouvelle vidéo...\n\n## Développement\n[Contenu principal basé sur vos ressources]\n\n## Conclusion\nJ'espère que cette vidéo vous a plu...`;
+        setGeneratedContent(script);
+        setIsGenerating(false);
+        
+        toast({
+          title: "✅ Script généré",
+          description: "Votre script personnalisé est prêt !"
+        });
+      }, 3000);
+      
+    } catch (error) {
+      console.error('Erreur génération script:', error);
       setIsGenerating(false);
     }
   };
 
-  const handleGenerateScript = async () => {
-    if (!scriptTopic.trim()) return;
-    
-    setIsGenerating(true);
-    try {
-      const response = await huggingfaceService.generateScript(scriptTopic);
-      setGeneratedContent(response.script || response);
-      toast({
-        title: "✅ Script généré",
-        description: "Votre script a été créé avec succès"
-      });
-    } catch (error) {
-      toast({
-        title: "❌ Erreur",
-        description: "Impossible de générer le script",
-        variant: "destructive"
-      });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+  // Fonctions de rendu pour chaque page
+  const renderWelcomePage = () => (
+    <UserSettingsSection />
+  );
 
-  // SECTION WELCOME AMÉLIORÉE
-  const renderWelcomePage = () => {
-    const currentHour = new Date().getHours();
-    const greeting = currentHour < 12 ? 'Bonjour' : currentHour < 18 ? 'Bon après-midi' : 'Bonsoir';
-    const userName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'Gem';
-
-    const nextSteps = [
-      {
-        id: 'feed-chrysalis',
-        title: 'Alimentez votre Chrysalide',
-        description: 'Ajoutez des ressources pour enrichir votre IA',
-        icon: Folder,
-        action: () => setActivePage('resources'),
-        color: 'bg-blue-500'
-      },
-      {
-        id: 'first-transformation',
-        title: 'Première Transformation',
-        description: 'Générez votre premier script personnalisé',
-        icon: PlayCircle,
-        action: () => setActivePage('creation'),
-        color: 'bg-purple-500'
-      },
-      {
-        id: 'monetization',
-        title: 'Partagez votre Envol',
-        description: 'Configurez votre assistant pour la monétisation',
-        icon: DollarSign,
-        action: () => setActivePage('monetization'),
-        color: 'bg-green-500'
-      }
-    ];
-
-    return (
-      <div className="p-4 md:p-8 space-y-8">
-        {/* En-tête de bienvenue */}
-        <div className="bg-gradient-to-r from-purple-600 via-blue-600 to-purple-700 rounded-2xl p-6 md:p-8 text-white relative overflow-hidden">
-          <div className="relative z-10">
-            <h1 className="text-2xl md:text-3xl font-bold mb-2">
-              {greeting}, {userName} ! 🦋
-            </h1>
-            <p className="text-purple-100 text-lg mb-6">
-              Transformez vos idées en contenu captivant.
-            </p>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
-              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Target className="h-5 w-5" />
-                  <span className="font-medium">Objectif du Jour</span>
-                </div>
-                <p className="text-sm text-purple-100">Commencer votre transformation</p>
-              </div>
-              
-              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
-                <div className="flex items-center space-x-2 mb-2">
-                  <TrendingUp className="h-5 w-5" />
-                  <span className="font-medium">Progression</span>
-                </div>
-                <p className="text-sm text-purple-100">Score créateur : {userStats?.totalScore || 0}</p>
-              </div>
-              
-              <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
-                <div className="flex items-center space-x-2 mb-2">
-                  <Clock className="h-5 w-5" />
-                  <span className="font-medium">Temps Économisé</span>
-                </div>
-                <p className="text-sm text-purple-100">{userStats?.timeSaved || 0} heures ce mois</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Statistiques */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="flex items-center justify-center w-12 h-12 bg-purple-100 rounded-full mx-auto mb-2">
-                <Sparkles className="h-6 w-6 text-purple-600" />
-              </div>
-              <div className="text-2xl font-bold text-purple-700">{userStats?.scriptsGenerated || 0}</div>
-              <div className="text-sm text-gray-600">Scripts Créés</div>
-              <div className="text-xs text-green-600 mt-1">0%</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="flex items-center justify-center w-12 h-12 bg-blue-100 rounded-full mx-auto mb-2">
-                <MessageSquare className="h-6 w-6 text-blue-600" />
-              </div>
-              <div className="text-2xl font-bold text-blue-700">{userStats?.chatConversations || 0}</div>
-              <div className="text-sm text-gray-600">Conversations IA</div>
-              <div className="text-xs text-green-600 mt-1">0%</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="flex items-center justify-center w-12 h-12 bg-green-100 rounded-full mx-auto mb-2">
-                <Folder className="h-6 w-6 text-green-600" />
-              </div>
-              <div className="text-2xl font-bold text-green-700">{userStats?.totalResources || 0}</div>
-              <div className="text-sm text-gray-600">Ressources</div>
-              <div className="text-xs text-green-600 mt-1">0%</div>
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardContent className="p-4 text-center">
-              <div className="flex items-center justify-center w-12 h-12 bg-orange-100 rounded-full mx-auto mb-2">
-                <Zap className="h-6 w-6 text-orange-600" />
-              </div>
-              <div className="text-2xl font-bold text-orange-700">{userStats?.contentGenerated || 0}</div>
-              <div className="text-sm text-gray-600">Transformations</div>
-              <div className="text-xs text-green-600 mt-1">+0%</div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Prochaines Étapes - AVEC BOUTONS CLIQUABLES */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Prochaines Étapes</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              {nextSteps.map((step) => {
-                const StepIcon = step.icon;
-                return (
-                  <Button
-                    key={step.id}
-                    variant="ghost"
-                    className="w-full p-4 h-auto justify-start hover:bg-gray-50 transition-all duration-200"
-                    onClick={step.action}
-                  >
-                    <div className="flex items-center space-x-4 w-full">
-                      <div className={`w-10 h-10 ${step.color} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                        <StepIcon className="h-5 w-5 text-white" />
-                      </div>
-                      <div className="flex-1 text-left">
-                        <div className="font-medium text-gray-900">{step.title}</div>
-                        <div className="text-sm text-gray-500">{step.description}</div>
-                      </div>
-                      <ChevronRight className="h-5 w-5 text-gray-400" />
-                    </div>
-                  </Button>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Évolution Récente */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Évolution Récente</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-center py-8">
-              <div className="text-gray-400 mb-2">📈</div>
-              <p className="text-gray-500">Aucune activité récente</p>
-              <p className="text-sm text-gray-400">Commencez votre première transformation pour voir vos progrès ici</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  };
-
-  // Page Ressources COMPLÈTE avec Upload et Renommage
   const renderResourcesPage = () => (
-    <div className="p-4 md:p-8 space-y-6">
-      {/* Header */}
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">Mes Ressources</h2>
-        <Button onClick={() => setShowNewFolderModal(true)}>
-          <Plus className="h-4 w-4 mr-2" />
-          Nouveau Dossier
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <Folder className="h-6 w-6" />
+            Mes Ressources
+          </h2>
+          <p className="text-muted-foreground">
+            Organisez vos fichiers et ressources pour l'IA
+          </p>
+        </div>
+      </div>
+
+      {/* Catégories */}
+      <div className="flex gap-2">
+        <Button
+          variant={activeCategory === 'resources' ? 'default' : 'outline'}
+          onClick={() => setActiveCategory('resources')}
+          className="gap-2"
+        >
+          <Folder className="h-4 w-4" />
+          Ressources
+        </Button>
+        <Button
+          variant={activeCategory === 'personal' ? 'default' : 'outline'}
+          onClick={() => setActiveCategory('personal')}
+          className="gap-2"
+        >
+          <User className="h-4 w-4" />
+          Personnel
         </Button>
       </div>
 
-      {/* Onglets Catégories */}
-      <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
-        <button
-          onClick={() => setActiveCategory('resources')}
-          className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-            activeCategory === 'resources'
-              ? 'bg-white text-gray-900 shadow'
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          Ressources
-        </button>
-        <button
-          onClick={() => setActiveCategory('personal')}
-          className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
-            activeCategory === 'personal'
-              ? 'bg-white text-gray-900 shadow'
-              : 'text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          Infos Personnelles
-        </button>
-      </div>
-
-      {/* Liste des Dossiers */}
+      {/* Dossiers */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {folders[activeCategory].map((folder) => (
-          <Card key={folder.id} className="hover:shadow-md transition-shadow">
+        {folders[activeCategory].map(folder => (
+          <Card key={folder.id} className="group hover:shadow-md transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center text-lg">
-                  <span className="text-2xl mr-2">{folder.emoji}</span>
-                  <span className="truncate">{folder.name}</span>
-                </CardTitle>
-                <div className="flex space-x-1">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      setSelectedFolder(folder);
-                      setRenameFolderData({ name: folder.name, emoji: folder.emoji });
-                      setShowRenameFolderModal(true);
-                    }}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      setSelectedFolder(folder);
-                      setShowNewItemModal(true);
-                    }}
-                  >
-                    <Plus className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => deleteFolder(folder.id)}
-                  >
-                    <Trash2 className="h-4 w-4 text-red-500" />
+                <div className="flex items-center gap-3">
+                  <div className="text-2xl">{folder.emoji}</div>
+                  <div>
+                    <CardTitle className="text-base">{folder.name}</CardTitle>
+                    <p className="text-sm text-muted-foreground">
+                      {folder.items.length} élément(s)
+                    </p>
+                  </div>
+                </div>
+                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button size="sm" variant="ghost">
+                    <MoreHorizontal className="h-4 w-4" />
                   </Button>
                 </div>
               </div>
-              <p className="text-sm text-gray-500">
-                {folder.items.length} élément(s)
-              </p>
             </CardHeader>
-            
-            <CardContent>
-              {folder.items.length === 0 ? (
-                <div className="text-center py-4 text-gray-400">
-                  <span className="text-3xl block mb-2">{folder.emoji}</span>
-                  <p className="text-sm">Dossier vide</p>
-                </div>
-              ) : (
-                <div className="space-y-2 max-h-40 overflow-y-auto">
-                  {folder.items.map((item) => (
-                    <div key={item.id}>
-                      {renderItemContent({ ...item, folderId: folder.id })}
-                    </div>
-                  ))}
-                </div>
-              )}
+            <CardContent className="pt-0">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full"
+                onClick={() => {
+                  setSelectedFolder(folder);
+                  setShowNewItemModal(true);
+                }}
+              >
+                <Plus className="h-3 w-3 mr-1" />
+                Ajouter un élément
+              </Button>
             </CardContent>
           </Card>
         ))}
-
-        {folders[activeCategory].length === 0 && (
-          <div className="col-span-full text-center py-12">
-            <Folder className="h-16 w-16 text-gray-300 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-600 mb-2">
-              Aucun dossier dans {activeCategory === 'resources' ? 'Ressources' : 'Infos Personnelles'}
-            </h3>
-            <p className="text-gray-500 mb-4">
-              Créez votre premier dossier pour organiser vos contenus.
-            </p>
-            <Button onClick={() => setShowNewFolderModal(true)}>
-              <Plus className="h-4 w-4 mr-2" />
-              Créer un dossier
+        
+        {/* Bouton nouveau dossier */}
+        <Card className="border-dashed border-2 hover:border-gray-400 transition-colors">
+          <CardContent className="flex items-center justify-center h-32">
+            <Button
+              variant="ghost"
+              onClick={() => setShowNewFolderModal(true)}
+              className="h-full w-full flex-col gap-2"
+            >
+              <Plus className="h-8 w-8 text-gray-400" />
+              <span className="text-sm text-gray-500">Nouveau dossier</span>
             </Button>
-          </div>
-        )}
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
 
   return (
-    <div className="flex h-screen bg-gray-50">
-      {/* Sidebar pour Desktop */}
-      {!isMobile && (
-        <div className="w-64 bg-white border-r border-gray-200 flex-shrink-0">
-          <div className="p-6">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+    <div className="min-h-screen bg-gray-50">
+      {/* Mobile Sidebar Overlay */}
+      {isMobile && sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40" 
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
+      {/* Sidebar */}
+      <div className={`
+        fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-50 transition-transform duration-300
+        ${isMobile ? 'w-72' : 'w-64'}
+        ${isMobile && !sidebarOpen ? '-translate-x-full' : 'translate-x-0'}
+      `}>
+        <div className="p-6">
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center space-x-3">
+              <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
                 <Sparkles className="h-5 w-5 text-white" />
               </div>
-              <h1 className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                Cocoon AI
-              </h1>
+              <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                Cocoon
+              </span>
             </div>
+            {isMobile && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setSidebarOpen(false)}
+              >
+                <X className="h-5 w-5" />
+              </Button>
+            )}
           </div>
-          
-          <nav className="px-4 space-y-1">
+
+          <nav className="space-y-2">
             {navigation.map((item) => {
               const Icon = item.icon;
               return (
                 <button
                   key={item.id}
-                  onClick={() => setActivePage(item.id)}
-                  className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
+                  onClick={() => {
+                    setActivePage(item.id);
+                    if (isMobile) setSidebarOpen(false);
+                  }}
+                  className={`w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors ${
                     activePage === item.id
                       ? 'bg-purple-50 text-purple-700 border border-purple-200'
                       : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
@@ -743,526 +577,318 @@ const Dashboard = () => {
             })}
           </nav>
         </div>
-      )}
-
-      {/* Mobile Header */}
-      {isMobile && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 px-4 py-3">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
-                <Sparkles className="h-5 w-5 text-white" />
-              </div>
-              <h1 className="text-lg font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                Cocoon AI
-              </h1>
-            </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setSidebarOpen(!sidebarOpen)}
-            >
-              {sidebarOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-            </Button>
-          </div>
-        </div>
-      )}
-
-      {/* Mobile Sidebar Overlay */}
-      {isMobile && sidebarOpen && (
-        <div className="fixed inset-0 z-40 bg-black bg-opacity-50" onClick={() => setSidebarOpen(false)}>
-          <div className="absolute top-0 left-0 w-64 h-full bg-white transform transition-transform">
-            <div className="p-6 pt-20">
-              <nav className="space-y-1">
-                {navigation.map((item) => {
-                  const Icon = item.icon;
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => {
-                        setActivePage(item.id);
-                        setSidebarOpen(false);
-                      }}
-                      className={`w-full flex items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors ${
-                        activePage === item.id
-                          ? 'bg-purple-50 text-purple-700 border border-purple-200'
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
-                      }`}
-                    >
-                      <Icon className="mr-3 h-5 w-5" />
-                      {item.name}
-                    </button>
-                  );
-                })}
-              </nav>
-            </div>
-          </div>
-        </div>
-      )}
+      </div>
 
       {/* Main Content */}
-      <div className={`flex-1 overflow-auto ${isMobile ? 'pt-16' : ''}`}>
-        {activePage === 'welcome' && renderWelcomePage()}
-        {activePage === 'resources' && renderResourcesPage()}
-        {activePage === 'creation' && (
-          <div className="p-4 md:p-8">
+      <div className={`flex-1 ${isMobile ? '' : 'ml-64'}`}>
+        {/* Header Mobile */}
+        {isMobile && (
+          <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => setSidebarOpen(true)}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
+            <span className="font-semibold">Cocoon</span>
+            <div className="w-8" />
+          </div>
+        )}
+
+        {/* Page Content */}
+        <div className={`p-4 md:p-8 ${isMobile ? 'pt-0' : ''}`}>
+          {activePage === 'welcome' && renderWelcomePage()}
+          {activePage === 'resources' && renderResourcesPage()}
+          {activePage === 'creation' && (
             <CreationsSection 
               folders={folders}
               onExecuteButton={handleExecuteCustomButton}
             />
-          </div>
-        )}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          )}
+          {activePage === 'monetization' && (
+            <div>
+              <h2 className="text-2xl font-bold mb-6">Mon Bot IA</h2>
               <Card className="p-6">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                    <MessageSquare className="h-6 w-6 text-purple-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium">Chat avec l'IA</h3>
-                    <p className="text-sm text-gray-500">Conversation personnalisée</p>
-                  </div>
+                <div className="text-center">
+                  <Crown className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
+                  <h3 className="text-xl font-semibold mb-2">Fonctionnalité Premium</h3>
+                  <p className="text-muted-foreground mb-4">
+                    Créez et partagez votre propre bot IA personnalisé
+                  </p>
+                  <Button disabled>
+                    Bientôt disponible
+                  </Button>
                 </div>
-                <Button onClick={() => setActiveModal('chat')} className="w-full">
-                  Commencer une conversation
-                </Button>
-              </Card>
-
-              <Card className="p-6">
-                <div className="flex items-center space-x-4 mb-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-                    <FileText className="h-6 w-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-medium">Générer un Script</h3>
-                    <p className="text-sm text-gray-500">Création de contenu</p>
-                  </div>
-                </div>
-                <Button onClick={() => setActiveModal('script')} variant="outline" className="w-full">
-                  Créer un script
-                </Button>
               </Card>
             </div>
-          </div>
-        )}
-        {activePage === 'monetization' && (
-          <div className="p-4 md:p-8">
-            <h2 className="text-2xl font-bold mb-6">Mon Bot IA</h2>
-            <Card className="p-6">
-              <div className="text-center">
-                <Crown className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
-                <h3 className="text-xl font-bold mb-2">Bientôt Disponible</h3>
-                <p className="text-gray-600">
-                  Partagez et monétisez votre assistant IA personnalisé
-                </p>
-              </div>
-            </Card>
-          </div>
-        )}
-        {activePage === 'settings' && (
-          <div className="p-4 md:p-8">
-            <h2 className="text-2xl font-bold mb-6">Réglages</h2>
-            <Card className="p-6">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-medium mb-2">Profil Utilisateur</h3>
-                  <div className="flex items-center space-x-4">
-                    <Avatar className="h-16 w-16">
-                      <AvatarImage src="" />
-                      <AvatarFallback className="bg-purple-500 text-white text-xl">
-                        {user?.user_metadata?.full_name?.[0] || user?.email?.[0] || 'U'}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium">{user?.user_metadata?.full_name || 'Utilisateur'}</p>
-                      <p className="text-sm text-gray-500">{user?.email}</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="border-t pt-6">
-                  <h3 className="text-lg font-medium mb-4">Configuration</h3>
-                  <div className="space-y-4">
-                    <div>
-                      <Label>Thème</Label>
-                      <p className="text-sm text-gray-500">Clair (par défaut)</p>
-                    </div>
-                    <div>
-                      <Label>Langue</Label>
-                      <p className="text-sm text-gray-500">Français</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Card>
-          </div>
-        )}
+          )}
+          {activePage === 'settings' && <OnboardingDataSection />}
+        </div>
       </div>
 
+      {/* Modales */}
+      
       {/* Modal Chat IA */}
-      <Dialog open={activeModal === 'chat'} onOpenChange={() => setActiveModal(null)}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>💬 Chat avec votre IA personnalisée</DialogTitle>
-            <DialogDescription>
-              Posez vos questions et obtenez des réponses adaptées à vos ressources
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4">
-            <div className="h-80 overflow-y-auto border rounded-lg p-4 space-y-3">
-              {chatMessages.length === 0 ? (
-                <div className="text-center text-gray-500 mt-20">
-                  <Brain className="h-12 w-12 mx-auto mb-3 text-gray-300" />
-                  <p>Commencez une conversation avec votre IA...</p>
-                </div>
-              ) : (
-                chatMessages.map((message, index) => (
-                  <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-xs lg:max-w-md px-3 py-2 rounded-lg ${
-                      message.type === 'user' 
-                        ? 'bg-purple-500 text-white' 
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {message.content}
+      {activeModal === 'chat' && (
+        <Dialog open={true} onOpenChange={() => setActiveModal(null)}>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle>Assistant IA</DialogTitle>
+            </DialogHeader>
+            
+            <div className="space-y-4">
+              {/* Messages */}
+              <div className="bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto">
+                {chatMessages.length > 0 ? (
+                  <div className="space-y-4">
+                    {chatMessages.map((message, index) => (
+                      <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                          message.type === 'user' 
+                            ? 'bg-purple-600 text-white' 
+                            : 'bg-white border'
+                        }`}>
+                          {message.content}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8">
+                    <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+                    <p className="text-gray-500">Commencez une conversation avec votre IA</p>
+                  </div>
+                )}
+                
+                {isGenerating && (
+                  <div className="flex justify-start">
+                    <div className="bg-white border rounded-lg px-4 py-2">
+                      <div className="flex items-center gap-2">
+                        <Loader2 className="h-4 w-4 animate-spin" />
+                        <span className="text-sm">L'IA réfléchit...</span>
+                      </div>
                     </div>
                   </div>
-                ))
-              )}
-              {isGenerating && (
-                <div className="flex justify-start">
-                  <div className="bg-gray-100 text-gray-800 px-3 py-2 rounded-lg flex items-center space-x-2">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                    <span>L'IA réfléchit...</span>
-                  </div>
-                </div>
-              )}
-            </div>
-            
-            <div className="flex space-x-2">
-              <Textarea
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                placeholder="Tapez votre message..."
-                className="flex-1 min-h-[40px] max-h-32"
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleChatIA();
-                  }
-                }}
-              />
-              <Button 
-                onClick={handleChatIA} 
-                disabled={isGenerating || !chatInput.trim()}
-                size="sm"
-              >
-                {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Send className="h-4 w-4" />}
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal Génération Script */}
-      <Dialog open={activeModal === 'script'} onOpenChange={() => setActiveModal(null)}>
-        <DialogContent className="max-w-2xl">
-          <DialogHeader>
-            <DialogTitle>🎬 Générer un Script Personnalisé</DialogTitle>
-            <DialogDescription>
-              Créez un script adapté à votre style et vos ressources
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="scriptTopic">Sujet du script</Label>
-              <Textarea
-                id="scriptTopic"
-                value={scriptTopic}
-                onChange={(e) => setScriptTopic(e.target.value)}
-                placeholder="Ex: Comment bien commencer sur YouTube, Les erreurs à éviter en création de contenu..."
-                className="min-h-[80px]"
-              />
-            </div>
-            
-            {generatedContent && (
-              <div className="space-y-2">
-                <Label>Script généré</Label>
-                <div className="border rounded-lg p-4 bg-gray-50 max-h-60 overflow-y-auto">
+                )}
+              </div>
+              
+              {/* Zone de contenu généré */}
+              {generatedContent && (
+                <div className="bg-gray-50 rounded-lg p-4">
                   <pre className="whitespace-pre-wrap text-sm">{generatedContent}</pre>
                 </div>
-                <div className="flex space-x-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => navigator.clipboard.writeText(generatedContent)}
-                  >
-                    <Share className="h-4 w-4 mr-2" />
-                    Copier
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => setGeneratedContent('')}
-                  >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Effacer
-                  </Button>
-                </div>
+              )}
+              
+              {/* Input */}
+              <div className="flex gap-2">
+                <Textarea
+                  placeholder="Posez votre question..."
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  className="flex-1"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      handleChatSubmit();
+                    }
+                  }}
+                />
+                <Button onClick={handleChatSubmit} disabled={isGenerating}>
+                  <Send className="h-4 w-4" />
+                </Button>
               </div>
-            )}
-            
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setActiveModal(null)}>
-                Fermer
-              </Button>
-              <Button 
-                onClick={handleGenerateScript} 
-                disabled={isGenerating || !scriptTopic.trim()}
-              >
-                {isGenerating ? (
-                  <>
-                    <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Génération...
-                  </>
-                ) : (
-                  <>
-                    <Sparkles className="h-4 w-4 mr-2" />
-                    Générer le script
-                  </>
+              
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setActiveModal(null)}>
+                  Fermer
+                </Button>
+                {generatedContent && (
+                  <Button onClick={() => {
+                    navigator.clipboard.writeText(generatedContent);
+                    toast({ title: "📋 Copié!", description: "Le contenu a été copié." });
+                  }}>
+                    Copier le résultat
+                  </Button>
                 )}
-              </Button>
+              </div>
             </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Modal Génération Script */}
+      {activeModal === 'script' && (
+        <Dialog open={true} onOpenChange={() => setActiveModal(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Générer un Script</DialogTitle>
+            </DialogHeader>
+            
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="scriptTopic">Sujet du script</Label>
+                <Input
+                  id="scriptTopic"
+                  placeholder="Ex: Comment créer du contenu viral"
+                  value={scriptTopic}
+                  onChange={(e) => setScriptTopic(e.target.value)}
+                />
+              </div>
+              
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setActiveModal(null)}>
+                  Annuler
+                </Button>
+                <Button onClick={handleScriptGeneration} disabled={isGenerating}>
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Génération...
+                    </>
+                  ) : (
+                    'Générer'
+                  )}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
 
       {/* Modal Nouveau Dossier */}
-      <Dialog open={showNewFolderModal} onOpenChange={setShowNewFolderModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Créer un nouveau dossier</DialogTitle>
-            <DialogDescription>
-              Ajoutez un dossier dans {activeCategory === 'resources' ? 'Ressources' : 'Infos Personnelles'}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="folderEmoji">Emoji du dossier</Label>
-              <div className="flex items-center space-x-2">
+      {showNewFolderModal && (
+        <Dialog open={true} onOpenChange={setShowNewFolderModal}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Créer un nouveau dossier</DialogTitle>
+            </DialogHeader>
+            
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="folderName">Nom du dossier</Label>
                 <Input
-                  id="folderEmoji"
-                  value={newFolderEmoji}
-                  onChange={(e) => setNewFolderEmoji(e.target.value)}
-                  className="w-16 text-center text-xl"
-                  maxLength={2}
+                  id="folderName"
+                  placeholder="Ex: Mes scripts"
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
                 />
-                <div className="flex-1">
-                  <div className="grid grid-cols-8 gap-1 max-h-32 overflow-y-auto border rounded p-2">
-                    {popularEmojis.map((emoji, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => setNewFolderEmoji(emoji)}
-                        className="text-xl hover:bg-gray-100 rounded p-1 transition-colors"
-                      >
-                        {emoji}
-                      </button>
-                    ))}
-                  </div>
+              </div>
+              
+              <div>
+                <Label>Emoji</Label>
+                <div className="grid grid-cols-8 gap-2 mt-2">
+                  {popularEmojis.map(emoji => (
+                    <Button
+                      key={emoji}
+                      variant={newFolderEmoji === emoji ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setNewFolderEmoji(emoji)}
+                      className="h-10 w-10 p-0"
+                    >
+                      {emoji}
+                    </Button>
+                  ))}
                 </div>
               </div>
+              
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setShowNewFolderModal(false)}>
+                  Annuler
+                </Button>
+                <Button onClick={addFolder}>
+                  Créer
+                </Button>
+              </div>
             </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="folderName">Nom du dossier</Label>
-              <Input
-                id="folderName"
-                value={newFolderName}
-                onChange={(e) => setNewFolderName(e.target.value)}
-                placeholder="Nom du dossier"
-                onKeyPress={(e) => e.key === 'Enter' && addFolder()}
-              />
-            </div>
-            
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => {
-                setShowNewFolderModal(false);
-                setNewFolderName('');
-                setNewFolderEmoji('📁');
-              }}>
-                Annuler
-              </Button>
-              <Button onClick={addFolder} disabled={!newFolderName.trim()}>
-                Créer
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
+      )}
 
-      {/* Modal Renommer Dossier */}
-      <Dialog open={showRenameFolderModal} onOpenChange={setShowRenameFolderModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Renommer le dossier</DialogTitle>
-            <DialogDescription>
-              Modifiez le nom et l'emoji de "{selectedFolder?.name}"
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="renameEmoji">Emoji du dossier</Label>
-              <div className="flex items-center space-x-2">
+      {/* Modal Ajouter un élément */}
+      {showNewItemModal && selectedFolder && (
+        <Dialog open={true} onOpenChange={setShowNewItemModal}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Ajouter à "{selectedFolder.name}"</DialogTitle>
+            </DialogHeader>
+            
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="itemName">Nom</Label>
                 <Input
-                  id="renameEmoji"
-                  value={renameFolderData.emoji}
-                  onChange={(e) => setRenameFolderData(prev => ({ ...prev, emoji: e.target.value }))}
-                  className="w-16 text-center text-xl"
-                  maxLength={2}
+                  id="itemName"
+                  placeholder="Nom de l'élément"
+                  value={newItemData.name}
+                  onChange={(e) => setNewItemData(prev => ({ ...prev, name: e.target.value }))}
                 />
-                <div className="flex-1">
-                  <div className="grid grid-cols-8 gap-1 max-h-32 overflow-y-auto border rounded p-2">
-                    {popularEmojis.map((emoji, index) => (
-                      <button
-                        key={index}
-                        type="button"
-                        onClick={() => setRenameFolderData(prev => ({ ...prev, emoji }))}
-                        className="text-xl hover:bg-gray-100 rounded p-1 transition-colors"
-                      >
-                        {emoji}
-                      </button>
-                    ))}
-                  </div>
+              </div>
+              
+              <div>
+                <Label htmlFor="itemType">Type</Label>
+                <Select
+                  value={newItemData.type}
+                  onValueChange={(value) => setNewItemData(prev => ({ ...prev, type: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="text">Texte</SelectItem>
+                    <SelectItem value="file">Fichier</SelectItem>
+                    <SelectItem value="link">Lien</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {newItemData.type === 'text' && (
+                <div>
+                  <Label htmlFor="itemContent">Contenu</Label>
+                  <Textarea
+                    id="itemContent"
+                    placeholder="Votre contenu..."
+                    value={newItemData.content}
+                    onChange={(e) => setNewItemData(prev => ({ ...prev, content: e.target.value }))}
+                  />
                 </div>
+              )}
+              
+              {newItemData.type === 'file' && (
+                <div>
+                  <Label htmlFor="itemFile">Fichier</Label>
+                  <Input
+                    id="itemFile"
+                    type="file"
+                    onChange={handleFileUpload}
+                  />
+                </div>
+              )}
+              
+              {newItemData.type === 'link' && (
+                <div>
+                  <Label htmlFor="itemUrl">URL</Label>
+                  <Input
+                    id="itemUrl"
+                    type="url"
+                    placeholder="https://..."
+                    value={newItemData.url}
+                    onChange={(e) => setNewItemData(prev => ({ ...prev, url: e.target.value }))}
+                  />
+                </div>
+              )}
+              
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setShowNewItemModal(false)}>
+                  Annuler
+                </Button>
+                <Button onClick={addItem}>
+                  Ajouter
+                </Button>
               </div>
             </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="renameName">Nom du dossier</Label>
-              <Input
-                id="renameName"
-                value={renameFolderData.name}
-                onChange={(e) => setRenameFolderData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="Nom du dossier"
-                onKeyPress={(e) => e.key === 'Enter' && renameFolder()}
-              />
-            </div>
-            
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => {
-                setShowRenameFolderModal(false);
-                setRenameFolderData({ name: '', emoji: '' });
-                setSelectedFolder(null);
-              }}>
-                Annuler
-              </Button>
-              <Button onClick={renameFolder} disabled={!renameFolderData.name.trim()}>
-                Renommer
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Modal Nouvel Élément */}
-      <Dialog open={showNewItemModal} onOpenChange={setShowNewItemModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Ajouter un élément</DialogTitle>
-            <DialogDescription>
-              Ajoutez un nouvel élément à "{selectedFolder?.name}"
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="itemName">Nom de l'élément</Label>
-              <Input
-                id="itemName"
-                value={newItemData.name}
-                onChange={(e) => setNewItemData(prev => ({ ...prev, name: e.target.value }))}
-                placeholder="Nom de l'élément"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="itemType">Type</Label>
-              <select
-                id="itemType"
-                value={newItemData.type}
-                onChange={(e) => setNewItemData(prev => ({ ...prev, type: e.target.value }))}
-                className="w-full p-2 border rounded-md"
-              >
-                <option value="text">Texte</option>
-                <option value="link">Lien</option>
-                <option value="document">Document</option>
-                <option value="image">Image</option>
-                <option value="video">Vidéo</option>
-              </select>
-            </div>
-            
-            {newItemData.type === 'text' && (
-              <div className="space-y-2">
-                <Label htmlFor="itemContent">Contenu</Label>
-                <Textarea
-                  id="itemContent"
-                  value={newItemData.content}
-                  onChange={(e) => setNewItemData(prev => ({ ...prev, content: e.target.value }))}
-                  placeholder="Contenu du texte..."
-                  className="min-h-[80px]"
-                />
-              </div>
-            )}
-            
-            {newItemData.type === 'link' && (
-              <div className="space-y-2">
-                <Label htmlFor="itemUrl">URL</Label>
-                <Input
-                  id="itemUrl"
-                  value={newItemData.url}
-                  onChange={(e) => setNewItemData(prev => ({ ...prev, url: e.target.value }))}
-                  placeholder="https://..."
-                />
-              </div>
-            )}
-            
-            {['document', 'image', 'video'].includes(newItemData.type) && (
-              <div className="space-y-2">
-                <Label htmlFor="itemFile">Fichier</Label>
-                <Input
-                  id="itemFile"
-                  type="file"
-                  onChange={handleFileUpload}
-                  accept={
-                    newItemData.type === 'image' ? 'image/*' :
-                    newItemData.type === 'video' ? 'video/*' :
-                    '.pdf,.doc,.docx,.txt'
-                  }
-                />
-                {newItemData.file && (
-                  <p className="text-sm text-gray-500">
-                    Fichier sélectionné: {newItemData.file.name}
-                  </p>
-                )}
-              </div>
-            )}
-            
-            <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => {
-                setShowNewItemModal(false);
-                setNewItemData({ name: '', type: 'text', content: '', file: null, url: '' });
-                setSelectedFolder(null);
-              }}>
-                Annuler
-              </Button>
-              <Button onClick={addItem} disabled={!newItemData.name.trim()}>
-                Ajouter
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };
