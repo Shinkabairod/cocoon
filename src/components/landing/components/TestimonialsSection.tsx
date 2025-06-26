@@ -12,12 +12,9 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Titre aligné à gauche */}
         <div className="text-left mb-20">
-          <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-teal-700 bg-clip-text text-transparent mb-6">
-            Ils ont transformé leur expertise
+          <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-6">
+            Testimonials
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl">
-            Découvre comment nos utilisateurs automatisent et monétisent leurs compétences
-          </p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
@@ -26,7 +23,13 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ testimonials 
               
               {/* Header avec avatar et info */}
               <div className="flex items-center gap-4 mb-6">
-                <div className={`w-16 h-16 bg-gradient-to-br ${testimonial.gradient} rounded-2xl flex items-center justify-center text-2xl shadow-md`}>
+                <div className={`w-16 h-16 ${
+                  index % 3 === 0 
+                    ? 'bg-gradient-to-br from-violet-100 to-violet-200' 
+                    : index % 3 === 1 
+                      ? 'bg-gradient-to-br from-blue-100 to-blue-200'
+                      : 'bg-gradient-to-br from-indigo-100 to-indigo-200'
+                } rounded-2xl flex items-center justify-center text-2xl shadow-md`}>
                   {testimonial.avatar}
                 </div>
                 <div>
