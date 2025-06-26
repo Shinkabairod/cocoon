@@ -49,18 +49,18 @@ const FAQSection: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-orange-50 to-orange-100 rounded-2xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
               {/* Ombre rouge dessous */}
               <div className="absolute inset-0 bg-red-400/20 rounded-2xl transform translate-y-2 translate-x-1 blur-sm"></div>
-              <div className="relative bg-white border border-orange-200 rounded-2xl hover:border-orange-400 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-red-200/30">
+              <div className="relative bg-white border-2 border-orange-300 rounded-2xl hover:border-orange-500 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-red-200/30">
                 <button
-                  className="w-full p-6 text-left flex items-center justify-between"
+                  className="w-full p-4 text-left flex items-center justify-between"
                   onClick={() => setOpenQuestion(openQuestion === index ? null : index)}
                 >
-                  <h3 className="text-xl font-bold text-gray-900 pr-4">
+                  <h3 className="text-lg font-bold text-gray-900 pr-4">
                     {faq.question}
                   </h3>
                   <div className="flex-shrink-0">
-                    <div className="w-10 h-10 bg-orange-50 rounded-xl flex items-center justify-center group-hover:bg-orange-100 transition-colors duration-300">
+                    <div className="w-8 h-8 bg-orange-50 rounded-lg flex items-center justify-center group-hover:bg-orange-100 transition-colors duration-300">
                       <ChevronDown 
-                        className={`w-5 h-5 text-orange-600 transition-transform duration-300 ${
+                        className={`w-4 h-4 text-orange-600 transition-transform duration-300 ${
                           openQuestion === index ? 'rotate-180' : ''
                         }`}
                       />
@@ -69,13 +69,13 @@ const FAQSection: React.FC = () => {
                 </button>
                 
                 {openQuestion === index && (
-                  <div className="px-6 pb-6">
-                    <div className="border-t border-orange-100 pt-4">
-                      <p className="text-gray-700 text-base leading-relaxed">
+                  <div className="px-4 pb-4">
+                    <div className="border-t border-orange-100 pt-3">
+                      <p className="text-gray-700 text-sm leading-relaxed">
                         {faq.answer}
                       </p>
                       
-                      <div className="mt-4 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-orange-200 to-red-200 text-orange-800 text-sm font-semibold">
+                      <div className="mt-3 inline-flex items-center px-2 py-1 rounded-full bg-gradient-to-r from-orange-200 to-red-200 text-orange-800 text-xs font-semibold">
                         ✨ Qualité Premium
                       </div>
                     </div>
