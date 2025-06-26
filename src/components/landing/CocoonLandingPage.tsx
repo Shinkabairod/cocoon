@@ -1,4 +1,27 @@
-import React, { useState, useEffect } from 'react';
+{/* Comment ça marche */}
+      <section className="py-24 bg-gradient-to-br from-gray-50 to-orange-50/30 relative">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-orange-700 bg-clip-text text-transparent mb-6">
+              Comment ça marche ?
+            </h2>
+            <p className="text-xl text-gray-600">
+              3 étapes simples pour transformer ton expertise en revenus automatisés
+            </p>
+          </div>
+
+          {/* Fil d'Ariane vertical */}
+          <div className="flex flex-col items-center mb-16">
+            <div className="flex flex-col items-center space-y-8">
+              {/* Étape 1 */}
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg">
+                  1
+                </div>
+                <div className="mt-3 text-black font-bold text-lg">Crée</div>
+              </div>
+              
+              {/* Ligne de conneximport React, { useState, useEffect } from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
@@ -138,22 +161,22 @@ const CocoonLandingPage = () => {
       title: "Bot IA Personnalisé",
       description: "Un assistant qui connaît toutes tes compétences et peut répondre à tes clients 24/7",
       icon: <Bot className="h-7 w-7" />,
-      gradient: "from-purple-50 to-purple-100",
-      iconColor: "text-purple-600"
+      gradient: "from-orange-50 to-orange-100",
+      iconColor: "text-orange-600"
     },
     {
       title: "Interface Sur Mesure", 
       description: "Une plateforme selon tes besoins et ceux de tes clients",
       icon: <Target className="h-7 w-7" />,
-      gradient: "from-blue-50 to-blue-100",
-      iconColor: "text-blue-600"
+      gradient: "from-teal-50 to-teal-100",
+      iconColor: "text-teal-600"
     },
     {
       title: "Monétisation Directe",
       description: "Vends tes services, assistants et automatisations sans rien faire",
       icon: <TrendingUp className="h-7 w-7" />,
-      gradient: "from-green-50 to-green-100",
-      iconColor: "text-green-600"
+      gradient: "from-rose-50 to-rose-100",
+      iconColor: "text-rose-600"
     }
   ];
 
@@ -334,17 +357,16 @@ const CocoonLandingPage = () => {
           <div className={`text-center transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
             
             {/* Bandeau modifié */}
-            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-100 to-blue-100 border border-purple-200/50 rounded-full px-6 py-3 mb-8 backdrop-blur-sm">
-              <Sparkles className="h-6 w-6 text-purple-600 animate-spin" style={{ animationDuration: '3s' }} />
-              <span className="text-sm font-medium bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-100 to-teal-100 border border-orange-200/50 rounded-full px-6 py-3 mb-8 backdrop-blur-sm">
+              <Sparkles className="h-6 w-6 text-orange-600 animate-spin" style={{ animationDuration: '3s' }} />
+              <span className="text-sm font-medium bg-gradient-to-r from-orange-600 to-teal-600 bg-clip-text text-transparent">
                 Automatise ton activité
               </span>
-              <Crown className="h-5 w-5 text-yellow-500 animate-bounce" />
+              <Crown className="h-5 w-5 text-amber-500 animate-bounce" />
             </div>
 
-            {/* Titre principal avec logo animé centré */}
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
-              <span className="bg-gradient-to-r from-gray-900 via-purple-900 to-blue-900 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-gray-900 via-orange-800 to-teal-800 bg-clip-text text-transparent">
                 Boost et monétise
               </span>
               <span className="block mt-4">
@@ -362,7 +384,7 @@ const CocoonLandingPage = () => {
                   </span>
                 </span>
               </span>
-              <span className="block mt-4 bg-gradient-to-r from-gray-900 to-purple-900 bg-clip-text text-transparent">
+              <span className="block mt-4 bg-gradient-to-r from-gray-900 to-orange-800 bg-clip-text text-transparent">
                 en quelques clics.
               </span>
             </h1>
@@ -372,7 +394,7 @@ const CocoonLandingPage = () => {
               <p className="text-xl text-gray-600 leading-relaxed">
                 Crée ton bot IA personnalisé qui connaît toutes tes compétences.
               </p>
-              <p className="text-xl bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent font-semibold mt-2">
+              <p className="text-xl bg-gradient-to-r from-orange-600 to-teal-600 bg-clip-text text-transparent font-semibold mt-2">
                 Une nouvelle façon de travailler et de vendre ton expertise.
               </p>
             </div>
@@ -401,10 +423,10 @@ const CocoonLandingPage = () => {
             {/* Stats avec animations avancées */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
               {[
-                { value: animatedStats.bots, suffix: '+', label: 'Bots créés', color: 'text-purple-600', icon: <Bot className="h-6 w-6" /> },
-                { value: animatedStats.revenue, suffix: '€', label: 'Revenus générés', color: 'text-green-600', icon: <DollarSign className="h-6 w-6" /> },
-                { value: animatedStats.hours, suffix: 'h', label: 'Temps économisé', color: 'text-blue-600', icon: <Clock className="h-6 w-6" /> },
-                { value: animatedStats.experts, suffix: '+', label: 'Experts actifs', color: 'text-orange-600', icon: <Users className="h-6 w-6" /> }
+                { value: animatedStats.bots, suffix: '+', label: 'Bots créés', color: 'text-orange-600', icon: <Bot className="h-6 w-6" /> },
+                { value: animatedStats.revenue, suffix: '€', label: 'Revenus générés', color: 'text-emerald-600', icon: <DollarSign className="h-6 w-6" /> },
+                { value: animatedStats.hours, suffix: 'h', label: 'Temps économisé', color: 'text-teal-600', icon: <Clock className="h-6 w-6" /> },
+                { value: animatedStats.experts, suffix: '+', label: 'Experts actifs', color: 'text-rose-600', icon: <Users className="h-6 w-6" /> }
               ].map((stat, index) => (
                 <div key={index} className="text-center transform hover:scale-110 transition-all duration-300 group cursor-pointer">
                   <div className="relative p-6 rounded-2xl bg-white/50 backdrop-blur-sm border border-gray-200/50 shadow-lg hover:shadow-xl">
@@ -440,40 +462,40 @@ const CocoonLandingPage = () => {
           <div className="relative overflow-hidden mb-3">
             <div className="flex animate-scroll-right space-x-4">
               {[
-                "🎥 Génère-moi un script viral TikTok",
-                "📧 Réponds à tous mes emails clients", 
-                "💡 Crée-moi 20 idées de contenu",
-                "🏋️ Développe mon programme sportif",
-                "💰 Écris ma page de vente qui convertit",
-                "📱 Automatise mon Instagram",
-                "🎯 Trouve-moi mes clients idéaux",
-                "📝 Rédige mes posts LinkedIn",
-                "🚀 Lance ma campagne publicitaire",
-                "💻 Code-moi une landing page",
-                "📊 Analyse mes concurrents",
-                "🎨 Crée mes visuels de marque"
-              ].map((text, index) => (
+                { text: "🎥 Génère-moi un script viral TikTok", color: "from-orange-100 to-orange-200 border-orange-300 text-orange-800 hover:from-orange-200 hover:to-orange-300 hover:border-orange-400" },
+                { text: "📧 Réponds à tous mes emails clients", color: "from-teal-100 to-teal-200 border-teal-300 text-teal-800 hover:from-teal-200 hover:to-teal-300 hover:border-teal-400" },
+                { text: "💡 Crée-moi 20 idées de contenu", color: "from-rose-100 to-rose-200 border-rose-300 text-rose-800 hover:from-rose-200 hover:to-rose-300 hover:border-rose-400" },
+                { text: "🏋️ Développe mon programme sportif", color: "from-cyan-100 to-cyan-200 border-cyan-300 text-cyan-800 hover:from-cyan-200 hover:to-cyan-300 hover:border-cyan-400" },
+                { text: "💰 Écris ma page de vente qui convertit", color: "from-amber-100 to-amber-200 border-amber-300 text-amber-800 hover:from-amber-200 hover:to-amber-300 hover:border-amber-400" },
+                { text: "📱 Automatise mon Instagram", color: "from-emerald-100 to-emerald-200 border-emerald-300 text-emerald-800 hover:from-emerald-200 hover:to-emerald-300 hover:border-emerald-400" },
+                { text: "🎯 Trouve-moi mes clients idéaux", color: "from-pink-100 to-pink-200 border-pink-300 text-pink-800 hover:from-pink-200 hover:to-pink-300 hover:border-pink-400" },
+                { text: "📝 Rédige mes posts LinkedIn", color: "from-indigo-100 to-indigo-200 border-indigo-300 text-indigo-800 hover:from-indigo-200 hover:to-indigo-300 hover:border-indigo-400" },
+                { text: "🚀 Lance ma campagne publicitaire", color: "from-lime-100 to-lime-200 border-lime-300 text-lime-800 hover:from-lime-200 hover:to-lime-300 hover:border-lime-400" },
+                { text: "💻 Code-moi une landing page", color: "from-violet-100 to-violet-200 border-violet-300 text-violet-800 hover:from-violet-200 hover:to-violet-300 hover:border-violet-400" },
+                { text: "📊 Analyse mes concurrents", color: "from-sky-100 to-sky-200 border-sky-300 text-sky-800 hover:from-sky-200 hover:to-sky-300 hover:border-sky-400" },
+                { text: "🎨 Crée mes visuels de marque", color: "from-fuchsia-100 to-fuchsia-200 border-fuchsia-300 text-fuchsia-800 hover:from-fuchsia-200 hover:to-fuchsia-300 hover:border-fuchsia-400" }
+              ].map((item, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 bg-gradient-to-r from-purple-100 to-purple-200 border-2 border-purple-300 rounded-full px-6 py-3 text-purple-800 font-medium whitespace-nowrap hover:from-purple-200 hover:to-purple-300 hover:border-purple-400 transition-all cursor-pointer shadow-lg"
+                  className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}
                 >
-                  {text}
+                  {item.text}
                 </div>
               ))}
               {/* Duplication pour effet continu */}
               {[
-                "🎥 Génère-moi un script viral TikTok",
-                "📧 Réponds à tous mes emails clients", 
-                "💡 Crée-moi 20 idées de contenu",
-                "🏋️ Développe mon programme sportif",
-                "💰 Écris ma page de vente qui convertit",
-                "📱 Automatise mon Instagram"
-              ].map((text, index) => (
+                { text: "🎥 Génère-moi un script viral TikTok", color: "from-orange-100 to-orange-200 border-orange-300 text-orange-800 hover:from-orange-200 hover:to-orange-300 hover:border-orange-400" },
+                { text: "📧 Réponds à tous mes emails clients", color: "from-teal-100 to-teal-200 border-teal-300 text-teal-800 hover:from-teal-200 hover:to-teal-300 hover:border-teal-400" },
+                { text: "💡 Crée-moi 20 idées de contenu", color: "from-rose-100 to-rose-200 border-rose-300 text-rose-800 hover:from-rose-200 hover:to-rose-300 hover:border-rose-400" },
+                { text: "🏋️ Développe mon programme sportif", color: "from-cyan-100 to-cyan-200 border-cyan-300 text-cyan-800 hover:from-cyan-200 hover:to-cyan-300 hover:border-cyan-400" },
+                { text: "💰 Écris ma page de vente qui convertit", color: "from-amber-100 to-amber-200 border-amber-300 text-amber-800 hover:from-amber-200 hover:to-amber-300 hover:border-amber-400" },
+                { text: "📱 Automatise mon Instagram", color: "from-emerald-100 to-emerald-200 border-emerald-300 text-emerald-800 hover:from-emerald-200 hover:to-emerald-300 hover:border-emerald-400" }
+              ].map((item, index) => (
                 <div
                   key={`dup-${index}`}
-                  className="flex-shrink-0 bg-gradient-to-r from-purple-100 to-purple-200 border-2 border-purple-300 rounded-full px-6 py-3 text-purple-800 font-medium whitespace-nowrap hover:from-purple-200 hover:to-purple-300 hover:border-purple-400 transition-all cursor-pointer shadow-lg"
+                  className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}
                 >
-                  {text}
+                  {item.text}
                 </div>
               ))}
             </div>
@@ -483,40 +505,40 @@ const CocoonLandingPage = () => {
           <div className="relative overflow-hidden mb-3">
             <div className="flex animate-scroll-left space-x-4">
               {[
-                "🍎 Crée mon plan nutrition personnalisé",
-                "📹 Monte mes vidéos automatiquement",
-                "💬 Gère ma communauté Discord",
-                "📚 Transforme mes idées en formation",
-                "🎤 Écris mes scripts de podcast",
-                "💳 Optimise mes revenus passifs",
-                "🔥 Boost mon taux d'engagement",
-                "📈 Développe ma stratégie marketing",
-                "✨ Personnalise mes workflows",
-                "🎯 Segmente ma base clients",
-                "💎 Crée mes funnels de vente",
-                "🚀 Scale mon business en ligne"
-              ].map((text, index) => (
+                { text: "🍎 Crée mon plan nutrition personnalisé", color: "from-emerald-100 to-emerald-200 border-emerald-300 text-emerald-800 hover:from-emerald-200 hover:to-emerald-300 hover:border-emerald-400" },
+                { text: "📹 Monte mes vidéos automatiquement", color: "from-orange-100 to-orange-200 border-orange-300 text-orange-800 hover:from-orange-200 hover:to-orange-300 hover:border-orange-400" },
+                { text: "💬 Gère ma communauté Discord", color: "from-cyan-100 to-cyan-200 border-cyan-300 text-cyan-800 hover:from-cyan-200 hover:to-cyan-300 hover:border-cyan-400" },
+                { text: "📚 Transforme mes idées en formation", color: "from-rose-100 to-rose-200 border-rose-300 text-rose-800 hover:from-rose-200 hover:to-rose-300 hover:border-rose-400" },
+                { text: "🎤 Écris mes scripts de podcast", color: "from-teal-100 to-teal-200 border-teal-300 text-teal-800 hover:from-teal-200 hover:to-teal-300 hover:border-teal-400" },
+                { text: "💳 Optimise mes revenus passifs", color: "from-amber-100 to-amber-200 border-amber-300 text-amber-800 hover:from-amber-200 hover:to-amber-300 hover:border-amber-400" },
+                { text: "🔥 Boost mon taux d'engagement", color: "from-pink-100 to-pink-200 border-pink-300 text-pink-800 hover:from-pink-200 hover:to-pink-300 hover:border-pink-400" },
+                { text: "📈 Développe ma stratégie marketing", color: "from-lime-100 to-lime-200 border-lime-300 text-lime-800 hover:from-lime-200 hover:to-lime-300 hover:border-lime-400" },
+                { text: "✨ Personnalise mes workflows", color: "from-violet-100 to-violet-200 border-violet-300 text-violet-800 hover:from-violet-200 hover:to-violet-300 hover:border-violet-400" },
+                { text: "🎯 Segmente ma base clients", color: "from-indigo-100 to-indigo-200 border-indigo-300 text-indigo-800 hover:from-indigo-200 hover:to-indigo-300 hover:border-indigo-400" },
+                { text: "💎 Crée mes funnels de vente", color: "from-sky-100 to-sky-200 border-sky-300 text-sky-800 hover:from-sky-200 hover:to-sky-300 hover:border-sky-400" },
+                { text: "🚀 Scale mon business en ligne", color: "from-fuchsia-100 to-fuchsia-200 border-fuchsia-300 text-fuchsia-800 hover:from-fuchsia-200 hover:to-fuchsia-300 hover:border-fuchsia-400" }
+              ].map((item, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 bg-gradient-to-r from-blue-100 to-blue-200 border-2 border-blue-300 rounded-full px-6 py-3 text-blue-800 font-medium whitespace-nowrap hover:from-blue-200 hover:to-blue-300 hover:border-blue-400 transition-all cursor-pointer shadow-lg"
+                  className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}
                 >
-                  {text}
+                  {item.text}
                 </div>
               ))}
               {/* Duplication pour effet continu */}
               {[
-                "🍎 Crée mon plan nutrition personnalisé",
-                "📹 Monte mes vidéos automatiquement",
-                "💬 Gère ma communauté Discord",
-                "📚 Transforme mes idées en formation",
-                "🎤 Écris mes scripts de podcast",
-                "💳 Optimise mes revenus passifs"
-              ].map((text, index) => (
+                { text: "🍎 Crée mon plan nutrition personnalisé", color: "from-emerald-100 to-emerald-200 border-emerald-300 text-emerald-800 hover:from-emerald-200 hover:to-emerald-300 hover:border-emerald-400" },
+                { text: "📹 Monte mes vidéos automatiquement", color: "from-orange-100 to-orange-200 border-orange-300 text-orange-800 hover:from-orange-200 hover:to-orange-300 hover:border-orange-400" },
+                { text: "💬 Gère ma communauté Discord", color: "from-cyan-100 to-cyan-200 border-cyan-300 text-cyan-800 hover:from-cyan-200 hover:to-cyan-300 hover:border-cyan-400" },
+                { text: "📚 Transforme mes idées en formation", color: "from-rose-100 to-rose-200 border-rose-300 text-rose-800 hover:from-rose-200 hover:to-rose-300 hover:border-rose-400" },
+                { text: "🎤 Écris mes scripts de podcast", color: "from-teal-100 to-teal-200 border-teal-300 text-teal-800 hover:from-teal-200 hover:to-teal-300 hover:border-teal-400" },
+                { text: "💳 Optimise mes revenus passifs", color: "from-amber-100 to-amber-200 border-amber-300 text-amber-800 hover:from-amber-200 hover:to-amber-300 hover:border-amber-400" }
+              ].map((item, index) => (
                 <div
                   key={`dup2-${index}`}
-                  className="flex-shrink-0 bg-gradient-to-r from-blue-100 to-blue-200 border-2 border-blue-300 rounded-full px-6 py-3 text-blue-800 font-medium whitespace-nowrap hover:from-blue-200 hover:to-blue-300 hover:border-blue-400 transition-all cursor-pointer shadow-lg"
+                  className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}
                 >
-                  {text}
+                  {item.text}
                 </div>
               ))}
             </div>
@@ -526,40 +548,40 @@ const CocoonLandingPage = () => {
           <div className="relative overflow-hidden">
             <div className="flex animate-scroll-right-slow space-x-4">
               {[
-                "⚡ Automatise mes processus business",
-                "🎨 Design mes templates Canva",
-                "📊 Génère mes rapports mensuels",
-                "🔍 Trouve mes mots-clés SEO",
-                "💌 Écris mes newsletters engageantes",
-                "🎬 Crée mes storyboards vidéo",
-                "📞 Gère mes rendez-vous clients",
-                "🏆 Développe ma stratégie de contenu",
-                "💡 Innove mes produits digitaux",
-                "🎯 Cible ma publicité Facebook",
-                "🌟 Booste ma présence en ligne",
-                "💻 Code mes outils personnalisés"
-              ].map((text, index) => (
+                { text: "⚡ Automatise mes processus business", color: "from-violet-100 to-violet-200 border-violet-300 text-violet-800 hover:from-violet-200 hover:to-violet-300 hover:border-violet-400" },
+                { text: "🎨 Design mes templates Canva", color: "from-teal-100 to-teal-200 border-teal-300 text-teal-800 hover:from-teal-200 hover:to-teal-300 hover:border-teal-400" },
+                { text: "📊 Génère mes rapports mensuels", color: "from-orange-100 to-orange-200 border-orange-300 text-orange-800 hover:from-orange-200 hover:to-orange-300 hover:border-orange-400" },
+                { text: "🔍 Trouve mes mots-clés SEO", color: "from-emerald-100 to-emerald-200 border-emerald-300 text-emerald-800 hover:from-emerald-200 hover:to-emerald-300 hover:border-emerald-400" },
+                { text: "💌 Écris mes newsletters engageantes", color: "from-rose-100 to-rose-200 border-rose-300 text-rose-800 hover:from-rose-200 hover:to-rose-300 hover:border-rose-400" },
+                { text: "🎬 Crée mes storyboards vidéo", color: "from-cyan-100 to-cyan-200 border-cyan-300 text-cyan-800 hover:from-cyan-200 hover:to-cyan-300 hover:border-cyan-400" },
+                { text: "📞 Gère mes rendez-vous clients", color: "from-amber-100 to-amber-200 border-amber-300 text-amber-800 hover:from-amber-200 hover:to-amber-300 hover:border-amber-400" },
+                { text: "🏆 Développe ma stratégie de contenu", color: "from-pink-100 to-pink-200 border-pink-300 text-pink-800 hover:from-pink-200 hover:to-pink-300 hover:border-pink-400" },
+                { text: "💡 Innove mes produits digitaux", color: "from-lime-100 to-lime-200 border-lime-300 text-lime-800 hover:from-lime-200 hover:to-lime-300 hover:border-lime-400" },
+                { text: "🎯 Cible ma publicité Facebook", color: "from-indigo-100 to-indigo-200 border-indigo-300 text-indigo-800 hover:from-indigo-200 hover:to-indigo-300 hover:border-indigo-400" },
+                { text: "🌟 Booste ma présence en ligne", color: "from-sky-100 to-sky-200 border-sky-300 text-sky-800 hover:from-sky-200 hover:to-sky-300 hover:border-sky-400" },
+                { text: "💻 Code mes outils personnalisés", color: "from-fuchsia-100 to-fuchsia-200 border-fuchsia-300 text-fuchsia-800 hover:from-fuchsia-200 hover:to-fuchsia-300 hover:border-fuchsia-400" }
+              ].map((item, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 bg-gradient-to-r from-green-100 to-green-200 border-2 border-green-300 rounded-full px-6 py-3 text-green-800 font-medium whitespace-nowrap hover:from-green-200 hover:to-green-300 hover:border-green-400 transition-all cursor-pointer shadow-lg"
+                  className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}
                 >
-                  {text}
+                  {item.text}
                 </div>
               ))}
               {/* Duplication pour effet continu */}
               {[
-                "⚡ Automatise mes processus business",
-                "🎨 Design mes templates Canva",
-                "📊 Génère mes rapports mensuels",
-                "🔍 Trouve mes mots-clés SEO",
-                "💌 Écris mes newsletters engageantes",
-                "🎬 Crée mes storyboards vidéo"
-              ].map((text, index) => (
+                { text: "⚡ Automatise mes processus business", color: "from-violet-100 to-violet-200 border-violet-300 text-violet-800 hover:from-violet-200 hover:to-violet-300 hover:border-violet-400" },
+                { text: "🎨 Design mes templates Canva", color: "from-teal-100 to-teal-200 border-teal-300 text-teal-800 hover:from-teal-200 hover:to-teal-300 hover:border-teal-400" },
+                { text: "📊 Génère mes rapports mensuels", color: "from-orange-100 to-orange-200 border-orange-300 text-orange-800 hover:from-orange-200 hover:to-orange-300 hover:border-orange-400" },
+                { text: "🔍 Trouve mes mots-clés SEO", color: "from-emerald-100 to-emerald-200 border-emerald-300 text-emerald-800 hover:from-emerald-200 hover:to-emerald-300 hover:border-emerald-400" },
+                { text: "💌 Écris mes newsletters engageantes", color: "from-rose-100 to-rose-200 border-rose-300 text-rose-800 hover:from-rose-200 hover:to-rose-300 hover:border-rose-400" },
+                { text: "🎬 Crée mes storyboards vidéo", color: "from-cyan-100 to-cyan-200 border-cyan-300 text-cyan-800 hover:from-cyan-200 hover:to-cyan-300 hover:border-cyan-400" }
+              ].map((item, index) => (
                 <div
                   key={`dup3-${index}`}
-                  className="flex-shrink-0 bg-gradient-to-r from-green-100 to-green-200 border-2 border-green-300 rounded-full px-6 py-3 text-green-800 font-medium whitespace-nowrap hover:from-green-200 hover:to-green-300 hover:border-green-400 transition-all cursor-pointer shadow-lg"
+                  className={`flex-shrink-0 bg-gradient-to-r ${item.color} border-2 rounded-full px-6 py-3 font-medium whitespace-nowrap transition-all cursor-pointer shadow-lg`}
                 >
-                  {text}
+                  {item.text}
                 </div>
               ))}
             </div>
@@ -569,7 +591,7 @@ const CocoonLandingPage = () => {
           <div className="text-center mt-12">
             <Button 
               size="lg" 
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl transition-all group"
+              className="bg-black hover:bg-gray-800 text-white px-8 py-4 text-lg font-semibold shadow-2xl transition-all group"
               onClick={handleAuthRedirect}
             >
               <Sparkles className="h-5 w-5 mr-2 group-hover:animate-spin" />
@@ -584,10 +606,10 @@ const CocoonLandingPage = () => {
       </section>
 
       {/* Section d'avis - Style photo */}
-      <section className="py-16 bg-gradient-to-br from-gray-50 to-purple-50/30">
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-orange-50/30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
-            <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent mb-6">
+            <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-teal-700 bg-clip-text text-transparent mb-6">
               Ils ont transformé leur expertise
             </h2>
             <p className="text-xl text-gray-600">
@@ -635,7 +657,7 @@ const CocoonLandingPage = () => {
       <section id="features" className="py-24 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20">
-            <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-purple-900 bg-clip-text text-transparent mb-6">
+            <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-orange-700 bg-clip-text text-transparent mb-6">
               Pourquoi choisir Cocoon AI ?
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -652,7 +674,7 @@ const CocoonLandingPage = () => {
                   </div>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-purple-700 transition-colors">
+                <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-orange-700 transition-colors">
                   {feature.title}
                 </h3>
                 
@@ -666,10 +688,10 @@ const CocoonLandingPage = () => {
       </section>
 
       {/* Comment ça marche */}
-      <section className="py-24 bg-gradient-to-br from-gray-50 to-purple-50/30 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <section className="py-24 bg-gradient-to-br from-gray-50 to-orange-50/30 relative">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20">
-            <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-purple-900 bg-clip-text text-transparent mb-6">
+            <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-orange-700 bg-clip-text text-transparent mb-6">
               Comment ça marche ?
             </h2>
             <p className="text-xl text-gray-600">
@@ -677,95 +699,99 @@ const CocoonLandingPage = () => {
             </p>
           </div>
 
-          {/* Fil d'Ariane horizontal */}
-          <div className="flex items-center justify-center mb-16">
+          {/* Fil d'Ariane vertical */}
+          <div className="flex justify-center mb-16">
             <div className="flex items-center space-x-8">
               {/* Étape 1 */}
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-purple-100/50 border-2 border-purple-300 rounded-full flex items-center justify-center text-purple-700 font-bold text-lg">
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg">
                   1
                 </div>
-                <div className="ml-3 text-purple-700 font-medium">Crée</div>
+                <div className="mt-3 text-black font-bold text-lg">Crée</div>
               </div>
               
               {/* Ligne de connexion */}
-              <div className="w-16 h-1 bg-gradient-to-r from-purple-300 to-blue-300 rounded-full"></div>
+              <div className="w-16 h-1 bg-gradient-to-r from-orange-400 to-teal-400 rounded-full"></div>
               
               {/* Étape 2 */}
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-blue-100/50 border-2 border-blue-300 rounded-full flex items-center justify-center text-blue-700 font-bold text-lg">
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg">
                   2
                 </div>
-                <div className="ml-3 text-blue-700 font-medium">Personnalise</div>
+                <div className="mt-3 text-black font-bold text-lg">Personnalise</div>
               </div>
               
               {/* Ligne de connexion */}
-              <div className="w-16 h-1 bg-gradient-to-r from-blue-300 to-green-300 rounded-full"></div>
+              <div className="w-16 h-1 bg-gradient-to-r from-teal-400 to-rose-400 rounded-full"></div>
               
               {/* Étape 3 */}
-              <div className="flex items-center">
-                <div className="w-12 h-12 bg-green-100/50 border-2 border-green-300 rounded-full flex items-center justify-center text-green-700 font-bold text-lg">
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center text-white font-bold text-2xl shadow-lg">
                   3
                 </div>
-                <div className="ml-3 text-green-700 font-medium">Génère</div>
+                <div className="mt-3 text-black font-bold text-lg">Génère</div>
               </div>
             </div>
           </div>
 
-          {/* Trois sections horizontales */}
-          <div className="grid md:grid-cols-3 gap-8">
+          {/* Trois sections verticales */}
+          <div className="space-y-12">
             {[
               {
                 step: "01",
                 title: "Crée ton profil",
-                description: "Renseigne tes compétences, ton domaine d'expertise et ajoute tes ressources (PDF, vidéos, textes)",
-                icon: <Settings className="h-8 w-8" />,
-                bgColor: "bg-purple-100/30",
-                borderColor: "border-purple-200",
-                textColor: "text-purple-700",
-                iconBg: "bg-purple-100/50"
+                description: "Renseigne tes compétences, ton domaine d'expertise et ajoute tes ressources (PDF, vidéos, textes). Notre IA analyse tout pour comprendre parfaitement ton univers et tes méthodes de travail.",
+                icon: <Settings className="h-10 w-10" />,
+                bgColor: "bg-orange-50/50",
+                borderColor: "border-orange-200",
+                textColor: "text-orange-700",
+                iconBg: "bg-orange-100/70"
               },
               {
                 step: "02", 
                 title: "Personnalise ton bot",
-                description: "Notre IA analyse tes données et crée un assistant parfaitement adapté à ton expertise",
-                icon: <Bot className="h-8 w-8" />,
-                bgColor: "bg-blue-100/30",
-                borderColor: "border-blue-200",
-                textColor: "text-blue-700",
-                iconBg: "bg-blue-100/50"
+                description: "Notre IA analyse tes données et crée un assistant parfaitement adapté à ton expertise. Configure ses réponses, son style de communication et ses domaines d'intervention selon tes préférences.",
+                icon: <Bot className="h-10 w-10" />,
+                bgColor: "bg-teal-50/50",
+                borderColor: "border-teal-200",
+                textColor: "text-teal-700",
+                iconBg: "bg-teal-100/70"
               },
               {
                 step: "03",
                 title: "Génère des revenus", 
-                description: "Ton bot gère tes clients, vend tes services et génère du contenu automatiquement",
-                icon: <DollarSign className="h-8 w-8" />,
-                bgColor: "bg-green-100/30",
-                borderColor: "border-green-200",
-                textColor: "text-green-700",
-                iconBg: "bg-green-100/50"
+                description: "Ton bot gère tes clients 24/7, vend tes services et génère du contenu automatiquement. Il répond aux questions, propose tes solutions et convertit tes visiteurs en clients payants sans que tu aies à intervenir.",
+                icon: <DollarSign className="h-10 w-10" />,
+                bgColor: "bg-rose-50/50",
+                borderColor: "border-rose-200",
+                textColor: "text-rose-700",
+                iconBg: "bg-rose-100/70"
               }
             ].map((step, index) => (
-              <div key={index} className={`relative p-8 rounded-2xl ${step.bgColor} border-2 ${step.borderColor} hover:scale-105 transition-all duration-300 group`}>
+              <div key={index} className={`relative p-8 rounded-3xl ${step.bgColor} border-2 ${step.borderColor} hover:scale-105 transition-all duration-300 group shadow-lg`}>
                 {/* Numéro en badge */}
-                <div className="absolute -top-4 left-6">
-                  <div className={`w-8 h-8 ${step.iconBg} border-2 ${step.borderColor} rounded-full flex items-center justify-center ${step.textColor} font-bold text-sm shadow-lg`}>
+                <div className="absolute -top-4 left-8">
+                  <div className={`w-12 h-12 bg-black rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg`}>
                     {step.step}
                   </div>
                 </div>
                 
-                {/* Icône principale */}
-                <div className={`w-16 h-16 ${step.iconBg} border-2 ${step.borderColor} rounded-2xl flex items-center justify-center ${step.textColor} mx-auto mb-6 group-hover:scale-110 transition-all duration-300`}>
-                  {step.icon}
+                <div className="flex items-start gap-6 pt-4">
+                  {/* Icône principale */}
+                  <div className={`w-20 h-20 ${step.iconBg} border-2 ${step.borderColor} rounded-3xl flex items-center justify-center ${step.textColor} group-hover:scale-110 transition-all duration-300 shadow-md`}>
+                    {step.icon}
+                  </div>
+                  
+                  <div className="flex-1">
+                    <h3 className={`text-3xl font-bold ${step.textColor} mb-4`}>
+                      {step.title}
+                    </h3>
+                    
+                    <p className="text-gray-700 text-lg leading-relaxed">
+                      {step.description}
+                    </p>
+                  </div>
                 </div>
-                
-                <h3 className={`text-2xl font-bold ${step.textColor} mb-4 text-center`}>
-                  {step.title}
-                </h3>
-                
-                <p className="text-gray-600 text-lg leading-relaxed text-center">
-                  {step.description}
-                </p>
               </div>
             ))}
           </div>
