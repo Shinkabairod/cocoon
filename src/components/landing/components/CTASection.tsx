@@ -1,20 +1,17 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Rocket, ArrowRight } from 'lucide-react';
-
 interface CTASectionProps {
   onAuthRedirect: () => void;
 }
-
-const CTASection: React.FC<CTASectionProps> = ({ onAuthRedirect }) => {
-  return (
-    <section className="py-24 bg-black text-white relative overflow-hidden">
+const CTASection: React.FC<CTASectionProps> = ({
+  onAuthRedirect
+}) => {
+  return <section className="py-24 bg-black text-white relative overflow-hidden">
       <div className="absolute inset-0 opacity-5"></div>
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <h2 className="text-3xl md:text-4xl font-bold mb-6">
-          Ready to turn your expertise into automated income?
-        </h2>
+        <h2 className="text-3xl md:text-4xl font-bold mb-6">Turn your expertise into automated income?</h2>
         <p className="text-lg text-gray-300 mb-8 leading-relaxed">
           Join thousands of experts who have already built their AI bot. 
           Set up in 2 minutes, results from day one.
@@ -30,8 +27,6 @@ const CTASection: React.FC<CTASectionProps> = ({ onAuthRedirect }) => {
           30-day money-back guarantee
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default CTASection;
