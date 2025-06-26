@@ -1,6 +1,40 @@
-
+// src/contexts/OnboardingContext.tsx - Version simplifiée
 import { createContext, useContext, useState, ReactNode } from 'react';
-import { OnboardingData } from '@/types/onboarding';
+
+// Interface simplifiée pour l'onboarding général
+interface OnboardingData {
+  step: number;
+  onboardingCompleted?: boolean;
+  
+  // Étape 2: Profession
+  profession?: string;
+  
+  // Étape 3: Objectifs
+  objectives?: string[];
+  
+  // Étape 4: Optimisation du temps
+  timeAvailable?: string;
+  experienceLevel?: string;
+  
+  // Étape 5: Défis
+  challenges?: string[];
+  
+  // Étape 6: Outils et préférences
+  toolsPreferences?: string[];
+  contentTypes?: string[];
+  platforms?: string[];
+  
+  // Étape 7: Assistance IA
+  aiAssistanceAreas?: string[];
+  learningStyle?: string;
+  
+  // Données héritées pour compatibilité
+  contentGoal?: string;
+  businessType?: string;
+  businessDescription?: string;
+  targetGeneration?: string;
+  monetization?: string;
+}
 
 interface OnboardingContextType {
   onboardingData: OnboardingData;
@@ -14,11 +48,11 @@ interface OnboardingContextType {
 
 const initialData: OnboardingData = {
   step: 1,
-  onboardingStage: 'Initial Guidance'
+  onboardingCompleted: false
 };
 
-// Total number of steps in the reorganized onboarding process (removed Educational Resources step)
-const TOTAL_STEPS = 21;
+// Total simplifié : 8 étapes seulement
+const TOTAL_STEPS = 8;
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 
