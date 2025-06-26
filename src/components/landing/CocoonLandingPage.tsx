@@ -561,7 +561,7 @@ const CocoonLandingPage = () => {
             {[{
             title: "Expertise 100% authentique",
             description: "Ton bot s’appuie sur tes vraies méthodes, ton contenu, ton savoir-faire. Pas d’IA générique : chaque réponse reflète ta voix, ton expérience, ta valeur.",
-            icon: <Database className="h-10 w-10" />,
+            icon: <Database className="w-8 h-8 text-red-600" />,
             bgColor: "bg-orange-50/50",
             borderColor: "border-orange-200",
             textColor: "text-orange-700",
@@ -569,7 +569,7 @@ const CocoonLandingPage = () => {
           }, {
             title: "Réponses sur-mesure",
             description: "Nos algorithmes adaptent ton ton, ton style, tes mots. Chaque échange est optimisé pour reproduire ta façon unique de transmettre.",
-            icon: <Code className="h-10 w-10" />,
+            icon: <Code className="w-8 h-8 text-red-600" />,
             bgColor: "bg-teal-50/50",
             borderColor: "border-teal-200",
             textColor: "text-teal-700",
@@ -577,18 +577,18 @@ const CocoonLandingPage = () => {
           }, {
             title: "Fiabilité garantie",
             description: "Aucune info inventée. Tout est analysé, structuré et vérifié avant d’être utilisé. Tu gardes le contrôle total sur ce que ton bot délivre.",
-            icon: <Award className="h-10 w-10" />,
+            icon: <Award className="w-8 h-8 text-red-600" />,
             bgColor: "bg-rose-50/50",
             borderColor: "border-rose-200",
             textColor: "text-rose-700",
             iconBg: "bg-rose-100/70"
-          }].map((feature, index) => <div key={index} className={`relative p-8 rounded-3xl ${feature.bgColor} border-2 ${feature.borderColor} hover:scale-105 transition-all duration-300 group shadow-lg`}>
+          }].map((feature, index) => <div key={index} className="relative bg-white border-2 border-red-300 rounded-3xl p-8 hover:border-red-400 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
                 {/* Icône principale */}
-                <div className={`w-20 h-20 ${feature.iconBg} border-2 ${feature.borderColor} rounded-3xl flex items-center justify-center ${feature.textColor} mb-6 group-hover:scale-110 transition-all duration-300 shadow-md`}>
+                <div className="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-red-100 transition-colors duration-300">
                   {feature.icon}
                 </div>
                 
-                <h3 className={`text-2xl font-bold ${feature.textColor} mb-4`}>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4">
                   {feature.title}
                 </h3>
                 
@@ -597,7 +597,7 @@ const CocoonLandingPage = () => {
                 </p>
                 
                 {/* Badge de qualité */}
-                <div className="mt-6 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 text-sm font-semibold">
+                <div className="mt-6 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-red from-orange-100 to-red-100 text-orange-700 text-sm font-semibold">
                   <Sparkles className="h-4 w-4 mr-1" />
                   Qualité Premium
                 </div>
