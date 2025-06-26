@@ -1,251 +1,121 @@
-import React, { createContext, useContext, useEffect, useState } from 'react';
-import { User, Session, AuthError } from '@supabase/supabase-js';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
 
-interface AuthContextType {
-  user: User | null;
-  session: Session | null;
-  loading: boolean;
-  signUp: (email: string, password: string, fullName: string) => Promise<{ user: User | null; error: AuthError | null }>;
-  signIn: (email: string, password: string) => Promise<{ user: User | null; error: AuthError | null }>;
-  signOut: () => Promise<void>;
-  resetPassword: (email: string) => Promise<{ error: AuthError | null }>;
-  updateProfile: (updates: { full_name?: string; [key: string]: any }) => Promise<{ error: AuthError | null }>;
-}
+// Import des composants d'auth
+import AuthWelcomePage from './AuthWelcomePage';
+import SignupSteps from './SignupSteps';
+import LoginPage from './LoginPage';
+import ForgotPasswordForm from './ForgotPasswordForm';
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// Types
+type AuthFlow = 'welcome' | 'signup' | 'login' | 'forgot-password';
 
-export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+const AuthExperience: React.FC = () => {
+  const [currentFlow, setCurrentFlow] = useState<AuthFlow>('welcome');
+  const { signUp, signIn } = useAuth();
+  const navigate = useNavigate();
 
-interface AuthProviderProps {
-  children: React.ReactNode;
-}
+  // Handlers pour la navigation
+  const handleLoginClick = () => setCurrentFlow('login');
+  const handleSignupClick = () => setCurrentFlow('signup');
+  const handleBackToWelcome = () => setCurrentFlow('welcome');
+  const handleForgotPassword = () => setCurrentFlow('forgot-password');
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [session, setSession] = useState<Session | null>(null);
-  const [loading, setLoading] = useState(true);
-  const { toast } = useToast();
-
-  useEffect(() => {
-    // Get initial session
-    const getInitialSession = async () => {
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) {
-          console.error('Error getting session:', error);
-        } else {
-          setSession(session);
-          setUser(session?.user ?? null);
-        }
-      } catch (error) {
-        console.error('Error in getInitialSession:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    getInitialSession();
-
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        console.log('Auth state changed:', event, session?.user?.email);
-        
-        setSession(session);
-        setUser(session?.user ?? null);
-        setLoading(false);
-
-        // Handle different auth events
-        switch (event) {
-          case 'SIGNED_IN':
-            toast({
-              title: "Welcome back!",
-              description: "You have been signed in successfully.",
-            });
-            break;
-          case 'SIGNED_OUT':
-            toast({
-              title: "Signed out",
-              description: "You have been signed out successfully.",
-            });
-            break;
-          case 'PASSWORD_RECOVERY':
-            toast({
-              title: "Password reset email sent",
-              description: "Check your email for password reset instructions.",
-            });
-            break;
-        }
-      }
-    );
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [toast]);
-
-  const signUp = async (email: string, password: string, fullName: string) => {
+  // Handler pour la completion de l'inscription
+  const handleSignupComplete = async (formData: {
+    email: string;
+    password: string;
+    fullName: string;
+    agreeToTerms: boolean;
+  }) => {
     try {
-      setLoading(true);
-      
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            full_name: fullName,
-          },
-        },
-      });
-
-      if (error) {
-        toast({
-          title: "Sign up failed",
-          description: error.message,
-          variant: "destructive",
-        });
-        return { user: null, error };
-      }
-
-      if (data.user && !data.session) {
-        toast({
-          title: "Check your email",
-          description: "We've sent you a confirmation link to complete your registration.",
-        });
-      }
-
-      return { user: data.user, error: null };
-    } catch (error) {
-      console.error('Error in signUp:', error);
-      return { user: null, error: error as AuthError };
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const signIn = async (email: string, password: string) => {
-    try {
-      setLoading(true);
-      
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-
-      if (error) {
-        toast({
-          title: "Sign in failed",
-          description: error.message,
-          variant: "destructive",
-        });
-        return { user: null, error };
-      }
-
-      return { user: data.user, error: null };
-    } catch (error) {
-      console.error('Error in signIn:', error);
-      return { user: null, error: error as AuthError };
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const signOut = async () => {
-    try {
-      setLoading(true);
-      const { error } = await supabase.auth.signOut();
+      const { user, error } = await signUp(formData.email, formData.password, formData.fullName);
       
       if (error) {
-        toast({
-          title: "Sign out failed",
-          description: error.message,
-          variant: "destructive",
-        });
-        throw error;
+        console.error('Signup error:', error);
+        return;
+      }
+
+      if (user) {
+        // Redirect to onboarding after successful signup
+        navigate('/onboarding');
       }
     } catch (error) {
-      console.error('Error in signOut:', error);
-    } finally {
-      setLoading(false);
+      console.error('Error in signup process:', error);
     }
   };
 
-  const resetPassword = async (email: string) => {
+  // Handler pour la connexion
+  const handleLogin = async (credentials: { email: string; password: string }) => {
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth/reset-password`,
-      });
-
+      const { user, error } = await signIn(credentials.email, credentials.password);
+      
       if (error) {
-        toast({
-          title: "Password reset failed",
-          description: error.message,
-          variant: "destructive",
-        });
-        return { error };
+        console.error('Login error:', error);
+        return;
       }
 
-      toast({
-        title: "Password reset email sent",
-        description: "Check your email for password reset instructions.",
-      });
-
-      return { error: null };
+      if (user) {
+        // Navigation will be handled by OnboardingGuard
+        navigate('/dashboard');
+      }
     } catch (error) {
-      console.error('Error in resetPassword:', error);
-      return { error: error as AuthError };
+      console.error('Error in login process:', error);
     }
   };
 
-  const updateProfile = async (updates: { full_name?: string; [key: string]: any }) => {
-    try {
-      const { error } = await supabase.auth.updateUser({
-        data: updates,
-      });
-
-      if (error) {
-        toast({
-          title: "Profile update failed",
-          description: error.message,
-          variant: "destructive",
-        });
-        return { error };
-      }
-
-      toast({
-        title: "Profile updated",
-        description: "Your profile has been updated successfully.",
-      });
-
-      return { error: null };
-    } catch (error) {
-      console.error('Error in updateProfile:', error);
-      return { error: error as AuthError };
-    }
+  // Handler pour le succès du mot de passe oublié
+  const handleForgotPasswordSuccess = () => {
+    setCurrentFlow('login');
   };
 
-  const value = {
-    user,
-    session,
-    loading,
-    signUp,
-    signIn,
-    signOut,
-    resetPassword,
-    updateProfile,
+  // Rendu conditionnel basé sur le flow actuel
+  const renderCurrentFlow = () => {
+    switch (currentFlow) {
+      case 'welcome':
+        return (
+          <AuthWelcomePage
+            onLoginClick={handleLoginClick}
+            onSignupClick={handleSignupClick}
+          />
+        );
+      
+      case 'signup':
+        return (
+          <SignupSteps
+            onComplete={handleSignupComplete}
+            onBack={handleBackToWelcome}
+          />
+        );
+      
+      case 'login':
+        return (
+          <LoginPage
+            onLogin={handleLogin}
+            onBack={handleBackToWelcome}
+            onForgotPassword={handleForgotPassword}
+          />
+        );
+      
+      case 'forgot-password':
+        return (
+          <ForgotPasswordForm
+            onBack={() => setCurrentFlow('login')}
+            onSuccess={handleForgotPasswordSuccess}
+          />
+        );
+      
+      default:
+        return null;
+    }
   };
 
   return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
+    <div className="min-h-screen bg-white">
+      {renderCurrentFlow()}
+    </div>
   );
 };
+
+export default AuthExperience;

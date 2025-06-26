@@ -1,77 +1,82 @@
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from '@/components/ui/toaster';
 
-import { ThemeProvider } from '@/contexts/ThemeContext';
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { OnboardingProvider } from "@/contexts/OnboardingContext";
-import { AuthProvider } from "@/contexts/AuthContext";
-import ProtectedRoute from "@/components/auth/ProtectedRoute";
-import OnboardingGuard from "@/components/auth/OnboardingGuard";
-import Index from "./pages/Index";
-import About from "./pages/About";
-import Pricing from "./pages/Pricing";
-import Auth from "./pages/Auth";
-import Onboarding from "./pages/Onboarding";
-import Dashboard from "./pages/Dashboard";
-import MobileDashboard from "./pages/MobileDashboard";
-import NotFound from "./pages/NotFound";
-import { useIsMobile } from "./hooks/use-mobile";
+// Contexts
+import { AuthProvider } from '@/contexts/AuthContext';
+import { OnboardingProvider } from '@/contexts/OnboardingContext';
 
-const queryClient = new QueryClient();
+// Layout Components
+import ProtectedRoute from '@/components/layout/ProtectedRoute';
+import OnboardingGuard from '@/components/layout/OnboardingGuard';
 
-const App = () => {
-  const isMobile = useIsMobile();
+// Auth Components
+import AuthExperience from '@/components/auth/AuthExperience';
 
+// Pages
+import CocoonLandingPage from '@/components/landing/CocoonLandingPage';
+import OnboardingFlow from '@/components/onboarding/OnboardingFlow';
+import Dashboard from '@/pages/Dashboard';
+
+// Error Boundary
+import ErrorBoundary from '@/components/ErrorBoundary';
+
+const App: React.FC = () => {
   return (
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <AuthProvider>
-          <OnboardingProvider>
-            <div className="min-h-screen bg-background">
-              <BrowserRouter>
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/about" element={<About />} />
-                  <Route path="/pricing" element={<Pricing />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/onboarding" element={
-                    <ProtectedRoute>
-                      <Onboarding />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/dashboard" element={
-                    <ProtectedRoute>
-                      <OnboardingGuard>
-                        {isMobile ? <MobileDashboard /> : <Dashboard />}
-                      </OnboardingGuard>
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/mobile" element={
-                    <ProtectedRoute>
-                      <OnboardingGuard>
-                        <MobileDashboard />
-                      </OnboardingGuard>
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/dashboard/*" element={
-                    <ProtectedRoute>
-                      <OnboardingGuard>
-                        {isMobile ? <MobileDashboard /> : <Dashboard />}
-                      </OnboardingGuard>
-                    </ProtectedRoute>
-                  } />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </BrowserRouter>
-            </div>
-          </OnboardingProvider>
-        </AuthProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
+    <ErrorBoundary>
+      <AuthProvider>
+        <Router>
+          <div className="min-h-screen bg-white">
+            <Routes>
+              {/* Public Landing Page */}
+              <Route path="/" element={<CocoonLandingPage />} />
+              
+              {/* Auth Routes - Protected against already authenticated users */}
+              <Route 
+                path="/auth/*" 
+                element={
+                  <ProtectedRoute requireAuth={false}>
+                    <AuthExperience />
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Onboarding Routes - Requires auth but not completed onboarding */}
+              <Route 
+                path="/onboarding/*" 
+                element={
+                  <ProtectedRoute requireAuth={true}>
+                    <OnboardingGuard requireOnboarding={true}>
+                      <OnboardingProvider>
+                        <OnboardingFlow />
+                      </OnboardingProvider>
+                    </OnboardingGuard>
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Dashboard Routes - Requires auth AND completed onboarding */}
+              <Route 
+                path="/dashboard/*" 
+                element={
+                  <ProtectedRoute requireAuth={true}>
+                    <OnboardingGuard requireOnboarding={false}>
+                      <Dashboard />
+                    </OnboardingGuard>
+                  </ProtectedRoute>
+                } 
+              />
+              
+              {/* Redirect unknown routes to landing */}
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+            
+            {/* Global Toast Notifications */}
+            <Toaster />
+          </div>
+        </Router>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 };
 
