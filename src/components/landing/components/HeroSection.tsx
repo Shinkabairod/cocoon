@@ -20,8 +20,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({
 }) => {
   return (
     <section className="pt-20 pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-      {/* NOUVEAU: Fond géométrique subtil */}
-      <div className="absolute inset-0 opacity-20">
+      {/* NOUVEAU: Fond géométrique plus actif */}
+      <div className="absolute inset-0 opacity-40">
         <svg 
           width="100%" 
           height="100%" 
@@ -32,176 +32,357 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           <defs>
             {/* Dégradés subtils en gris */}
             <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style={{stopColor:'#f3f4f6', stopOpacity:0.4}} />
-              <stop offset="100%" style={{stopColor:'#e5e7eb', stopOpacity:0.2}} />
+              <stop offset="0%" style={{stopColor:'#f3f4f6', stopOpacity:0.6}} />
+              <stop offset="100%" style={{stopColor:'#e5e7eb', stopOpacity:0.3}} />
             </linearGradient>
             <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style={{stopColor:'#d1d5db', stopOpacity:0.3}} />
-              <stop offset="100%" style={{stopColor:'#f9fafb', stopOpacity:0.1}} />
+              <stop offset="0%" style={{stopColor:'#d1d5db', stopOpacity:0.5}} />
+              <stop offset="100%" style={{stopColor:'#f9fafb', stopOpacity:0.2}} />
             </linearGradient>
           </defs>
           
-          {/* Cercles flottants avec animation */}
-          <circle cx="150" cy="120" r="60" fill="url(#grad1)">
+          {/* Nombreux petits cercles flottants */}
+          <circle cx="120" cy="80" r="15" fill="url(#grad1)">
             <animateTransform
               attributeName="transform"
               type="translate"
-              values="0,0; 15,25; 0,0"
-              dur="8s"
+              values="0,0; 25,35; 0,0"
+              dur="4s"
               repeatCount="indefinite"
             />
           </circle>
           
-          <circle cx="1000" cy="180" r="80" fill="url(#grad2)">
+          <circle cx="300" cy="150" r="12" fill="url(#grad2)">
             <animateTransform
               attributeName="transform"
               type="translate"
-              values="0,0; -20,15; 0,0"
-              dur="10s"
+              values="0,0; -30,20; 0,0"
+              dur="5s"
               repeatCount="indefinite"
             />
           </circle>
           
-          <circle cx="800" cy="580" r="45" fill="url(#grad1)">
+          <circle cx="500" cy="100" r="18" fill="url(#grad1)">
             <animateTransform
               attributeName="transform"
               type="translate"
-              values="0,0; 25,-10; 0,0"
-              dur="7s"
+              values="0,0; 20,-25; 0,0"
+              dur="3.5s"
               repeatCount="indefinite"
             />
           </circle>
           
-          {/* Rectangles avec rotation */}
-          <rect x="100" y="480" width="70" height="70" fill="url(#grad2)" rx="8">
+          <circle cx="750" cy="180" r="10" fill="url(#grad2)">
+            <animateTransform
+              attributeName="transform"
+              type="translate"
+              values="0,0; -15,30; 0,0"
+              dur="6s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          
+          <circle cx="950" cy="120" r="20" fill="url(#grad1)">
+            <animateTransform
+              attributeName="transform"
+              type="translate"
+              values="0,0; 35,-20; 0,0"
+              dur="4.5s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          
+          <circle cx="1100" cy="200" r="14" fill="url(#grad2)">
+            <animateTransform
+              attributeName="transform"
+              type="translate"
+              values="0,0; -25,25; 0,0"
+              dur="5.5s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          
+          <circle cx="200" cy="400" r="16" fill="url(#grad1)">
+            <animateTransform
+              attributeName="transform"
+              type="translate"
+              values="0,0; 30,15; 0,0"
+              dur="3s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          
+          <circle cx="400" cy="350" r="11" fill="url(#grad2)">
+            <animateTransform
+              attributeName="transform"
+              type="translate"
+              values="0,0; -20,-30; 0,0"
+              dur="4.2s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          
+          <circle cx="650" cy="450" r="17" fill="url(#grad1)">
+            <animateTransform
+              attributeName="transform"
+              type="translate"
+              values="0,0; 25,20; 0,0"
+              dur="3.8s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          
+          <circle cx="850" cy="380" r="13" fill="url(#grad2)">
+            <animateTransform
+              attributeName="transform"
+              type="translate"
+              values="0,0; -35,25; 0,0"
+              dur="5.2s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          
+          <circle cx="100" cy="600" r="19" fill="url(#grad1)">
+            <animateTransform
+              attributeName="transform"
+              type="translate"
+              values="0,0; 40,-15; 0,0"
+              dur="4.8s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          
+          <circle cx="350" cy="650" r="15" fill="url(#grad2)">
+            <animateTransform
+              attributeName="transform"
+              type="translate"
+              values="0,0; -25,30; 0,0"
+              dur="3.3s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          
+          <circle cx="600" cy="680" r="12" fill="url(#grad1)">
+            <animateTransform
+              attributeName="transform"
+              type="translate"
+              values="0,0; 20,-35; 0,0"
+              dur="5.8s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          
+          <circle cx="900" cy="620" r="16" fill="url(#grad2)">
+            <animateTransform
+              attributeName="transform"
+              type="translate"
+              values="0,0; -30,20; 0,0"
+              dur="4.3s"
+              repeatCount="indefinite"
+            />
+          </circle>
+          
+          {/* Petits rectangles nombreux */}
+          <rect x="80" y="250" width="25" height="25" fill="url(#grad2)" rx="3">
             <animateTransform
               attributeName="transform"
               type="rotate"
-              values="0 135 515; 10 135 515; 0 135 515"
-              dur="12s"
+              values="0 92 262; 25 92 262; 0 92 262"
+              dur="6s"
               repeatCount="indefinite"
             />
           </rect>
           
-          <rect x="1050" y="320" width="50" height="50" fill="#d1d5db" opacity="0.25" rx="6">
+          <rect x="250" y="280" width="20" height="20" fill="url(#grad1)" rx="2">
             <animateTransform
               attributeName="transform"
-              type="translate"
-              values="0,0; 15,20; 0,0"
-              dur="9s"
+              type="rotate"
+              values="0 260 290; -20 260 290; 0 260 290"
+              dur="4.5s"
               repeatCount="indefinite"
             />
           </rect>
           
-          {/* Triangles */}
-          <polygon points="320,180 360,250 280,250" fill="url(#grad1)">
+          <rect x="550" y="300" width="30" height="30" fill="url(#grad2)" rx="4">
             <animateTransform
               attributeName="transform"
               type="rotate"
-              values="0 320 215; 8 320 215; 0 320 215"
-              dur="11s"
+              values="0 565 315; 30 565 315; 0 565 315"
+              dur="5.5s"
+              repeatCount="indefinite"
+            />
+          </rect>
+          
+          <rect x="800" y="250" width="22" height="22" fill="url(#grad1)" rx="3">
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              values="0 811 261; -25 811 261; 0 811 261"
+              dur="3.8s"
+              repeatCount="indefinite"
+            />
+          </rect>
+          
+          <rect x="1000" y="300" width="28" height="28" fill="url(#grad2)" rx="4">
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              values="0 1014 314; 20 1014 314; 0 1014 314"
+              dur="6.2s"
+              repeatCount="indefinite"
+            />
+          </rect>
+          
+          <rect x="150" y="500" width="24" height="24" fill="url(#grad1)" rx="3">
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              values="0 162 512; -30 162 512; 0 162 512"
+              dur="4.8s"
+              repeatCount="indefinite"
+            />
+          </rect>
+          
+          <rect x="450" y="550" width="26" height="26" fill="url(#grad2)" rx="3">
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              values="0 463 563; 35 463 563; 0 463 563"
+              dur="5.3s"
+              repeatCount="indefinite"
+            />
+          </rect>
+          
+          <rect x="750" y="520" width="21" height="21" fill="url(#grad1)" rx="2">
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              values="0 760 530; -15 760 530; 0 760 530"
+              dur="3.5s"
+              repeatCount="indefinite"
+            />
+          </rect>
+          
+          {/* Petits triangles */}
+          <polygon points="180,180 200,210 160,210" fill="url(#grad1)">
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              values="0 180 200; 40 180 200; 0 180 200"
+              dur="4s"
               repeatCount="indefinite"
             />
           </polygon>
           
-          <polygon points="920,420 960,490 880,490" fill="#e5e7eb" opacity="0.3">
+          <polygon points="380,200 395,225 365,225" fill="url(#grad2)">
             <animateTransform
               attributeName="transform"
               type="rotate"
-              values="0 920 455; -6 920 455; 0 920 455"
-              dur="13s"
+              values="0 380 217; -35 380 217; 0 380 217"
+              dur="5s"
               repeatCount="indefinite"
             />
           </polygon>
           
-          {/* Hexagones */}
-          <polygon points="450,80 480,95 480,125 450,140 420,125 420,95" fill="url(#grad2)">
+          <polygon points="680,200 700,230 660,230" fill="url(#grad1)">
             <animateTransform
               attributeName="transform"
-              type="translate"
-              values="0,0; 12,18; 0,0"
+              type="rotate"
+              values="0 680 220; 25 680 220; 0 680 220"
+              dur="3.5s"
+              repeatCount="indefinite"
+            />
+          </polygon>
+          
+          <polygon points="980,180 1000,210 960,210" fill="url(#grad2)">
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              values="0 980 200; -20 980 200; 0 980 200"
               dur="6s"
               repeatCount="indefinite"
             />
           </polygon>
           
-          <polygon points="750,520 780,535 780,565 750,580 720,565 720,535" fill="#f3f4f6" opacity="0.3">
+          <polygon points="280,480 300,510 260,510" fill="url(#grad1)">
             <animateTransform
               attributeName="transform"
               type="rotate"
-              values="0 750 552; 15 750 552; 0 750 552"
-              dur="14s"
+              values="0 280 500; 30 280 500; 0 280 500"
+              dur="4.5s"
               repeatCount="indefinite"
             />
           </polygon>
           
-          {/* Lignes connectrices animées */}
-          <line x1="80" y1="280" x2="180" y2="300" stroke="#9ca3af" strokeWidth="1.5" opacity="0.2">
-            <animate
-              attributeName="opacity"
-              values="0.2; 0.5; 0.2"
-              dur="5s"
-              repeatCount="indefinite"
-            />
-          </line>
-          
-          <line x1="980" y1="200" x2="1080" y2="180" stroke="#6b7280" strokeWidth="1" opacity="0.25">
-            <animate
-              attributeName="opacity"
-              values="0.25; 0.6; 0.25"
-              dur="4s"
-              repeatCount="indefinite"
-            />
-          </line>
-          
-          {/* Grille de points subtile */}
-          {Array.from({length: 8}, (_, i) => 
-            Array.from({length: 5}, (_, j) => (
-              <circle 
-                key={`dot-${i}-${j}`}
-                cx={150 * i + 100} 
-                cy={160 * j + 100} 
-                r="1" 
-                fill="#d1d5db" 
-                opacity="0.15"
-              />
-            ))
-          )}
-          
-          {/* Losanges */}
-          <polygon points="600,350 620,330 640,350 620,370" fill="url(#grad1)">
+          <polygon points="580,480 600,510 560,510" fill="url(#grad2)">
             <animateTransform
               attributeName="transform"
               type="rotate"
-              values="0 620 350; 20 620 350; 0 620 350"
-              dur="8s"
+              values="0 580 500; -40 580 500; 0 580 500"
+              dur="3.8s"
+              repeatCount="indefinite"
+            />
+          </polygon>
+          
+          {/* Losanges nombreux */}
+          <polygon points="220,320 235,305 250,320 235,335" fill="url(#grad1)">
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              values="0 235 320; 45 235 320; 0 235 320"
+              dur="5s"
+              repeatCount="indefinite"
+            />
+          </polygon>
+          
+          <polygon points="520,320 535,305 550,320 535,335" fill="url(#grad2)">
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              values="0 535 320; -45 535 320; 0 535 320"
+              dur="4.2s"
+              repeatCount="indefinite"
+            />
+          </polygon>
+          
+          <polygon points="820,320 835,305 850,320 835,335" fill="url(#grad1)">
+            <animateTransform
+              attributeName="transform"
+              type="rotate"
+              values="0 835 320; 30 835 320; 0 835 320"
+              dur="3.3s"
               repeatCount="indefinite"
             />
           </polygon>
         </svg>
       </div>
 
-      {/* NOUVEAU: Particules flottantes */}
+      {/* NOUVEAU: Plus de particules flottantes */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce opacity-20" style={{animationDelay: '0s', animationDuration: '4s'}} />
-        <div className="absolute top-2/3 right-1/3 w-1 h-1 bg-gray-400 rounded-full animate-bounce opacity-15" style={{animationDelay: '1s', animationDuration: '5s'}} />
-        <div className="absolute top-1/2 left-1/6 w-0.5 h-0.5 bg-gray-350 rounded-full animate-bounce opacity-25" style={{animationDelay: '2s', animationDuration: '3s'}} />
-        <div className="absolute top-1/3 right-1/4 w-2 h-2 bg-gray-200 rounded-full animate-bounce opacity-30" style={{animationDelay: '0.5s', animationDuration: '6s'}} />
-        <div className="absolute bottom-1/3 left-3/4 w-1 h-1 bg-gray-300 rounded-full animate-bounce opacity-20" style={{animationDelay: '1.5s', animationDuration: '4.5s'}} />
+        <div className="absolute top-1/5 left-1/6 w-2 h-2 bg-gray-300 rounded-full animate-bounce opacity-30" style={{animationDelay: '0s', animationDuration: '3s'}} />
+        <div className="absolute top-1/3 right-1/5 w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce opacity-25" style={{animationDelay: '0.5s', animationDuration: '4s'}} />
+        <div className="absolute top-2/3 left-1/4 w-1 h-1 bg-gray-350 rounded-full animate-bounce opacity-35" style={{animationDelay: '1s', animationDuration: '2.5s'}} />
+        <div className="absolute top-1/4 right-1/3 w-2.5 h-2.5 bg-gray-200 rounded-full animate-bounce opacity-40" style={{animationDelay: '1.5s', animationDuration: '3.5s'}} />
+        <div className="absolute bottom-1/4 left-2/3 w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce opacity-25" style={{animationDelay: '2s', animationDuration: '4s'}} />
+        <div className="absolute top-3/4 right-1/6 w-1 h-1 bg-gray-250 rounded-full animate-bounce opacity-30" style={{animationDelay: '0.8s', animationDuration: '3.2s'}} />
+        <div className="absolute top-1/2 left-1/8 w-2 h-2 bg-gray-400 rounded-full animate-bounce opacity-20" style={{animationDelay: '1.2s', animationDuration: '2.8s'}} />
+        <div className="absolute bottom-1/3 right-1/4 w-1.5 h-1.5 bg-gray-300 rounded-full animate-bounce opacity-35" style={{animationDelay: '2.5s', animationDuration: '3.8s'}} />
+        <div className="absolute top-1/6 left-3/4 w-1 h-1 bg-gray-200 rounded-full animate-bounce opacity-25" style={{animationDelay: '1.8s', animationDuration: '4.2s'}} />
+        <div className="absolute bottom-1/5 left-1/3 w-2.5 h-2.5 bg-gray-350 rounded-full animate-bounce opacity-30" style={{animationDelay: '0.3s', animationDuration: '3.5s'}} />
       </div>
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className={`text-center transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
           
           {/* Badge avec animation */}
-          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-orange-100 to-teal-100 border border-orange-200/50 rounded-full px-6 py-3 mb-8 backdrop-blur-sm">
-            <Sparkles className="h-6 w-6 text-orange-600 animate-spin" style={{
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-50 to-blue-50 border border-violet-200/50 rounded-full px-6 py-3 mb-8 backdrop-blur-sm">
+            <Sparkles className="h-6 w-6 text-violet-600 animate-spin" style={{
             animationDuration: '3s'
           }} />
-            <span className="text-sm font-medium bg-gradient-to-r from-orange-600 to-teal-600 bg-clip-text text-transparent">
+            <span className="text-sm font-medium bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">
               Automatise ton activité
             </span>
-            <Crown className="h-5 w-5 text-amber-500 animate-bounce" />
+            <Crown className="h-5 w-5 text-blue-500 animate-bounce" />
           </div>
 
           {/* Titre principal avec logo animé centré */}
@@ -234,7 +415,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             <p className="text-xl text-gray-600 leading-relaxed">
               Crée ton bot IA personnalisé qui connaît toutes tes compétences.
             </p>
-            <p className="text-xl bg-gradient-to-r from-orange-600 to-teal-600 bg-clip-text text-transparent font-semibold mt-2">
+            <p className="text-xl bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent font-semibold mt-2">
               Une nouvelle façon de travailler et de vendre ton expertise.
             </p>
           </div>
