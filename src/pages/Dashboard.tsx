@@ -806,7 +806,12 @@ const Dashboard = () => {
         {activePage === 'resources' && renderResourcesPage()}
         {activePage === 'creation' && (
           <div className="p-4 md:p-8">
-            <h2 className="text-2xl font-bold mb-6">Mes Créations</h2>
+            <CreationsSection 
+              folders={folders}
+              onExecuteButton={handleExecuteCustomButton}
+            />
+          </div>
+        )}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Card className="p-6">
                 <div className="flex items-center space-x-4 mb-4">
