@@ -11,6 +11,7 @@ import FeaturesSection from './components/FeaturesSection';
 import HowItWorksSection from './components/HowItWorksSection';
 import PricingSection from './components/PricingSection';
 import CTASection from './components/CTASection';
+import FAQSection from './components/FAQSection';
 import Footer from './components/Footer';
 
 // Data
@@ -76,53 +77,6 @@ const CocoonLandingPage = () => {
         onAuthRedirect={handleAuthRedirect}
       />
 
-      <section className="py-24 bg-gradient-to-br from-gray-50 to-teal-50/30 relative">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-orange-700 bg-clip-text text-transparent mb-6">
-              Pourquoi nos bots surpassent tous les autres ?
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              La différence entre un chatbot générique et un expert digital personnalisé
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-3 gap-12">
-            {[{
-              title: "Expertise 100% authentique",
-              description: "Ton bot s'appuie sur tes vraies méthodes, ton contenu, ton savoir-faire. Pas d'IA générique : chaque réponse reflète ta voix, ton expérience, ta valeur.",
-              icon: "🗃️"
-            }, {
-              title: "Réponses sur-mesure",
-              description: "Nos algorithmes adaptent ton ton, ton style, tes mots. Chaque échange est optimisé pour reproduire ta façon unique de transmettre.",
-              icon: "⚙️"
-            }, {
-              title: "Fiabilité garantie",
-              description: "Aucune info inventée. Tout est analysé, structuré et vérifié avant d'être utilisé. Tu gardes le contrôle total sur ce que ton bot délivre.",
-              icon: "🏆"
-            }].map((feature, index) => (
-              <div key={index} className="relative bg-white border-2 border-gray-300 rounded-3xl p-8 hover:border-red-400 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                <div className="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center mb-4">
-                  <span className="text-2xl">{feature.icon}</span>
-                </div>
-                
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">
-                  {feature.title}
-                </h3>
-                
-                <p className="text-gray-700 text-lg leading-relaxed">
-                  {feature.description}
-                </p>
-                
-                <div className="mt-6 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-orange-100 to-red-100 text-red-700 text-sm font-semibold">
-                  ✨ Qualité Premium
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       <TestimonialsSection testimonials={testimonials} />
 
       <FeaturesSection />
@@ -130,6 +84,8 @@ const CocoonLandingPage = () => {
       <HowItWorksSection />
 
       <PricingSection pricingPlans={pricingPlans} onAuthRedirect={handleAuthRedirect} />
+
+      <FAQSection />
 
       <CTASection onAuthRedirect={handleAuthRedirect} />
 
