@@ -3,7 +3,7 @@ const HowItWorksSection: React.FC = () => {
   return <section className="py-24 bg-gradient-to-br from-gray-50 to-neutral-50 relative">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-20">
-          <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mb-6">
+          <h2 className="text-5xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-purple-700 bg-clip-text text-transparent mb-6">
             Comment ça marche ?
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">

@@ -6,9 +6,7 @@ const FeaturesSection: React.FC = () => {
           <h2 className="text-5xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-blue-700 bg-clip-text text-transparent mb-6">
             Pourquoi choisir Cocoon AI ?
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Une technologie de pointe pour des résultats exceptionnels
-          </p>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">L'IA et tes connaissances pour des résultats exceptionnels</p>
         </div>
 
         <div className="grid md:grid-cols-3 gap-12">
