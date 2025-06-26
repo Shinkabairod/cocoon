@@ -97,44 +97,44 @@ const CocoonLandingPage = () => {
     experts: 892
   };
 
-  const activities = [
-    { 
-      text: "ta création de contenu", 
-      icon: <Camera className="h-10 w-10" />,
-      color: "text-orange-600",
-      example: "Scripts, thumbnails, planning"
-    },
-    { 
-      text: "ton agence digitale", 
-      icon: <Briefcase className="h-10 w-10" />,
-      color: "text-teal-600",
-      example: "Stratégies, audits, consulting"
-    },
-    { 
-      text: "ton activité de dev", 
-      icon: <Code className="h-10 w-10" />,
-      color: "text-emerald-600",
-      example: "Solutions, API, formations"
-    },
-    { 
-      text: "ton coaching sportif", 
-      icon: <Dumbbell className="h-10 w-10" />,
-      color: "text-rose-600",
-      example: "Programmes, nutrition, suivi"
-    },
-    { 
-      text: "ton temps d'expert", 
-      icon: <Clock className="h-10 w-10" />,
-      color: "text-amber-600",
-      example: "Consultations, masterclass, audit"
-    },
-    { 
-      text: "tes connaissances", 
-      icon: <BookOpen className="h-10 w-10" />,
-      color: "text-cyan-600",
-      example: "Cours, workshops, certifications"
-    }
-  ];
+const activities = [
+  { 
+    text: "ta création de contenu", 
+    icon: <Camera className="h-10 w-10" />,
+    color: "text-fuchsia-600", // vibrant & créatif
+    example: "Scripts, thumbnails, planning"
+  },
+  { 
+    text: "ton agence digitale", 
+    icon: <Briefcase className="h-10 w-10" />,
+    color: "text-indigo-600", // sérieux & stratégique
+    example: "Stratégies, audits, consulting"
+  },
+  { 
+    text: "ton activité de dev", 
+    icon: <Code className="h-10 w-10" />,
+    color: "text-blue-600", // tech & stabilité
+    example: "Solutions, API, formations"
+  },
+  { 
+    text: "ton coaching sportif", 
+    icon: <Dumbbell className="h-10 w-10" />,
+    color: "text-red-500", // énergie & dynamisme
+    example: "Programmes, nutrition, suivi"
+  },
+  { 
+    text: "ton temps d'expert", 
+    icon: <Clock className="h-10 w-10" />,
+    color: "text-yellow-500", // précieux & visible
+    example: "Consultations, masterclass, audit"
+  },
+  { 
+    text: "tes connaissances", 
+    icon: <BookOpen className="h-10 w-10" />,
+    color: "text-emerald-600", // sagesse & transmission
+    example: "Cours, workshops, certifications"
+  }
+];
 
   const features = [
     {
