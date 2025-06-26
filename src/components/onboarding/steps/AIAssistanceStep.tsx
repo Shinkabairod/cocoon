@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -14,11 +13,12 @@ import {
   FileText,
   Lightbulb
 } from "lucide-react";
+import { LearningStyle } from "@/types/onboarding";
 
 const AIAssistanceStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
   const [aiAssistanceAreas, setAiAssistanceAreas] = useState<string[]>(onboardingData.aiAssistanceAreas || []);
-  const [learningStyle, setLearningStyle] = useState(onboardingData.learningStyle || '');
+  const [learningStyle, setLearningStyle] = useState<LearningStyle | ''>(onboardingData.learningStyle || '');
   
   const assistanceAreas = [
     {
@@ -71,7 +71,7 @@ const AIAssistanceStep = () => {
     }
   ];
   
-  const learningStyles = [
+  const learningStyles: { value: LearningStyle; label: string; description: string }[] = [
     { value: 'Step-by-step guides', label: 'Guides étape par étape', description: 'Instructions détaillées et structurées' },
     { value: 'Video tutorials', label: 'Tutoriels vidéo', description: 'Apprentissage visuel et pratique' },
     { value: 'Articles', label: 'Articles et documentation', description: 'Lecture approfondie' },
@@ -90,7 +90,7 @@ const AIAssistanceStep = () => {
   const handleContinue = () => {
     updateOnboardingData({ 
       aiAssistanceAreas,
-      learningStyle
+      learningStyle: learningStyle as LearningStyle
     });
     nextStep();
   };

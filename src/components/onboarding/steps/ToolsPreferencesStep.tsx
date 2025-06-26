@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -18,8 +17,8 @@ import {
 const ToolsPreferencesStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
   const [toolsPreferences, setToolsPreferences] = useState<string[]>(onboardingData.toolsPreferences || []);
-  const [contentTypes, setContentTypes] = useState<string[]>(onboardingData.contentTypes || []);
-  const [platforms, setPlatforms] = useState<string[]>(onboardingData.platforms || []);
+  const [contentTypes, setContentTypes] = useState<string[]>(onboardingData.contentTypes?.map(String) || []);
+  const [platforms, setPlatforms] = useState<string[]>(onboardingData.platforms?.map(String) || []);
   
   const tools = [
     { id: 'text_generation', name: 'Génération de texte', icon: <FileText className="h-6 w-6" />, description: 'Articles, emails, descriptions' },
@@ -79,8 +78,8 @@ const ToolsPreferencesStep = () => {
   const handleContinue = () => {
     updateOnboardingData({ 
       toolsPreferences,
-      contentTypes,
-      platforms
+      contentTypes: contentTypes as any,
+      platforms: platforms as any
     });
     nextStep();
   };

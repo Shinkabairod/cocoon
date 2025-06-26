@@ -99,5 +99,12 @@ export interface OnboardingData {
   // Pricing
   selectedPlan?: string;
   
+  // New simplified onboarding properties
+  profession?: string;
+  objectives?: string[];
+  challenges?: string[];
+  toolsPreferences?: string[];
+  aiAssistanceAreas?: string[];
+  
   step: number;
 }

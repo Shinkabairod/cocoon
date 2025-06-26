@@ -7,27 +7,28 @@ import { Label } from "@/components/ui/label";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import OnboardingLayout from "../OnboardingLayout";
 import { Clock, Zap, Users, Target } from "lucide-react";
+import { TimeAvailable, ExperienceLevel } from "@/types/onboarding";
 
 const TimeOptimizationStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
-  const [timeAvailable, setTimeAvailable] = useState(onboardingData.timeAvailable || '');
-  const [experienceLevel, setExperienceLevel] = useState(onboardingData.experienceLevel || '');
+  const [timeAvailable, setTimeAvailable] = useState<TimeAvailable | ''>(onboardingData.timeAvailable || '');
+  const [experienceLevel, setExperienceLevel] = useState<ExperienceLevel | ''>(onboardingData.experienceLevel || '');
   
-  const timeOptions = [
+  const timeOptions: { value: TimeAvailable; label: string; description: string }[] = [
     { value: 'Less than 1 hour', label: 'Moins d\'1 heure par jour', description: 'Pour les plus pressés' },
     { value: '1-3 hours', label: '1 à 3 heures par jour', description: 'Rythme modéré' },
     { value: '3-5 hours', label: '3 à 5 heures par jour', description: 'Engagement soutenu' },
     { value: '5+ hours', label: 'Plus de 5 heures par jour', description: 'Activité intensive' }
   ];
   
-  const experienceOptions = [
+  const experienceOptions: { value: ExperienceLevel; label: string; description: string; icon: JSX.Element }[] = [
     { value: 'Beginner', label: 'Débutant', description: 'Première fois avec l\'IA', icon: <Target className="h-5 w-5" /> },
     { value: 'Intermediate', label: 'Intermédiaire', description: 'Quelques expériences', icon: <Users className="h-5 w-5" /> },
     { value: 'Experienced', label: 'Expérimenté', description: 'Utilisateur régulier', icon: <Zap className="h-5 w-5" /> }
   ];
   
   const handleContinue = () => {
-    updateOnboardingData({ timeAvailable, experienceLevel });
+    updateOnboardingData({ timeAvailable: timeAvailable as TimeAvailable, experienceLevel: experienceLevel as ExperienceLevel });
     nextStep();
   };
   
@@ -46,7 +47,7 @@ const TimeOptimizationStep = () => {
             <h3 className="text-lg font-medium">Temps disponible par jour</h3>
           </div>
           
-          <RadioGroup value={timeAvailable} onValueChange={setTimeAvailable}>
+          <RadioGroup value={timeAvailable} onValueChange={(value) => setTimeAvailable(value as TimeAvailable)}>
             <div className="grid grid-cols-1 gap-3">
               {timeOptions.map((option) => (
                 <div key={option.value} className="flex items-start space-x-3">
