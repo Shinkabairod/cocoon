@@ -668,7 +668,7 @@ const CocoonLandingPage = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-gray-50 to-gray-100 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
         <div className="relative bg-white border-2 border-gray-300 rounded-3xl p-8 hover:border-gray-400 transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
           {/* Emoji animé */}
-          <div className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-gray-100 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
+          <div className="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-gray-100 transition-all duration-300 group-hover:scale-110 group-hover:">
             <span className="text-2xl animate-pulse">🗃️</span>
           </div>
           
@@ -762,7 +762,7 @@ const CocoonLandingPage = () => {
             {/* Numéro plus gros */}
             <div className="flex-shrink-0">
               <div className="w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-2xl font-bold">01</span>
+                <span className="text-2xl font-bold">1.</span>
               </div>
             </div>
             
@@ -795,7 +795,7 @@ const CocoonLandingPage = () => {
             {/* Numéro plus gros */}
             <div className="flex-shrink-0">
               <div className="w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-2xl font-bold">02</span>
+                <span className="text-2xl font-bold">2.</span>
               </div>
             </div>
             
@@ -828,7 +828,7 @@ const CocoonLandingPage = () => {
             {/* Numéro plus gros */}
             <div className="flex-shrink-0">
               <div className="w-16 h-16 bg-black text-white rounded-2xl flex items-center justify-center shadow-lg">
-                <span className="text-2xl font-bold">03</span>
+                <span className="text-2xl font-bold">3.</span>
               </div>
             </div>
             
