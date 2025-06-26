@@ -14,7 +14,7 @@ const HowItWorksSection: React.FC = () => {
         <div className="space-y-8">
           {/* Étape 1 */}
           <div className="group relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-blue-100 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-purple-50 to-purple-100 rounded-3xl transform rotate-1 group-hover:rotate-3 transition-transform duration-300"></div>
             <div className="relative bg-white border-2 border-purple-300 rounded-3xl p-8 hover:border-purple-400 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div className="flex items-start gap-6">
                 {/* Numéro plus gros */}
