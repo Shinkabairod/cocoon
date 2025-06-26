@@ -597,7 +597,7 @@ const CocoonLandingPage = () => {
                 </p>
                 
                 {/* Badge de qualité */}
-                <div className="mt-6 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-green-100 to-red-100 text-red-700 text-sm font-semibold">
+                <div className="mt-6 inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-yellow from-orange-100 to-red-100 text-red-700 text-sm font-semibold">
                   <Sparkles className="h-4 w-4 mr-1" />
                   Qualité Premium
                 </div>
