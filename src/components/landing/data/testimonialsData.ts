@@ -1,29 +1,28 @@
-
 import { Testimonial } from '../types';
 
 export const testimonials: Testimonial[] = [
   {
     name: "Marie L.",
-    activity: "Coach Business",
-    content: "En 3 mois, mon bot IA a géré 847 consultations automatiquement. Je gagne maintenant 5 200€/mois en travaillant 2 fois moins !",
+    activity: "Business Coach",
+    content: "In just 3 months, my AI bot handled 847 consultations automatically. I now earn €5,200/month while working half as much!",
     avatar: "👩‍💼",
     gradient: "from-orange-100 to-rose-100",
-    revenue: "+5 200€/mois"
+    revenue: "+€5,200/month"
   },
   {
     name: "Thomas D.",
-    activity: "Développeur Freelance",
-    content: "Mon assistant IA répond aux clients, génère les devis et conseille sur les technologies. J'ai multiplié mes revenus par 3 sans augmenter mes heures.",
+    activity: "Freelance Developer",
+    content: "My AI assistant replies to clients, creates quotes, and gives tech advice. I’ve tripled my income without increasing my hours.",
     avatar: "👨‍💻",
     gradient: "from-teal-100 to-cyan-100",
-    revenue: "×3 revenus"
+    revenue: "×3 income"
   },
   {
     name: "Sarah K.",
-    activity: "Créatrice de contenu",
-    content: "Mon bot génère mes idées de contenu, planifie ma stratégie et répond à ma communauté. 15h/semaine économisées, 3 000€ de revenus en plus !",
+    activity: "Content Creator",
+    content: "My bot generates content ideas, plans my strategy, and replies to my community. I save 15 hours a week and earn an extra €3,000!",
     avatar: "🎥",
     gradient: "from-rose-100 to-orange-100",
-    revenue: "+3 000€/mois"
+    revenue: "+€3,000/month"
   }
 ];
