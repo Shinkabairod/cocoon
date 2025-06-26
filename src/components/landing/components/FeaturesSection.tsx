@@ -68,7 +68,7 @@ const FeaturesSection: React.FC = () => {
             <div className="relative bg-white border-2 border-blue-300 rounded-3xl p-8 hover:border-blue-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               {/* Emoji animé */}
               <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-gray-200 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
-                <span className="text-2xl animate-pulse">🏆</span>
+                <span className="text-2xl ">🏆</span>
               </div>
               
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
