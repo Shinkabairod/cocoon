@@ -425,24 +425,19 @@ const CocoonLandingPage = () => {
       </section>
 
       {/* Section de boutons défilants */}
-      <section className="py-16 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 overflow-hidden relative">
-        {/* Background effects */}
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-blue-600/20" />
-        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
-        
+      <section className="py-16 bg-white overflow-hidden relative">        
         <div className="relative z-10">
           <div className="text-center mb-12">
-            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+            <h2 className="text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
               Que veux-tu automatiser aujourd'hui ?
             </h2>
-            <p className="text-xl text-purple-100 max-w-2xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Dis-le à ton IA et regarde la magie opérer
             </p>
           </div>
 
           {/* Premier défilement - gauche vers droite */}
-          <div className="relative overflow-hidden mb-6">
+          <div className="relative overflow-hidden mb-3">
             <div className="flex animate-scroll-right space-x-4">
               {[
                 "🎥 Génère-moi un script viral TikTok",
@@ -460,7 +455,7 @@ const CocoonLandingPage = () => {
               ].map((text, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 text-white font-medium whitespace-nowrap hover:bg-white/20 transition-all cursor-pointer shadow-lg"
+                  className="flex-shrink-0 bg-gradient-to-r from-purple-100 to-purple-200 border-2 border-purple-300 rounded-full px-6 py-3 text-purple-800 font-medium whitespace-nowrap hover:from-purple-200 hover:to-purple-300 hover:border-purple-400 transition-all cursor-pointer shadow-lg"
                 >
                   {text}
                 </div>
@@ -476,7 +471,7 @@ const CocoonLandingPage = () => {
               ].map((text, index) => (
                 <div
                   key={`dup-${index}`}
-                  className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 text-white font-medium whitespace-nowrap hover:bg-white/20 transition-all cursor-pointer shadow-lg"
+                  className="flex-shrink-0 bg-gradient-to-r from-purple-100 to-purple-200 border-2 border-purple-300 rounded-full px-6 py-3 text-purple-800 font-medium whitespace-nowrap hover:from-purple-200 hover:to-purple-300 hover:border-purple-400 transition-all cursor-pointer shadow-lg"
                 >
                   {text}
                 </div>
@@ -485,7 +480,7 @@ const CocoonLandingPage = () => {
           </div>
 
           {/* Deuxième défilement - droite vers gauche */}
-          <div className="relative overflow-hidden mb-6">
+          <div className="relative overflow-hidden mb-3">
             <div className="flex animate-scroll-left space-x-4">
               {[
                 "🍎 Crée mon plan nutrition personnalisé",
@@ -503,7 +498,7 @@ const CocoonLandingPage = () => {
               ].map((text, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 text-white font-medium whitespace-nowrap hover:bg-white/20 transition-all cursor-pointer shadow-lg"
+                  className="flex-shrink-0 bg-gradient-to-r from-blue-100 to-blue-200 border-2 border-blue-300 rounded-full px-6 py-3 text-blue-800 font-medium whitespace-nowrap hover:from-blue-200 hover:to-blue-300 hover:border-blue-400 transition-all cursor-pointer shadow-lg"
                 >
                   {text}
                 </div>
@@ -519,7 +514,7 @@ const CocoonLandingPage = () => {
               ].map((text, index) => (
                 <div
                   key={`dup2-${index}`}
-                  className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 text-white font-medium whitespace-nowrap hover:bg-white/20 transition-all cursor-pointer shadow-lg"
+                  className="flex-shrink-0 bg-gradient-to-r from-blue-100 to-blue-200 border-2 border-blue-300 rounded-full px-6 py-3 text-blue-800 font-medium whitespace-nowrap hover:from-blue-200 hover:to-blue-300 hover:border-blue-400 transition-all cursor-pointer shadow-lg"
                 >
                   {text}
                 </div>
@@ -546,7 +541,7 @@ const CocoonLandingPage = () => {
               ].map((text, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 text-white font-medium whitespace-nowrap hover:bg-white/20 transition-all cursor-pointer shadow-lg"
+                  className="flex-shrink-0 bg-gradient-to-r from-green-100 to-green-200 border-2 border-green-300 rounded-full px-6 py-3 text-green-800 font-medium whitespace-nowrap hover:from-green-200 hover:to-green-300 hover:border-green-400 transition-all cursor-pointer shadow-lg"
                 >
                   {text}
                 </div>
@@ -562,7 +557,7 @@ const CocoonLandingPage = () => {
               ].map((text, index) => (
                 <div
                   key={`dup3-${index}`}
-                  className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 text-white font-medium whitespace-nowrap hover:bg-white/20 transition-all cursor-pointer shadow-lg"
+                  className="flex-shrink-0 bg-gradient-to-r from-green-100 to-green-200 border-2 border-green-300 rounded-full px-6 py-3 text-green-800 font-medium whitespace-nowrap hover:from-green-200 hover:to-green-300 hover:border-green-400 transition-all cursor-pointer shadow-lg"
                 >
                   {text}
                 </div>
@@ -574,14 +569,14 @@ const CocoonLandingPage = () => {
           <div className="text-center mt-12">
             <Button 
               size="lg" 
-              className="bg-white text-purple-900 hover:bg-gray-100 px-8 py-4 text-lg font-semibold shadow-2xl hover:shadow-white/25 transition-all group"
+              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-4 text-lg font-semibold shadow-2xl transition-all group"
               onClick={handleAuthRedirect}
             >
               <Sparkles className="h-5 w-5 mr-2 group-hover:animate-spin" />
               Commencer maintenant
               <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <p className="text-purple-100 text-sm mt-3">
+            <p className="text-gray-600 text-sm mt-3">
               Gratuit • Configuration en 2 minutes
             </p>
           </div>
@@ -682,42 +677,93 @@ const CocoonLandingPage = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-12">
+          {/* Fil d'Ariane horizontal */}
+          <div className="flex items-center justify-center mb-16">
+            <div className="flex items-center space-x-8">
+              {/* Étape 1 */}
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-purple-100/50 border-2 border-purple-300 rounded-full flex items-center justify-center text-purple-700 font-bold text-lg">
+                  1
+                </div>
+                <div className="ml-3 text-purple-700 font-medium">Crée</div>
+              </div>
+              
+              {/* Ligne de connexion */}
+              <div className="w-16 h-1 bg-gradient-to-r from-purple-300 to-blue-300 rounded-full"></div>
+              
+              {/* Étape 2 */}
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-blue-100/50 border-2 border-blue-300 rounded-full flex items-center justify-center text-blue-700 font-bold text-lg">
+                  2
+                </div>
+                <div className="ml-3 text-blue-700 font-medium">Personnalise</div>
+              </div>
+              
+              {/* Ligne de connexion */}
+              <div className="w-16 h-1 bg-gradient-to-r from-blue-300 to-green-300 rounded-full"></div>
+              
+              {/* Étape 3 */}
+              <div className="flex items-center">
+                <div className="w-12 h-12 bg-green-100/50 border-2 border-green-300 rounded-full flex items-center justify-center text-green-700 font-bold text-lg">
+                  3
+                </div>
+                <div className="ml-3 text-green-700 font-medium">Génère</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Trois sections horizontales */}
+          <div className="grid md:grid-cols-3 gap-8">
             {[
               {
                 step: "01",
                 title: "Crée ton profil",
                 description: "Renseigne tes compétences, ton domaine d'expertise et ajoute tes ressources (PDF, vidéos, textes)",
                 icon: <Settings className="h-8 w-8" />,
-                color: "from-purple-500 to-purple-700"
+                bgColor: "bg-purple-100/30",
+                borderColor: "border-purple-200",
+                textColor: "text-purple-700",
+                iconBg: "bg-purple-100/50"
               },
               {
                 step: "02", 
                 title: "Personnalise ton bot",
                 description: "Notre IA analyse tes données et crée un assistant parfaitement adapté à ton expertise",
                 icon: <Bot className="h-8 w-8" />,
-                color: "from-blue-500 to-blue-700"
+                bgColor: "bg-blue-100/30",
+                borderColor: "border-blue-200",
+                textColor: "text-blue-700",
+                iconBg: "bg-blue-100/50"
               },
               {
                 step: "03",
                 title: "Génère des revenus", 
                 description: "Ton bot gère tes clients, vend tes services et génère du contenu automatiquement",
                 icon: <DollarSign className="h-8 w-8" />,
-                color: "from-green-500 to-green-700"
+                bgColor: "bg-green-100/30",
+                borderColor: "border-green-200",
+                textColor: "text-green-700",
+                iconBg: "bg-green-100/50"
               }
             ].map((step, index) => (
-              <div key={index} className="text-center group">
-                <div className="relative mb-8">
-                  <div className={`w-20 h-20 bg-gradient-to-br ${step.color} rounded-2xl flex items-center justify-center text-white mx-auto shadow-2xl group-hover:scale-110 transition-all duration-300`}>
-                    {step.icon}
-                  </div>
-                  <div className="absolute -top-4 -right-4 w-12 h-12 bg-black text-white rounded-full flex items-center justify-center font-bold text-lg shadow-lg">
+              <div key={index} className={`relative p-8 rounded-2xl ${step.bgColor} border-2 ${step.borderColor} hover:scale-105 transition-all duration-300 group`}>
+                {/* Numéro en badge */}
+                <div className="absolute -top-4 left-6">
+                  <div className={`w-8 h-8 ${step.iconBg} border-2 ${step.borderColor} rounded-full flex items-center justify-center ${step.textColor} font-bold text-sm shadow-lg`}>
                     {step.step}
                   </div>
                 </div>
                 
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">{step.title}</h3>
-                <p className="text-gray-600 text-lg leading-relaxed max-w-sm mx-auto">
+                {/* Icône principale */}
+                <div className={`w-16 h-16 ${step.iconBg} border-2 ${step.borderColor} rounded-2xl flex items-center justify-center ${step.textColor} mx-auto mb-6 group-hover:scale-110 transition-all duration-300`}>
+                  {step.icon}
+                </div>
+                
+                <h3 className={`text-2xl font-bold ${step.textColor} mb-4 text-center`}>
+                  {step.title}
+                </h3>
+                
+                <p className="text-gray-600 text-lg leading-relaxed text-center">
                   {step.description}
                 </p>
               </div>
