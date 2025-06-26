@@ -101,14 +101,14 @@ const CocoonLandingPage = () => {
     },
     {
       title: "Interface Sur Mesure", 
-      description: "Une plateforme adaptée à ton activité avec tes couleurs, ton style, tes services",
+      description: "Une plateforme selon tes besoins et ceux de tes clients",
       icon: <Target className="h-6 w-6" />,
       gradient: "from-blue-50 to-blue-100",
       iconColor: "text-blue-600"
     },
     {
       title: "Monétisation Directe",
-      description: "Vends tes services, formations et consultations directement via ton bot",
+      description: "Vends tes services, assistants et automatisations sans rien faire",
       icon: <TrendingUp className="h-6 w-6" />,
       gradient: "from-green-50 to-green-100",
       iconColor: "text-green-600"
@@ -119,16 +119,16 @@ const CocoonLandingPage = () => {
     {
       name: "Marie L.",
       activity: "Créatrice de contenu",
-      revenue: "3 200€/mois",
-      quote: "Mon bot répond à mes clients même quand je dors",
+      revenue: "0€/mois",
+      quote: "Mes bots me font gagner plus de 20 heures par semaine",
       avatar: "🎨",
       gradient: "from-pink-50 to-pink-100"
     },
     {
       name: "Thomas R.", 
-      activity: "Développeur freelance",
-      revenue: "8 500€/mois",
-      quote: "Je vends mes formations automatiquement",
+      activity: "Créateur de contenu",
+      revenue: "2,300€/mois",
+      quote: "Mes bots ont déjà permis de générer des idées et scripts cumulant +50M de vues!",
       avatar: "💻",
       gradient: "from-blue-50 to-blue-100"
     },
@@ -136,7 +136,7 @@ const CocoonLandingPage = () => {
       name: "Sophie M.",
       activity: "Coach business",
       revenue: "5 800€/mois",
-      quote: "Mes clients adorent avoir des réponses instantanées",
+      quote: "Mes clients adorent avoir des réponses par moi, en instantanées",
       avatar: "📈",
       gradient: "from-green-50 to-green-100"
     }
@@ -164,7 +164,7 @@ const CocoonLandingPage = () => {
     {
       number: "03",
       title: "Permets à d'autres d'apprendre",
-      description: "Crée des répliques de ton expertise pour que d'autres puissent automatiser leurs entreprises",
+      description: "Crée des répliques de ton expertise pour que d'autres puissent automatiser leurs activités",
       icon: <Brain className="h-8 w-8" />,
       color: "text-green-600",
       bgColor: "bg-green-50",
