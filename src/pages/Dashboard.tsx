@@ -205,7 +205,7 @@ const Dashboard = () => {
       const contextualPrompt = `${finalPrompt}\n\n${connectedContent.length > 0 ? 'Contexte et ressources disponibles :' + connectedContent.join('') : ''}`;
       
       // 4. Simuler l'appel à l'IA (tu pourras connecter ton API ici)
-      console.log('🤖 Prompt final envoyé à l'IA:', contextualPrompt);
+      console.log('🤖 Prompt final envoyé à l\'IA:', contextualPrompt);
       
       // Simulation de génération (remplace par ton appel API réel)
       setTimeout(() => {
@@ -213,7 +213,7 @@ const Dashboard = () => {
           `Prompt utilisé: ${finalPrompt}\n\n` +
           `Paramètres:\n${Object.entries(placeholderValues).map(([k,v]) => `- ${k}: ${v}`).join('\n')}\n\n` +
           `Ressources utilisées: ${buttonData.connectedFolders.length} dossier(s)\n\n` +
-          `[Ici serait le contenu généré par l'IA basé sur ton prompt et tes ressources]`;
+          `[Ici serait le contenu généré par l\'IA basé sur ton prompt et tes ressources]`;
         
         setGeneratedContent(generatedContent);
         setIsGenerating(false);
