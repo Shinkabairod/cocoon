@@ -19,7 +19,7 @@ const PricingSection: React.FC<PricingSectionProps> = ({
         {/* Titre aligné à gauche */}
         <div className="text-left mb-20">
           <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-6">
-            Prix
+            Pricing
           </h2>
         </div>
 
