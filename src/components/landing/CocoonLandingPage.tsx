@@ -335,7 +335,7 @@ const activities = [
   }, [isVisible]);
 
   return (
-    <div className="min-h-screen bg-white overflow-hidden relative">
+    <div className="min-h-screen bg-white relative">
       {/* Background pattern subtil */}
       <div className="absolute inset-0 opacity-[0.02]"
         style={{
