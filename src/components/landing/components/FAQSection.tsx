@@ -6,48 +6,45 @@ const FAQSection: React.FC = () => {
 
   const faqs = [
     {
-      question: "How can my bot truly reflect my expertise?",
-      answer: "Your bot is trained on your exclusive content: your courses, articles, videos, and methods. It learns your vocabulary, your approach, and your specific solutions. The more you feed its knowledge base, the more precise and authentic it becomes."
+      question: "Comment mon bot peut-il vraiment refléter mon expertise ?",
+      answer: "Ton bot s'entraîne sur tes contenus exclusifs : tes formations, articles, vidéos, méthodes. Il apprend ton vocabulaire, ton approche et tes solutions spécifiques. Plus tu alimentes sa base de connaissances, plus il devient précis et authentique."
     },
     {
-      question: "How long does it take to set up my bot?",
-      answer: "Basic setup takes 10–15 minutes. You can start with a few documents and expand gradually. The bot improves automatically with every interaction and content update."
+      question: "Combien de temps faut-il pour configurer mon bot ?",
+      answer: "La configuration de base prend 10-15 minutes. Tu peux commencer avec quelques documents et enrichir progressivement. Le bot s'améliore automatiquement à chaque interaction et mise à jour de contenu."
     },
     {
-      question: "Can I control what my bot says?",
-      answer: "Absolutely! You set the boundaries, tone, and allowed topics. You can also review and approve responses before they're published. You maintain full control over your brand image."
+      question: "Puis-je contrôler ce que dit mon bot ?",
+      answer: "Absolument ! Tu définis les limites, le ton, les sujets autorisés. Tu peux aussi réviser et approuver les réponses avant publication. Tu gardes un contrôle total sur ton image de marque."
     },
     {
-      question: "How can I monetize my AI bot?",
-      answer: "Several options: automated consultations, course sales, premium customer support, qualified lead generation. The bot can also recommend your paid services at the right time."
+      question: "Comment puis-je monétiser mon bot IA ?",
+      answer: "Plusieurs options : consultations automatisées, vente de formations, support client premium, lead generation qualifiée. Le bot peut aussi recommander tes services payants au bon moment."
     },
     {
-      question: "Can my bot integrate with my existing tools?",
-      answer: "Yes, we offer integrations with major platforms: websites, social networks, CRMs, messaging tools. The API also allows for custom integrations."
+      question: "Mon bot peut-il s'intégrer à mes outils existants ?",
+      answer: "Oui, nous proposons des intégrations avec les principales plateformes : sites web, réseaux sociaux, CRM, outils de messagerie. L'API permet aussi des intégrations personnalisées."
     },
     {
-      question: "What happens if my bot doesn’t know the answer?",
-      answer: "It smartly redirects to you or suggests alternatives. You can also configure default responses and continuously enrich its knowledge base."
+      question: "Que se passe-t-il si mon bot ne sait pas répondre ?",
+      answer: "Il redirige intelligemment vers toi ou propose des alternatives. Tu peux aussi configurer des réponses par défaut et enrichir sa base de connaissances en continu."
     }
   ];
 
   return (
     <section className="py-24 bg-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Title aligned to the left */}
+        {/* Titre aligné à gauche */}
         <div className="text-left mb-20">
-          <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-black bg-clip-text text-transparent mb-6">
-            Frequently Asked Questions
+          <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-6">
+            FAQ
           </h2>
-          <p className="text-xl text-gray-600 max-w-3xl">
-            Everything you need to know to turn your expertise into a profitable AI bot
-          </p>
         </div>
 
         <div className="space-y-6">
           {faqs.map((faq, index) => (
             <div key={index} className="group relative">
-              {/* Decorative background */}
+              {/* Fond en relief */}
               <div className={`absolute inset-0 ${
                 index % 3 === 0 
                   ? 'bg-gradient-to-r from-violet-50 to-violet-100' 
