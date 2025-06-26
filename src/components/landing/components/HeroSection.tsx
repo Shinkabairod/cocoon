@@ -252,7 +252,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                 </span>
               </span>
             </span>
-            <span className="block mt-4 bg-gradient-to-r from-gray-900 to-orange-800 bg-clip-text text-transparent">
+            <span className="block mt-4 bg-gradient-to-r from-gray-900 to-grey-900 bg-clip-text">
               en quelques clics.
             </span>
           </h1>
