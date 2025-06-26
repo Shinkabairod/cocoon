@@ -35,6 +35,46 @@ import {
   Crown
 } from 'lucide-react';
 
+// Styles CSS pour les animations de défilement
+const scrollAnimationStyles = `
+  @keyframes scroll-right {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(0%);
+    }
+  }
+  
+  @keyframes scroll-left {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  
+  .animate-scroll-right {
+    animation: scroll-right 30s linear infinite;
+  }
+  
+  .animate-scroll-left {
+    animation: scroll-left 25s linear infinite;
+  }
+  
+  .animate-scroll-right-slow {
+    animation: scroll-right 35s linear infinite;
+  }
+`;
+
+// Injection des styles dans le document
+if (typeof document !== 'undefined') {
+  const styleSheet = document.createElement('style');
+  styleSheet.textContent = scrollAnimationStyles;
+  document.head.appendChild(styleSheet);
+}
+
 const CocoonLandingPage = () => {
   const navigate = useNavigate();
   const [currentActivity, setCurrentActivity] = useState(0);
@@ -93,30 +133,27 @@ const CocoonLandingPage = () => {
     }
   ];
 
-  const whyChooseFeatures = [
+  const features = [
     {
-      title: "Intelligence Artificielle Avancée",
-      description: "Notre IA apprend de tes ressources et connaissances pour devenir ton assistant personnel parfait",
-      icon: <Brain className="h-8 w-8" />,
-      gradient: "from-purple-500 to-purple-700",
-      bgGradient: "from-purple-50 to-purple-100",
-      stats: "98% de précision"
+      title: "Bot IA Personnalisé",
+      description: "Un assistant qui connaît toutes tes compétences et peut répondre à tes clients 24/7",
+      icon: <Bot className="h-7 w-7" />,
+      gradient: "from-purple-50 to-purple-100",
+      iconColor: "text-purple-600"
     },
     {
-      title: "Automatisation Complète", 
-      description: "Traite tes clients 24/7, génère du contenu et vend tes services sans ton intervention",
-      icon: <Zap className="h-8 w-8" />,
-      gradient: "from-blue-500 to-blue-700",
-      bgGradient: "from-blue-50 to-blue-100",
-      stats: "24h/24 disponible"
+      title: "Interface Sur Mesure", 
+      description: "Une plateforme selon tes besoins et ceux de tes clients",
+      icon: <Target className="h-7 w-7" />,
+      gradient: "from-blue-50 to-blue-100",
+      iconColor: "text-blue-600"
     },
     {
-      title: "Revenus Automatisés",
-      description: "Monétise ton expertise pendant que tu dors. Nos utilisateurs génèrent en moyenne 2 847€/mois",
-      icon: <TrendingUp className="h-8 w-8" />,
-      gradient: "from-emerald-500 to-emerald-700",
-      bgGradient: "from-emerald-50 to-emerald-100",
-      stats: "+2 847€/mois"
+      title: "Monétisation Directe",
+      description: "Vends tes services, assistants et automatisations sans rien faire",
+      icon: <TrendingUp className="h-7 w-7" />,
+      gradient: "from-green-50 to-green-100",
+      iconColor: "text-green-600"
     }
   ];
 
@@ -294,30 +331,44 @@ const CocoonLandingPage = () => {
       {/* Hero Section */}
       <section className="pt-20 pb-32 px-4 sm:px-6 lg:px-8 relative">
         <div className="max-w-7xl mx-auto relative z-10">
-          <div className={`text-center transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
+          <div className={`text-center transition-all duration-1000 ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'}`}>
             
-            <div className="flex items-center justify-center gap-4 mb-8">
-              <span className="text-2xl text-gray-600">Automatise</span>
-              <div className="relative bg-white rounded-2xl border-2 border-gray-200 p-4 shadow-xl min-w-[280px] flex items-center justify-center">
-                <div className={`${activities[currentActivity].color} transition-all duration-500 flex items-center gap-3`}>
-                  <div className="transform transition-transform duration-500 hover:scale-110">
-                    {activities[currentActivity].icon}
-                  </div>
-                  <span className="text-xl font-bold text-gray-900">
-                    {activities[currentActivity].text}
-                  </span>
-                </div>
-              </div>
+            {/* Bandeau modifié */}
+            <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-100 to-blue-100 border border-purple-200/50 rounded-full px-6 py-3 mb-8 backdrop-blur-sm">
+              <Sparkles className="h-6 w-6 text-purple-600 animate-spin" style={{ animationDuration: '3s' }} />
+              <span className="text-sm font-medium bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+                Automatise ton activité
+              </span>
+              <Crown className="h-5 w-5 text-yellow-500 animate-bounce" />
             </div>
 
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-gray-900 mb-8 leading-tight">
-              Ton expertise devient
-              <span className="bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 bg-clip-text text-transparent block">
-                automatique
+            {/* Titre principal avec logo animé centré */}
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-8 leading-tight">
+              <span className="bg-gradient-to-r from-gray-900 via-purple-900 to-blue-900 bg-clip-text text-transparent">
+                Boost et monétise
+              </span>
+              <span className="block mt-4">
+                <span className={`inline-flex items-center justify-center gap-4 transition-all duration-700 transform ${activities[currentActivity].color}`}>
+                  <span className="relative flex items-center justify-center">
+                    <span className="animate-bounce">
+                      {activities[currentActivity].icon}
+                    </span>
+                    <div className="absolute inset-0 animate-ping opacity-30">
+                      {activities[currentActivity].icon}
+                    </div>
+                  </span>
+                  <span className="animate-pulse">
+                    {activities[currentActivity].text}
+                  </span>
+                </span>
+              </span>
+              <span className="block mt-4 bg-gradient-to-r from-gray-900 to-purple-900 bg-clip-text text-transparent">
+                en quelques clics.
               </span>
             </h1>
 
-            <div className="max-w-4xl mx-auto mb-6">
+            {/* Texte sur deux lignes */}
+            <div className="max-w-4xl mx-auto mb-12">
               <p className="text-xl text-gray-600 leading-relaxed">
                 Crée ton bot IA personnalisé qui connaît toutes tes compétences.
               </p>
@@ -373,73 +424,254 @@ const CocoonLandingPage = () => {
         </div>
       </section>
 
-      {/* Pourquoi choisir Cocoon AI - Section refaite */}
-      <section id="features" className="py-24 bg-gradient-to-br from-gray-50 to-purple-50/30 relative">
-        <div className="absolute inset-0 opacity-40"></div>
+      {/* Section de boutons défilants */}
+      <section className="py-16 bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900 overflow-hidden relative">
+        {/* Background effects */}
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-blue-600/20" />
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
         
+        <div className="relative z-10">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl lg:text-4xl font-bold text-white mb-4">
+              Que veux-tu automatiser aujourd'hui ?
+            </h2>
+            <p className="text-xl text-purple-100 max-w-2xl mx-auto">
+              Dis-le à ton IA et regarde la magie opérer
+            </p>
+          </div>
+
+          {/* Premier défilement - gauche vers droite */}
+          <div className="relative overflow-hidden mb-6">
+            <div className="flex animate-scroll-right space-x-4">
+              {[
+                "🎥 Génère-moi un script viral TikTok",
+                "📧 Réponds à tous mes emails clients", 
+                "💡 Crée-moi 20 idées de contenu",
+                "🏋️ Développe mon programme sportif",
+                "💰 Écris ma page de vente qui convertit",
+                "📱 Automatise mon Instagram",
+                "🎯 Trouve-moi mes clients idéaux",
+                "📝 Rédige mes posts LinkedIn",
+                "🚀 Lance ma campagne publicitaire",
+                "💻 Code-moi une landing page",
+                "📊 Analyse mes concurrents",
+                "🎨 Crée mes visuels de marque"
+              ].map((text, index) => (
+                <div
+                  key={index}
+                  className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 text-white font-medium whitespace-nowrap hover:bg-white/20 transition-all cursor-pointer shadow-lg"
+                >
+                  {text}
+                </div>
+              ))}
+              {/* Duplication pour effet continu */}
+              {[
+                "🎥 Génère-moi un script viral TikTok",
+                "📧 Réponds à tous mes emails clients", 
+                "💡 Crée-moi 20 idées de contenu",
+                "🏋️ Développe mon programme sportif",
+                "💰 Écris ma page de vente qui convertit",
+                "📱 Automatise mon Instagram"
+              ].map((text, index) => (
+                <div
+                  key={`dup-${index}`}
+                  className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 text-white font-medium whitespace-nowrap hover:bg-white/20 transition-all cursor-pointer shadow-lg"
+                >
+                  {text}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Deuxième défilement - droite vers gauche */}
+          <div className="relative overflow-hidden mb-6">
+            <div className="flex animate-scroll-left space-x-4">
+              {[
+                "🍎 Crée mon plan nutrition personnalisé",
+                "📹 Monte mes vidéos automatiquement",
+                "💬 Gère ma communauté Discord",
+                "📚 Transforme mes idées en formation",
+                "🎤 Écris mes scripts de podcast",
+                "💳 Optimise mes revenus passifs",
+                "🔥 Boost mon taux d'engagement",
+                "📈 Développe ma stratégie marketing",
+                "✨ Personnalise mes workflows",
+                "🎯 Segmente ma base clients",
+                "💎 Crée mes funnels de vente",
+                "🚀 Scale mon business en ligne"
+              ].map((text, index) => (
+                <div
+                  key={index}
+                  className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 text-white font-medium whitespace-nowrap hover:bg-white/20 transition-all cursor-pointer shadow-lg"
+                >
+                  {text}
+                </div>
+              ))}
+              {/* Duplication pour effet continu */}
+              {[
+                "🍎 Crée mon plan nutrition personnalisé",
+                "📹 Monte mes vidéos automatiquement",
+                "💬 Gère ma communauté Discord",
+                "📚 Transforme mes idées en formation",
+                "🎤 Écris mes scripts de podcast",
+                "💳 Optimise mes revenus passifs"
+              ].map((text, index) => (
+                <div
+                  key={`dup2-${index}`}
+                  className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 text-white font-medium whitespace-nowrap hover:bg-white/20 transition-all cursor-pointer shadow-lg"
+                >
+                  {text}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Troisième défilement - gauche vers droite (plus lent) */}
+          <div className="relative overflow-hidden">
+            <div className="flex animate-scroll-right-slow space-x-4">
+              {[
+                "⚡ Automatise mes processus business",
+                "🎨 Design mes templates Canva",
+                "📊 Génère mes rapports mensuels",
+                "🔍 Trouve mes mots-clés SEO",
+                "💌 Écris mes newsletters engageantes",
+                "🎬 Crée mes storyboards vidéo",
+                "📞 Gère mes rendez-vous clients",
+                "🏆 Développe ma stratégie de contenu",
+                "💡 Innove mes produits digitaux",
+                "🎯 Cible ma publicité Facebook",
+                "🌟 Booste ma présence en ligne",
+                "💻 Code mes outils personnalisés"
+              ].map((text, index) => (
+                <div
+                  key={index}
+                  className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 text-white font-medium whitespace-nowrap hover:bg-white/20 transition-all cursor-pointer shadow-lg"
+                >
+                  {text}
+                </div>
+              ))}
+              {/* Duplication pour effet continu */}
+              {[
+                "⚡ Automatise mes processus business",
+                "🎨 Design mes templates Canva",
+                "📊 Génère mes rapports mensuels",
+                "🔍 Trouve mes mots-clés SEO",
+                "💌 Écris mes newsletters engageantes",
+                "🎬 Crée mes storyboards vidéo"
+              ].map((text, index) => (
+                <div
+                  key={`dup3-${index}`}
+                  className="flex-shrink-0 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-6 py-3 text-white font-medium whitespace-nowrap hover:bg-white/20 transition-all cursor-pointer shadow-lg"
+                >
+                  {text}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* CTA au centre */}
+          <div className="text-center mt-12">
+            <Button 
+              size="lg" 
+              className="bg-white text-purple-900 hover:bg-gray-100 px-8 py-4 text-lg font-semibold shadow-2xl hover:shadow-white/25 transition-all group"
+              onClick={handleAuthRedirect}
+            >
+              <Sparkles className="h-5 w-5 mr-2 group-hover:animate-spin" />
+              Commencer maintenant
+              <ArrowRight className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" />
+            </Button>
+            <p className="text-purple-100 text-sm mt-3">
+              Gratuit • Configuration en 2 minutes
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* Section d'avis - Style photo */}
+      <section className="py-16 bg-gradient-to-br from-gray-50 to-purple-50/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent mb-6">
+              Ils ont transformé leur expertise
+            </h2>
+            <p className="text-xl text-gray-600">
+              Découvre comment nos utilisateurs automatisent et monétisent leurs compétences
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100">
+                {/* Header avec avatar et info */}
+                <div className="flex items-center gap-4 mb-6">
+                  <div className={`w-16 h-16 bg-gradient-to-br ${testimonial.gradient} rounded-2xl flex items-center justify-center text-2xl shadow-md`}>
+                    {testimonial.avatar}
+                  </div>
+                  <div>
+                    <div className="font-bold text-gray-900 text-lg">{testimonial.name}</div>
+                    <div className="text-gray-600 text-sm">{testimonial.activity}</div>
+                  </div>
+                </div>
+                
+                {/* Étoiles */}
+                <div className="flex items-center gap-1 mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-4 w-4 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                
+                {/* Citation */}
+                <p className="text-gray-700 text-base leading-relaxed mb-4 italic">
+                  "{testimonial.content}"
+                </p>
+                
+                {/* Badge revenus */}
+                <div className="inline-flex items-center px-3 py-1 rounded-full bg-green-100 text-green-700 text-sm font-semibold">
+                  {testimonial.revenue}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pourquoi choisir Cocoon AI - 3 mini sections */}
+      <section id="features" className="py-24 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20">
             <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-purple-900 bg-clip-text text-transparent mb-6">
               Pourquoi choisir Cocoon AI ?
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              La technologie qui révolutionne la façon dont les experts monétisent leur savoir
+              Automatise ton expertise et génère des revenus sans effort
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-8">
-            {whyChooseFeatures.map((feature, index) => (
-              <div key={index} className="group relative">
-                <div className={`absolute inset-0 bg-gradient-to-br ${feature.bgGradient} rounded-3xl transform group-hover:scale-105 transition-transform duration-500 opacity-50`} />
+          <div className="grid md:grid-cols-3 gap-12">
+            {features.map((feature, index) => (
+              <div key={index} className="text-center group">
+                <div className={`w-20 h-20 bg-gradient-to-br ${feature.gradient} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-all duration-300`}>
+                  <div className={feature.iconColor}>
+                    {feature.icon}
+                  </div>
+                </div>
                 
-                <Card className="relative border-0 bg-white/80 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-500 rounded-3xl overflow-hidden">
-                  <CardContent className="p-8">
-                    {/* Icon avec gradient */}
-                    <div className={`w-16 h-16 bg-gradient-to-br ${feature.gradient} rounded-2xl flex items-center justify-center text-white mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
-                      {feature.icon}
-                    </div>
-                    
-                    {/* Stats badge */}
-                    <div className="inline-flex items-center px-3 py-1 rounded-full bg-gradient-to-r from-green-100 to-emerald-100 text-green-700 text-sm font-semibold mb-4">
-                      <Sparkles className="h-4 w-4 mr-1" />
-                      {feature.stats}
-                    </div>
-                    
-                    <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-purple-700 transition-colors">
-                      {feature.title}
-                    </h3>
-                    
-                    <p className="text-gray-600 text-lg leading-relaxed">
-                      {feature.description}
-                    </p>
-                    
-                    {/* Hover effect */}
-                    <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${feature.gradient} transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500`} />
-                  </CardContent>
-                </Card>
+                <h3 className="text-2xl font-bold text-gray-900 mb-4 group-hover:text-purple-700 transition-colors">
+                  {feature.title}
+                </h3>
+                
+                <p className="text-gray-600 text-lg leading-relaxed">
+                  {feature.description}
+                </p>
               </div>
             ))}
-          </div>
-
-          {/* CTA intégré */}
-          <div className="text-center mt-16">
-            <Button 
-              size="lg" 
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-12 py-6 text-xl font-semibold rounded-2xl shadow-2xl hover:shadow-purple-500/25 transition-all duration-300 group"
-              onClick={handleAuthRedirect}
-            >
-              <Crown className="h-6 w-6 mr-3 group-hover:animate-bounce" />
-              Découvrir toutes les fonctionnalités
-              <ArrowRight className="h-6 w-6 ml-3 group-hover:translate-x-2 transition-transform" />
-            </Button>
           </div>
         </div>
       </section>
 
       {/* Comment ça marche */}
       <section className="py-24 bg-gradient-to-br from-gray-50 to-purple-50/30 relative">
-        <div className="absolute inset-0 opacity-40"></div>
-        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-20">
             <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-purple-900 bg-clip-text text-transparent mb-6">
@@ -494,54 +726,6 @@ const CocoonLandingPage = () => {
         </div>
       </section>
 
-      {/* Témoignages */}
-      <section id="testimonials" className="py-24 bg-gradient-to-br from-gray-50 to-blue-50/30">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-gray-900 to-blue-900 bg-clip-text text-transparent mb-6">
-              Ils ont transformé leur expertise
-            </h2>
-            <p className="text-xl text-gray-600">
-              Découvre comment nos utilisateurs automatisent et monétisent leurs compétences
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-10">
-            {testimonials.map((testimonial, index) => (
-              <Card key={index} className="border-0 shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 bg-white/90 backdrop-blur-sm">
-                <CardContent className="p-8 relative overflow-hidden">
-                  <div className="flex items-center gap-4 mb-8">
-                    <div className={`w-16 h-16 bg-gradient-to-br ${testimonial.gradient} rounded-2xl flex items-center justify-center text-2xl shadow-lg animate-pulse`}>
-                      {testimonial.avatar}
-                    </div>
-                    <div>
-                      <div className="font-bold text-gray-900 text-lg">{testimonial.name}</div>
-                      <div className="text-gray-600">{testimonial.activity}</div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 mb-6">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 text-yellow-400 fill-current animate-pulse" style={{ animationDelay: `${i * 0.1}s` }} />
-                    ))}
-                  </div>
-                  
-                  <p className="text-gray-700 text-lg leading-relaxed mb-6 italic">
-                    "{testimonial.content}"
-                  </p>
-                  
-                  <div className="bg-gradient-to-r from-green-100 to-emerald-100 px-4 py-2 rounded-lg inline-block">
-                    <span className="text-green-700 font-bold">{testimonial.revenue}</span>
-                  </div>
-                  
-                  <div className="absolute top-4 right-4 text-6xl text-gray-100 font-bold">"</div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Pricing */}
       <section id="pricing" className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -575,7 +759,7 @@ const CocoonLandingPage = () => {
                     <ul className="space-y-4 mb-10 text-left">
                       {plan.features.map((feature, j) => (
                         <li key={j} className="flex items-center gap-3">
-                          <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0 animate-pulse" />
+                          <CheckCircle className="h-6 w-6 text-green-500 flex-shrink-0" />
                           <span className="text-gray-700 text-lg">{feature}</span>
                         </li>
                       ))}
@@ -644,38 +828,4 @@ const CocoonLandingPage = () => {
             <div>
               <h4 className="font-semibold text-gray-900 mb-4">Produit</h4>
               <ul className="space-y-2 text-gray-600">
-                <li><a href="#" className="hover:text-gray-900 transition-colors">Comment ça marche</a></li>
-                <li><a href="#" className="hover:text-gray-900 transition-colors">Tarifs</a></li>
-                <li><a href="#" className="hover:text-gray-900 transition-colors">Exemples</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">Support</h4>
-              <ul className="space-y-2 text-gray-600">
-                <li><a href="#" className="hover:text-gray-900 transition-colors">Centre d'aide</a></li>
-                <li><a href="#" className="hover:text-gray-900 transition-colors">Contact</a></li>
-                <li><a href="#" className="hover:text-gray-900 transition-colors">API</a></li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-4">Légal</h4>
-              <ul className="space-y-2 text-gray-600">
-                <li><a href="#" className="hover:text-gray-900 transition-colors">Confidentialité</a></li>
-                <li><a href="#" className="hover:text-gray-900 transition-colors">CGU</a></li>
-                <li><a href="#" className="hover:text-gray-900 transition-colors">Cookies</a></li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-200 mt-8 pt-8 text-center text-gray-600">
-            <p>&copy; 2024 Cocoon AI. Tous droits réservés.</p>
-          </div>
-        </div>
-      </footer>
-    </div>
-  );
-};
-
-export default CocoonLandingPage;
+                <li><a href="#
