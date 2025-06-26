@@ -48,7 +48,7 @@ const HowItWorksSection: React.FC = () => {
           {/* Étape 2 */}
           <div className="group relative">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-50 to-purple-100 rounded-3xl transform -rotate-1 group-hover:-rotate-2 transition-transform duration-300"></div>
-            <div className="relative bg-white border-2 border-purple-300 rounded-3xl p-8 hover:border-purple-600 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div className="relative bg-white border-2 border-purple-600 rounded-3xl p-8 hover:border-purple-600 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div className="flex items-start gap-6">
                 {/* Numéro plus gros */}
                 <div className="flex-shrink-0">
@@ -81,7 +81,7 @@ const HowItWorksSection: React.FC = () => {
           {/* Étape 3 */}
           <div className="group relative">
             <div className="absolute inset-0 bg-gradient-to-r from-purple-50 to-purple-100 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
-            <div className="relative bg-white border-2 border-orange-300 rounded-3xl p-8 hover:border-purple-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div className="relative bg-white border-2 border-purple-800 rounded-3xl p-8 hover:border-purple-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               <div className="flex items-start gap-6">
                 {/* Numéro plus gros */}
                 <div className="flex-shrink-0">
