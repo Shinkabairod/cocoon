@@ -128,7 +128,7 @@ const ObjectivesStep = () => {
                     </div>
                   </div>
                 </CardContent>
-              </div>
+              </Card>
             );
           })}
         </div>
