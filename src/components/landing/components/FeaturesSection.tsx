@@ -65,7 +65,7 @@ const FeaturesSection: React.FC = () => {
           {/* Carte 3 - Fiabilité garantie */}
           <div className="group relative">
             <div className="absolute inset-0 bg-gradient-to-r from-gray-50 to-gray-100 rounded-3xl transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
-            <div className="relative bg-white border-2 border-blue-300 rounded-3xl p-8 hover:border-blue-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+            <div className="relative bg-white border-2 border-blue-400 rounded-3xl p-8 hover:border-blue-400 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               {/* Emoji animé */}
               <div className="w-14 h-14 bg-gray-100 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-gray-200 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
                 <span className="text-2xl ">🏆</span>
