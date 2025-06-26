@@ -16,7 +16,7 @@ const FeaturesSection: React.FC = () => {
             <div className="relative bg-white border-2 border-blue-800 rounded-3xl p-8 hover:border-blue-900 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               {/* Emoji animé */}
               <div className="w-14 h-14 bg-blue-150 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-300 transition-colors duration-300">
-                <span className="text-2xl">🗃️</span>
+                <span class="material-symbols-outlined text-2xl text-blue-400">inventory_2</span>
               </div>
               
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
@@ -41,7 +41,7 @@ const FeaturesSection: React.FC = () => {
             <div className="relative bg-white border-2 border-blue-600 rounded-3xl p-8 hover:border-blue-800 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               {/* Emoji animé */}
               <div className="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-200 transition-colors duration-300">
-                <span className="text-2xl">⚙️</span>
+                <span class="material-symbols-outlined text-2xl animate-bounce text-blue-400">settings</span>
               </div>
               
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
@@ -66,7 +66,7 @@ const FeaturesSection: React.FC = () => {
             <div className="relative bg-white border-2 border-blue-400 rounded-3xl p-8 hover:border-blue-400 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
               {/* Emoji animé */}
               <div className="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center mb-4 group-hover:bg-blue-100 transition-colors duration-300">
-                <span className="text-2xl ">🏆</span>
+                <span class="material-symbols-outlined text-2xl animate-pulse text-blue-400">emoji_events</span>
               </div>
               
               <h3 className="text-2xl font-bold text-gray-900 mb-4">
