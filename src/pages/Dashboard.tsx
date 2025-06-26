@@ -1,4 +1,5 @@
 // src/pages/Dashboard.tsx
+import SettingsSection from '@/components/dashboard/SettingsSection';
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOnboarding } from '@/contexts/OnboardingContext';
@@ -927,7 +928,7 @@ const Dashboard = () => {
               </Card>
             </div>
           )}
-          {activePage === 'settings' && <OnboardingDataSection />}
+          {activePage === 'settings' && <SettingsSection />}
         </div>
       </div>
 
