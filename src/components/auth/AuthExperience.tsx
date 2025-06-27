@@ -28,11 +28,10 @@ const AuthExperience: React.FC = () => {
   // Redirect authenticated users
 useEffect(() => {
   if (user) {
-    console.log('✅ User authenticated, redirecting to onboarding');
-    // Petit délai pour s'assurer que l'auth est bien établie
-    setTimeout(() => {
-      navigate('/onboarding', { replace: true });
-    }, 100);
+    console.log('✅ User authenticated, checking onboarding status...');
+    // Vérifier si l'utilisateur a déjà complété l'onboarding
+    // Pour l'instant, redirection directe vers onboarding
+    navigate('/onboarding', { replace: true });
   }
 }, [user, navigate]);
   const handleSignUp = async (e: React.FormEvent) => {
@@ -82,10 +81,6 @@ useEffect(() => {
           description: "Welcome! Let's set up your workspace."
         });
   
-        // Redirection explicite après un court délai
-        setTimeout(() => {
-          navigate('/onboarding', { replace: true });
-        }, 1500);
       } else {
         toast({
           title: "Please check your email",

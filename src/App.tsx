@@ -59,9 +59,11 @@ const App: React.FC = () => {
                   <Route 
                     path="/onboarding/*" 
                     element={
-                      <OnboardingGuard requireOnboarding={true}>
-                        <OnboardingFlow />
-                      </OnboardingGuard>
+                      <ProtectedRoute requireAuth={true}>
+                        <OnboardingGuard requireOnboarding={true}>
+                          <OnboardingFlow />
+                        </OnboardingGuard>
+                      </ProtectedRoute>
                     } 
                   />
                   
