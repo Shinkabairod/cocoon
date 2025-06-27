@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import { Card } from "@/components/ui/card";
-import { Check, Lightbulb, TrendingUp, Users, BookOpen, Zap, Target } from "lucide-react";
+import { Check, Lightbulb, TrendingUp, Users, BookOpen, Zap, Target, DollarSign } from "lucide-react";
 
 const AIAssistanceStep = () => {
   const { onboardingData, updateOnboardingData, nextStep, prevStep } = useOnboarding();
@@ -37,6 +37,11 @@ const AIAssistanceStep = () => {
       id: 'optimization', 
       label: 'Optimization', 
       icon: <Zap className="h-5 w-5" />
+    },
+    { 
+      id: 'monetization', 
+      label: 'Monetization', 
+      icon: <DollarSign className="h-5 w-5" />
     }
   ];
   
@@ -64,10 +69,10 @@ const AIAssistanceStep = () => {
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mb-4">
             <div className="w-2 h-2 bg-black rounded-full"></div>
-            <span>Step 10 of 11</span>
+            <span>Step 9 of 10</span>
           </div>
           <h1 className="text-6xl md:text-7xl font-bold mb-6">
-            <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">AI</span>
+            <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">Assistance</span>
           </h1>
         </div>
 

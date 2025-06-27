@@ -10,7 +10,6 @@ import ObjectivesStep from './steps/ObjectivesStep';
 import ChallengesStep from './steps/ChallengesStep';
 import ToolsStep from './steps/ToolsStep';
 import LearningStyleStep from './steps/LearningStyleStep';
-import TimeStep from './steps/TimeStep';
 import MonetizationStep from './steps/MonetizationStep';
 import AIAssistanceStep from './steps/AIAssistanceStep';
 import SummaryStep from './steps/SummaryStep';
@@ -35,12 +34,10 @@ const OnboardingFlow: React.FC = () => {
       case 7:
         return <LearningStyleStep />;
       case 8:
-        return <TimeStep />;
-      case 9:
         return <MonetizationStep />;
-      case 10:
+      case 9:
         return <AIAssistanceStep />;
-      case 11:
+      case 10:
         return <SummaryStep />;
       default:
         return <WelcomeStep />;

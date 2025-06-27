@@ -17,8 +17,8 @@ const initialData: OnboardingData = {
   onboardingCompleted: false
 };
 
-// Total steps: 11 (ajout de l'étape monétisation)
-const TOTAL_STEPS = 11;
+// Total steps: 10 (removed Time step)
+const TOTAL_STEPS = 10;
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 

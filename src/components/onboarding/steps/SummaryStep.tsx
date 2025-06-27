@@ -79,7 +79,7 @@ const SummaryStep: React.FC = () => {
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mb-4">
             <div className="w-2 h-2 bg-black rounded-full"></div>
-            <span>Step 11 of 11</span>
+            <span>Step 10 of 10</span>
           </div>
           <h1 className="text-6xl md:text-7xl font-bold mb-6">
             <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">Ready</span>
