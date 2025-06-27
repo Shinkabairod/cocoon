@@ -26,12 +26,15 @@ const AuthExperience: React.FC = () => {
   } = useToast();
 
   // Redirect authenticated users
-  useEffect(() => {
-    if (user) {
-      console.log('✅ User authenticated, redirecting to onboarding');
-      navigate('/onboarding');
-    }
-  }, [user, navigate]);
+useEffect(() => {
+  if (user) {
+    console.log('✅ User authenticated, redirecting to onboarding');
+    // Petit délai pour s'assurer que l'auth est bien établie
+    setTimeout(() => {
+      navigate('/onboarding', { replace: true });
+    }, 100);
+  }
+}, [user, navigate]);
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.email || !formData.password || !formData.fullName) {
@@ -78,7 +81,11 @@ const AuthExperience: React.FC = () => {
           title: "Account created!",
           description: "Welcome! Let's set up your workspace."
         });
-        // User will be redirected by the useEffect above
+  
+        // Redirection explicite après un court délai
+        setTimeout(() => {
+          navigate('/onboarding', { replace: true });
+        }, 1500);
       } else {
         toast({
           title: "Please check your email",
