@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -155,230 +154,245 @@ const AuthExperience: React.FC = () => {
     }
   };
 
-  const goHome = () => {
-    navigate('/');
-  };
-
-  // Welcome Step
+  // Page d'accueil (welcome step)
   if (currentStep === 'welcome') {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-4">
-        {/* Background pattern */}
-        <div className="absolute inset-0 opacity-[0.02]" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-        }} />
-
-        <div className="relative max-w-lg w-full text-center space-y-12">
-          {/* Logo */}
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <div className="relative">
-              <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center shadow-lg">
-                <div className="w-5 h-5 bg-white transform rotate-45 rounded-sm"></div>
-              </div>
-              <div className="absolute inset-0 bg-black rounded-lg blur opacity-30 animate-pulse" />
-            </div>
-            <span className="text-2xl font-bold text-black">Cocoon AI</span>
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
+        {/* Logo */}
+        <div className="flex items-center gap-3 mb-12">
+          <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
+            <div className="w-6 h-6 bg-white transform rotate-45"></div>
           </div>
-
-          {/* Main title */}
-          <div className="space-y-4">
-            <h1 className="text-4xl md:text-5xl font-bold text-gray-900">
-              Ready to <span className="bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">transform</span> your expertise?
-            </h1>
-            <p className="text-xl text-gray-600">
-              Join thousands creating their AI bot
-            </p>
-          </div>
-
-          {/* Action buttons */}
-          <div className="space-y-4">
-            <Button 
-              onClick={() => setCurrentStep('signup')}
-              size="lg" 
-              className="w-full bg-black hover:bg-gray-800 text-white py-6 text-xl font-semibold group shadow-xl hover:shadow-black/25 transition-all duration-300"
-            >
-              <Rocket className="h-6 w-6 mr-3 group-hover:animate-bounce" />
-              Create my bot for free
-            </Button>
-            
-            <Button 
-              onClick={() => setCurrentStep('signin')}
-              variant="outline" 
-              size="lg"
-              className="w-full py-6 text-xl border-2 border-gray-300 hover:border-black hover:scale-105 transition-all duration-300"
-            >
-              I already have an account
-            </Button>
-          </div>
-
-          {/* Back */}
-          <Button variant="ghost" onClick={goHome} className="text-gray-500 hover:text-gray-900">
-            ← Back to homepage
-          </Button>
+          <span className="text-2xl font-bold text-gray-900">Cocoon AI</span>
         </div>
-      </div>
-    );
-  }
 
-  // Sign Up Step
-  if (currentStep === 'signup') {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-4">
-        <div className="relative max-w-md w-full space-y-8">
-          {/* Back button */}
-          <Button 
-            variant="ghost" 
-            onClick={() => setCurrentStep('welcome')}
-            className="mb-4"
-          >
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back
-          </Button>
-
-          {/* Title */}
-          <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold text-gray-900">
-              Create your <span className="bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">account</span>
-            </h1>
-            <p className="text-gray-600">Setup takes less than 2 minutes</p>
-          </div>
-
-          {/* Form */}
-          <form onSubmit={handleSignUp} className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <Input
-                  type="text"
-                  placeholder="Your name"
-                  value={formData.fullName}
-                  onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
-                  className="h-14 text-lg border-2 border-gray-200 focus:border-violet-500 rounded-xl"
-                  required
-                />
-              </div>
-              
-              <div>
-                <Input
-                  type="email"
-                  placeholder="Your email"
-                  value={formData.email}
-                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                  className="h-14 text-lg border-2 border-gray-200 focus:border-violet-500 rounded-xl"
-                  required
-                />
-              </div>
-              
-              <div>
-                <Input
-                  type="password"
-                  placeholder="Choose a password (min. 6 characters)"
-                  value={formData.password}
-                  onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                  className="h-14 text-lg border-2 border-gray-200 focus:border-violet-500 rounded-xl"
-                  required
-                  minLength={6}
-                />
-              </div>
-            </div>
-
-            <Button 
-              type="submit" 
-              disabled={loading}
-              className="w-full h-14 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
-            >
-              {loading ? (
-                <div className="flex items-center gap-2">
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  Creating account...
-                </div>
-              ) : (
-                <>
-                  <Sparkles className="h-5 w-5 mr-2" />
-                  Create my bot
-                </>
-              )}
-            </Button>
-          </form>
-
-          <p className="text-center text-sm text-gray-500">
-            By creating an account, you agree to our terms
+        {/* Titre principal */}
+        <div className="text-center max-w-md mb-12">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+            Ready to{' '}
+            <span className="text-violet-600 font-black uppercase tracking-wide">
+              REVOLUTIONIZE
+            </span>
+            <br />
+            your expertise?
+          </h1>
+          <p className="text-gray-600 text-lg">
+            Join thousands creating their AI space
           </p>
         </div>
+
+        {/* Boutons d'action */}
+        <div className="w-full max-w-sm space-y-4">
+          <Button 
+            onClick={() => setCurrentStep('signup')}
+            className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 text-lg rounded-xl transition-all duration-200 hover:scale-105"
+          >
+            🚀 Create my AI Space for free
+          </Button>
+          
+          <Button 
+            onClick={() => setCurrentStep('signin')}
+            variant="outline" 
+            className="w-full border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-semibold py-4 text-lg rounded-xl bg-white hover:bg-gray-50 transition-all duration-200"
+          >
+            I already have an account
+          </Button>
+        </div>
+
+        {/* Lien retour */}
+        <div className="mt-8">
+          <button 
+            onClick={() => navigate('/')}
+            className="text-gray-500 hover:text-gray-700 flex items-center gap-2 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back to homepage
+          </button>
+        </div>
       </div>
     );
   }
 
-  // Sign In Step
-  if (currentStep === 'signin') {
+  // Page d'inscription
+  if (currentStep === 'signup') {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center p-4">
-        <div className="relative max-w-md w-full space-y-8">
-          {/* Back button */}
-          <Button 
-            variant="ghost" 
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
+        {/* Header avec bouton retour */}
+        <div className="w-full max-w-md mb-8">
+          <button
             onClick={() => setCurrentStep('welcome')}
-            className="mb-4"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
           >
-            <ArrowLeft className="h-4 w-4 mr-2" />
+            <ArrowLeft className="h-4 w-4" />
             Back
-          </Button>
+          </button>
+        </div>
 
-          {/* Title */}
-          <div className="text-center space-y-2">
-            <h1 className="text-3xl font-bold text-gray-900">
-              Welcome <span className="bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">back</span>
-            </h1>
-            <p className="text-gray-600">Sign in to access your bot</p>
+        {/* Logo */}
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+            <div className="w-5 h-5 bg-white transform rotate-45"></div>
           </div>
+          <span className="text-xl font-bold text-gray-900">Cocoon AI</span>
+        </div>
 
-          {/* Form */}
-          <form onSubmit={handleSignIn} className="space-y-6">
-            <div className="space-y-4">
-              <div>
-                <Input
-                  type="email"
-                  placeholder="Your email"
-                  value={formData.email}
-                  onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                  className="h-14 text-lg border-2 border-gray-200 focus:border-violet-500 rounded-xl"
-                  required
-                />
-              </div>
-              
-              <div>
-                <Input
-                  type="password"
-                  placeholder="Your password"
-                  value={formData.password}
-                  onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                  className="h-14 text-lg border-2 border-gray-200 focus:border-violet-500 rounded-xl"
-                  required
-                />
-              </div>
+        {/* Titre */}
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Create your AI Space
+          </h2>
+          <p className="text-gray-600">
+            Start building your personalized AI assistant
+          </p>
+        </div>
+
+        {/* Formulaire */}
+        <div className="w-full max-w-md">
+          <form onSubmit={handleSignUp} className="space-y-4">
+            <div>
+              <Input
+                type="text"
+                placeholder="Full Name"
+                value={formData.fullName}
+                onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
+                className="w-full py-3 px-4 rounded-xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                required
+              />
             </div>
-
-            <Button 
-              type="submit" 
+            <div>
+              <Input
+                type="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                className="w-full py-3 px-4 rounded-xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                required
+              />
+            </div>
+            <div>
+              <Input
+                type="password"
+                placeholder="Password (min. 6 characters)"
+                value={formData.password}
+                onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                className="w-full py-3 px-4 rounded-xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                required
+              />
+            </div>
+            <Button
+              type="submit"
               disabled={loading}
-              className="w-full h-14 bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 text-white text-lg font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+              className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 rounded-xl transition-all duration-200"
             >
               {loading ? (
-                <div className="flex items-center gap-2">
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  Signing in...
-                </div>
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating your space...
+                </>
               ) : (
                 <>
-                  Sign in to my bot
+                  <Rocket className="mr-2 h-4 w-4" />
+                  Create my AI Space for free
                 </>
               )}
             </Button>
           </form>
 
-          <div className="text-center">
-            <Button variant="ghost" className="text-gray-500 hover:text-gray-900">
-              Forgot password?
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => setCurrentStep('signin')}
+              className="text-violet-600 hover:text-violet-700 font-medium"
+            >
+              Already have an account? Sign in
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Page de connexion
+  if (currentStep === 'signin') {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
+        {/* Header avec bouton retour */}
+        <div className="w-full max-w-md mb-8">
+          <button
+            onClick={() => setCurrentStep('welcome')}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
+          >
+            <ArrowLeft className="h-4 w-4" />
+            Back
+          </button>
+        </div>
+
+        {/* Logo */}
+        <div className="flex items-center gap-3 mb-8">
+          <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+            <div className="w-5 h-5 bg-white transform rotate-45"></div>
+          </div>
+          <span className="text-xl font-bold text-gray-900">Cocoon AI</span>
+        </div>
+
+        {/* Titre */}
+        <div className="text-center mb-8">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+            Welcome back
+          </h2>
+          <p className="text-gray-600">
+            Sign in to access your AI space
+          </p>
+        </div>
+
+        {/* Formulaire */}
+        <div className="w-full max-w-md">
+          <form onSubmit={handleSignIn} className="space-y-4">
+            <div>
+              <Input
+                type="email"
+                placeholder="Email"
+                value={formData.email}
+                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                className="w-full py-3 px-4 rounded-xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                required
+              />
+            </div>
+            <div>
+              <Input
+                type="password"
+                placeholder="Password"
+                value={formData.password}
+                onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
+                className="w-full py-3 px-4 rounded-xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                required
+              />
+            </div>
+            <Button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-4 rounded-xl transition-all duration-200"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Signing in...
+                </>
+              ) : (
+                <>
+                  <Sparkles className="mr-2 h-4 w-4" />
+                  Sign in to my space
+                </>
+              )}
             </Button>
+          </form>
+
+          <div className="mt-6 text-center">
+            <button
+              onClick={() => setCurrentStep('signup')}
+              className="text-violet-600 hover:text-violet-700 font-medium"
+            >
+              Don't have an account? Create one
+            </button>
           </div>
         </div>
       </div>
