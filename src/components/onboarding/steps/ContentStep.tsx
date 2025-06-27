@@ -1,57 +1,53 @@
-
+// src/components/onboarding/steps/ContentStep.tsx
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { ContentType } from '@/types/onboarding';
-import { ArrowLeft, ArrowRight, Video, FileText, Mic, MessageSquare } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 const ContentStep: React.FC = () => {
   const { onboardingData, updateOnboardingData, nextStep, prevStep } = useOnboarding();
 
   const contentTypes = [
-    {
-      type: 'Videos' as ContentType,
-      title: 'Videos',
-      description: 'YouTube, TikTok, Reels',
-      icon: <Video className="h-8 w-8" />,
-      color: 'from-red-500 to-pink-500'
+    { 
+      type: 'Videos' as ContentType, 
+      title: 'Videos', 
+      description: 'YouTube, TikTok, Instagram Reels',
+      icon: '🎬',
+      color: 'from-red-500 to-pink-600'
     },
-    {
-      type: 'Blogs' as ContentType,
-      title: 'Blog Posts',
-      description: 'Articles and written content',
-      icon: <FileText className="h-8 w-8" />,
-      color: 'from-blue-500 to-cyan-500'
+    { 
+      type: 'Social Media Posts' as ContentType, 
+      title: 'Social Posts', 
+      description: 'Instagram, Twitter, LinkedIn posts',
+      icon: '📱',
+      color: 'from-blue-500 to-purple-600'
     },
-    {
-      type: 'Podcasts' as ContentType,
-      title: 'Podcasts',
+    { 
+      type: 'Blogs' as ContentType, 
+      title: 'Blog Articles', 
+      description: 'Long-form written content',
+      icon: '📝',
+      color: 'from-green-500 to-teal-600'
+    },
+    { 
+      type: 'Podcasts' as ContentType, 
+      title: 'Podcasts', 
       description: 'Audio content and shows',
-      icon: <Mic className="h-8 w-8" />,
-      color: 'from-purple-500 to-violet-500'
-    },
-    {
-      type: 'Social Media Posts' as ContentType,
-      title: 'Social Posts',
-      description: 'Instagram, Twitter, LinkedIn',
-      icon: <MessageSquare className="h-8 w-8" />,
-      color: 'from-green-500 to-emerald-500'
+      icon: '🎙️',
+      color: 'from-orange-500 to-red-600'
     }
   ];
 
-  const handleSelect = (type: ContentType) => {
-    const currentTypes = onboardingData.contentTypes || [];
-    const isSelected = currentTypes.includes(type);
+  const selectedTypes = onboardingData.contentTypes || [];
+
+  const handleToggleType = (type: ContentType) => {
+    const current = selectedTypes;
+    const updated = current.includes(type)
+      ? current.filter(t => t !== type)
+      : [...current, type];
     
-    if (isSelected) {
-      updateOnboardingData({ 
-        contentTypes: currentTypes.filter(t => t !== type) 
-      });
-    } else {
-      updateOnboardingData({ 
-        contentTypes: [...currentTypes, type] 
-      });
-    }
+    updateOnboardingData({ contentTypes: updated });
   };
 
   return (
@@ -64,30 +60,30 @@ const ContentStep: React.FC = () => {
             <span>Step 5 of 7</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            What <span className="bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">content</span> do you create?
+            What type of <span className="bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">content</span> do you want to create?
           </h1>
-          <p className="text-xl text-gray-600">Select all types that apply to you</p>
+          <p className="text-xl text-gray-600">Your AI will specialize in your chosen content formats</p>
         </div>
 
-        {/* Options */}
+        {/* Content Types Grid */}
         <div className="grid md:grid-cols-2 gap-6 mb-12">
-          {contentTypes.map((contentType) => (
+          {contentTypes.map((content) => (
             <button
-              key={contentType.type}
-              onClick={() => handleSelect(contentType.type)}
+              key={content.type}
+              onClick={() => handleToggleType(content.type)}
               className={`relative p-8 rounded-2xl border-2 transition-all duration-300 hover:scale-105 ${
-                onboardingData.contentTypes?.includes(contentType.type)
+                selectedTypes.includes(content.type)
                   ? 'border-violet-500 bg-violet-50 shadow-lg'
                   : 'border-gray-200 hover:border-gray-300 bg-white hover:shadow-md'
               }`}
             >
-              <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${contentType.color} flex items-center justify-center text-white mx-auto mb-4`}>
-                {contentType.icon}
+              <div className={`w-16 h-16 rounded-xl bg-gradient-to-r ${content.color} flex items-center justify-center text-white mx-auto mb-4`}>
+                <span className="text-3xl">{content.icon}</span>
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{contentType.title}</h3>
-              <p className="text-gray-600">{contentType.description}</p>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">{content.title}</h3>
+              <p className="text-gray-600">{content.description}</p>
               
-              {onboardingData.contentTypes?.includes(contentType.type) && (
+              {selectedTypes.includes(content.type) && (
                 <div className="absolute top-4 right-4 w-6 h-6 bg-violet-600 rounded-full flex items-center justify-center">
                   <div className="w-3 h-3 bg-white rounded-full"></div>
                 </div>
@@ -105,7 +101,7 @@ const ContentStep: React.FC = () => {
           
           <Button
             onClick={nextStep}
-            disabled={!onboardingData.contentTypes || onboardingData.contentTypes.length === 0}
+            disabled={selectedTypes.length === 0}
             className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 text-white px-8 py-3 rounded-xl font-semibold disabled:opacity-50"
           >
             Continue

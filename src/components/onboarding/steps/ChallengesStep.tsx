@@ -1,152 +1,90 @@
+// src/components/onboarding/steps/ChallengesStep.tsx
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { useOnboarding } from '@/contexts/OnboardingContext';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
-import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { useOnboarding } from "@/contexts/OnboardingContext";
-import OnboardingLayout from "../OnboardingLayout";
-import { 
-  Clock, 
-  Brain, 
-  Target, 
-  Users,
-  Lightbulb,
-  Zap,
-  TrendingUp,
-  AlertCircle
-} from "lucide-react";
+const ChallengesStep: React.FC = () => {
+  const { onboardingData, updateOnboardingData, nextStep, prevStep } = useOnboarding();
 
-const ChallengesStep = () => {
-  const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
-  const [selectedChallenges, setSelectedChallenges] = useState<string[]>(onboardingData.challenges || []);
-  
   const challenges = [
-    {
-      id: 'lack_of_time',
-      name: 'Manque de temps',
-      icon: <Clock className="h-6 w-6" />,
-      description: 'Difficile de tout faire dans la journée'
-    },
-    {
-      id: 'repetitive_tasks',
-      name: 'Tâches répétitives',
-      icon: <Zap className="h-6 w-6" />,
-      description: 'Beaucoup de travail manuel et répétitif'
-    },
-    {
-      id: 'content_creation',
-      name: 'Création de contenu',
-      icon: <Lightbulb className="h-6 w-6" />,
-      description: 'Manque d\'inspiration ou de temps pour créer'
-    },
-    {
-      id: 'communication',
-      name: 'Communication',
-      icon: <Users className="h-6 w-6" />,
-      description: 'Emails, réseaux sociaux, présentation'
-    },
-    {
-      id: 'organization',
-      name: 'Organisation',
-      icon: <Target className="h-6 w-6" />,
-      description: 'Planification et gestion des priorités'
-    },
-    {
-      id: 'learning_curve',
-      name: 'Apprentissage',
-      icon: <Brain className="h-6 w-6" />,
-      description: 'Se former rapidement sur de nouveaux sujets'
-    },
-    {
-      id: 'growth',
-      name: 'Développement',
-      icon: <TrendingUp className="h-6 w-6" />,
-      description: 'Faire grandir son activité ou audience'
-    },
-    {
-      id: 'decision_making',
-      name: 'Prise de décision',
-      icon: <AlertCircle className="h-6 w-6" />,
-      description: 'Analyser les options et choisir'
-    }
+    { id: 'ideas', title: 'Finding ideas', description: 'Coming up with fresh content concepts', icon: '💡' },
+    { id: 'writing', title: 'Writing scripts', description: 'Creating engaging scripts and captions', icon: '✍️' },
+    { id: 'editing', title: 'Video editing', description: 'Post-production and visual effects', icon: '🎬' },
+    { id: 'consistency', title: 'Staying consistent', description: 'Publishing content regularly', icon: '📅' },
+    { id: 'engagement', title: 'Growing engagement', description: 'Getting likes, comments, shares', icon: '❤️' },
+    { id: 'analytics', title: 'Understanding analytics', description: 'Analyzing performance data', icon: '📊' }
   ];
-  
-  const toggleChallenge = (challengeId: string) => {
-    setSelectedChallenges(prev => 
-      prev.includes(challengeId)
-        ? prev.filter(id => id !== challengeId)
-        : [...prev, challengeId]
-    );
+
+  const selectedChallenges = onboardingData.challenges || [];
+
+  const handleToggleChallenge = (challengeId: string) => {
+    const current = selectedChallenges;
+    const updated = current.includes(challengeId)
+      ? current.filter(c => c !== challengeId)
+      : [...current, challengeId];
+    
+    updateOnboardingData({ challenges: updated });
   };
-  
-  const handleContinue = () => {
-    updateOnboardingData({ challenges: selectedChallenges });
-    nextStep();
-  };
-  
+
   return (
-    <OnboardingLayout 
-      title="Quels sont vos principaux défis ?" 
-      subtitle="Identifiez les obstacles que l'IA peut vous aider à surmonter"
-    >
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-          {challenges.map((challenge) => {
-            const isSelected = selectedChallenges.includes(challenge.id);
-            
-            return (
-              <Card 
-                key={challenge.id}
-                className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
-                  isSelected
-                    ? 'ring-2 ring-purple-500 bg-purple-50' 
-                    : 'hover:bg-gray-50'
-                }`}
-                onClick={() => toggleChallenge(challenge.id)}
-              >
-                <CardContent className="p-4">
-                  <div className="flex items-start space-x-3">
-                    <div className={`p-2 rounded-lg ${
-                      isSelected ? 'bg-purple-500 text-white' : 'bg-gray-100'
-                    }`}>
-                      {challenge.icon}
-                    </div>
-                    <div className="flex-1">
-                      <h3 className="font-medium">{challenge.name}</h3>
-                      <p className="text-sm text-muted-foreground">{challenge.description}</p>
-                    </div>
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                      isSelected
-                        ? 'bg-purple-500 border-purple-500' 
-                        : 'border-gray-300'
-                    }`}>
-                      {isSelected && (
-                        <div className="w-3 h-3 rounded-full bg-white"></div>
-                      )}
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <div className="relative max-w-4xl w-full">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mb-4">
+            <div className="w-2 h-2 bg-violet-600 rounded-full"></div>
+            <span>Step 6 of 7</span>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            What are your biggest <span className="bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">challenges</span>?
+          </h1>
+          <p className="text-xl text-gray-600">Your AI will focus on helping you with these areas</p>
         </div>
-        
-        <div className="text-center">
-          <p className="text-sm text-muted-foreground">
-            {selectedChallenges.length} défi(s) sélectionné(s)
-          </p>
+
+        {/* Challenges Grid */}
+        <div className="grid md:grid-cols-3 gap-4 mb-12">
+          {challenges.map((challenge) => (
+            <button
+              key={challenge.id}
+              onClick={() => handleToggleChallenge(challenge.id)}
+              className={`relative p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 ${
+                selectedChallenges.includes(challenge.id)
+                  ? 'border-violet-500 bg-violet-50 shadow-lg'
+                  : 'border-gray-200 hover:border-gray-300 bg-white hover:shadow-md'
+              }`}
+            >
+              <div className="text-3xl mb-3">{challenge.icon}</div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">{challenge.title}</h3>
+              <p className="text-gray-600 text-sm">{challenge.description}</p>
+              
+              {selectedChallenges.includes(challenge.id) && (
+                <div className="absolute top-3 right-3 w-6 h-6 bg-violet-600 rounded-full flex items-center justify-center">
+                  <div className="w-3 h-3 bg-white rounded-full"></div>
+                </div>
+              )}
+            </button>
+          ))}
         </div>
-        
-        <div className="pt-4 flex justify-center">
-          <Button 
-            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-            onClick={handleContinue}
+
+        {/* Navigation */}
+        <div className="flex justify-between items-center">
+          <Button variant="ghost" onClick={prevStep} className="text-gray-500">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+          
+          <Button
+            onClick={nextStep}
             disabled={selectedChallenges.length === 0}
+            className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 text-white px-8 py-3 rounded-xl font-semibold disabled:opacity-50"
           >
-            Continuer
+            Continue
+            <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </div>
       </div>
-    </OnboardingLayout>
+    </div>
   );
 };
 
