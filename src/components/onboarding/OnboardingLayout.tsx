@@ -1,5 +1,4 @@
 
-// src/components/onboarding/OnboardingLayout.tsx
 import React from 'react';
 import { Progress } from '@/components/ui/progress';
 import { useOnboarding } from '@/contexts/OnboardingContext';
@@ -9,13 +8,19 @@ interface OnboardingLayoutProps {
   title?: string;
   subtitle?: string;
   showProgress?: boolean;
+  showBackButton?: boolean;
+  fullWidth?: boolean;
+  contentClassName?: string;
 }
 
 const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
   children,
   title,
   subtitle,
-  showProgress = true
+  showProgress = true,
+  showBackButton = true,
+  fullWidth = false,
+  contentClassName = ''
 }) => {
   const { onboardingData, totalSteps } = useOnboarding();
   const progress = ((onboardingData.step - 1) / (totalSteps - 1)) * 100;
@@ -33,7 +38,7 @@ const OnboardingLayout: React.FC<OnboardingLayoutProps> = ({
       )}
 
       <div className="flex items-center justify-center min-h-screen p-4">
-        <div className="relative max-w-4xl w-full">
+        <div className={`relative ${fullWidth ? 'w-full' : 'max-w-4xl w-full'} ${contentClassName}`}>
           {/* Header */}
           {(title || subtitle) && (
             <div className="text-center mb-12">
