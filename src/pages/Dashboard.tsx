@@ -1,1295 +1,496 @@
-// src/pages/Dashboard.tsx
-import SettingsSection from '@/components/dashboard/SettingsSection';
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useOnboarding } from '@/contexts/OnboardingContext';
-import { useUserStats } from '@/hooks/useUserStats';
-import { huggingfaceService } from '@/services/huggingfaceService';
-import { useToast } from '@/hooks/use-toast';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { useIsMobile } from '@/hooks/use-mobile';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Home,
-  Folder,
-  Sparkles,
-  DollarSign,
-  Settings,
-  Menu,
-  X,
-  Users,
-  Target,
-  TrendingUp,
-  Clock,
-  Shield,
-  Zap,
-  Upload,
-  FileText,
-  Image,
-  Music,
-  Video,
-  Download,
-  Trash2,
-  Eye,
+import React, { useState } from 'react';
+import { 
+  Home, 
+  FileText, 
+  Calendar, 
+  BookOpen, 
+  BarChart, 
+  Settings, 
+  HelpCircle, 
+  LogOut,
+  Search,
+  Bell,
   Plus,
+  Sparkles,
+  FolderOpen,
+  User,
+  Crown,
+  Eye,
+  TrendingUp,
+  Users,
+  CheckCircle,
+  ArrowRight,
+  Video,
+  Mic,
+  Image,
   MessageSquare,
-  BarChart3,
-  Send,
-  Loader2,
-  Share,
-  MapPin,
-  Calendar,
+  Upload,
+  Edit,
+  Trash2,
+  MoreHorizontal,
+  Target,
   Brain,
   Lightbulb,
-  CheckCircle,
-  Star,
-  Globe,
-  Lock,
-  Save,
-  ChevronRight,
-  Crown,
-  PlayCircle,
-  Edit,
-  Smile,
-  User,
-  MoreHorizontal,
-  FolderOpen,
-  Play,
-  ArrowRight,
-  Building,
-  ExternalLink
+  Globe
 } from 'lucide-react';
 
-// Import des composants Dashboard
-import UserSettingsSection from '@/components/dashboard/UserSettingsSection';
-import OnboardingDataSection from '@/components/dashboard/OnboardingDataSection';
-import CreationsSection from '@/components/dashboard/CreationsSection';
+// Composants simulés (gardez vos vrais composants)
+const UserSettingsSection = () => (
+  <div className="space-y-6">
+    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+      <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+        <Settings className="h-6 w-6" />
+        Mon Compte
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <div className="flex items-center gap-4">
+            <div className="w-16 h-16 bg-black rounded-xl flex items-center justify-center">
+              <span className="text-white font-bold text-xl">JD</span>
+            </div>
+            <div>
+              <h3 className="font-semibold">John Doe</h3>
+              <p className="text-gray-600">john@example.com</p>
+              <div className="flex items-center gap-2 mt-1">
+                <Crown className="h-4 w-4 text-yellow-500" />
+                <span className="text-sm font-medium">Plan Pro</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="space-y-3">
+          <h4 className="font-medium">Actions rapides</h4>
+          <div className="grid grid-cols-2 gap-3">
+            {[
+              { icon: Sparkles, label: 'Outils IA' },
+              { icon: FolderOpen, label: 'Mes fichiers' },
+              { icon: BarChart, label: 'Statistiques' },
+              { icon: User, label: 'Mon profil' }
+            ].map((item, index) => (
+              <button
+                key={index}
+                className="bg-gray-50 hover:bg-gray-100 p-3 rounded-lg transition-colors flex flex-col items-center gap-2"
+              >
+                <item.icon className="h-5 w-5" />
+                <span className="text-xs font-medium">{item.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
 
-const Dashboard = () => {
-  const { user } = useAuth();
-  const { onboardingData } = useOnboarding();
-  const { data: userStats, isLoading, refetch } = useUserStats(user?.id);
-  const { toast } = useToast();
+const OnboardingDataSection = () => (
+  <div className="space-y-6">
+    <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+      <h2 className="text-2xl font-semibold mb-4 flex items-center gap-2">
+        <User className="h-6 w-6" />
+        Mes Données Onboarding
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="space-y-4">
+          <div>
+            <label className="text-sm font-medium text-gray-600">Niveau d'expérience</label>
+            <p className="font-medium">Intermédiaire</p>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-gray-600">Niche</label>
+            <p className="font-medium">Marketing Digital</p>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-gray-600">Plateformes</label>
+            <div className="flex gap-2 mt-1">
+              {['YouTube', 'LinkedIn', 'Instagram'].map((platform) => (
+                <span key={platform} className="px-2 py-1 bg-gray-100 text-gray-700 rounded-full text-xs">
+                  {platform}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+        <div className="space-y-4">
+          <div>
+            <label className="text-sm font-medium text-gray-600">Objectif principal</label>
+            <p className="font-medium">Développer mon audience</p>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-gray-600">Type de contenu</label>
+            <p className="font-medium">Vidéos éducatives</p>
+          </div>
+          <div>
+            <label className="text-sm font-medium text-gray-600">Temps disponible</label>
+            <p className="font-medium">3-5 heures par semaine</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
+const CreationsSection = () => (
+  <div className="space-y-6">
+    <div className="flex items-center justify-between">
+      <h2 className="text-2xl font-semibold">Mes Créations</h2>
+      <button className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors flex items-center gap-2">
+        <Plus className="h-4 w-4" />
+        Nouvelle création
+      </button>
+    </div>
+    
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {[
+        { title: 'Script Vidéo YouTube', type: 'Vidéo', status: 'Terminé', icon: Video, color: 'from-red-500 to-red-600' },
+        { title: 'Article de Blog SEO', type: 'Article', status: 'En cours', icon: FileText, color: 'from-blue-500 to-blue-600' },
+        { title: 'Post LinkedIn', type: 'Social', status: 'Planifié', icon: MessageSquare, color: 'from-green-500 to-green-600' },
+      ].map((creation, index) => (
+        <div key={index} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+          <div className={`w-12 h-12 bg-gradient-to-br ${creation.color} rounded-lg flex items-center justify-center mb-4`}>
+            <creation.icon className="h-6 w-6 text-white" />
+          </div>
+          <h3 className="font-semibold mb-2">{creation.title}</h3>
+          <p className="text-sm text-gray-600 mb-3">{creation.type}</p>
+          <div className="flex items-center justify-between">
+            <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+              creation.status === 'Terminé' ? 'bg-green-100 text-green-800' :
+              creation.status === 'En cours' ? 'bg-orange-100 text-orange-800' :
+              'bg-blue-100 text-blue-800'
+            }`}>
+              {creation.status}
+            </span>
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <MoreHorizontal className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const UserWorkspace = () => (
+  <div className="space-y-6">
+    <div className="flex items-center justify-between">
+      <h2 className="text-2xl font-semibold flex items-center gap-2">
+        <FolderOpen className="h-6 w-6" />
+        Mon Espace de Travail
+      </h2>
+      <button className="bg-black text-white px-4 py-2 rounded-lg hover:bg-gray-800 transition-colors flex items-center gap-2">
+        <Upload className="h-4 w-4" />
+        Uploader
+      </button>
+    </div>
+    
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {[
+        { type: 'Documents', count: 24, icon: FileText, color: 'from-blue-500 to-blue-600' },
+        { type: 'Images', count: 18, icon: Image, color: 'from-green-500 to-green-600' },
+        { type: 'Vidéos', count: 7, icon: Video, color: 'from-red-500 to-red-600' },
+        { type: 'Audio', count: 5, icon: Mic, color: 'from-purple-500 to-purple-600' }
+      ].map((resource) => (
+        <div key={resource.type} className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+          <div className={`w-12 h-12 bg-gradient-to-br ${resource.color} rounded-lg flex items-center justify-center mb-4`}>
+            <resource.icon className="h-6 w-6 text-white" />
+          </div>
+          <h3 className="font-semibold mb-1">{resource.type}</h3>
+          <p className="text-sm text-gray-600">{resource.count} fichiers</p>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const DashboardWebImproved = () => {
   const [activePage, setActivePage] = useState('welcome');
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const isMobile = useIsMobile();
-
-  // États pour les modales et actions
-  const [activeModal, setActiveModal] = useState(null);
-  const [chatInput, setChatInput] = useState('');
-  const [scriptTopic, setScriptTopic] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedContent, setGeneratedContent] = useState('');
-  const [chatMessages, setChatMessages] = useState([]);
-  const [uploadingFiles, setUploadingFiles] = useState(false);
-
-  // États pour la section Ressources
-  const [activeCategory, setActiveCategory] = useState('resources');
-  const [folders, setFolders] = useState({
-    resources: [
-      { id: '1', name: 'Scripts Vidéos', emoji: '🎬', items: [] },
-      { id: '2', name: 'Images de marque', emoji: '🎨', items: [] }
-    ],
-    personal: [
-      { id: '3', name: 'Mon Profil', emoji: '👤', items: [] },
-      { id: '4', name: 'Mes Objectifs', emoji: '🎯', items: [] },
-      { id: '5', name: 'Mon Business', emoji: '🏢', items: [] },
-      { id: '6', name: 'Mes Plateformes', emoji: '📱', items: [] },
-      { id: '7', name: 'Mes Défis', emoji: '⚡', items: [] }
-    ]
-  });
-
-  // États pour les modales
-  const [showNewFolderModal, setShowNewFolderModal] = useState(false);
-  const [showNewItemModal, setShowNewItemModal] = useState(false);
-  const [showRenameFolderModal, setShowRenameFolderModal] = useState(false);
-  const [showFilePreviewModal, setShowFilePreviewModal] = useState(false);
-  const [selectedFolder, setSelectedFolder] = useState(null);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [newFolderName, setNewFolderName] = useState('');
-  const [newFolderEmoji, setNewFolderEmoji] = useState('📁');
-  const [renameFolderData, setRenameFolderData] = useState({ name: '', emoji: '' });
-  const [newItemData, setNewItemData] = useState({ 
-    name: '', 
-    type: 'text', 
-    content: '', 
-    file: null,
-    url: '' 
-  });
-
-  // Navigation avec thème Cocoon
-  const navigation = [
-    {
-      id: 'welcome',
-      name: 'Mon compte',
-      icon: Home,
-      description: 'Votre espace personnel'
-    },
-    {
-      id: 'resources',
-      name: 'Mes ressources',
-      icon: Folder,
-      description: 'Ressources et données'
-    },
-    {
-      id: 'creation',
-      name: 'Mes créations',
-      icon: Sparkles,
-      description: 'Création de contenu'
-    },
-    {
-      id: 'monetization',
-      name: 'Mon bot IA',
-      icon: DollarSign,
-      description: 'Partage et monétisation'
-    },
-    {
-      id: 'settings',
-      name: 'Réglages',
-      icon: Settings,
-      description: 'Configuration'
-    }
+  
+  // Navigation items pour la sidebar
+  const navItems = [
+    { id: 'welcome', icon: Home, label: "Accueil", path: "/dashboard" },
+    { id: 'creation', icon: FileText, label: "Mes Créations", path: "/dashboard/scripts" },
+    { id: 'resources', icon: FolderOpen, label: "Mon Workspace", path: "/dashboard/calendar" },
+    { id: 'monetization', icon: Crown, label: "Mon Bot IA", path: "/dashboard/resources" },
+    { id: 'settings', icon: Settings, label: "Paramètres", path: "/dashboard/analytics" },
+  ];
+  
+  const accountItems = [
+    { icon: HelpCircle, label: "Aide & Support", path: "/dashboard/support" },
   ];
 
-  // Emojis populaires pour les dossiers
-  const popularEmojis = [
-    '📁', '📂', '🎬', '🎨', '📝', '💼', '🎯', '💡', 
-    '🚀', '⭐', '📊', '🎵', '📷', '🎥', '📖', '💻',
-    '🏆', '❤️', '🔥', '✨', '🌟', '🎉', '👤', '🏠',
-    '📱', '🌐', '🔧', '📈', '💰', '🎪', '🎨', '🎭',
-    '😊', '😍', '🤔', '💪', '👍', '🎁', '⚡', '🌈',
-    '🍕', '☕', '🎸', '🎲', '🎈', '🎊', '🌺', '🌸',
-    '🦄', '🐱', '🐶', '🎀', '💝', '💎', '🔮', '🌙',
-    '☀️', '⭐', '💫', '🌊', '🔑', '🎪', '🎯', '📚'
+  // Données pour la page d'accueil
+  const stats = {
+    contents: 47,
+    views: 12543,
+    engagement: 8.7,
+    followers: 2847
+  };
+
+  const quickActions = [
+    { icon: Video, label: 'Script Vidéo', color: 'from-red-500 to-red-600', desc: 'Créer un script optimisé' },
+    { icon: Mic, label: 'Podcast', color: 'from-purple-500 to-purple-600', desc: 'Episode de podcast' },
+    { icon: FileText, label: 'Article Blog', color: 'from-blue-500 to-blue-600', desc: 'Article de blog SEO' },
+    { icon: MessageSquare, label: 'Post Social', color: 'from-green-500 to-green-600', desc: 'Contenu pour réseaux' }
   ];
 
-  // Fonction pour auto-classer les données d'onboarding
-  const autoClassifyOnboardingData = () => {
-    if (!onboardingData || folders.personal.some(folder => folder.items.length > 0)) {
-      return; // Déjà classé ou pas de données
-    }
+  const recentContent = [
+    { id: 1, title: 'Comment créer du contenu viral', type: 'Vidéo', status: 'Publié', views: '2.1K', engagement: '5.2%' },
+    { id: 2, title: '10 astuces marketing digital', type: 'Article', status: 'En cours', views: '1.8K', engagement: '7.4%' },
+    { id: 3, title: 'Interview expert SEO', type: 'Podcast', status: 'Planifié', views: '-', engagement: '-' }
+  ];
 
-    const updatedFolders = { ...folders };
-
-    // Classer dans "Mon Profil" - Données personnelles et professionnelles
-    const profileItems = [];
-    if (onboardingData.profession) {
-      profileItems.push({
-        id: 'profile_profession',
-        name: 'Domaine d\'activité',
-        type: 'text',
-        content: onboardingData.profession,
-        createdAt: new Date().toISOString(),
-        source: 'onboarding'
-      });
-    }
-    if (onboardingData.experienceLevel) {
-      profileItems.push({
-        id: 'profile_experience',
-        name: 'Niveau d\'expérience',
-        type: 'text',
-        content: onboardingData.experienceLevel,
-        createdAt: new Date().toISOString(),
-        source: 'onboarding'
-      });
-    }
-    if (onboardingData.timeAvailable) {
-      profileItems.push({
-        id: 'profile_time',
-        name: 'Temps disponible',
-        type: 'text',
-        content: onboardingData.timeAvailable,
-        createdAt: new Date().toISOString(),
-        source: 'onboarding'
-      });
-    }
-
-    // Classer dans "Mes Objectifs" - Objectifs et aspirations
-    const objectiveItems = [];
-    if (onboardingData.objectives && onboardingData.objectives.length > 0) {
-      objectiveItems.push({
-        id: 'obj_main_goals',
-        name: 'Objectifs principaux',
-        type: 'text',
-        content: onboardingData.objectives.join(', '),
-        createdAt: new Date().toISOString(),
-        source: 'onboarding'
-      });
-    }
-    if (onboardingData.contentGoal) {
-      objectiveItems.push({
-        id: 'obj_content_goal',
-        name: 'Objectif de contenu',
-        type: 'text',
-        content: onboardingData.contentGoal,
-        createdAt: new Date().toISOString(),
-        source: 'onboarding'
-      });
-    }
-    if (onboardingData.monetization) {
-      objectiveItems.push({
-        id: 'obj_monetization',
-        name: 'Objectifs de monétisation',
-        type: 'text',
-        content: onboardingData.monetization,
-        createdAt: new Date().toISOString(),
-        source: 'onboarding'
-      });
-    }
-
-    // Classer dans "Mon Business" - Informations business et audience
-    const businessItems = [];
-    if (onboardingData.businessType) {
-      businessItems.push({
-        id: 'biz_type',
-        name: 'Type d\'activité',
-        type: 'text',
-        content: onboardingData.businessType,
-        createdAt: new Date().toISOString(),
-        source: 'onboarding'
-      });
-    }
-    if (onboardingData.businessDescription) {
-      businessItems.push({
-        id: 'biz_desc',
-        name: 'Description de l\'activité',
-        type: 'text',
-        content: onboardingData.businessDescription,
-        createdAt: new Date().toISOString(),
-        source: 'onboarding'
-      });
-    }
-    if (onboardingData.targetGeneration) {
-      businessItems.push({
-        id: 'biz_audience',
-        name: 'Audience cible',
-        type: 'text',
-        content: onboardingData.targetGeneration,
-        createdAt: new Date().toISOString(),
-        source: 'onboarding'
-      });
-    }
-
-    // Classer dans "Mes Plateformes" - Outils et plateformes utilisés
-    const platformItems = [];
-    if (onboardingData.platforms && onboardingData.platforms.length > 0) {
-      platformItems.push({
-        id: 'platforms_list',
-        name: 'Plateformes utilisées',
-        type: 'text',
-        content: onboardingData.platforms.join(', '),
-        createdAt: new Date().toISOString(),
-        source: 'onboarding'
-      });
-    }
-    if (onboardingData.toolsPreferences && onboardingData.toolsPreferences.length > 0) {
-      platformItems.push({
-        id: 'tools_preferences',
-        name: 'Outils préférés',
-        type: 'text',
-        content: onboardingData.toolsPreferences.join(', '),
-        createdAt: new Date().toISOString(),
-        source: 'onboarding'
-      });
-    }
-    if (onboardingData.contentTypes && onboardingData.contentTypes.length > 0) {
-      platformItems.push({
-        id: 'content_types',
-        name: 'Types de contenu',
-        type: 'text',
-        content: onboardingData.contentTypes.join(', '),
-        createdAt: new Date().toISOString(),
-        source: 'onboarding'
-      });
-    }
-
-    // Classer dans "Mes Défis" - Défis et besoins d'assistance
-    const challengeItems = [];
-    if (onboardingData.challenges && onboardingData.challenges.length > 0) {
-      challengeItems.push({
-        id: 'challenges_list',
-        name: 'Défis principaux',
-        type: 'text',
-        content: onboardingData.challenges.join(', '),
-        createdAt: new Date().toISOString(),
-        source: 'onboarding'
-      });
-    }
-    if (onboardingData.aiAssistanceAreas && onboardingData.aiAssistanceAreas.length > 0) {
-      challengeItems.push({
-        id: 'ai_assistance',
-        name: 'Domaines d\'assistance IA',
-        type: 'text',
-        content: onboardingData.aiAssistanceAreas.join(', '),
-        createdAt: new Date().toISOString(),
-        source: 'onboarding'
-      });
-    }
-    if (onboardingData.learningStyle) {
-      challengeItems.push({
-        id: 'learning_style',
-        name: 'Style d\'apprentissage',
-        type: 'text',
-        content: onboardingData.learningStyle,
-        createdAt: new Date().toISOString(),
-        source: 'onboarding'
-      });
-    }
-
-    // Mettre à jour les dossiers avec les items
-    updatedFolders.personal = updatedFolders.personal.map(folder => {
-      if (folder.id === '3') return { ...folder, items: profileItems };
-      if (folder.id === '4') return { ...folder, items: objectiveItems };
-      if (folder.id === '5') return { ...folder, items: businessItems };
-      if (folder.id === '6') return { ...folder, items: platformItems };
-      if (folder.id === '7') return { ...folder, items: challengeItems };
-      return folder;
-    });
-
-    setFolders(updatedFolders);
-
-    const totalItems = profileItems.length + objectiveItems.length + businessItems.length + platformItems.length + challengeItems.length;
-    
-    if (totalItems > 0) {
-      toast({
-        title: "🎯 Profil organisé",
-        description: `${totalItems} informations classées automatiquement dans vos dossiers personnels.`
-      });
-    }
-  };
-
-  // Auto-classer au chargement
-  useEffect(() => {
-    if (onboardingData && Object.keys(onboardingData).length > 0) {
-      autoClassifyOnboardingData();
-    }
-  }, [onboardingData]);
-
-  // Fonction pour obtenir l'icône selon le type de fichier
-  const getFileIcon = (type, fileName = '') => {
-    if (type === 'file') {
-      const extension = fileName.split('.').pop()?.toLowerCase();
-      if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) return <Image className="h-4 w-4 text-blue-500" />;
-      if (['mp4', 'avi', 'mov', 'wmv'].includes(extension)) return <Video className="h-4 w-4 text-red-500" />;
-      if (['mp3', 'wav', 'flac'].includes(extension)) return <Music className="h-4 w-4 text-purple-500" />;
-      if (['pdf', 'doc', 'docx', 'txt'].includes(extension)) return <FileText className="h-4 w-4 text-green-500" />;
-    }
-    if (type === 'link') return <ExternalLink className="h-4 w-4 text-blue-500" />;
-    return <FileText className="h-4 w-4 text-gray-500" />;
-  };
-
-  // Fonction pour obtenir l'aperçu du fichier
-  const getFilePreview = (item) => {
-    if (item.type === 'text') {
-      return item.content.length > 100 ? item.content.substring(0, 100) + '...' : item.content;
-    }
-    if (item.type === 'link') {
-      return item.url;
-    }
-    if (item.type === 'file' && item.file) {
-      return `Fichier: ${item.file.name} (${(item.file.size / 1024).toFixed(1)} KB)`;
-    }
-    return 'Aucun aperçu disponible';
-  };
-
-  // Fonction pour gérer l'exécution des boutons personnalisés
-  const handleExecuteCustomButton = async (buttonData, placeholderValues) => {
-    console.log('🚀 Exécution du bouton:', buttonData.name);
-    console.log('📝 Prompt:', buttonData.prompt);
-    console.log('🔧 Paramètres:', placeholderValues);
-    console.log('📁 Dossiers connectés:', buttonData.connectedFolders);
-
-    try {
-      setIsGenerating(true);
-      
-      // 1. Remplacer les placeholders dans le prompt
-      let finalPrompt = buttonData.prompt;
-      Object.entries(placeholderValues).forEach(([key, value]) => {
-        finalPrompt = finalPrompt.replace(new RegExp(`{${key}}`, 'g'), value);
-      });
-      
-      // 2. Récupérer le contenu des dossiers connectés
-      const connectedContent = [];
-      buttonData.connectedFolders.forEach(folderId => {
-        const folder = [...folders.resources, ...folders.personal].find(f => f.id === folderId);
-        if (folder && folder.items.length > 0) {
-          connectedContent.push(`\n## Ressources de "${folder.name}" :\n`);
-          folder.items.forEach(item => {
-            connectedContent.push(`- ${item.name}: ${item.content || item.description || 'Contenu disponible'}\n`);
-          });
-        }
-      });
-      
-      // 3. Créer le prompt final avec le contexte
-      const contextualPrompt = `${finalPrompt}\n\n${connectedContent.length > 0 ? 'Contexte et ressources disponibles :' + connectedContent.join('') : ''}`;
-      
-      // 4. Simuler l'appel à l'IA (tu pourras connecter ton API ici)
-      console.log('🤖 Prompt final envoyé à l\'IA:', contextualPrompt);
-      
-      // Simulation de génération (remplace par ton appel API réel)
-      setTimeout(() => {
-        const generatedContent = `✨ Contenu généré par "${buttonData.name}":\n\n` +
-          `Prompt utilisé: ${finalPrompt}\n\n` +
-          `Paramètres:\n${Object.entries(placeholderValues).map(([k,v]) => `- ${k}: ${v}`).join('\n')}\n\n` +
-          `Ressources utilisées: ${buttonData.connectedFolders.length} dossier(s)\n\n` +
-          `[Ici serait le contenu généré par l\'IA basé sur ton prompt et tes ressources]`;
-        
-        setGeneratedContent(generatedContent);
-        setIsGenerating(false);
-        
-        toast({
-          title: `✅ ${buttonData.name} terminé`,
-          description: "Le contenu a été généré avec succès!"
-        });
-        
-        // Tu peux aussi ouvrir automatiquement le modal de chat ou de résultats
-        setActiveModal('chat');
-      }, 3000);
-      
-    } catch (error) {
-      console.error('❌ Erreur lors de l\'exécution:', error);
-      setIsGenerating(false);
-      toast({
-        title: "❌ Erreur",
-        description: "Une erreur s'est produite lors de la génération."
-      });
-    }
-  };
-
-  // Fonction pour gérer l'upload de fichiers
-  const handleFileUpload = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setNewItemData(prev => ({ 
-        ...prev, 
-        file: file,
-        name: prev.name || file.name // Auto-remplir le nom si vide
-      }));
-      
-      toast({
-        title: "📁 Fichier sélectionné",
-        description: `"${file.name}" prêt à être ajouté.`
-      });
-    }
-  };
-
-  // Fonctions pour les ressources
-  const addFolder = () => {
-    if (!newFolderName.trim()) return;
-    
-    const newFolder = {
-      id: Date.now().toString(),
-      name: newFolderName,
-      emoji: newFolderEmoji,
-      items: []
+  // Fonction pour obtenir le badge de statut
+  const getStatusBadge = (status) => {
+    const styles = {
+      'Publié': 'bg-green-100 text-green-800 border-green-200',
+      'En cours': 'bg-orange-100 text-orange-800 border-orange-200',
+      'Planifié': 'bg-blue-100 text-blue-800 border-blue-200'
     };
-    
-    setFolders(prev => ({
-      ...prev,
-      [activeCategory]: [...prev[activeCategory], newFolder]
-    }));
-    
-    setNewFolderName('');
-    setNewFolderEmoji('📁');
-    setShowNewFolderModal(false);
-    
-    toast({
-      title: "✅ Dossier créé",
-      description: `Le dossier "${newFolderEmoji} ${newFolderName}" a été ajouté.`
-    });
+    return styles[status] || 'bg-gray-100 text-gray-800 border-gray-200';
   };
 
-  const renameFolder = () => {
-    if (!renameFolderData.name.trim() || !selectedFolder) return;
-    
-    setFolders(prev => ({
-      ...prev,
-      [activeCategory]: prev[activeCategory].map(folder => 
-        folder.id === selectedFolder.id 
-          ? { ...folder, name: renameFolderData.name, emoji: renameFolderData.emoji }
-          : folder
-      )
-    }));
-    
-    setShowRenameFolderModal(false);
-    setSelectedFolder(null);
-    setRenameFolderData({ name: '', emoji: '' });
-    
-    toast({
-      title: "✅ Dossier renommé",
-      description: `Dossier mis à jour : "${renameFolderData.emoji} ${renameFolderData.name}"`
-    });
-  };
-
-  const deleteFolder = (folderId) => {
-    setFolders(prev => ({
-      ...prev,
-      [activeCategory]: prev[activeCategory].filter(folder => folder.id !== folderId)
-    }));
-    
-    toast({
-      title: "🗑️ Dossier supprimé",
-      description: "Le dossier a été supprimé avec succès."
-    });
-  };
-
-  const deleteItem = (folderId, itemId) => {
-    setFolders(prev => ({
-      ...prev,
-      [activeCategory]: prev[activeCategory].map(folder =>
-        folder.id === folderId
-          ? { ...folder, items: folder.items.filter(item => item.id !== itemId) }
-          : folder
-      )
-    }));
-    
-    toast({
-      title: "🗑️ Élément supprimé",
-      description: "L'élément a été retiré du dossier."
-    });
-  };
-
-  const addItem = () => {
-    if (!newItemData.name.trim() || !selectedFolder) return;
-    
-    // Validation selon le type
-    if (newItemData.type === 'link' && !newItemData.url.trim()) {
-      toast({
-        title: "❌ URL manquante",
-        description: "Veuillez saisir une URL pour le lien."
-      });
-      return;
-    }
-
-    if (newItemData.type === 'file' && !newItemData.file) {
-      toast({
-        title: "❌ Fichier manquant",
-        description: "Veuillez sélectionner un fichier."
-      });
-      return;
-    }
-
-    const newItem = {
-      id: Date.now().toString(),
-      name: newItemData.name,
-      type: newItemData.type,
-      content: newItemData.content,
-      url: newItemData.url,
-      file: newItemData.file,
-      createdAt: new Date().toISOString(),
-      source: 'manual'
-    };
-
-    setFolders(prev => ({
-      ...prev,
-      [activeCategory]: prev[activeCategory].map(folder =>
-        folder.id === selectedFolder.id
-          ? { ...folder, items: [...folder.items, newItem] }
-          : folder
-      )
-    }));
-
-    setNewItemData({ name: '', type: 'text', content: '', file: null, url: '' });
-    setShowNewItemModal(false);
-    setSelectedFolder(null);
-
-    toast({
-      title: "✅ Élément ajouté",
-      description: `"${newItem.name}" a été ajouté au dossier.`
-    });
-  };
-
-  // Fonction pour le chat IA
-  const handleChatSubmit = async () => {
-    if (!chatInput.trim()) return;
-
-    const userMessage = chatInput;
-    setChatInput('');
-    setChatMessages(prev => [...prev, { type: 'user', content: userMessage }]);
-
-    try {
-      setIsGenerating(true);
-      
-      // Simuler réponse IA (remplace par ton service réel)
-      setTimeout(() => {
-        const aiResponse = `Voici ma réponse à "${userMessage}" basée sur vos ressources et profil créateur...`;
-        setChatMessages(prev => [...prev, { type: 'ai', content: aiResponse }]);
-        setIsGenerating(false);
-      }, 2000);
-      
-    } catch (error) {
-      console.error('Erreur chat:', error);
-      setIsGenerating(false);
-      toast({
-        title: "❌ Erreur",
-        description: "Erreur lors de la conversation avec l'IA."
-      });
-    }
-  };
-
-  // Fonction pour générer un script
-  const handleScriptGeneration = async () => {
-    if (!scriptTopic.trim()) {
-      toast({
-        title: "❌ Sujet manquant",
-        description: "Veuillez entrer un sujet pour le script."
-      });
-      return;
-    }
-
-    try {
-      setIsGenerating(true);
-      
-      // Simuler génération de script
-      setTimeout(() => {
-        const script = `# Script pour "${scriptTopic}"\n\n## Introduction\nBonjour et bienvenue dans cette nouvelle vidéo...\n\n## Développement\n[Contenu principal basé sur vos ressources]\n\n## Conclusion\nJ'espère que cette vidéo vous a plu...`;
-        setGeneratedContent(script);
-        setIsGenerating(false);
-        
-        toast({
-          title: "✅ Script généré",
-          description: "Votre script personnalisé est prêt !"
-        });
-      }, 3000);
-      
-    } catch (error) {
-      console.error('Erreur génération script:', error);
-      setIsGenerating(false);
-    }
-  };
-
-  // Fonctions de rendu pour chaque page
+  // Rendu de la page d'accueil
   const renderWelcomePage = () => (
-    <UserSettingsSection />
-  );
+    <div className="space-y-8">
+      {/* Hero Section avec stats */}
+      <div className="bg-gradient-to-br from-black via-gray-900 to-black rounded-2xl p-8 text-white overflow-hidden relative">
+        {/* Pattern background subtil */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }} />
+        
+        <div className="relative z-10">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">
+                Bonjour John ! 👋
+              </h1>
+              <p className="text-white/80">
+                Votre workspace créatif vous attend
+              </p>
+            </div>
+            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+              <Crown className="h-4 w-4 text-yellow-400" />
+              <span className="text-sm font-medium">Plan Pro</span>
+            </div>
+          </div>
 
-  const renderResourcesPage = () => (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <Folder className="h-6 w-6" />
-            Mes Ressources
-          </h2>
-          <p className="text-muted-foreground">
-            Organisez vos fichiers et ressources pour l'IA
-          </p>
+          {/* Stats */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { label: 'Contenus', value: stats.contents, suffix: '', icon: FileText },
+              { label: 'Vues totales', value: stats.views, suffix: '', icon: Eye },
+              { label: 'Engagement', value: stats.engagement, suffix: '%', icon: TrendingUp },
+              { label: 'Followers', value: stats.followers, suffix: '', icon: Users }
+            ].map((stat, index) => (
+              <div key={stat.label} className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center">
+                <stat.icon className="h-5 w-5 mx-auto mb-2 text-white/80" />
+                <div className="text-2xl font-bold mb-1">
+                  {stat.value.toLocaleString()}{stat.suffix}
+                </div>
+                <div className="text-xs text-white/60">{stat.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* Catégories */}
-      <div className="flex gap-2">
-        <Button
-          variant={activeCategory === 'resources' ? 'default' : 'outline'}
-          onClick={() => setActiveCategory('resources')}
-          className="gap-2"
-        >
-          <Folder className="h-4 w-4" />
-          Ressources
-        </Button>
-        <Button
-          variant={activeCategory === 'personal' ? 'default' : 'outline'}
-          onClick={() => setActiveCategory('personal')}
-          className="gap-2"
-        >
-          <User className="h-4 w-4" />
-          Personnel
-          <Badge variant="secondary" className="ml-1">
-            {folders.personal.reduce((acc, folder) => acc + folder.items.length, 0)}
-          </Badge>
-        </Button>
+      {/* Actions rapides */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Actions rapides</h2>
+          <button className="text-sm text-gray-600 hover:text-black transition-colors flex items-center gap-1">
+            Voir tout <ArrowRight className="h-4 w-4" />
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {quickActions.map((action, index) => (
+            <button
+              key={action.label}
+              className="group bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-200 hover:-translate-y-1 text-left"
+              onClick={() => setActivePage('creation')}
+            >
+              <div className={`w-12 h-12 bg-gradient-to-br ${action.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                <action.icon className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="font-semibold mb-1">{action.label}</h3>
+              <p className="text-sm text-gray-600">{action.desc}</p>
+            </button>
+          ))}
+        </div>
       </div>
 
-      {/* Dossiers */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {folders[activeCategory].map(folder => (
-          <Card key={folder.id} className="group hover:shadow-md transition-shadow">
-            <CardHeader className="pb-3">
+      {/* Contenus récents */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Contenus récents</h2>
+          <button className="text-sm text-gray-600 hover:text-black transition-colors flex items-center gap-1">
+            Gérer tout <ArrowRight className="h-4 w-4" />
+          </button>
+        </div>
+        
+        <div className="space-y-3">
+          {recentContent.map((content) => (
+            <div key={content.id} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-3">
-                  <div className="text-2xl">{folder.emoji}</div>
-                  <div>
-                    <CardTitle className="text-base">{folder.name}</CardTitle>
-                    <p className="text-sm text-muted-foreground">
-                      {folder.items.length} élément(s)
-                    </p>
+                <div className="flex-1">
+                  <div className="flex items-center gap-3 mb-2">
+                    <h3 className="font-medium">{content.title}</h3>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium border ${getStatusBadge(content.status)}`}>
+                      {content.status}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-4 text-sm text-gray-600">
+                    <span>{content.type}</span>
+                    <span>•</span>
+                    <span>{content.views} vues</span>
+                    {content.engagement !== '-' && (
+                      <>
+                        <span>•</span>
+                        <span>{content.engagement} engagement</span>
+                      </>
+                    )}
                   </div>
                 </div>
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button size="sm" variant="ghost">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
+                <div className="flex items-center gap-2">
+                  <button className="p-2 text-gray-400 hover:text-black transition-colors">
+                    <Eye className="h-4 w-4" />
+                  </button>
+                  <button className="p-2 text-gray-400 hover:text-black transition-colors">
+                    <Edit className="h-4 w-4" />
+                  </button>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="pt-0">
-              {/* Aperçu des éléments */}
-              {folder.items.length > 0 ? (
-                <div className="space-y-2 mb-4">
-                  {folder.items.slice(0, 3).map(item => (
-                    <div key={item.id} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg text-sm">
-                      <div className="flex items-center gap-2 flex-1 min-w-0">
-                        {getFileIcon(item.type, item.file?.name)}
-                        <span className="truncate">{item.name}</span>
-                        {item.source === 'onboarding' && (
-                          <Badge variant="secondary" className="text-xs">Auto</Badge>
-                        )}
-                      </div>
-                      <div className="flex gap-1">
-                        <Button 
-                          size="sm" 
-                          variant="ghost" 
-                          onClick={() => {
-                            setSelectedFile(item);
-                            setShowFilePreviewModal(true);
-                          }}
-                        >
-                          <Eye className="h-3 w-3" />
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant="ghost" 
-                          onClick={() => deleteItem(folder.id, item.id)}
-                        >
-                          <Trash2 className="h-3 w-3 text-red-500" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                  {folder.items.length > 3 && (
-                    <p className="text-xs text-muted-foreground text-center">
-                      +{folder.items.length - 3} autres éléments
-                    </p>
-                  )}
-                </div>
-              ) : (
-                <div className="text-center py-4 text-muted-foreground text-sm">
-                  <Folder className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                  <p>Dossier vide</p>
-                </div>
-              )}
-              
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="w-full"
-                onClick={() => {
-                  setSelectedFolder(folder);
-                  setShowNewItemModal(true);
-                }}
-              >
-                <Plus className="h-3 w-3 mr-1" />
-                Ajouter un élément
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
-        
-        {/* Bouton nouveau dossier */}
-        <Card className="border-dashed border-2 hover:border-gray-400 transition-colors">
-          <CardContent className="flex items-center justify-center h-32">
-            <Button
-              variant="ghost"
-              onClick={() => setShowNewFolderModal(true)}
-              className="h-full w-full flex-col gap-2"
-            >
-              <Plus className="h-8 w-8 text-gray-400" />
-              <span className="text-sm text-gray-500">Nouveau dossier</span>
-            </Button>
-          </CardContent>
-        </Card>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 
+  // Rendu conditionnel du contenu principal
+  const renderMainContent = () => {
+    switch(activePage) {
+      case 'welcome': return renderWelcomePage();
+      case 'creation': return <CreationsSection />;
+      case 'resources': return <UserWorkspace />;
+      case 'monetization': 
+        return (
+          <div className="text-center py-12">
+            <Crown className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
+            <h2 className="text-2xl font-semibold mb-2">Mon Bot IA</h2>
+            <p className="text-gray-600 mb-6">Fonctionnalité premium - Bientôt disponible</p>
+            <button className="bg-black text-white px-6 py-3 rounded-lg" disabled>
+              En développement
+            </button>
+          </div>
+        );
+      case 'settings': return <UserSettingsSection />;
+      default: return renderWelcomePage();
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Mobile Sidebar Overlay */}
-      {isMobile && sidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40" 
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <div className={`
-        fixed top-0 left-0 h-full bg-white border-r border-gray-200 z-50 transition-transform duration-300
-        ${isMobile ? 'w-72' : 'w-64'}
-        ${isMobile && !sidebarOpen ? '-translate-x-full' : 'translate-x-0'}
-      `}>
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-600 to-blue-600 rounded-lg flex items-center justify-center">
-                <Sparkles className="h-5 w-5 text-white" />
+      {/* Header */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+        <div className="flex items-center justify-between h-16 px-6">
+          {/* Logo */}
+          <div className="flex items-center gap-3">
+            <div className="relative">
+              <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                <div className="w-3 h-3 bg-white transform rotate-45 rounded-sm"></div>
               </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
-                Cocoon
-              </span>
             </div>
-            {isMobile && (
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                onClick={() => setSidebarOpen(false)}
-              >
-                <X className="h-5 w-5" />
-              </Button>
-            )}
+            <span className="text-xl font-bold">Cocoon AI</span>
           </div>
 
-          <nav className="space-y-2">
-            {navigation.map((item) => {
-              const Icon = item.icon;
-              return (
+          {/* Search bar */}
+          <div className="flex items-center flex-1 max-w-md mx-6">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input 
+                type="text"
+                placeholder="Rechercher..."
+                className="w-full pl-10 pr-4 py-2 bg-gray-100 border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:bg-white transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Actions utilisateur */}
+          <div className="flex items-center gap-3">
+            <button className="p-2 hover:bg-gray-100 rounded-lg transition-colors relative">
+              <Bell className="h-5 w-5" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            </button>
+            
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">JD</span>
+              </div>
+              <div>
+                <div className="font-medium">John Doe</div>
+                <div className="text-xs text-gray-500">Plan Pro</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex">
+        {/* Sidebar */}
+        <aside className="w-64 bg-white border-r border-gray-200 h-[calc(100vh-64px)] sticky top-16 flex flex-col">
+          <nav className="flex-1 p-4">
+            <div className="space-y-1">
+              {navItems.map((item) => (
                 <button
                   key={item.id}
-                  onClick={() => {
-                    setActivePage(item.id);
-                    if (isMobile) setSidebarOpen(false);
-                  }}
-                  className={`w-full flex items-center px-3 py-2 rounded-lg text-left transition-colors ${
-                    activePage === item.id
-                      ? 'bg-purple-50 text-purple-700 border border-purple-200'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                  onClick={() => setActivePage(item.id)}
+                  className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-all ${
+                    activePage === item.id 
+                      ? 'bg-black text-white' 
+                      : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
-                  <Icon className="mr-3 h-5 w-5" />
-                  {item.name}
+                  <item.icon className="h-5 w-5" />
+                  <span className="font-medium">{item.label}</span>
                 </button>
-              );
-            })}
+              ))}
+            </div>
+            
+            <div className="mt-8">
+              <h3 className="text-xs uppercase font-medium text-gray-500 mb-2 px-3">
+                Compte
+              </h3>
+              <div className="space-y-1">
+                {accountItems.map((item, index) => (
+                  <button
+                    key={index}
+                    className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left text-gray-700 hover:bg-gray-100 transition-all"
+                  >
+                    <item.icon className="h-5 w-5" />
+                    <span className="font-medium">{item.label}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </nav>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className={`flex-1 ${isMobile ? '' : 'ml-64'}`}>
-        {/* Header Mobile */}
-        {isMobile && (
-          <div className="bg-white border-b border-gray-200 p-4 flex items-center justify-between">
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={() => setSidebarOpen(true)}
-            >
-              <Menu className="h-5 w-5" />
-            </Button>
-            <span className="font-semibold">Cocoon</span>
-            <div className="w-8" />
+          
+          <div className="p-4 border-t">
+            <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left text-gray-500 hover:bg-gray-100 transition-all">
+              <LogOut className="h-5 w-5" />
+              <span className="font-medium">Se déconnecter</span>
+            </button>
           </div>
-        )}
+        </aside>
 
-        {/* Page Content */}
-        <div className={`p-4 md:p-8 ${isMobile ? 'pt-0' : ''}`}>
-          {activePage === 'welcome' && renderWelcomePage()}
-          {activePage === 'resources' && renderResourcesPage()}
-          {activePage === 'creation' && (
-            <CreationsSection 
-              folders={folders}
-              onExecuteButton={handleExecuteCustomButton}
-            />
-          )}
-          {activePage === 'monetization' && (
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Mon Bot IA</h2>
-              <Card className="p-6">
-                <div className="text-center">
-                  <Crown className="h-12 w-12 text-yellow-500 mx-auto mb-4" />
-                  <h3 className="text-xl font-semibold mb-2">Fonctionnalité Premium</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Créez et partagez votre propre bot IA personnalisé
-                  </p>
-                  <Button disabled>
-                    Bientôt disponible
-                  </Button>
-                </div>
-              </Card>
-            </div>
-          )}
-          {activePage === 'settings' && <SettingsSection />}
-        </div>
+        {/* Main Content */}
+        <main className="flex-1 p-8">
+          {renderMainContent()}
+        </main>
       </div>
-
-      {/* Modales */}
-      
-      {/* Modal Chat IA */}
-      {activeModal === 'chat' && (
-        <Dialog open={true} onOpenChange={() => setActiveModal(null)}>
-          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle>Assistant IA</DialogTitle>
-            </DialogHeader>
-            
-            <div className="space-y-4">
-              {/* Messages */}
-              <div className="bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto">
-                {chatMessages.length > 0 ? (
-                  <div className="space-y-4">
-                    {chatMessages.map((message, index) => (
-                      <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
-                        <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                          message.type === 'user' 
-                            ? 'bg-purple-600 text-white' 
-                            : 'bg-white border'
-                        }`}>
-                          {message.content}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8">
-                    <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                    <p className="text-gray-500">Commencez une conversation avec votre IA</p>
-                  </div>
-                )}
-                
-                {isGenerating && (
-                  <div className="flex justify-start">
-                    <div className="bg-white border rounded-lg px-4 py-2">
-                      <div className="flex items-center gap-2">
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                        <span className="text-sm">L'IA réfléchit...</span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-              
-              {/* Zone de contenu généré */}
-              {generatedContent && (
-                <div className="bg-gray-50 rounded-lg p-4">
-                  <pre className="whitespace-pre-wrap text-sm">{generatedContent}</pre>
-                </div>
-              )}
-              
-              {/* Input */}
-              <div className="flex gap-2">
-                <Textarea
-                  placeholder="Posez votre question..."
-                  value={chatInput}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  className="flex-1"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleChatSubmit();
-                    }
-                  }}
-                />
-                <Button onClick={handleChatSubmit} disabled={isGenerating}>
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
-              
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setActiveModal(null)}>
-                  Fermer
-                </Button>
-                {generatedContent && (
-                  <Button onClick={() => {
-                    navigator.clipboard.writeText(generatedContent);
-                    toast({ title: "📋 Copié!", description: "Le contenu a été copié." });
-                  }}>
-                    Copier le résultat
-                  </Button>
-                )}
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
-
-      {/* Modal Génération Script */}
-      {activeModal === 'script' && (
-        <Dialog open={true} onOpenChange={() => setActiveModal(null)}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Générer un Script</DialogTitle>
-            </DialogHeader>
-            
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="scriptTopic">Sujet du script</Label>
-                <Input
-                  id="scriptTopic"
-                  placeholder="Ex: Comment créer du contenu viral"
-                  value={scriptTopic}
-                  onChange={(e) => setScriptTopic(e.target.value)}
-                />
-              </div>
-              
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setActiveModal(null)}>
-                  Annuler
-                </Button>
-                <Button onClick={handleScriptGeneration} disabled={isGenerating}>
-                  {isGenerating ? (
-                    <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                      Génération...
-                    </>
-                  ) : (
-                    'Générer'
-                  )}
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
-
-      {/* Modal Aperçu Fichier */}
-      {showFilePreviewModal && selectedFile && (
-        <Dialog open={true} onOpenChange={setShowFilePreviewModal}>
-          <DialogContent className="max-w-2xl">
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-2">
-                {getFileIcon(selectedFile.type, selectedFile.file?.name)}
-                {selectedFile.name}
-                {selectedFile.source === 'onboarding' && (
-                  <Badge variant="secondary">Onboarding</Badge>
-                )}
-              </DialogTitle>
-            </DialogHeader>
-            
-            <div className="space-y-4">
-              {/* Informations du fichier */}
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <span className="font-medium">Type:</span> {selectedFile.type}
-                </div>
-                <div>
-                  <span className="font-medium">Créé le:</span> {new Date(selectedFile.createdAt).toLocaleDateString()}
-                </div>
-                {selectedFile.file && (
-                  <>
-                    <div>
-                      <span className="font-medium">Taille:</span> {(selectedFile.file.size / 1024).toFixed(1)} KB
-                    </div>
-                    <div>
-                      <span className="font-medium">Type de fichier:</span> {selectedFile.file.type || 'Non spécifié'}
-                    </div>
-                  </>
-                )}
-              </div>
-              
-              {/* Aperçu du contenu */}
-              <div>
-                <Label>Aperçu:</Label>
-                <div className="bg-gray-50 p-4 rounded-lg text-sm max-h-60 overflow-y-auto">
-                  {selectedFile.type === 'text' && (
-                    <p>{selectedFile.content}</p>
-                  )}
-                  {selectedFile.type === 'link' && (
-                    <div>
-                      <p className="mb-2">Lien externe:</p>
-                      <a href={selectedFile.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline flex items-center gap-1">
-                        {selectedFile.url}
-                        <ExternalLink className="h-3 w-3" />
-                      </a>
-                    </div>
-                  )}
-                  {selectedFile.type === 'file' && (
-                    <div>
-                      <p className="mb-2">Fichier uploadé:</p>
-                      <div className="flex items-center gap-2 p-2 bg-white rounded border">
-                        {getFileIcon(selectedFile.type, selectedFile.file?.name)}
-                        <span>{selectedFile.file?.name}</span>
-                      </div>
-                      {selectedFile.file?.type?.startsWith('image/') && (
-                        <div className="mt-2">
-                          <img 
-                            src={URL.createObjectURL(selectedFile.file)} 
-                            alt={selectedFile.name}
-                            className="max-w-full h-auto rounded border"
-                            style={{ maxHeight: '200px' }}
-                          />
-                        </div>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </div>
-              
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setShowFilePreviewModal(false)}>
-                  Fermer
-                </Button>
-                {selectedFile.type === 'link' && (
-                  <Button onClick={() => window.open(selectedFile.url, '_blank')}>
-                    <ExternalLink className="h-4 w-4 mr-2" />
-                    Ouvrir le lien
-                  </Button>
-                )}
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
-
-      {/* Modal Nouveau Dossier */}
-      {showNewFolderModal && (
-        <Dialog open={true} onOpenChange={setShowNewFolderModal}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Créer un nouveau dossier</DialogTitle>
-            </DialogHeader>
-            
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="folderName">Nom du dossier</Label>
-                <Input
-                  id="folderName"
-                  placeholder="Ex: Mes scripts"
-                  value={newFolderName}
-                  onChange={(e) => setNewFolderName(e.target.value)}
-                />
-              </div>
-              
-              <div>
-                <Label>Emoji</Label>
-                <div className="grid grid-cols-8 gap-2 mt-2">
-                  {popularEmojis.map(emoji => (
-                    <Button
-                      key={emoji}
-                      variant={newFolderEmoji === emoji ? "default" : "outline"}
-                      size="sm"
-                      onClick={() => setNewFolderEmoji(emoji)}
-                      className="h-10 w-10 p-0"
-                    >
-                      {emoji}
-                    </Button>
-                  ))}
-                </div>
-              </div>
-              
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setShowNewFolderModal(false)}>
-                  Annuler
-                </Button>
-                <Button onClick={addFolder}>
-                  Créer
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
-
-      {/* Modal Ajouter un élément */}
-      {showNewItemModal && selectedFolder && (
-        <Dialog open={true} onOpenChange={setShowNewItemModal}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Ajouter à "{selectedFolder.name}"</DialogTitle>
-            </DialogHeader>
-            
-            <div className="space-y-4">
-              <div>
-                <Label htmlFor="itemName">Nom</Label>
-                <Input
-                  id="itemName"
-                  placeholder="Nom de l'élément"
-                  value={newItemData.name}
-                  onChange={(e) => setNewItemData(prev => ({ ...prev, name: e.target.value }))}
-                />
-              </div>
-              
-              <div>
-                <Label htmlFor="itemType">Type</Label>
-                <Select
-                  value={newItemData.type}
-                  onValueChange={(value) => setNewItemData(prev => ({ ...prev, type: value }))}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="text">Texte</SelectItem>
-                    <SelectItem value="file">Fichier</SelectItem>
-                    <SelectItem value="link">Lien</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              {newItemData.type === 'text' && (
-                <div>
-                  <Label htmlFor="itemContent">Contenu</Label>
-                  <Textarea
-                    id="itemContent"
-                    placeholder="Votre contenu..."
-                    value={newItemData.content}
-                    onChange={(e) => setNewItemData(prev => ({ ...prev, content: e.target.value }))}
-                  />
-                </div>
-              )}
-              
-              {newItemData.type === 'file' && (
-                <div>
-                  <Label htmlFor="itemFile">Fichier</Label>
-                  <Input
-                    id="itemFile"
-                    type="file"
-                    onChange={handleFileUpload}
-                  />
-                  {newItemData.file && (
-                    <div className="mt-2 p-2 bg-gray-50 rounded text-sm">
-                      Fichier sélectionné: {newItemData.file.name}
-                    </div>
-                  )}
-                </div>
-              )}
-              
-              {newItemData.type === 'link' && (
-                <div>
-                  <Label htmlFor="itemUrl">URL</Label>
-                  <Input
-                    id="itemUrl"
-                    type="url"
-                    placeholder="https://..."
-                    value={newItemData.url}
-                    onChange={(e) => setNewItemData(prev => ({ ...prev, url: e.target.value }))}
-                  />
-                </div>
-              )}
-              
-              <div className="flex justify-end gap-2">
-                <Button variant="outline" onClick={() => setShowNewItemModal(false)}>
-                  Annuler
-                </Button>
-                <Button onClick={addItem}>
-                  Ajouter
-                </Button>
-              </div>
-            </div>
-          </DialogContent>
-        </Dialog>
-      )}
     </div>
   );
 };
 
-export default Dashboard;
+export default DashboardWebImproved;
