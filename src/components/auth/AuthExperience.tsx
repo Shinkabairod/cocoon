@@ -44,6 +44,55 @@ useEffect(() => {
       });
       return;
     }
+    
+    setLoading(true);
+    console.log('🔄 Starting signup process for:', formData.email);
+    
+    try {
+      const { user: newUser, error } = await signUp(formData.email, formData.password, formData.fullName);
+      
+      console.log('📋 Signup result:', { newUser, error });
+      console.log('👤 User from context after signup:', user);
+      
+      if (error) {
+        console.error('❌ Signup error:', error);
+        // ... gestion d'erreur
+        return;
+      }
+      
+      if (newUser) {
+        console.log('✅ Signup successful for:', newUser.email);
+        console.log('📧 Email confirmed?', newUser.email_confirmed_at);
+        
+        toast({
+          title: "Account created!",
+          description: "Welcome! Let's set up your workspace."
+        });
+        
+        // Forcer la redirection après 2 secondes
+        setTimeout(() => {
+          console.log('🔄 Forcing navigation to onboarding...');
+          navigate('/onboarding', { replace: true });
+        }, 2000);
+        
+      } else {
+        console.log('📧 Email confirmation required');
+        toast({
+          title: "Please check your email",
+          description: "We sent you a confirmation link. Please check your email and click the link to verify your account."
+        });
+      }
+    } catch (error) {
+      console.error('❌ Signup exception:', error);
+      toast({
+        title: "Something went wrong",
+        description: "Please try again or contact support if the problem persists.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
     if (formData.password.length < 6) {
       toast({
         title: "Password too short",
