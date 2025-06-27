@@ -204,12 +204,10 @@ const AuthExperience: React.FC = () => {
 
         {/* Titre */}
         <div className="text-center mb-8">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
+          <h2 className="font-bold mb-2 text-6xl text-violet-600">
             Create your AI Space
           </h2>
-          <p className="text-gray-600">
-            Start building your personalized AI assistant
-          </p>
+          <p className="text-gray-600">Start building your personalized AI space</p>
         </div>
 
         {/* Formulaire avec design cohérent */}
