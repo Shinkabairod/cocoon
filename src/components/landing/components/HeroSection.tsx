@@ -546,7 +546,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           <div className="flex flex-col sm:flex-row gap-6 justify-center mb-20">
-            <Button size="lg" onClick={onAuthRedirect} className="bg-black hover:bg-gray-800 text-white px-10 py-6 text-xl font-semibold group shadow-2xl hover:shadow-black/25 transition-all duration-300 rounded-l">
+            <Button size="lg" onClick={onAuthRedirect} className="bg-black hover:bg-gray-800 text-white px-10 py-6 text-xl font-semibold group shadow-2xl hover:shadow-black/25 transition-all duration-300">
               <Rocket className="h-6 w-6 mr-3 group-hover:animate-bounce" />
               Create my AI Space for free
               <ArrowRight className="h-6 w-6 ml-3 group-hover:translate-x-2 transition-transform" />
