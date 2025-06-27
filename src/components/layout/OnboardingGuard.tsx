@@ -65,24 +65,19 @@ const OnboardingGuard: React.FC<OnboardingGuardProps> = ({
     );
   }
 
-  // User not authenticated
+  // User not authenticated - redirect to auth
   if (!user) {
     return <Navigate to="/auth" replace />;
   }
 
-  // If onboarding is required but not completed
-  if (requireOnboarding && !onboardingStatus.completed) {
-    return <Navigate to="/onboarding" replace />;
-  }
-
-  // If onboarding is NOT required but user hasn't completed it
-  if (!requireOnboarding && !onboardingStatus.completed) {
-    return <Navigate to="/onboarding" replace />;
-  }
-
-  // If user is trying to access onboarding but already completed it
+  // If we're on onboarding pages and onboarding is already completed
   if (requireOnboarding && onboardingStatus.completed) {
     return <Navigate to="/dashboard" replace />;
+  }
+
+  // If we're on dashboard pages but onboarding is not completed
+  if (!requireOnboarding && !onboardingStatus.completed) {
+    return <Navigate to="/onboarding" replace />;
   }
 
   return <>{children}</>;

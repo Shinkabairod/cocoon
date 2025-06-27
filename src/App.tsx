@@ -45,7 +45,7 @@ const App: React.FC = () => {
                   {/* Public Landing Page */}
                   <Route path="/" element={<CocoonLandingPage />} />
                   
-                  {/* Auth Routes - Protected against already authenticated users */}
+                  {/* Auth Routes - Only accessible when NOT authenticated */}
                   <Route 
                     path="/auth/*" 
                     element={
@@ -55,27 +55,23 @@ const App: React.FC = () => {
                     } 
                   />
                   
-                  {/* Onboarding Routes - Requires auth but not completed onboarding */}
+                  {/* Onboarding Routes - Requires auth + incomplete onboarding */}
                   <Route 
                     path="/onboarding/*" 
                     element={
-                      <ProtectedRoute requireAuth={true}>
-                        <OnboardingGuard requireOnboarding={true}>
-                          <OnboardingFlow />
-                        </OnboardingGuard>
-                      </ProtectedRoute>
+                      <OnboardingGuard requireOnboarding={true}>
+                        <OnboardingFlow />
+                      </OnboardingGuard>
                     } 
                   />
                   
-                  {/* Dashboard Routes - Requires auth AND completed onboarding */}
+                  {/* Dashboard Routes - Requires auth + completed onboarding */}
                   <Route 
                     path="/dashboard/*" 
                     element={
-                      <ProtectedRoute requireAuth={true}>
-                        <OnboardingGuard requireOnboarding={false}>
-                          <Dashboard />
-                        </OnboardingGuard>
-                      </ProtectedRoute>
+                      <OnboardingGuard requireOnboarding={false}>
+                        <Dashboard />
+                      </OnboardingGuard>
                     } 
                   />
                   
