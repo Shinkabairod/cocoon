@@ -19,7 +19,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   return <section className="pt-20 pb-0 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* NOUVEAU: Fond géométrique plus actif */}
       <div className="absolute inset-0 opacity-40">
-        <svg width="100%" height="100%" viewBox="0 0 1200 800" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
+        <svg width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 w-full h-full py-0 my-[11px]">
           <defs>
             {/* Dégradés subtils en gris */}
             <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -558,7 +558,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
           </div>
 
           {/* Stats avec animations avancées */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-5xl mx-auto my-0 py-[30px]">
             {[{
             value: animatedStats.bots,
             suffix: '+',
@@ -592,7 +592,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
                   {stat.value.toLocaleString()}{stat.suffix}
                 </div>
                 <div className="text-gray-600 text-sm lg:text-base">{stat.label}</div>
-                <div className="absolute inset-0 bg-gradient-to-r from-violet-600/5 to-blue-600/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute inset-0 bg-gradient-to-r from-violet-600/5 to-blue-600/5 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity my-0" />
               </div>
             </div>)}
           </div>
