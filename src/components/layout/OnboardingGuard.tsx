@@ -24,7 +24,10 @@ const OnboardingGuard: React.FC<OnboardingGuardProps> = ({
 
   useEffect(() => {
     const checkOnboardingStatus = async () => {
+      console.log('🔍 Checking onboarding status for user:', user?.email);
+      
       if (!user) {
+        console.log('❌ No user found, marking onboarding as incomplete');
         setOnboardingStatus({ completed: false, loading: false });
         return;
       }
@@ -34,18 +37,19 @@ const OnboardingGuard: React.FC<OnboardingGuardProps> = ({
           .from('user_profiles')
           .select('onboarding_completed')
           .eq('user_id', user.id)
-          .single();
+          .maybeSingle();
 
-        if (error && error.code !== 'PGRST116') { // PGRST116 = no rows returned
-          console.error('Error checking onboarding status:', error);
+        if (error) {
+          console.error('❌ Error checking onboarding status:', error);
           setOnboardingStatus({ completed: false, loading: false });
           return;
         }
 
         const completed = data?.onboarding_completed ?? false;
+        console.log('✅ Onboarding status:', completed ? 'completed' : 'incomplete');
         setOnboardingStatus({ completed, loading: false });
       } catch (error) {
-        console.error('Error in checkOnboardingStatus:', error);
+        console.error('❌ Error in checkOnboardingStatus:', error);
         setOnboardingStatus({ completed: false, loading: false });
       }
     };
@@ -59,7 +63,7 @@ const OnboardingGuard: React.FC<OnboardingGuardProps> = ({
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <div className="w-12 h-12 border-4 border-violet-200 border-t-violet-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Checking your account status...</p>
+          <p className="text-gray-600">Loading your account...</p>
         </div>
       </div>
     );
@@ -67,19 +71,23 @@ const OnboardingGuard: React.FC<OnboardingGuardProps> = ({
 
   // User not authenticated - redirect to auth
   if (!user) {
+    console.log('🔄 User not authenticated, redirecting to auth');
     return <Navigate to="/auth" replace />;
   }
 
   // If we're on onboarding pages and onboarding is already completed
   if (requireOnboarding && onboardingStatus.completed) {
+    console.log('🔄 Onboarding completed, redirecting to dashboard');
     return <Navigate to="/dashboard" replace />;
   }
 
   // If we're on dashboard pages but onboarding is not completed
   if (!requireOnboarding && !onboardingStatus.completed) {
+    console.log('🔄 Onboarding not completed, redirecting to onboarding');
     return <Navigate to="/onboarding" replace />;
   }
 
+  console.log('✅ Guard passed, rendering children');
   return <>{children}</>;
 };
 

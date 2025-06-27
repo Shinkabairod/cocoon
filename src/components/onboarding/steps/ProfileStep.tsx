@@ -2,21 +2,31 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useOnboarding } from "@/contexts/OnboardingContext";
-import { useState } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { useState, useEffect } from "react";
 import { User, ArrowLeft, ArrowRight } from "lucide-react";
 
 const ProfileStep = () => {
   const { onboardingData, updateOnboardingData, nextStep, prevStep } = useOnboarding();
-  const [fullName, setFullName] = useState(onboardingData.fullName || '');
+  const { user } = useAuth();
+  const [fullName, setFullName] = useState('');
+
+  useEffect(() => {
+    // Initialize with user's name from signup or existing onboarding data
+    const initialName = onboardingData.fullName || user?.user_metadata?.full_name || '';
+    setFullName(initialName);
+    console.log('👤 Initializing profile with name:', initialName);
+  }, [onboardingData.fullName, user]);
   
   const handleContinue = () => {
+    console.log('👤 Saving profile name:', fullName);
     updateOnboardingData({ fullName });
     nextStep();
   };
   
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4">
-      {/* Background pattern - same as landing */}
+      {/* Background pattern */}
       <div className="absolute inset-0 opacity-[0.02]" style={{
         backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
       }} />
@@ -26,7 +36,7 @@ const ProfileStep = () => {
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mb-4">
             <div className="w-2 h-2 bg-black rounded-full"></div>
-            <span>Step 2 of 11</span>
+            <span>Step 2 of 10</span>
           </div>
           <h1 className="text-6xl md:text-7xl font-bold mb-6">
             <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">Profile</span>
