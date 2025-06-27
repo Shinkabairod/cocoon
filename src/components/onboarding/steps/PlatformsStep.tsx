@@ -1,100 +1,93 @@
+// src/components/onboarding/steps/PlatformsStep.tsx
+import React from 'react';
+import { Button } from '@/components/ui/button';
+import { useOnboarding } from '@/contexts/OnboardingContext';
+import { Platform } from '@/types/onboarding';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
-import { Button } from "@/components/ui/button";
-import { useOnboarding } from "@/contexts/OnboardingContext";
-import OnboardingLayout from "../OnboardingLayout";
-import { Platform } from "@/types/onboarding";
-import { platforms } from "@/components/onboarding/content-type/contentTypeData";
-import { Check, Share2 } from "lucide-react";
-import { Card } from "@/components/ui/card";
+const PlatformsStep: React.FC = () => {
+  const { onboardingData, updateOnboardingData, nextStep, prevStep } = useOnboarding();
 
-const PlatformsStep = () => {
-  const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
-  
-  const handlePlatformToggle = (platform: Platform) => {
-    const currentPlatforms = onboardingData.platforms || [];
-    let updatedPlatforms;
+  const platforms = [
+    { name: 'YouTube' as Platform, icon: '🎥', color: 'from-red-500 to-red-600' },
+    { name: 'Instagram' as Platform, icon: '📸', color: 'from-pink-500 to-purple-600' },
+    { name: 'TikTok' as Platform, icon: '🎵', color: 'from-black to-gray-800' },
+    { name: 'Twitter' as Platform, icon: '🐦', color: 'from-blue-400 to-blue-600' },
+    { name: 'LinkedIn' as Platform, icon: '💼', color: 'from-blue-700 to-blue-800' },
+    { name: 'Blog' as Platform, icon: '✍️', color: 'from-green-500 to-green-600' },
+    { name: 'Podcast' as Platform, icon: '🎙️', color: 'from-orange-500 to-orange-600' }
+  ];
+
+  const selectedPlatforms = onboardingData.platforms || [];
+
+  const handleTogglePlatform = (platform: Platform) => {
+    const current = selectedPlatforms;
+    const updated = current.includes(platform)
+      ? current.filter(p => p !== platform)
+      : [...current, platform];
     
-    if (currentPlatforms.includes(platform)) {
-      updatedPlatforms = currentPlatforms.filter(p => p !== platform);
-    } else {
-      updatedPlatforms = [...currentPlatforms, platform];
-    }
-    
-    updateOnboardingData({ platforms: updatedPlatforms });
+    updateOnboardingData({ platforms: updated });
   };
-  
-  const handleContinue = () => {
-    nextStep();
-  };
-  
-  const getPlatformIcon = (platform: Platform) => {
-    switch (platform) {
-      case 'YouTube':
-        return '▶️';
-      case 'Instagram':
-        return '📸';
-      case 'TikTok':
-        return '🎵';
-      case 'Twitter':
-        return '🐦';
-      case 'LinkedIn':
-        return '💼';
-      case 'Blog':
-        return '📝';
-      case 'Podcast':
-        return '🎙️';
-      default:
-        return '🌐';
-    }
-  };
-  
+
   return (
-    <OnboardingLayout 
-      title="Your Platforms" 
-      subtitle="Where do you want to share your content?"
-    >
-      <div className="space-y-6">
-        <div className="flex justify-center mb-4">
-          <Share2 className="h-12 w-12 text-primary" />
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <div className="relative max-w-4xl w-full">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mb-4">
+            <div className="w-2 h-2 bg-violet-600 rounded-full"></div>
+            <span>Step 4 of 7</span>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Which <span className="bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">platforms</span> interest you?
+          </h1>
+          <p className="text-xl text-gray-600">Select all that apply - your AI will understand each platform's style</p>
         </div>
-        
-        <div className="grid grid-cols-1 gap-3">
-          {platforms.map((platform) => {
-            const isSelected = (onboardingData.platforms || []).includes(platform);
-            
-            return (
-              <Card 
-                key={platform}
-                className={`p-4 cursor-pointer border-2 ${
-                  isSelected 
-                    ? 'border-primary' 
-                    : 'border-border hover:border-muted-foreground'
-                }`}
-                onClick={() => handlePlatformToggle(platform)}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <span className="text-xl">{getPlatformIcon(platform)}</span>
-                    <span className="font-medium">{platform}</span>
-                  </div>
-                  {isSelected && <Check className="h-5 w-5 text-primary" />}
+
+        {/* Platforms Grid */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+          {platforms.map((platform) => (
+            <button
+              key={platform.name}
+              onClick={() => handleTogglePlatform(platform.name)}
+              className={`relative p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 ${
+                selectedPlatforms.includes(platform.name)
+                  ? 'border-violet-500 bg-violet-50 shadow-lg'
+                  : 'border-gray-200 hover:border-gray-300 bg-white hover:shadow-md'
+              }`}
+            >
+              <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${platform.color} flex items-center justify-center text-white mx-auto mb-3`}>
+                <span className="text-2xl">{platform.icon}</span>
+              </div>
+              <h3 className="text-lg font-semibold text-gray-900">{platform.name}</h3>
+              
+              {selectedPlatforms.includes(platform.name) && (
+                <div className="absolute top-3 right-3 w-6 h-6 bg-violet-600 rounded-full flex items-center justify-center">
+                  <div className="w-3 h-3 bg-white rounded-full"></div>
                 </div>
-              </Card>
-            );
-          })}
+              )}
+            </button>
+          ))}
         </div>
-        
-        <div className="pt-4 flex justify-center">
-          <Button 
-            className="gradient-bg w-full"
-            onClick={handleContinue}
-            disabled={(onboardingData.platforms || []).length === 0}
+
+        {/* Navigation */}
+        <div className="flex justify-between items-center">
+          <Button variant="ghost" onClick={prevStep} className="text-gray-500">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back
+          </Button>
+          
+          <Button
+            onClick={nextStep}
+            disabled={selectedPlatforms.length === 0}
+            className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 text-white px-8 py-3 rounded-xl font-semibold disabled:opacity-50"
           >
             Continue
+            <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </div>
       </div>
-    </OnboardingLayout>
+    </div>
   );
 };
 
