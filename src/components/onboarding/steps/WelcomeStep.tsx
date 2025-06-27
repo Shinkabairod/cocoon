@@ -1,9 +1,8 @@
 
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
-import OnboardingLayout from "../OnboardingLayout";
 import { Card } from "@/components/ui/card";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { ArrowRight, Rocket } from "lucide-react";
 
 const WelcomeStep = () => {
   const { nextStep } = useOnboarding();
@@ -13,21 +12,36 @@ const WelcomeStep = () => {
   };
   
   return (
-    <OnboardingLayout 
-      title="Bienvenue dans votre Assistant IA Personnel"
-      subtitle="Quelques questions pour personnaliser votre expérience"
-      showProgress={false}
-      showBackButton={false}
-    >
-      <div className="space-y-8 text-center">
-        <div className="relative">
-          <div className="w-20 h-20 bg-gradient-to-r from-violet-600 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-6">
-            <Sparkles className="h-10 w-10 text-white" />
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      {/* Background pattern - same as landing */}
+      <div className="absolute inset-0 opacity-[0.02]" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+      }} />
+
+      <div className="relative max-w-2xl w-full text-center space-y-12">
+        {/* Logo */}
+        <div className="flex items-center justify-center gap-3 mb-8">
+          <div className="relative">
+            <div className="w-16 h-16 bg-black rounded-lg flex items-center justify-center shadow-lg">
+              <div className="w-6 h-6 bg-white transform rotate-45 rounded-sm"></div>
+            </div>
+            <div className="absolute inset-0 bg-black rounded-lg blur opacity-30 animate-pulse" />
           </div>
-          <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-blue-600 rounded-2xl blur opacity-20 animate-pulse"></div>
+          <span className="text-3xl font-bold text-black">Cocoon AI</span>
         </div>
-        
-        <Card className="p-8 bg-gradient-to-br from-violet-50 to-blue-50 border-violet-200">
+
+        {/* Main content */}
+        <div className="space-y-6">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-900">
+            Bienvenue dans votre <span className="bg-gradient-to-r from-black to-gray-600 bg-clip-text text-transparent">Assistant IA</span>
+          </h1>
+          <p className="text-xl text-gray-600 max-w-xl mx-auto">
+            Quelques questions pour personnaliser votre expérience et créer l'assistant parfait pour vos besoins
+          </p>
+        </div>
+
+        {/* Features cards */}
+        <Card className="p-8 bg-gradient-to-br from-gray-50 to-white border-gray-200">
           <div className="space-y-4">
             <h3 className="text-xl font-semibold text-gray-900">
               Votre assistant IA va s'adapter à vos besoins
@@ -38,19 +52,19 @@ const WelcomeStep = () => {
             </p>
             <div className="grid md:grid-cols-3 gap-4 pt-4">
               <div className="text-center">
-                <div className="w-12 h-12 bg-violet-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                   <span className="text-2xl">🎯</span>
                 </div>
                 <p className="text-sm text-gray-600">Définir vos objectifs</p>
               </div>
               <div className="text-center">
-                <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                   <span className="text-2xl">⚡</span>
                 </div>
                 <p className="text-sm text-gray-600">Optimiser l'assistance</p>
               </div>
               <div className="text-center">
-                <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center mx-auto mb-2">
+                <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                   <span className="text-2xl">🚀</span>
                 </div>
                 <p className="text-sm text-gray-600">Commencer à créer</p>
@@ -59,19 +73,21 @@ const WelcomeStep = () => {
           </div>
         </Card>
         
+        {/* Action button */}
         <Button 
-          className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 text-white px-8 py-3 text-lg font-medium rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group"
+          className="bg-black hover:bg-gray-800 text-white px-12 py-6 text-xl font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group"
           onClick={handleStart}
         >
+          <Rocket className="h-6 w-6 mr-3 group-hover:animate-bounce" />
           Commencer la configuration
-          <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+          <ArrowRight className="h-6 w-6 ml-3 group-hover:translate-x-1 transition-transform" />
         </Button>
         
         <p className="text-sm text-gray-500">
-          Seulement 10 étapes • 3-5 minutes
+          Seulement 11 étapes • 3-5 minutes
         </p>
       </div>
-    </OnboardingLayout>
+    </div>
   );
 };
 

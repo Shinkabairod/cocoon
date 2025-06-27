@@ -2,9 +2,8 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useOnboarding } from "@/contexts/OnboardingContext";
-import OnboardingLayout from "../OnboardingLayout";
 import { useState } from "react";
-import { User } from "lucide-react";
+import { User, ArrowLeft, ArrowRight } from "lucide-react";
 
 const ProfileStep = () => {
   const { onboardingData, updateOnboardingData, nextStep, prevStep } = useOnboarding();
@@ -16,18 +15,34 @@ const ProfileStep = () => {
   };
   
   return (
-    <OnboardingLayout 
-      title="Faisons connaissance"
-      subtitle="Comment souhaitez-vous que votre assistant s'adresse à vous ?"
-    >
-      <div className="space-y-8">
-        <div className="flex justify-center">
-          <div className="w-16 h-16 bg-gradient-to-r from-violet-100 to-blue-100 rounded-2xl flex items-center justify-center">
-            <User className="h-8 w-8 text-violet-600" />
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      {/* Background pattern - same as landing */}
+      <div className="absolute inset-0 opacity-[0.02]" style={{
+        backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+      }} />
+
+      <div className="relative max-w-2xl w-full">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mb-4">
+            <div className="w-2 h-2 bg-black rounded-full"></div>
+            <span>Étape 2 sur 11</span>
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            Faisons <span className="bg-gradient-to-r from-black to-gray-600 bg-clip-text text-transparent">connaissance</span>
+          </h1>
+          <p className="text-xl text-gray-600">Comment souhaitez-vous que votre assistant s'adresse à vous ?</p>
+        </div>
+
+        {/* Icon */}
+        <div className="flex justify-center mb-8">
+          <div className="w-16 h-16 bg-gradient-to-r from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center">
+            <User className="h-8 w-8 text-gray-700" />
           </div>
         </div>
         
-        <div className="max-w-md mx-auto space-y-4">
+        {/* Form */}
+        <div className="max-w-md mx-auto space-y-6 mb-12">
           <div>
             <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
               Votre prénom ou nom complet
@@ -38,7 +53,7 @@ const ProfileStep = () => {
               placeholder="Ex: Marie, Jean Dupont..."
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="text-center text-lg"
+              className="text-center text-lg border-gray-300 focus:border-black focus:ring-black"
             />
           </div>
           
@@ -47,24 +62,27 @@ const ProfileStep = () => {
           </p>
         </div>
         
-        <div className="flex justify-between pt-4">
+        {/* Navigation */}
+        <div className="flex justify-between items-center">
           <Button 
             variant="outline"
             onClick={prevStep}
-            className="px-6"
+            className="text-gray-500 border-gray-300 hover:bg-gray-50"
           >
+            <ArrowLeft className="h-4 w-4 mr-2" />
             Retour
           </Button>
           <Button 
-            className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 px-6"
+            className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-xl font-semibold disabled:opacity-50"
             onClick={handleContinue}
             disabled={!fullName.trim()}
           >
             Continuer
+            <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </div>
       </div>
-    </OnboardingLayout>
+    </div>
   );
 };
 

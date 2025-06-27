@@ -2,7 +2,7 @@
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 
-// Import des nouvelles étapes
+// Import des étapes
 import WelcomeStep from './steps/WelcomeStep';
 import ProfileStep from './steps/ProfileStep';
 import ProfessionStep from './steps/ProfessionStep';
@@ -11,6 +11,7 @@ import ChallengesStep from './steps/ChallengesStep';
 import ToolsStep from './steps/ToolsStep';
 import LearningStyleStep from './steps/LearningStyleStep';
 import TimeStep from './steps/TimeStep';
+import MonetizationStep from './steps/MonetizationStep';
 import AIAssistanceStep from './steps/AIAssistanceStep';
 import SummaryStep from './steps/SummaryStep';
 
@@ -36,8 +37,10 @@ const OnboardingFlow: React.FC = () => {
       case 8:
         return <TimeStep />;
       case 9:
-        return <AIAssistanceStep />;
+        return <MonetizationStep />;
       case 10:
+        return <AIAssistanceStep />;
+      case 11:
         return <SummaryStep />;
       default:
         return <WelcomeStep />;
