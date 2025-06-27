@@ -24,9 +24,9 @@ const Footer: React.FC = () => {
           <div>
             <h4 className="font-semibold text-gray-900 mb-4">Product</h4>
             <ul className="space-y-2 text-gray-600">
-              <li><a href="#" className="hover:text-gray-900 transition-colors">How it works</a></li>
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Pricing</a></li>
-              <li><a href="#" className="hover:text-gray-900 transition-colors">Examples</a></li>
+              <li><a href="#features" className="hover:text-gray-900 transition-colors">How it works</a></li>
+              <li><a href="#pricing" className="hover:text-gray-900 transition-colors">Pricing</a></li>
+              <li><a href="#testimonials" className="hover:text-gray-900 transition-colors">Examples</a></li>
             </ul>
           </div>
           
