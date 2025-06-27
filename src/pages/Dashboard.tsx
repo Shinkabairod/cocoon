@@ -161,7 +161,7 @@ const Dashboard = () => {
   const handleExecuteCustomButton = async (buttonData, placeholderValues) => {
     try {
       setIsGenerating(true);
-      const result = await huggingfaceService.generateContent(buttonData.prompt, placeholderValues);
+      const result = await huggingfaceService.generateConcepts(buttonData.prompt, placeholderValues);
       setGeneratedContent(result);
       toast({
         title: "✅ Content Generated",
@@ -187,7 +187,7 @@ const Dashboard = () => {
     setChatInput('');
 
     try {
-      const response = await huggingfaceService.generateContent(chatInput, {});
+      const response = await huggingfaceService.askAI(chatInput);
       const botMessage = { type: 'bot', content: response };
       setChatMessages(prev => [...prev, botMessage]);
     } catch (error) {
