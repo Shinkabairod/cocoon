@@ -159,7 +159,7 @@ const AuthExperience: React.FC = () => {
           <h1 className="text-3xl font-bold text-gray-900 mb-4 leading-tight text-center md:text-6xl">
             Ready to{' '}
             <span className="text-violet-600 font-black uppercase tracking-wide">
-              REVOLUTIONIZE
+              OPTIMIZE
             </span>
             <br />
             your skills?
