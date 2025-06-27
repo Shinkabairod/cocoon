@@ -161,7 +161,8 @@ const Dashboard = () => {
   const handleExecuteCustomButton = async (buttonData, placeholderValues) => {
     try {
       setIsGenerating(true);
-      const result = await huggingfaceService.generateConcepts(buttonData.prompt, placeholderValues);
+      // Utilise la méthode askAI avec le prompt comme question
+      const result = await huggingfaceService.askAI(buttonData.prompt);
       setGeneratedContent(result);
       toast({
         title: "✅ Content Generated",
@@ -209,19 +210,23 @@ const Dashboard = () => {
     try {
       setIsGenerating(true);
       
-      setTimeout(() => {
-        const script = `# Script for "${scriptTopic}"\n\n## Introduction\nHello and welcome to this new video...\n\n## Development\n[Main content based on your resources]\n\n## Conclusion\nI hope you enjoyed this video...`;
-        setGeneratedContent(script);
-        setIsGenerating(false);
-        
-        toast({
-          title: "✅ Script Generated",
-          description: "Your personalized script is ready!"
-        });
-      }, 3000);
+      // Utilise generateScript avec le topic
+      const result = await huggingfaceService.generateScript(scriptTopic);
+      setGeneratedContent(result);
+      setIsGenerating(false);
+      
+      toast({
+        title: "✅ Script Generated",
+        description: "Your personalized script is ready!"
+      });
       
     } catch (error) {
       console.error('Script generation error:', error);
+      toast({
+        title: "❌ Error",
+        description: "Unable to generate script",
+        variant: "destructive"
+      });
       setIsGenerating(false);
     }
   };
