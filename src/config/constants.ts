@@ -1,14 +1,12 @@
 
-// src/config/constants.ts
-// Configuration sécurisée - avec clés configurées
-
+// Configuration sécurisée avec les nouvelles clés
 export const CONFIG = {
   // URL du backend
   HF_SPACE_URL: "https://cocoonai-cocoon-ai-assistant.hf.space",
   
-  // Supabase - Configuration directe
+  // Supabase - Configuration mise à jour
   SUPABASE_URL: "https://uwmkgkdswguferayhqbt.supabase.co",
-  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3bWtna2Rzd2d1ZmVyYXlocWJ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxNDYxNjYsImV4cCI6MjA2NTcyMjE2Nn0.z5sgAIof1dHY8kyxulF3TaFzjy7emYalr4XLJ9uJdeE",
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3bWtna2Rzd2d1ZmVyYXlocWJ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NDcxNzYsImV4cCI6MjA2NjMyMzE3Nn0.68k9Pvthq02EbiL9PoT3O1u0dG36FFLGQ_JwfmTkh7M",
 };
 
 // Validation stricte
@@ -24,7 +22,7 @@ export const validateConfig = () => {
   if (!CONFIG.SUPABASE_ANON_KEY) {
     errors.push("❌ SUPABASE_ANON_KEY manquant dans la configuration");
   } else {
-    console.log("✅ Supabase Key configuré");
+    console.log("✅ Supabase Key configuré et mis à jour");
   }
   
   console.log("🔗 Backend URL:", CONFIG.HF_SPACE_URL);

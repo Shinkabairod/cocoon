@@ -1,10 +1,8 @@
-// src/integrations/supabase/client.ts
-// Configuration avec la VRAIE clé API
 
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-// VRAIES clés de votre projet Supabase
+// Configuration avec les clés Supabase mises à jour
 const supabaseUrl = "https://uwmkgkdswguferayhqbt.supabase.co";
 const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3bWtna2Rzd2d1ZmVyYXlocWJ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NDcxNzYsImV4cCI6MjA2NjMyMzE3Nn0.68k9Pvthq02EbiL9PoT3O1u0dG36FFLGQ_JwfmTkh7M";
 
@@ -41,7 +39,7 @@ if (typeof window !== 'undefined') {
       if (error) {
         console.error('❌ Erreur session:', error.message);
         if (error.message.includes('Invalid API key')) {
-          console.error('🚨 CLÉ API TOUJOURS INVALIDE !');
+          console.error('🚨 CLÉ API INVALIDE !');
         }
       } else {
         console.log('✅ Supabase OK:', data.session ? 'Session active' : 'Pas de session');
