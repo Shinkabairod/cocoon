@@ -551,7 +551,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
               Create my AI Space for free
               <ArrowRight className="h-6 w-6 ml-3 group-hover:translate-x-2 transition-transform" />
             </Button>
-            <Button variant="outline" size="lg" onClick={onAuthRedirect} className="px-10 py-6 text-xl border-2 border-gray-300 hover:border-black hover:scale-105 transition-all duration-300 rounded-l">
+            <Button variant="outline" size="lg" onClick={onAuthRedirect} className="px-10 py-6 text-xl border-2 border-gray-300 hover:border-black hover:scale-105 transition-all duration-300">
               <Play className="h-6 w-6 mr-3" />
               Watch demo
             </Button>
