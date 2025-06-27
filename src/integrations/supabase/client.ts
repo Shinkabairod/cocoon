@@ -1,59 +1,54 @@
 // src/integrations/supabase/client.ts
-// Configuration Supabase corrigée et sécurisée
+// Configuration avec la VRAIE clé API
 
 import { createClient } from '@supabase/supabase-js';
 import type { Database } from './types';
 
-// Configuration centralisée
+// VRAIES clés de votre projet Supabase
 const supabaseUrl = "https://uwmkgkdswguferayhqbt.supabase.co";
-const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3bWtna2Rzd2d1ZmVyYXlocWJ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxNDYxNjYsImV4cCI6MjA2NTcyMjE2Nn0.z5sgAIof1dHY8kyxulF3TaFzjy7emYalr4XLJ9uJdeE";
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV3bWtna2Rzd2d1ZmVyYXlocWJ0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTA3NDcxNzYsImV4cCI6MjA2NjMyMzE3Nn0.68k9Pvthq02EbiL9PoT3O1u0dG36FFLGQ_JwfmTkh7M";
 
-// Vérification des clés au démarrage
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('❌ Configuration Supabase manquante');
-  console.error('URL:', supabaseUrl ? '✅' : '❌');
-  console.error('Key:', supabaseAnonKey ? '✅' : '❌');
-}
+// Test des clés au démarrage
+console.log('🔑 Configuration Supabase:');
+console.log('URL:', supabaseUrl);
+console.log('Key (début):', supabaseAnonKey.substring(0, 20) + '...');
 
-// Création du client avec options optimisées
 export const supabase = createClient<Database>(
   supabaseUrl,
   supabaseAnonKey,
   {
     auth: {
-      // Configuration d'authentification améliorée
       storage: typeof window !== 'undefined' ? window.localStorage : undefined,
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
-      flowType: 'pkce', // Plus sécurisé
+      flowType: 'pkce'
     },
     global: {
       headers: {
-        'X-Client-Info': 'cocoon-ai-assistant',
-      }
-    },
-    // Configuration pour éviter les erreurs CORS
-    realtime: {
-      headers: {
-        'apikey': supabaseAnonKey,
+        'X-Client-Info': 'cocoon-ai-v2',
       }
     }
   }
 );
 
-// Test de connexion au démarrage
+// Test de connexion immédiat
 if (typeof window !== 'undefined') {
+  console.log('🔍 Test de connexion Supabase...');
+  
   supabase.auth.getSession()
     .then(({ data, error }) => {
       if (error) {
-        console.warn('⚠️ Erreur session Supabase:', error.message);
+        console.error('❌ Erreur session:', error.message);
+        if (error.message.includes('Invalid API key')) {
+          console.error('🚨 CLÉ API TOUJOURS INVALIDE !');
+        }
       } else {
-        console.log('✅ Supabase connecté:', data.session ? 'Session active' : 'Pas de session');
+        console.log('✅ Supabase OK:', data.session ? 'Session active' : 'Pas de session');
       }
     })
     .catch(err => {
-      console.error('❌ Erreur connexion Supabase:', err);
+      console.error('❌ Erreur connexion:', err);
     });
 }
 
