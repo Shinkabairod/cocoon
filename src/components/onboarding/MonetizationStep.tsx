@@ -9,9 +9,9 @@ const MonetizationStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
   
   const monetizationOptions: Monetization[] = [
-    'Yes',
-    'No',
-    'Not sure yet'
+    'yes',
+    'no',
+    'maybe'
   ];
   
   const handleMonetizationSelect = (option: Monetization) => {
@@ -47,7 +47,7 @@ const MonetizationStep = () => {
           </div>
         </div>
         
-        {onboardingData.monetization === 'Yes' && (
+        {onboardingData.monetization === 'yes' && (
           <div className="bg-muted p-4 rounded-md">
             <h4 className="font-medium mb-2">Monetization options we'll help you explore:</h4>
             <ul className="list-disc list-inside space-y-1 text-muted-foreground">

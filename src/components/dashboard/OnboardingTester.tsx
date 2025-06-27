@@ -28,11 +28,11 @@ const OnboardingTester = () => {
       contentTypes: ['Videos', 'Social Media Posts'] as ContentType[],
       niche: 'Tech & Lifestyle',
       contentChallenges: ['Script writing', 'Editing', 'Promotion'],
-      timeAvailable: '3-5 hours' as const,
+      timeAvailable: 'high' as const,
       targetGeneration: 'Millennials' as const,
       impactGoals: ['Educate', 'Entertain'],
-      learningStyle: 'Video tutorials' as const,
-      monetization: 'Yes' as const
+      learningStyle: 'visual' as const,
+      monetization: 'yes' as const
     };
     
     console.log('📋 Données de test configurées:', testData);
