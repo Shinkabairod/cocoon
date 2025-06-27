@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ArrowLeft, Sparkles, Rocket, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import Logo from '@/components/ui/Logo';
 
 type AuthStep = 'welcome' | 'signup' | 'signin';
 
@@ -158,13 +159,8 @@ const AuthExperience: React.FC = () => {
   if (currentStep === 'welcome') {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4">
-        {/* Logo */}
-        <div className="flex items-center gap-3 mb-12">
-          <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
-            <div className="w-6 h-6 bg-white transform rotate-45"></div>
-          </div>
-          <span className="text-2xl font-bold text-gray-900">Cocoon AI</span>
-        </div>
+        {/* Logo uniforme */}
+        <Logo size="large" className="mb-12" />
 
         {/* Titre principal */}
         <div className="text-center max-w-md mb-12">
@@ -181,11 +177,11 @@ const AuthExperience: React.FC = () => {
           </p>
         </div>
 
-        {/* Boutons d'action */}
+        {/* Boutons d'action avec design cohérent */}
         <div className="w-full max-w-sm space-y-4">
           <Button 
             onClick={() => setCurrentStep('signup')}
-            className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 text-lg rounded-xl transition-all duration-200 hover:scale-105"
+            className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 text-lg rounded-3xl transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl"
           >
             🚀 Create my AI Space for free
           </Button>
@@ -193,7 +189,7 @@ const AuthExperience: React.FC = () => {
           <Button 
             onClick={() => setCurrentStep('signin')}
             variant="outline" 
-            className="w-full border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-semibold py-4 text-lg rounded-xl bg-white hover:bg-gray-50 transition-all duration-200"
+            className="w-full border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-semibold py-4 text-lg rounded-3xl bg-white hover:bg-gray-50 transition-all duration-200 shadow-lg hover:shadow-xl"
           >
             I already have an account
           </Button>
@@ -203,7 +199,7 @@ const AuthExperience: React.FC = () => {
         <div className="mt-8">
           <button 
             onClick={() => navigate('/')}
-            className="text-gray-500 hover:text-gray-700 flex items-center gap-2 transition-colors"
+            className="text-gray-500 hover:text-gray-700 flex items-center gap-2 transition-colors font-medium"
           >
             <ArrowLeft className="h-4 w-4" />
             Back to homepage
@@ -221,20 +217,15 @@ const AuthExperience: React.FC = () => {
         <div className="w-full max-w-md mb-8">
           <button
             onClick={() => setCurrentStep('welcome')}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors font-medium"
           >
             <ArrowLeft className="h-4 w-4" />
             Back
           </button>
         </div>
 
-        {/* Logo */}
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
-            <div className="w-5 h-5 bg-white transform rotate-45"></div>
-          </div>
-          <span className="text-xl font-bold text-gray-900">Cocoon AI</span>
-        </div>
+        {/* Logo uniforme */}
+        <Logo size="medium" className="mb-8" />
 
         {/* Titre */}
         <div className="text-center mb-8">
@@ -246,7 +237,7 @@ const AuthExperience: React.FC = () => {
           </p>
         </div>
 
-        {/* Formulaire */}
+        {/* Formulaire avec design cohérent */}
         <div className="w-full max-w-md">
           <form onSubmit={handleSignUp} className="space-y-4">
             <div>
@@ -255,7 +246,7 @@ const AuthExperience: React.FC = () => {
                 placeholder="Full Name"
                 value={formData.fullName}
                 onChange={(e) => setFormData(prev => ({ ...prev, fullName: e.target.value }))}
-                className="w-full py-3 px-4 rounded-xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                className="w-full py-3 px-4 rounded-2xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 shadow-sm"
                 required
               />
             </div>
@@ -265,7 +256,7 @@ const AuthExperience: React.FC = () => {
                 placeholder="Email"
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                className="w-full py-3 px-4 rounded-xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                className="w-full py-3 px-4 rounded-2xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 shadow-sm"
                 required
               />
             </div>
@@ -275,14 +266,14 @@ const AuthExperience: React.FC = () => {
                 placeholder="Password (min. 6 characters)"
                 value={formData.password}
                 onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                className="w-full py-3 px-4 rounded-xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                className="w-full py-3 px-4 rounded-2xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 shadow-sm"
                 required
               />
             </div>
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 rounded-xl transition-all duration-200"
+              className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 rounded-3xl transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               {loading ? (
                 <>
@@ -319,20 +310,15 @@ const AuthExperience: React.FC = () => {
         <div className="w-full max-w-md mb-8">
           <button
             onClick={() => setCurrentStep('welcome')}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors font-medium"
           >
             <ArrowLeft className="h-4 w-4" />
             Back
           </button>
         </div>
 
-        {/* Logo */}
-        <div className="flex items-center gap-3 mb-8">
-          <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
-            <div className="w-5 h-5 bg-white transform rotate-45"></div>
-          </div>
-          <span className="text-xl font-bold text-gray-900">Cocoon AI</span>
-        </div>
+        {/* Logo uniforme */}
+        <Logo size="medium" className="mb-8" />
 
         {/* Titre */}
         <div className="text-center mb-8">
@@ -344,7 +330,7 @@ const AuthExperience: React.FC = () => {
           </p>
         </div>
 
-        {/* Formulaire */}
+        {/* Formulaire avec design cohérent */}
         <div className="w-full max-w-md">
           <form onSubmit={handleSignIn} className="space-y-4">
             <div>
@@ -353,7 +339,7 @@ const AuthExperience: React.FC = () => {
                 placeholder="Email"
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                className="w-full py-3 px-4 rounded-xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                className="w-full py-3 px-4 rounded-2xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 shadow-sm"
                 required
               />
             </div>
@@ -363,14 +349,14 @@ const AuthExperience: React.FC = () => {
                 placeholder="Password"
                 value={formData.password}
                 onChange={(e) => setFormData(prev => ({ ...prev, password: e.target.value }))}
-                className="w-full py-3 px-4 rounded-xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500"
+                className="w-full py-3 px-4 rounded-2xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 shadow-sm"
                 required
               />
             </div>
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-4 rounded-xl transition-all duration-200"
+              className="w-full bg-violet-600 hover:bg-violet-700 text-white font-semibold py-4 rounded-3xl transition-all duration-200 shadow-lg hover:shadow-xl"
             >
               {loading ? (
                 <>
