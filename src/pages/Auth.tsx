@@ -303,7 +303,14 @@ const Auth = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-xl p-6 max-w-md w-full mx-4">
             <h3 className="text-lg font-bold mb-4">Reset Password</h3>
-            <ForgotPasswordForm onClose={() => setShowForgotPassword(false)} />
+            <ForgotPasswordForm />
+            <Button
+              variant="outline"
+              onClick={() => setShowForgotPassword(false)}
+              className="mt-4 w-full"
+            >
+              Cancel
+            </Button>
           </div>
         </div>
       )}
