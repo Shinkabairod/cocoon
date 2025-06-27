@@ -4,11 +4,12 @@ import { useOnboarding } from "@/contexts/OnboardingContext";
 import OnboardingLayout from "../OnboardingLayout";
 import { Card } from "@/components/ui/card";
 import { BookOpen, Monitor, Users, Zap } from "lucide-react";
+import { LearningStyle } from "@/types/onboarding";
 
 const LearningStyleStep = () => {
   const { onboardingData, updateOnboardingData, nextStep, prevStep } = useOnboarding();
   
-  const learningStyles = [
+  const learningStyles: { id: LearningStyle; label: string; description: string; icon: JSX.Element }[] = [
     { 
       id: 'reading', 
       label: 'Lecture et documentation', 
@@ -35,7 +36,7 @@ const LearningStyleStep = () => {
     }
   ];
   
-  const handleStyleSelect = (styleId: string) => {
+  const handleStyleSelect = (styleId: LearningStyle) => {
     updateOnboardingData({ learningStyle: styleId });
   };
   

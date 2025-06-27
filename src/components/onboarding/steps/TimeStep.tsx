@@ -4,11 +4,12 @@ import { useOnboarding } from "@/contexts/OnboardingContext";
 import OnboardingLayout from "../OnboardingLayout";
 import { Card } from "@/components/ui/card";
 import { Clock } from "lucide-react";
+import { TimeAvailable } from "@/types/onboarding";
 
 const TimeStep = () => {
   const { onboardingData, updateOnboardingData, nextStep, prevStep } = useOnboarding();
   
-  const timeOptions = [
+  const timeOptions: { id: TimeAvailable; label: string; description: string; color: string }[] = [
     { 
       id: 'low', 
       label: 'Moins d\'1h par jour', 
@@ -35,7 +36,7 @@ const TimeStep = () => {
     }
   ];
   
-  const handleTimeSelect = (timeId: string) => {
+  const handleTimeSelect = (timeId: TimeAvailable) => {
     updateOnboardingData({ timeAvailable: timeId });
   };
   
