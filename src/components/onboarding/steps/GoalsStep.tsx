@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { ContentGoal } from '@/types/onboarding';
-import { ArrowLeft, ArrowRight, Target, Users, DollarSign, Star, Heart } from 'lucide-react';
+import { ArrowLeft, ArrowRight, TrendingUp, Heart, DollarSign, Building, Smile } from 'lucide-react';
 
 const GoalsStep: React.FC = () => {
   const { onboardingData, updateOnboardingData, nextStep, prevStep } = useOnboarding();
@@ -11,38 +11,38 @@ const GoalsStep: React.FC = () => {
   const goals = [
     {
       goal: 'Grow an audience' as ContentGoal,
-      title: 'Grow an audience',
-      description: 'Build a loyal following',
-      icon: <Users className="h-8 w-8" />,
+      title: 'Grow audience',
+      description: 'Build a following and reach more people',
+      icon: <TrendingUp className="h-8 w-8" />,
       color: 'from-blue-500 to-cyan-500'
     },
     {
       goal: 'Share knowledge' as ContentGoal,
       title: 'Share knowledge',
-      description: 'Educate and inspire others',
-      icon: <Target className="h-8 w-8" />,
+      description: 'Educate and help others learn',
+      icon: <Heart className="h-8 w-8" />,
       color: 'from-green-500 to-emerald-500'
     },
     {
       goal: 'Make money' as ContentGoal,
       title: 'Make money',
-      description: 'Monetize your content',
+      description: 'Generate income from content',
       icon: <DollarSign className="h-8 w-8" />,
       color: 'from-yellow-500 to-orange-500'
     },
     {
       goal: 'Build a brand' as ContentGoal,
       title: 'Build a brand',
-      description: 'Establish your presence',
-      icon: <Star className="h-8 w-8" />,
+      description: 'Establish your professional presence',
+      icon: <Building className="h-8 w-8" />,
       color: 'from-purple-500 to-pink-500'
     },
     {
       goal: 'Have fun' as ContentGoal,
       title: 'Have fun',
-      description: 'Enjoy the creative process',
-      icon: <Heart className="h-8 w-8" />,
-      color: 'from-pink-500 to-red-500'
+      description: 'Enjoy creating and expressing yourself',
+      icon: <Smile className="h-8 w-8" />,
+      color: 'from-pink-500 to-rose-500'
     }
   ];
 
@@ -62,28 +62,28 @@ const GoalsStep: React.FC = () => {
           <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
             What's your main <span className="bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">goal</span>?
           </h1>
-          <p className="text-xl text-gray-600">Choose your primary objective with content creation</p>
+          <p className="text-xl text-gray-600">Your AI will be optimized for your primary objective</p>
         </div>
 
         {/* Options */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-          {goals.map((goalItem) => (
+        <div className="grid md:grid-cols-3 gap-6 mb-12">
+          {goals.map((item) => (
             <button
-              key={goalItem.goal}
-              onClick={() => handleSelect(goalItem.goal)}
+              key={item.goal}
+              onClick={() => handleSelect(item.goal)}
               className={`relative p-6 rounded-2xl border-2 transition-all duration-300 hover:scale-105 ${
-                onboardingData.contentGoal === goalItem.goal
+                onboardingData.contentGoal === item.goal
                   ? 'border-violet-500 bg-violet-50 shadow-lg'
                   : 'border-gray-200 hover:border-gray-300 bg-white hover:shadow-md'
               }`}
             >
-              <div className={`w-14 h-14 rounded-xl bg-gradient-to-r ${goalItem.color} flex items-center justify-center text-white mx-auto mb-4`}>
-                {goalItem.icon}
+              <div className={`w-14 h-14 rounded-xl bg-gradient-to-r ${item.color} flex items-center justify-center text-white mx-auto mb-4`}>
+                {item.icon}
               </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">{goalItem.title}</h3>
-              <p className="text-gray-600 text-sm">{goalItem.description}</p>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">{item.title}</h3>
+              <p className="text-gray-600 text-sm">{item.description}</p>
               
-              {onboardingData.contentGoal === goalItem.goal && (
+              {onboardingData.contentGoal === item.goal && (
                 <div className="absolute top-4 right-4 w-6 h-6 bg-violet-600 rounded-full flex items-center justify-center">
                   <div className="w-3 h-3 bg-white rounded-full"></div>
                 </div>
