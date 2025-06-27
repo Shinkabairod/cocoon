@@ -1,139 +1,169 @@
 // src/components/onboarding/SummaryStep.tsx
-import { Button } from "@/components/ui/button";
-import { useOnboarding } from "@/contexts/OnboardingContext";
-import OnboardingLayout from "./OnboardingLayout";
-import { Card, CardContent } from "@/components/ui/card";
-import { Check, FileText, Users, Target, Loader2, Sparkles } from "lucide-react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/contexts/AuthContext";
-import { useToast } from "@/hooks/use-toast";
-import { useState, useEffect } from "react";
-import { apiService } from '@/lib/api';
-import { supabase } from '@/integrations/supabase/client';
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { useOnboarding } from '@/contexts/OnboardingContext';
+import { useOnboardingComplete } from '@/hooks/useOnboardingComplete';
+import { useAuth } from '@/contexts/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { Sparkles, Rocket, CheckCircle, Loader2 } from 'lucide-react';
+import OnboardingLayout from './OnboardingLayout';
 
-const loadingMessages = [
-  "🧠 Analysing your profile and preferences...",
-  "🎯 Creating your personalized AI coaching strategy...",
-  "📊 Setting up your content optimization system...",
-  "🔥 Configuring your growth accelerator tools...",
-  "✨ Finalizing your personalized workspace...",
-  "🚀 Almost ready to launch your creator journey!"
-];
-
-const SummaryStep = () => {
+const SummaryStep: React.FC = () => {
   const { onboardingData } = useOnboarding();
+  const { completeOnboarding, isProcessing } = useOnboardingComplete();
   const { user } = useAuth();
-  const { toast } = useToast();
   const navigate = useNavigate();
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [currentLoadingMessage, setCurrentLoadingMessage] = useState(0);
-  
-  useEffect(() => {
-    if (isProcessing) {
-      const interval = setInterval(() => {
-        setCurrentLoadingMessage(prev => (prev + 1) % loadingMessages.length);
-      }, 2000);
-      
-      return () => clearInterval(interval);
-    }
-  }, [isProcessing]);
+  const [isCreating, setIsCreating] = useState(false);
 
-  const finishOnboarding = async () => {
-    if (!user) return;
+  const handleComplete = async () => {
+    setIsCreating(true);
     
     try {
-      setIsProcessing(true);
-      
-      // Sauvegarder dans votre backend (Obsidian)
-      await apiService.saveProfile(user.id, onboardingData);
-      
-      // Sauvegarder aussi dans Supabase pour accès rapide - CORRECTION DES TYPES
-      const { error: updateError } = await supabase
-        .from('user_profiles')
-        .upsert({
-          user_id: user.id, // Utiliser user_id au lieu de id
-          onboarding_completed: true,
-          profile_data: onboardingData as any, // Cast explicite pour Json
-          updated_at: new Date().toISOString()
-        });
-
-      if (updateError) {
-        console.warn('⚠️ Erreur lors de la sauvegarde du profil:', updateError);
-      } else {
-        console.log('✅ Profil sauvegardé en base de données');
-      }
-
-      toast({ 
-        title: "✅ Profil créé !", 
-        description: "Votre vault Obsidian est prêt !" 
-      });
-      
-      navigate('/dashboard');
+      await completeOnboarding();
+      // Navigation is handled by useOnboardingComplete
     } catch (error) {
-      console.error('Erreur onboarding:', error);
-      toast({ 
-        title: "❌ Erreur", 
-        description: "Impossible de créer votre profil" 
-      });
+      console.error('Error completing onboarding:', error);
     } finally {
-      setIsProcessing(false);
+      setIsCreating(false);
     }
   };
 
+  const getSummary = () => {
+    const { experienceLevel, contentGoal, platforms, contentTypes, challenges } = onboardingData;
+    
+    return {
+      experience: experienceLevel || 'Not specified',
+      goal: contentGoal || 'Not specified',
+      platforms: platforms?.slice(0, 3).join(', ') + (platforms?.length > 3 ? '...' : '') || 'None selected',
+      content: contentTypes?.slice(0, 2).join(', ') + (contentTypes?.length > 2 ? '...' : '') || 'None selected',
+      challengesCount: challenges?.length || 0
+    };
+  };
+
+  const summary = getSummary();
+
+  if (isCreating || isProcessing) {
+    return (
+      <OnboardingLayout showProgress={false}>
+        <div className="text-center space-y-8">
+          <div className="relative">
+            <div className="w-24 h-24 bg-gradient-to-r from-violet-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Loader2 className="h-12 w-12 text-white animate-spin" />
+            </div>
+            <div className="absolute inset-0 bg-gradient-to-r from-violet-600 to-blue-600 rounded-full blur opacity-30 animate-pulse"></div>
+          </div>
+          
+          <div className="space-y-4">
+            <h1 className="text-4xl font-bold text-gray-900">
+              Creating your <span className="bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">AI bot</span>...
+            </h1>
+            <p className="text-xl text-gray-600">This will only take a moment</p>
+          </div>
+
+          <div className="space-y-2 text-left max-w-md mx-auto">
+            <div className="flex items-center gap-3 text-gray-600">
+              <CheckCircle className="h-5 w-5 text-green-500" />
+              <span>Analyzing your preferences</span>
+            </div>
+            <div className="flex items-center gap-3 text-gray-600">
+              <CheckCircle className="h-5 w-5 text-green-500" />
+              <span>Setting up AI personality</span>
+            </div>
+            <div className="flex items-center gap-3 text-gray-600">
+              <Loader2 className="h-5 w-5 text-violet-600 animate-spin" />
+              <span>Creating your workspace</span>
+            </div>
+          </div>
+        </div>
+      </OnboardingLayout>
+    );
+  }
+
   return (
-    <OnboardingLayout 
-      title="🎉 Votre profil est prêt !"
-      subtitle="Finalisez votre configuration"
+    <OnboardingLayout
+      title="Perfect! Your AI bot is ready 🎉"
+      subtitle="Here's what we've set up for you"
+      showProgress={false}
     >
-      <div className="space-y-6">
-        {/* Résumé existant */}
-        <Card>
-          <CardContent className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <Check className="h-5 w-5 text-green-600" />
-                <span>Expérience: {onboardingData.experienceLevel}</span>
+      <div className="space-y-12">
+        {/* Summary Cards */}
+        <div className="grid md:grid-cols-2 gap-6">
+          <div className="bg-gradient-to-br from-violet-50 to-blue-50 p-6 rounded-2xl border border-violet-200">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">Your Profile</h3>
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Experience:</span>
+                <span className="font-medium">{summary.experience}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Check className="h-5 w-5 text-green-600" />
-                <span>Objectif: {onboardingData.contentGoal}</span>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Main goal:</span>
+                <span className="font-medium">{summary.goal}</span>
               </div>
-              <div className="flex items-center gap-2">
-                <Check className="h-5 w-5 text-green-600" />
-                <span>Plateformes: {onboardingData.platforms?.length || 0}</span>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Platforms:</span>
+                <span className="font-medium">{summary.platforms}</span>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* Message de loading */}
-        {isProcessing && (
-          <Card>
-            <CardContent className="p-6 text-center">
-              <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
-              <p>{loadingMessages[currentLoadingMessage]}</p>
-            </CardContent>
-          </Card>
-        )}
+          <div className="bg-gradient-to-br from-green-50 to-emerald-50 p-6 rounded-2xl border border-green-200">
+            <h3 className="text-lg font-bold text-gray-900 mb-4">AI Specialization</h3>
+            <div className="space-y-3">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Content types:</span>
+                <span className="font-medium">{summary.content}</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Focus areas:</span>
+                <span className="font-medium">{summary.challengesCount} challenges</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Optimization:</span>
+                <span className="font-medium">Personalized</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        {/* Bouton final */}
-        <Button 
-          className="w-full gradient-bg"
-          onClick={finishOnboarding}
-          disabled={isProcessing}
-        >
-          {isProcessing ? (
-            <>
-              <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-              Configuration en cours...
-            </>
-          ) : (
-            <>
-              <Sparkles className="h-4 w-4 mr-2" />
-              🚀 Créer mon espace IA
-            </>
-          )}
-        </Button>
+        {/* Features Preview */}
+        <div className="bg-gray-50 rounded-2xl p-8">
+          <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">Your AI bot will help you with:</h3>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="w-12 h-12 bg-violet-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <Sparkles className="h-6 w-6 text-white" />
+              </div>
+              <h4 className="font-medium text-gray-900 mb-1">Content Ideas</h4>
+              <p className="text-sm text-gray-600">Endless creative concepts</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <span className="text-white text-xl">✍️</span>
+              </div>
+              <h4 className="font-medium text-gray-900 mb-1">Script Writing</h4>
+              <p className="text-sm text-gray-600">Engaging scripts & captions</p>
+            </div>
+            <div className="text-center">
+              <div className="w-12 h-12 bg-green-600 rounded-xl flex items-center justify-center mx-auto mb-3">
+                <span className="text-white text-xl">📊</span>
+              </div>
+              <h4 className="font-medium text-gray-900 mb-1">Strategy Tips</h4>
+              <p className="text-sm text-gray-600">Growth optimization</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Action Button */}
+        <div className="text-center">
+          <Button
+            onClick={handleComplete}
+            disabled={isCreating}
+            className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 text-white px-12 py-4 text-xl font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 group"
+          >
+            <Rocket className="h-6 w-6 mr-3 group-hover:animate-bounce" />
+            Create my AI bot
+          </Button>
+        </div>
       </div>
     </OnboardingLayout>
   );
