@@ -1,5 +1,7 @@
+
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from '@/components/ui/toaster';
 
 // Contexts
@@ -21,61 +23,73 @@ import Dashboard from '@/pages/Dashboard';
 // Error Boundary
 import ErrorBoundary from '@/components/ErrorBoundary';
 
+// Create a client
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      retry: 1,
+    },
+  },
+});
+
 const App: React.FC = () => {
   return (
     <ErrorBoundary>
-      <AuthProvider>
-        <OnboardingProvider>
-          <Router>
-            <div className="min-h-screen bg-white">
-              <Routes>
-                {/* Public Landing Page */}
-                <Route path="/" element={<CocoonLandingPage />} />
+      <QueryClientProvider client={queryClient}>
+        <AuthProvider>
+          <OnboardingProvider>
+            <Router>
+              <div className="min-h-screen bg-white">
+                <Routes>
+                  {/* Public Landing Page */}
+                  <Route path="/" element={<CocoonLandingPage />} />
+                  
+                  {/* Auth Routes - Protected against already authenticated users */}
+                  <Route 
+                    path="/auth/*" 
+                    element={
+                      <ProtectedRoute requireAuth={false}>
+                        <AuthExperience />
+                      </ProtectedRoute>
+                    } 
+                  />
+                  
+                  {/* Onboarding Routes - Requires auth but not completed onboarding */}
+                  <Route 
+                    path="/onboarding/*" 
+                    element={
+                      <ProtectedRoute requireAuth={true}>
+                        <OnboardingGuard requireOnboarding={true}>
+                          <OnboardingFlow />
+                        </OnboardingGuard>
+                      </ProtectedRoute>
+                    } 
+                  />
+                  
+                  {/* Dashboard Routes - Requires auth AND completed onboarding */}
+                  <Route 
+                    path="/dashboard/*" 
+                    element={
+                      <ProtectedRoute requireAuth={true}>
+                        <OnboardingGuard requireOnboarding={false}>
+                          <Dashboard />
+                        </OnboardingGuard>
+                      </ProtectedRoute>
+                    } 
+                  />
+                  
+                  {/* Redirect unknown routes to landing */}
+                  <Route path="*" element={<Navigate to="/" replace />} />
+                </Routes>
                 
-                {/* Auth Routes - Protected against already authenticated users */}
-                <Route 
-                  path="/auth/*" 
-                  element={
-                    <ProtectedRoute requireAuth={false}>
-                      <AuthExperience />
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                {/* Onboarding Routes - Requires auth but not completed onboarding */}
-                <Route 
-                  path="/onboarding/*" 
-                  element={
-                    <ProtectedRoute requireAuth={true}>
-                      <OnboardingGuard requireOnboarding={true}>
-                        <OnboardingFlow />
-                      </OnboardingGuard>
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                {/* Dashboard Routes - Requires auth AND completed onboarding */}
-                <Route 
-                  path="/dashboard/*" 
-                  element={
-                    <ProtectedRoute requireAuth={true}>
-                      <OnboardingGuard requireOnboarding={false}>
-                        <Dashboard />
-                      </OnboardingGuard>
-                    </ProtectedRoute>
-                  } 
-                />
-                
-                {/* Redirect unknown routes to landing */}
-                <Route path="*" element={<Navigate to="/" replace />} />
-              </Routes>
-              
-              {/* Global Toast Notifications */}
-              <Toaster />
-            </div>
-          </Router>
-        </OnboardingProvider>
-      </AuthProvider>
+                {/* Global Toast Notifications */}
+                <Toaster />
+              </div>
+            </Router>
+          </OnboardingProvider>
+        </AuthProvider>
+      </QueryClientProvider>
     </ErrorBoundary>
   );
 };
