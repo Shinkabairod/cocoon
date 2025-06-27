@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Play, Sparkles, Crown, Rocket, Bot, DollarSign, Clock, Users } from 'lucide-react';
@@ -1149,7 +1150,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
             icon: <Bot className="h-6 w-6" />
           }, {
             value: animatedStats.revenue,
-            suffix: ',
+            suffix: 'K+',
             label: 'Revenue generated',
             color: 'text-blue-600',
             icon: <DollarSign className="h-6 w-6" />
