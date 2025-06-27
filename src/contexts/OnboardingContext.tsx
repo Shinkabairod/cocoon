@@ -1,5 +1,4 @@
 
-// src/contexts/OnboardingContext.tsx - Fixed to match actual usage
 import { createContext, useContext, useState, ReactNode } from 'react';
 import { OnboardingData } from '@/types/onboarding';
 
@@ -18,8 +17,8 @@ const initialData: OnboardingData = {
   onboardingCompleted: false
 };
 
-// Total steps: 7
-const TOTAL_STEPS = 7;
+// Total steps: 10
+const TOTAL_STEPS = 10;
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 
@@ -31,7 +30,7 @@ export const OnboardingProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const nextStep = () => {
-    setOnboardingData(prev => ({ ...prev, step: prev.step + 1 }));
+    setOnboardingData(prev => ({ ...prev, step: Math.min(prev.step + 1, TOTAL_STEPS) }));
   };
 
   const prevStep = () => {

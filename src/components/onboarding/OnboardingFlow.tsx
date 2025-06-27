@@ -1,16 +1,18 @@
 
-// src/components/onboarding/OnboardingFlow.tsx
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 
-// Import des étapes depuis steps_old temporairement
-import WelcomeStep from './steps_old/WelcomeStep';
-import ExperienceStep from './steps_old/ExperienceStep';
-import GoalsStep from './steps_old/GoalsStep';
-import PlatformsStep from './steps_old/PlatformsStep';
-import ContentStep from './steps_old/ContentStep';
-import ChallengesStep from './steps_old/ChallengesStep';
-import FinalStep from './steps_old/FinalStep';
+// Import des nouvelles étapes
+import WelcomeStep from './steps/WelcomeStep';
+import ProfileStep from './steps/ProfileStep';
+import ProfessionStep from './steps/ProfessionStep';
+import ObjectivesStep from './steps/ObjectivesStep';
+import ChallengesStep from './steps/ChallengesStep';
+import ToolsStep from './steps/ToolsStep';
+import LearningStyleStep from './steps/LearningStyleStep';
+import TimeStep from './steps/TimeStep';
+import AIAssistanceStep from './steps/AIAssistanceStep';
+import SummaryStep from './steps/SummaryStep';
 
 const OnboardingFlow: React.FC = () => {
   const { onboardingData } = useOnboarding();
@@ -20,17 +22,23 @@ const OnboardingFlow: React.FC = () => {
       case 1:
         return <WelcomeStep />;
       case 2:
-        return <ExperienceStep />;
+        return <ProfileStep />;
       case 3:
-        return <GoalsStep />;
+        return <ProfessionStep />;
       case 4:
-        return <PlatformsStep />;
+        return <ObjectivesStep />;
       case 5:
-        return <ContentStep />;
-      case 6:
         return <ChallengesStep />;
+      case 6:
+        return <ToolsStep />;
       case 7:
-        return <FinalStep />;
+        return <LearningStyleStep />;
+      case 8:
+        return <TimeStep />;
+      case 9:
+        return <AIAssistanceStep />;
+      case 10:
+        return <SummaryStep />;
       default:
         return <WelcomeStep />;
     }
