@@ -18,8 +18,8 @@ const initialData: OnboardingData = {
   onboardingCompleted: false
 };
 
-// Total steps: 8
-const TOTAL_STEPS = 8;
+// Total steps: 7
+const TOTAL_STEPS = 7;
 
 const OnboardingContext = createContext<OnboardingContextType | undefined>(undefined);
 
