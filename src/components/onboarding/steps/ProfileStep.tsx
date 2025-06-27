@@ -26,12 +26,11 @@ const ProfileStep = () => {
         <div className="text-center mb-12">
           <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mb-4">
             <div className="w-2 h-2 bg-black rounded-full"></div>
-            <span>Étape 2 sur 11</span>
+            <span>Step 2 of 11</span>
           </div>
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Faisons <span className="bg-gradient-to-r from-black to-gray-600 bg-clip-text text-transparent">connaissance</span>
+          <h1 className="text-6xl md:text-7xl font-bold mb-6">
+            <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">Profile</span>
           </h1>
-          <p className="text-xl text-gray-600">Comment souhaitez-vous que votre assistant s'adresse à vous ?</p>
         </div>
 
         {/* Icon */}
@@ -45,20 +44,20 @@ const ProfileStep = () => {
         <div className="max-w-md mx-auto space-y-6 mb-12">
           <div>
             <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
-              Votre prénom ou nom complet
+              First name or Username
             </label>
             <Input
               id="fullName"
               type="text"
-              placeholder="Ex: Marie, Jean Dupont..."
+              placeholder="Ex: Marie, john_dev..."
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="text-center text-lg border-gray-300 focus:border-black focus:ring-black"
+              className="text-center text-lg border-gray-300 focus:border-violet-500 focus:ring-violet-500"
             />
           </div>
           
           <p className="text-sm text-gray-500 text-center">
-            Cette information nous permet de personnaliser vos interactions avec l'assistant IA
+            How would you like to be addressed?
           </p>
         </div>
         
@@ -70,14 +69,14 @@ const ProfileStep = () => {
             className="text-gray-500 border-gray-300 hover:bg-gray-50"
           >
             <ArrowLeft className="h-4 w-4 mr-2" />
-            Retour
+            Back
           </Button>
           <Button 
             className="bg-black hover:bg-gray-800 text-white px-8 py-3 rounded-xl font-semibold disabled:opacity-50"
             onClick={handleContinue}
             disabled={!fullName.trim()}
           >
-            Continuer
+            Continue
             <ArrowRight className="h-4 w-4 ml-2" />
           </Button>
         </div>

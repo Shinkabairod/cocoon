@@ -1,7 +1,6 @@
 
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
-import OnboardingLayout from "../OnboardingLayout";
 import { Card } from "@/components/ui/card";
 import { Check, Lightbulb, TrendingUp, Users, BookOpen, Zap, Target } from "lucide-react";
 
@@ -11,38 +10,32 @@ const AIAssistanceStep = () => {
   const assistanceAreas = [
     { 
       id: 'ideas', 
-      label: 'Génération d\'idées', 
-      description: 'Brainstorming, concepts créatifs',
+      label: 'Generate ideas', 
       icon: <Lightbulb className="h-5 w-5" />
     },
     { 
       id: 'strategy', 
-      label: 'Stratégie et planification', 
-      description: 'Plans d\'action, roadmaps',
+      label: 'Strategy', 
       icon: <Target className="h-5 w-5" />
     },
     { 
       id: 'content', 
-      label: 'Création de contenu', 
-      description: 'Rédaction, scripts, posts',
+      label: 'Create content', 
       icon: <BookOpen className="h-5 w-5" />
     },
     { 
       id: 'growth', 
-      label: 'Croissance et marketing', 
-      description: 'Acquisition, engagement',
+      label: 'Growth', 
       icon: <TrendingUp className="h-5 w-5" />
     },
     { 
       id: 'community', 
-      label: 'Gestion de communauté', 
-      description: 'Interaction, support',
+      label: 'Community', 
       icon: <Users className="h-5 w-5" />
     },
     { 
       id: 'optimization', 
-      label: 'Optimisation et productivité', 
-      description: 'Workflows, automatisation',
+      label: 'Optimization', 
       icon: <Zap className="h-5 w-5" />
     }
   ];
@@ -66,69 +59,74 @@ const AIAssistanceStep = () => {
   };
   
   return (
-    <OnboardingLayout 
-      title="Domaines d'assistance IA"
-      subtitle="Dans quels domaines souhaitez-vous que l'IA vous aide le plus ?"
-    >
-      <div className="space-y-6">
-        <div className="grid md:grid-cols-2 gap-4">
-          {assistanceAreas.map((area) => {
-            const isSelected = selectedAreas.includes(area.id);
-            
-            return (
-              <Card 
-                key={area.id}
-                className={`p-4 cursor-pointer border-2 transition-all hover:shadow-md ${
-                  isSelected 
-                    ? 'border-violet-500 bg-violet-50' 
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
-                onClick={() => handleAreaToggle(area.id)}
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex items-start space-x-3">
-                    <div className={`mt-1 ${isSelected ? 'text-violet-600' : 'text-gray-500'}`}>
-                      {area.icon}
-                    </div>
-                    <div>
+    <div className="min-h-screen bg-white flex items-center justify-center p-4">
+      <div className="relative max-w-4xl w-full">
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center gap-2 text-sm text-gray-500 mb-4">
+            <div className="w-2 h-2 bg-black rounded-full"></div>
+            <span>Step 10 of 11</span>
+          </div>
+          <h1 className="text-6xl md:text-7xl font-bold mb-6">
+            <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">AI</span>
+          </h1>
+        </div>
+
+        <div className="space-y-6 mb-12">
+          <div className="grid md:grid-cols-2 gap-4">
+            {assistanceAreas.map((area) => {
+              const isSelected = selectedAreas.includes(area.id);
+              
+              return (
+                <Card 
+                  key={area.id}
+                  className={`p-6 cursor-pointer border-2 transition-all hover:shadow-md ${
+                    isSelected 
+                      ? 'border-violet-500 bg-violet-50' 
+                      : 'border-gray-200 hover:border-gray-300'
+                  }`}
+                  onClick={() => handleAreaToggle(area.id)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className={`${isSelected ? 'text-violet-600' : 'text-gray-500'}`}>
+                        {area.icon}
+                      </div>
                       <h4 className="font-medium text-gray-900">{area.label}</h4>
-                      <p className="text-sm text-gray-600">{area.description}</p>
                     </div>
+                    {isSelected && (
+                      <Check className="h-5 w-5 text-violet-600" />
+                    )}
                   </div>
-                  {isSelected && (
-                    <Check className="h-5 w-5 text-violet-600 flex-shrink-0" />
-                  )}
-                </div>
-              </Card>
-            );
-          })}
+                </Card>
+              );
+            })}
+          </div>
+          
+          <div className="bg-violet-50 p-4 rounded-lg border border-violet-200">
+            <p className="text-sm text-violet-800 text-center">
+              <span className="font-medium">{selectedAreas.length}</span> selected
+            </p>
+          </div>
         </div>
         
-        <div className="bg-gradient-to-r from-violet-50 to-blue-50 p-4 rounded-lg border border-violet-200">
-          <p className="text-sm text-violet-800 text-center">
-            <span className="font-medium">{selectedAreas.length}</span> domaine(s) sélectionné(s) • 
-            L'IA se spécialisera dans ces domaines pour vous
-          </p>
-        </div>
-        
-        <div className="flex justify-between pt-4">
+        <div className="flex justify-between items-center">
           <Button 
             variant="outline"
             onClick={prevStep}
             className="px-6"
           >
-            Retour
+            Back
           </Button>
           <Button 
-            className="bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-700 hover:to-blue-700 px-6"
+            className="bg-black hover:bg-gray-800 text-white px-8 py-3"
             onClick={handleContinue}
             disabled={selectedAreas.length === 0}
           >
-            Continuer
+            Continue
           </Button>
         </div>
       </div>
-    </OnboardingLayout>
+    </div>
   );
 };
 

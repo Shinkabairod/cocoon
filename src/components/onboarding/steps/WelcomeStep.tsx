@@ -33,10 +33,10 @@ const WelcomeStep = () => {
         {/* Main content */}
         <div className="space-y-6">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-900">
-            Bienvenue dans votre <span className="bg-gradient-to-r from-black to-gray-600 bg-clip-text text-transparent">Assistant IA</span>
+            Welcome to your <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">Workspace</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-xl mx-auto">
-            Quelques questions pour personnaliser votre expérience et créer l'assistant parfait pour vos besoins
+            Quick setup to personalize your experience
           </p>
         </div>
 
@@ -44,30 +44,29 @@ const WelcomeStep = () => {
         <Card className="p-8 bg-gradient-to-br from-gray-50 to-white border-gray-200">
           <div className="space-y-4">
             <h3 className="text-xl font-semibold text-gray-900">
-              Votre assistant IA va s'adapter à vos besoins
+              Your workspace will adapt to your needs
             </h3>
             <p className="text-gray-600">
-              En quelques minutes, nous allons configurer votre assistant personnel 
-              pour qu'il comprenne parfaitement vos objectifs et puisse vous accompagner efficacement.
+              Configure your personal workspace in minutes
             </p>
             <div className="grid md:grid-cols-3 gap-4 pt-4">
               <div className="text-center">
                 <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                   <span className="text-2xl">🎯</span>
                 </div>
-                <p className="text-sm text-gray-600">Définir vos objectifs</p>
+                <p className="text-sm text-gray-600">Define goals</p>
               </div>
               <div className="text-center">
                 <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                   <span className="text-2xl">⚡</span>
                 </div>
-                <p className="text-sm text-gray-600">Optimiser l'assistance</p>
+                <p className="text-sm text-gray-600">Optimize experience</p>
               </div>
               <div className="text-center">
                 <div className="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center mx-auto mb-2">
                   <span className="text-2xl">🚀</span>
                 </div>
-                <p className="text-sm text-gray-600">Commencer à créer</p>
+                <p className="text-sm text-gray-600">Start creating</p>
               </div>
             </div>
           </div>
@@ -79,12 +78,12 @@ const WelcomeStep = () => {
           onClick={handleStart}
         >
           <Rocket className="h-6 w-6 mr-3 group-hover:animate-bounce" />
-          Commencer la configuration
+          Start Setup
           <ArrowRight className="h-6 w-6 ml-3 group-hover:translate-x-1 transition-transform" />
         </Button>
         
         <p className="text-sm text-gray-500">
-          Seulement 11 étapes • 3-5 minutes
+          11 steps • 3-5 minutes
         </p>
       </div>
     </div>
