@@ -156,7 +156,7 @@ const AuthExperience: React.FC = () => {
 
         {/* Titre principal */}
         <div className="text-center max-w-md mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4 leading-tight">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4 leading-tight md:text-5xl">
             Ready to{' '}
             <span className="text-violet-600 font-black uppercase tracking-wide">
               REVOLUTIONIZE
@@ -171,9 +171,9 @@ const AuthExperience: React.FC = () => {
 
         {/* Boutons d'action avec design cohérent */}
         <div className="w-full max-w-sm space-y-4">
-          <Button onClick={() => setCurrentStep('signup')} className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 text-lg rounded-l transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl">Create my AI Space for free</Button>
+          <Button onClick={() => setCurrentStep('signup')} className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 transition-all duration-200 hover:scale-105 shadow-lg hover:shadow-xl text-lg">Create my AI Space for free</Button>
           
-          <Button onClick={() => setCurrentStep('signin')} variant="outline" className="w-full border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-semibold py-4 text-lg rounded-l bg-white hover:bg-gray-50 transition-all duration-200 shadow-lg hover:shadow-xl">
+          <Button onClick={() => setCurrentStep('signin')} variant="outline" className="w-full border-2 border-gray-300 hover:border-gray-400 text-gray-700 font-semibold py-4 text-lg bg-white hover:bg-gray-50 transition-all duration-200 shadow-lg hover:shadow-xl">
             I already have an account
           </Button>
         </div>
