@@ -11,7 +11,7 @@ const CTASection: React.FC<CTASectionProps> = ({
       <div className="absolute inset-0 opacity-5"></div>
       
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <h2 className="text-3xl md:text-4xl font-bold mb-8">
+        <h2 className="font-bold md:text-4xl font-bold mb-8 text-[#9c61ff]">
           Ready to <span className="text-4xl lg:text-5xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-6">transform</span> your expertise into automated <span className="bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">revenue</span>?
         </h2>
         
