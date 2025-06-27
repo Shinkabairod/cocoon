@@ -1,16 +1,13 @@
-
 import React from 'react';
-
 interface LogoProps {
   size?: 'small' | 'medium' | 'large';
   showText?: boolean;
   className?: string;
 }
-
-const Logo: React.FC<LogoProps> = ({ 
-  size = 'medium', 
-  showText = true, 
-  className = '' 
+const Logo: React.FC<LogoProps> = ({
+  size = 'medium',
+  showText = true,
+  className = ''
 }) => {
   const sizeConfig = {
     small: {
@@ -29,24 +26,13 @@ const Logo: React.FC<LogoProps> = ({
       text: 'text-3xl'
     }
   };
-
   const config = sizeConfig[size];
-
-  return (
-    <div className={`flex items-center gap-3 ${className}`}>
+  return <div className={`flex items-center gap-3 ${className}`}>
       {/* Icône logo */}
-      <div className={`${config.container} bg-black rounded-xl flex items-center justify-center shadow-lg hover:shadow-xl transition-shadow duration-200`}>
-        <div className={`${config.icon} bg-white transform rotate-45 rounded-sm`}></div>
-      </div>
+      
       
       {/* Texte */}
-      {showText && (
-        <span className={`${config.text} font-bold text-gray-900`}>
-          Cocoon AI
-        </span>
-      )}
-    </div>
-  );
+      {showText}
+    </div>;
 };
-
 export default Logo;
