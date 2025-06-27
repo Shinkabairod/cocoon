@@ -3,14 +3,14 @@
 import React from 'react';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 
-// Import des étapes simplifiées
-import WelcomeStep from './steps/WelcomeStep';
-import ExperienceStep from './steps/ExperienceStep';
-import GoalsStep from './steps/GoalsStep';
-import PlatformsStep from './steps/PlatformsStep';
-import ContentStep from './steps/ContentStep';
-import ChallengesStep from './steps/ChallengesStep';
-import FinalStep from './steps/FinalStep';
+// Import des étapes depuis steps_old temporairement
+import WelcomeStep from './steps_old/WelcomeStep';
+import ExperienceStep from './steps_old/ExperienceStep';
+import GoalsStep from './steps_old/GoalsStep';
+import PlatformsStep from './steps_old/PlatformsStep';
+import ContentStep from './steps_old/ContentStep';
+import ChallengesStep from './steps_old/ChallengesStep';
+import FinalStep from './steps_old/FinalStep';
 
 const OnboardingFlow: React.FC = () => {
   const { onboardingData } = useOnboarding();

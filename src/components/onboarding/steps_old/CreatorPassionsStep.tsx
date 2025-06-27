@@ -1,11 +1,10 @@
-
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import OnboardingLayout from "../OnboardingLayout";
 import { Badge } from "@/components/ui/badge";
-import { Heart } from "lucide-react";
+import { Heart, Lightbulb } from "lucide-react";
 import { useState } from "react";
-import { passions } from "@/components/onboarding/content-type/contentTypeData";
+import { passions } from "@/components/onboarding/content-type_old/contentTypeData";
 
 const CreatorPassionsStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();

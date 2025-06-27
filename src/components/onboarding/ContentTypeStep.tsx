@@ -4,16 +4,16 @@ import { useOnboarding } from "@/contexts/OnboardingContext";
 import { ContentType, Platform, ContentCategory } from "@/types/onboarding";
 import OnboardingLayout from "./OnboardingLayout";
 import { useState } from "react";
-import ContentTypesSelector from "./content-type/ContentTypesSelector";
-import PlatformsSelector from "./content-type/PlatformsSelector";
-import CategoriesSelector from "./content-type/CategoriesSelector";
-import NicheSelector from "./content-type/NicheSelector";
+import ContentTypesSelector from "./content-type_old/ContentTypesSelector";
+import PlatformsSelector from "./content-type_old/PlatformsSelector";
+import CategoriesSelector from "./content-type_old/CategoriesSelector";
+import NicheSelector from "./content-type_old/NicheSelector";
 import { 
   contentTypes, 
   platforms, 
   contentCategories, 
   popularNiches 
-} from "./content-type/contentTypeData";
+} from "./content-type_old/contentTypeData";
 
 const ContentTypeStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();

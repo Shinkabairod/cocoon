@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import OnboardingLayout from "../OnboardingLayout";
-import { contentCategories } from "@/components/onboarding/content-type/contentTypeData";
+import { contentCategories } from "@/components/onboarding/content-type_old/contentTypeData";
 import { Badge } from "@/components/ui/badge";
 import { TagIcon } from "lucide-react";
 import { useState } from "react";

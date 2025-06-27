@@ -1,11 +1,10 @@
-
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import OnboardingLayout from "../OnboardingLayout";
 import { Badge } from "@/components/ui/badge";
-import { Star } from "lucide-react";
+import { Compass, Lightbulb } from "lucide-react";
 import { useState } from "react";
-import { lifeValues } from "@/components/onboarding/content-type/contentTypeData";
+import { lifeValues } from "@/components/onboarding/content-type_old/contentTypeData";
 
 const CreatorValuesStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
@@ -33,7 +32,7 @@ const CreatorValuesStep = () => {
     >
       <div className="space-y-6">
         <div className="flex justify-center mb-4">
-          <Star className="h-12 w-12 text-primary" />
+          <Compass className="h-12 w-12 text-primary" />
         </div>
         
         <div>

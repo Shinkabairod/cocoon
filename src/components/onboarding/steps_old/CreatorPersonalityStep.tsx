@@ -1,11 +1,10 @@
-
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import OnboardingLayout from "../OnboardingLayout";
 import { Badge } from "@/components/ui/badge";
-import { UserCircle } from "lucide-react";
+import { User, Lightbulb } from "lucide-react";
 import { useState } from "react";
-import { personalityTraits } from "@/components/onboarding/content-type/contentTypeData";
+import { personalityTraits } from "@/components/onboarding/content-type_old/contentTypeData";
 
 const CreatorPersonalityStep = () => {
   const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
@@ -33,7 +32,7 @@ const CreatorPersonalityStep = () => {
     >
       <div className="space-y-6">
         <div className="flex justify-center mb-4">
-          <UserCircle className="h-12 w-12 text-primary" />
+          <User className="h-12 w-12 text-primary" />
         </div>
         
         <div>

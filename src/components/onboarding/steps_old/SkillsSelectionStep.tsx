@@ -5,7 +5,7 @@ import OnboardingLayout from "../OnboardingLayout";
 import { Badge } from "@/components/ui/badge";
 import { Lightbulb, Award } from "lucide-react";
 import { useState } from "react";
-import { existingSkills } from "@/components/onboarding/content-type/contentTypeData";
+import { existingSkills } from "@/components/onboarding/content-type_old/contentTypeData";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";

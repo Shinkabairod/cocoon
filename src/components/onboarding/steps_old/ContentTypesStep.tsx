@@ -1,88 +1,71 @@
-
 import { Button } from "@/components/ui/button";
 import { useOnboarding } from "@/contexts/OnboardingContext";
 import OnboardingLayout from "../OnboardingLayout";
-import { ContentType } from "@/types/onboarding";
-import { contentTypes } from "@/components/onboarding/content-type/contentTypeData";
-import { Check, FileType } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { Check } from "lucide-react";
+import { contentTypes } from "@/components/onboarding/content-type_old/contentTypeData";
+import { ContentType } from "@/types/onboarding";
+import { useState } from "react";
 
-const ContentTypesStep = () => {
-  const { onboardingData, updateOnboardingData, nextStep } = useOnboarding();
-  
+interface ContentTypesStepProps {
+  onboardingData: any;
+  updateOnboardingData: (data: any) => void;
+  nextStep: () => void;
+}
+
+const ContentTypesStep: React.FC<ContentTypesStepProps> = ({ onboardingData, updateOnboardingData, nextStep }) => {
+  const [selectedTypes, setSelectedTypes] = useState<ContentType[]>(
+    onboardingData.contentTypes || []
+  );
+
   const handleTypeToggle = (type: ContentType) => {
-    const currentTypes = onboardingData.contentTypes || [];
-    let updatedTypes;
-    
-    if (currentTypes.includes(type)) {
-      updatedTypes = currentTypes.filter(t => t !== type);
+    let updatedTypes = [...selectedTypes];
+
+    if (updatedTypes.includes(type)) {
+      updatedTypes = updatedTypes.filter(t => t !== type);
     } else {
-      updatedTypes = [...currentTypes, type];
+      updatedTypes.push(type);
     }
-    
+
+    setSelectedTypes(updatedTypes);
     updateOnboardingData({ contentTypes: updatedTypes });
   };
-  
+
   const handleContinue = () => {
     nextStep();
   };
-  
-  const getTypeIcon = (type: ContentType) => {
-    switch (type) {
-      case 'Videos':
-        return '🎬';
-      case 'Blogs':
-        return '📝';
-      case 'Podcasts':
-        return '🎙️';
-      case 'Social Media Posts':
-        return '📱';
-      default:
-        return '📄';
-    }
-  };
-  
+
   return (
-    <OnboardingLayout 
-      title="Your Content Types" 
+    <OnboardingLayout
+      title="Content Types"
       subtitle="What type of content do you want to create?"
     >
       <div className="space-y-6">
-        <div className="flex justify-center mb-4">
-          <FileType className="h-12 w-12 text-primary" />
-        </div>
-        
-        <div className="grid grid-cols-1 gap-3">
+        <div className="grid grid-cols-2 gap-3">
           {contentTypes.map((type) => {
-            const isSelected = (onboardingData.contentTypes || []).includes(type);
-            
+            const isSelected = selectedTypes.includes(type);
+
             return (
-              <Card 
+              <Card
                 key={type}
-                className={`p-4 cursor-pointer border-2 ${
-                  isSelected 
-                    ? 'border-primary' 
-                    : 'border-border hover:border-muted-foreground'
-                }`}
+                className={`p-3 cursor-pointer border-2 ${isSelected ? 'border-primary' : 'border-border hover:border-muted-foreground'
+                  }`}
                 onClick={() => handleTypeToggle(type)}
               >
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <span className="text-xl">{getTypeIcon(type)}</span>
-                    <span className="font-medium">{type}</span>
-                  </div>
-                  {isSelected && <Check className="h-5 w-5 text-primary" />}
+                  <div className="font-medium">{type}</div>
+                  {isSelected && <Check className="h-4 w-4 text-primary" />}
                 </div>
               </Card>
             );
           })}
         </div>
-        
+
         <div className="pt-4 flex justify-center">
-          <Button 
+          <Button
             className="gradient-bg w-full"
             onClick={handleContinue}
-            disabled={(onboardingData.contentTypes || []).length === 0}
+            disabled={selectedTypes.length === 0}
           >
             Continue
           </Button>

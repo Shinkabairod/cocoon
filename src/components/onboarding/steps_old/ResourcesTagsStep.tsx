@@ -5,7 +5,7 @@ import OnboardingLayout from "../OnboardingLayout";
 import { Badge } from "@/components/ui/badge";
 import { Tag, BookOpen } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { resourcesList, resourceTags } from "@/components/onboarding/content-type/contentTypeData";
+import { resourcesList, resourceTags } from "@/components/onboarding/content-type_old/contentTypeData";
 import { useState } from "react";
 import { Resource, ResourceType } from "@/types/onboarding";
 
