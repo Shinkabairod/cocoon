@@ -235,7 +235,7 @@ const AuthExperience: React.FC = () => {
               password: e.target.value
             }))} className="w-full py-3 px-4 rounded-2xl border border-gray-300 focus:border-violet-500 focus:ring-1 focus:ring-violet-500 shadow-sm" required />
             </div>
-            <Button type="submit" disabled={loading} className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 rounded-3xl transition-all duration-200 shadow-lg hover:shadow-xl">
+            <Button type="submit" disabled={loading} className="w-full bg-black hover:bg-gray-800 text-white font-semibold py-4 rounded-l transition-all duration-200 shadow-lg hover:shadow-xl">
               {loading ? <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   Creating your space...
