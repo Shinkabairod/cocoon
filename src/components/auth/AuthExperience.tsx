@@ -156,7 +156,7 @@ const AuthExperience: React.FC = () => {
 
         {/* Titre principal */}
         <div className="text-center max-w-md mb-12">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4 leading-tight text-center md:text-6xl">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4 leading-tight text-center md:text-5xl">
             Ready to{' '}
             <span className="text-violet-600 font-black uppercase tracking-wide">
               REVOLUTIONIZE
