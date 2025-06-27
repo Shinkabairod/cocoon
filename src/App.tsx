@@ -25,56 +25,56 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <AuthProvider>
-        <Router>
-          <div className="min-h-screen bg-white">
-            <Routes>
-              {/* Public Landing Page */}
-              <Route path="/" element={<CocoonLandingPage />} />
-              
-              {/* Auth Routes - Protected against already authenticated users */}
-              <Route 
-                path="/auth/*" 
-                element={
-                  <ProtectedRoute requireAuth={false}>
-                    <AuthExperience />
-                  </ProtectedRoute>
-                } 
-              />
-              
-              {/* Onboarding Routes - Requires auth but not completed onboarding */}
-              <Route 
-                path="/onboarding/*" 
-                element={
-                  <ProtectedRoute requireAuth={true}>
-                    <OnboardingGuard requireOnboarding={true}>
-                      <OnboardingProvider>
+        <OnboardingProvider>
+          <Router>
+            <div className="min-h-screen bg-white">
+              <Routes>
+                {/* Public Landing Page */}
+                <Route path="/" element={<CocoonLandingPage />} />
+                
+                {/* Auth Routes - Protected against already authenticated users */}
+                <Route 
+                  path="/auth/*" 
+                  element={
+                    <ProtectedRoute requireAuth={false}>
+                      <AuthExperience />
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                {/* Onboarding Routes - Requires auth but not completed onboarding */}
+                <Route 
+                  path="/onboarding/*" 
+                  element={
+                    <ProtectedRoute requireAuth={true}>
+                      <OnboardingGuard requireOnboarding={true}>
                         <OnboardingFlow />
-                      </OnboardingProvider>
-                    </OnboardingGuard>
-                  </ProtectedRoute>
-                } 
-              />
+                      </OnboardingGuard>
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                {/* Dashboard Routes - Requires auth AND completed onboarding */}
+                <Route 
+                  path="/dashboard/*" 
+                  element={
+                    <ProtectedRoute requireAuth={true}>
+                      <OnboardingGuard requireOnboarding={false}>
+                        <Dashboard />
+                      </OnboardingGuard>
+                    </ProtectedRoute>
+                  } 
+                />
+                
+                {/* Redirect unknown routes to landing */}
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
               
-              {/* Dashboard Routes - Requires auth AND completed onboarding */}
-              <Route 
-                path="/dashboard/*" 
-                element={
-                  <ProtectedRoute requireAuth={true}>
-                    <OnboardingGuard requireOnboarding={false}>
-                      <Dashboard />
-                    </OnboardingGuard>
-                  </ProtectedRoute>
-                } 
-              />
-              
-              {/* Redirect unknown routes to landing */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-            
-            {/* Global Toast Notifications */}
-            <Toaster />
-          </div>
-        </Router>
+              {/* Global Toast Notifications */}
+              <Toaster />
+            </div>
+          </Router>
+        </OnboardingProvider>
       </AuthProvider>
     </ErrorBoundary>
   );
