@@ -16,7 +16,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   isVisible,
   onAuthRedirect
 }) => {
-  return <section className="pt-20 pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+  return <section className="pt-20 pb-0 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* NOUVEAU: Fond géométrique plus actif */}
       <div className="absolute inset-0 opacity-40">
         <svg width="100%" height="100%" viewBox="0 0 1200 800" className="absolute inset-0 w-full h-full" preserveAspectRatio="xMidYMid slice">
