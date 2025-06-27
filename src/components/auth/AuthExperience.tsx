@@ -161,7 +161,6 @@ const AuthExperience: React.FC = () => {
             <span className="text-violet-600 font-black uppercase tracking-wide">
               REVOLUTIONIZE
             </span>
-            <br />
             your expertise?
           </h1>
           <p className="text-gray-600 text-lg">
