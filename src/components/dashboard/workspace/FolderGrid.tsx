@@ -1,4 +1,4 @@
-
+// src/components/dashboard/workspace/FolderGrid.tsx
 import React from 'react';
 import FolderCard from './FolderCard';
 
@@ -9,7 +9,7 @@ interface FolderGridProps {
   onDeleteFolder: (folderId: string) => void;
 }
 
-const FolderGrid: React.FC<FolderGridProps> = ({
+export const FolderGrid: React.FC<FolderGridProps> = ({
   folders,
   onFolderClick,
   onEditFolder,
@@ -27,5 +27,3 @@ const FolderGrid: React.FC<FolderGridProps> = ({
     ))}
   </div>
 );
-
-export default FolderGrid;
