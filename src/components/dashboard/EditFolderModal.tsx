@@ -41,7 +41,6 @@ const EditFolderModal: React.FC<EditFolderModalProps> = ({
   ];
 
   const iconsPerPage = 24;
-  const [currentPage, setCurrentPage] = useState(0);
   const totalPages = Math.ceil(allLucideIcons.length / iconsPerPage);
 
   // Filtrer et paginer les icônes
@@ -50,8 +49,8 @@ const EditFolderModal: React.FC<EditFolderModalProps> = ({
   );
   
   const paginatedIcons = searchQuery 
-  ? filteredIcons.slice(0, iconsPerPage)
-  : allLucideIcons.slice(currentPage * iconsPerPage, (currentPage + 1) * iconsPerPage);
+    ? filteredIcons.slice(0, iconsPerPage)
+    : allLucideIcons.slice(currentPage * iconsPerPage, (currentPage + 1) * iconsPerPage);
 
   // Couleurs prédéfinies avec leurs valeurs hex
   const predefinedColors = [
@@ -68,7 +67,7 @@ const EditFolderModal: React.FC<EditFolderModalProps> = ({
   ];
 
   // Gestion du slider de couleur
-  const handleColorSlider = (e) => {
+  const handleColorSlider = (e: React.MouseEvent) => {
     if (!colorSliderRef.current) return;
     
     const rect = colorSliderRef.current.getBoundingClientRect();
@@ -81,15 +80,15 @@ const EditFolderModal: React.FC<EditFolderModalProps> = ({
     setColor(hsl);
   };
 
-  const handleMouseDown = (e) => {
+  const handleMouseDown = (e: React.MouseEvent) => {
     setIsDragging(true);
     handleColorSlider(e);
   };
 
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: MouseEvent) => {
       if (isDragging) {
-        handleColorSlider(e);
+        handleColorSlider(e as any);
       }
     };
 
@@ -125,107 +124,46 @@ const EditFolderModal: React.FC<EditFolderModalProps> = ({
         </div>
 
         <div className="space-y-6 flex-1 overflow-y-auto">
-          {/* Folder Name */}
+          {/* Nom du dossier */}
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-3 block">Folder Name</label>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Folder Name
+            </label>
             <input
+              type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
-              placeholder="Enter folder name"
+              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Enter folder name..."
             />
           </div>
 
-          {/* Color Picker */}
+          {/* Sélection d'icône */}
           <div>
-            <label className="text-sm font-medium text-gray-700 mb-3 block">Choose Color</label>
+            <label className="block text-sm font-medium text-gray-700 mb-4">
+              Choose Icon
+            </label>
             
-            {/* Innovative Circle Line Color Picker */}
-            <div className="mb-4">
-              <div 
-                ref={colorSliderRef}
-                className="relative flex items-center justify-between p-2 cursor-pointer"
-                onMouseDown={handleMouseDown}
-              >
-                {/* Circles representing the color spectrum */}
-                {Array.from({ length: 20 }, (_, i) => {
-                  const hue = (i / 19) * 360;
-                  const circleColor = `hsl(${hue}, 70%, 55%)`;
-                  const isSelected = Math.abs(parseInt(color.match(/\d+/)?.[0] || '0') - hue) < 18;
-                  
-                  return (
-                    <div
-                      key={i}
-                      className={`w-6 h-6 rounded-full transition-all duration-200 hover:scale-125 cursor-pointer ${
-                        isSelected ? 'scale-150 ring-4 ring-white ring-opacity-80 shadow-2xl' : 'hover:shadow-lg'
-                      }`}
-                      style={{ backgroundColor: circleColor }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setColor(circleColor);
-                      }}
-                    />
-                  );
-                })}
-              </div>
-              
-              {/* Connecting line behind circles */}
-              {/* Ligne gradient supprimée temporairement */}
-
-            </div>
-
-            {/* Quick Color Presets */}
-            <div className="grid grid-cols-5 gap-2 mb-4">
-              {predefinedColors.slice(0, 10).map((colorOption) => (
-                <button
-                  key={colorOption.value}
-                  onClick={() => setColor(colorOption.value)}
-                  className={`w-10 h-10 rounded-full transition-all hover:scale-110 border-3 ${
-                    color === colorOption.value ? 'border-gray-800 shadow-xl' : 'border-white shadow-md'
-                  }`}
-                  style={{ backgroundColor: colorOption.value }}
-                />
-              ))}
-            </div>
-            
-            {/* Current Color Display */}
-            <div className="flex items-center justify-center gap-3 p-3 bg-gray-50 rounded-xl">
-              <div 
-                className="w-8 h-8 rounded-full border-2 border-white shadow-lg"
-                style={{ backgroundColor: color }}
-              />
-              <div className="text-center">
-                <p className="text-xs font-medium text-gray-700">Selected Color</p>
-                <p className="text-xs text-gray-500 font-mono">{color}</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Icon Picker */}
-          <div>
-            <label className="text-sm font-medium text-gray-700 mb-3 block">Choose Icon</label>
-            
-            {/* Search Icons */}
+            {/* Barre de recherche */}
             <div className="relative mb-4">
-              <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
               <input
                 type="text"
                 placeholder="Search icons..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
               />
             </div>
-
-            {/* Icons Grid avec Pagination */}
-            <div className="space-y-4">
-              {/* Grid des icônes */}
-              <div className="grid grid-cols-8 gap-2 min-h-[240px]">
+            
+            <div className="border border-gray-100 rounded-xl p-4 bg-gray-50/50">
+              {/* Grille d'icônes */}
+              <div className="grid grid-cols-6 gap-2 mb-4">
                 {paginatedIcons.map(({ id, icon: IconComponent }) => (
                   <button
                     key={id}
                     onClick={() => setIcon(id)}
-                    className={`p-3 rounded-xl transition-all hover:scale-105 group relative ${
+                    className={`group relative w-12 h-12 rounded-xl flex items-center justify-center transition-all hover:scale-105 ${
                       icon === id 
                         ? 'bg-black text-white shadow-xl scale-105' 
                         : 'hover:bg-gray-50 text-gray-600 border border-gray-100'
@@ -317,6 +255,55 @@ const EditFolderModal: React.FC<EditFolderModalProps> = ({
                   </button>
                 </div>
               )}
+            </div>
+          </div>
+
+          {/* Sélection de couleur */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-4">
+              Choose Color
+            </label>
+            
+            {/* Couleurs prédéfinies */}
+            <div className="grid grid-cols-5 gap-3 mb-4">
+              {predefinedColors.map((colorOption) => (
+                <button
+                  key={colorOption.name}
+                  onClick={() => setColor(colorOption.value)}
+                  className={`w-12 h-12 rounded-xl transition-all hover:scale-110 ${
+                    color === colorOption.value ? 'ring-2 ring-offset-2 ring-gray-900' : ''
+                  }`}
+                  style={{ backgroundColor: colorOption.value }}
+                  title={colorOption.name}
+                />
+              ))}
+            </div>
+            
+            {/* Slider de couleur personnalisé */}
+            <div 
+              ref={colorSliderRef}
+              className="w-full h-8 rounded-lg cursor-pointer relative"
+              style={{
+                background: 'linear-gradient(to right, hsl(0, 70%, 55%), hsl(60, 70%, 55%), hsl(120, 70%, 55%), hsl(180, 70%, 55%), hsl(240, 70%, 55%), hsl(300, 70%, 55%), hsl(360, 70%, 55%))'
+              }}
+              onMouseDown={handleMouseDown}
+            >
+              {/* Indicateur de position */}
+              <div 
+                className="absolute top-1/2 transform -translate-y-1/2 w-4 h-4 bg-white border-2 border-gray-800 rounded-full shadow-lg pointer-events-none"
+                style={{
+                  left: `${(parseInt(color.match(/\d+/)?.[0] || '0') / 360) * 100}%`
+                }}
+              />
+            </div>
+            
+            {/* Aperçu de la couleur */}
+            <div className="flex items-center gap-3 mt-3">
+              <div 
+                className="w-8 h-8 rounded-lg border border-gray-200" 
+                style={{ backgroundColor: color }}
+              />
+              <span className="text-sm text-gray-600">{color}</span>
             </div>
           </div>
         </div>
