@@ -1,8 +1,6 @@
 import React from 'react';
-
 const HowItWorksSection: React.FC = () => {
-  return (
-    <section className="bg-gradient-to-br from-gray-50 to-neutral-50 relative py-[40px]">
+  return <section className="bg-gradient-to-br from-gray-50 to-neutral-50 relative py-[30px]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-20">
           {/* Optional: you can add a section title here if needed */}
@@ -97,8 +95,6 @@ const HowItWorksSection: React.FC = () => {
           </div>
         </div>
       </div>
-    </section>
-  );
+    </section>;
 };
-
 export default HowItWorksSection;
