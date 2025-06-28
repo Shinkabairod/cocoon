@@ -44,6 +44,7 @@ import {
 } from 'lucide-react';
 import { FolderItem, FileContent } from '@/types/folders';
 import { useFolderSystem } from '@/hooks/useFolderSystem';
+import EditFolderModal from './EditFolderModal';
 
 interface FolderTreeProps {
   onFileSelect?: (file: FileContent) => void;
@@ -85,13 +86,12 @@ const FolderTree = ({ onFileSelect, onFolderSelect }: FolderTreeProps) => {
     setExpandedFolders(newExpanded);
   };
 
-  const handleCreateFolder = async () => {
-    if (!newFolderName.trim()) return;
-    
-    await createFolder(newFolderName, selectedFolder || undefined, {
-      description: newFolderDescription
+  const handleFolderSave = async (data: { name: string; icon: string; color: string }) => {
+    await createFolder(data.name, selectedFolder || undefined, {
+      description: newFolderDescription,
+      color: data.color,
+      icon: data.icon
     });
-    
     setNewFolderName('');
     setNewFolderDescription('');
     setNewFolderDialog(false);
@@ -135,81 +135,40 @@ const FolderTree = ({ onFileSelect, onFolderSelect }: FolderTreeProps) => {
     const reader = new FileReader();
     reader.onload = async (e) => {
       const content = e.target?.result as string;
-      const fileName = file.name.replace(/\.[^/.]+$/, ""); // Remove extension
+      const fileName = file.name.replace(/\.[^/.]+$/, '');
       
-      let fileContent = '';
-      let contentType: FileContent['contentType'] = 'resource';
+      const fileType: FileContent['contentType'] = 
+        file.type.startsWith('video/') ? 'video' : 'resource';
       
-      if (file.type === 'application/pdf') {
-        fileContent = `# ${fileName}
-
-**File Type:** PDF Document
-**Original Name:** ${file.name}
-**Size:** ${(file.size / 1024 / 1024).toFixed(2)} MB
-
-**Content:** 
-This PDF has been added to your Obsidian vault. The file content will be processed and made searchable.
-
----
-*PDF file imported on ${new Date().toLocaleDateString()}*`;
-      } else if (file.type.startsWith('video/')) {
-        contentType = 'video' as FileContent['contentType'];
-        fileContent = `# ${fileName}
-
-**File Type:** Video (${file.type})
-**Original Name:** ${file.name}
-**Size:** ${(file.size / 1024 / 1024).toFixed(2)} MB
-
-**Description:** 
-Video content imported to your Obsidian vault for reference and note-taking.
-
-**Notes:**
-- Add your video notes here
-- Key timestamps and insights
-- Action items from this video
-
----
-*Video imported on ${new Date().toLocaleDateString()}*`;
-      }
-      
-      await createFile(fileName, fileContent, selectedFolder, contentType);
+      await createFile(fileName, content, selectedFolder, fileType);
     };
-    
-    if (file.type === 'application/pdf' || file.type.startsWith('video/')) {
-      reader.readAsDataURL(file);
-    } else {
-      reader.readAsText(file);
-    }
-    
-    // Reset input
-    event.target.value = '';
+    reader.readAsText(file);
   };
 
-  const getFileIcon = (contentType: FileContent['contentType']) => {
-    switch (contentType) {
+  const getFileIcon = (type: FileContent['contentType']) => {
+    switch (type) {
+      case 'note':
+        return <FileText className="h-4 w-4 text-blue-600" />;
       case 'resource':
-        return <Link className="h-4 w-4 text-blue-600" />;
+        return <Link className="h-4 w-4 text-green-600" />;
       case 'video':
         return <FileVideo className="h-4 w-4 text-purple-600" />;
       default:
-        return <FileText className="h-4 w-4 text-gray-600" />;
+        return <File className="h-4 w-4 text-gray-600" />;
     }
   };
 
-  const renderFolderNode = (folder: FolderItem & { children: any[] }, level = 0) => {
+  const renderFolderNode = (folder: FolderItem, level: number = 0) => {
+    const hasChildren = folder.children && folder.children.length > 0;
     const isExpanded = expandedFolders.has(folder.id);
     const files = getFilesInFolder(folder.id);
-    const hasChildren = folder.children.length > 0 || files.length > 0;
 
     return (
-      <div key={folder.id} className="select-none">
-        <div 
-          className={`flex items-center py-2 px-2 hover:bg-muted/50 rounded cursor-pointer ${
-            selectedFolder === folder.id ? 'bg-muted' : ''
-          }`}
+      <div key={folder.id} className="w-full">
+        <div
+          className="flex items-center py-2 px-2 hover:bg-muted/50 rounded cursor-pointer group"
           style={{ paddingLeft: `${level * 20 + 8}px` }}
           onClick={() => {
-            setSelectedFolder(folder.id);
             onFolderSelect?.(folder);
           }}
         >
@@ -345,46 +304,17 @@ Video content imported to your Obsidian vault for reference and note-taking.
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-semibold">My Workspace</h3>
         <div className="flex gap-2">
-          <Dialog open={newFolderDialog} onOpenChange={setNewFolderDialog}>
-            <DialogTrigger asChild>
-              <Button size="sm" variant="outline">
-                <FolderPlus className="h-4 w-4 mr-1" />
-                New Folder
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Create New Folder</DialogTitle>
-                <DialogDescription>
-                  Create a new folder to organize your content.
-                </DialogDescription>
-              </DialogHeader>
-              <div className="space-y-4">
-                <div>
-                  <Label htmlFor="folder-name">Folder Name</Label>
-                  <Input
-                    id="folder-name"
-                    value={newFolderName}
-                    onChange={(e) => setNewFolderName(e.target.value)}
-                    placeholder="Enter folder name..."
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="folder-description">Description (optional)</Label>
-                  <Textarea
-                    id="folder-description"
-                    value={newFolderDescription}
-                    onChange={(e) => setNewFolderDescription(e.target.value)}
-                    placeholder="Describe what this folder will contain..."
-                    rows={3}
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button onClick={handleCreateFolder}>Create Folder</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <Button size="sm" variant="outline" onClick={() => setNewFolderDialog(true)}>
+            <FolderPlus className="h-4 w-4 mr-1" />
+            New Folder
+          </Button>
+
+          <EditFolderModal
+            isOpen={newFolderDialog}
+            onClose={() => setNewFolderDialog(false)}
+            onSave={handleFolderSave}
+            initialData={{ name: newFolderName, icon: 'folder', color: '#3b82f6' }}
+          />
 
           <Dialog open={newFileDialog} onOpenChange={setNewFileDialog}>
             <DialogTrigger asChild>
@@ -401,30 +331,27 @@ Video content imported to your Obsidian vault for reference and note-taking.
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="file-name">Note Title</Label>
-                    <Input
-                      id="file-name"
-                      value={newFileName}
-                      onChange={(e) => setNewFileName(e.target.value)}
-                      placeholder="Enter note title..."
-                    />
-                  </div>
-                  <div>
-                    <Label htmlFor="file-type">Note Type</Label>
-                    <Select value={newFileType} onValueChange={(value) => setNewFileType(value as FileContent['contentType'])}>
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="note">Note</SelectItem>
-                        <SelectItem value="script">Script</SelectItem>
-                        <SelectItem value="idea">Idea</SelectItem>
-                        <SelectItem value="concept">Concept</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                <div>
+                  <Label htmlFor="file-name">Note Title</Label>
+                  <Input
+                    id="file-name"
+                    value={newFileName}
+                    onChange={(e) => setNewFileName(e.target.value)}
+                    placeholder="Enter note title..."
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="file-type">Content Type</Label>
+                  <Select value={newFileType} onValueChange={(value: FileContent['contentType']) => setNewFileType(value)}>
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="note">Note</SelectItem>
+                      <SelectItem value="resource">Resource</SelectItem>
+                      <SelectItem value="video">Video</SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
                 <div>
                   <Label htmlFor="file-content">Content</Label>
@@ -433,7 +360,7 @@ Video content imported to your Obsidian vault for reference and note-taking.
                     value={newFileContent}
                     onChange={(e) => setNewFileContent(e.target.value)}
                     placeholder="Enter your content here..."
-                    rows={8}
+                    rows={6}
                   />
                 </div>
               </div>
@@ -454,7 +381,7 @@ Video content imported to your Obsidian vault for reference and note-taking.
               <DialogHeader>
                 <DialogTitle>Add Link Resource</DialogTitle>
                 <DialogDescription>
-                  Save a web link to your Obsidian vault for easy reference.
+                  Save a useful link to your selected folder.
                 </DialogDescription>
               </DialogHeader>
               <div className="space-y-4">
