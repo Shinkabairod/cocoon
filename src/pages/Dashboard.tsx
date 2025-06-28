@@ -1,3 +1,4 @@
+
 // src/pages/Dashboard.tsx - Version complète avec TOUS les composants existants
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -733,3 +734,23 @@ const Dashboard = () => {
                 <DollarSign className="h-7 w-7 mr-2 text-green-500" />
                 Monétisation
               </h2>
+              <Card>
+                <CardContent className="p-6">
+                  <div className="text-center text-muted-foreground">
+                    <DollarSign className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>Section Monétisation en développement</p>
+                    <p className="text-sm">Outils de revenus bientôt disponibles</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+          {activePage === 'onboarding' && <OnboardingDataSection />}
+          {activePage === 'settings' && <SettingsSection />}
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default Dashboard;
