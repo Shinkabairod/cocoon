@@ -1065,9 +1065,6 @@ const MyWorkspace = () => {
 };
 
 export default MyWorkspace;
-                ))}
-              </div>
-            </div>
             
             <div>
               <label className="text-sm font-medium">Category</label>
