@@ -1,46 +1,64 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, FileText, Folder, Target, Lightbulb, Briefcase, Smartphone, Zap, Palette, Video, BarChart3, Camera, Code, Dumbbell, Clock, BookOpen, Users, Wrench, Database, Home, Star, Heart, Globe, Music, Image, MessageSquare, Settings, Search, Bell, Map, Compass, Gift, Truck, Shield, Wifi, Sun, Moon, Cloud, Battery, Headphones, Mic, Speaker, Phone, Mail, Calendar, Edit, Save, Download, Upload, Trash2, Plus, Minus, Check, AlertCircle, Info, HelpCircle, Flag, Key, Lock, Unlock, Eye, EyeOff, TrendingUp, DollarSign, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
 
-interface EditFolderModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onSave: (data: { name: string; icon: string; color: string }) => void;
-  initialData?: {
-    name?: string;
-    icon?: string;
-    color?: string;
-  };
-}
-
-const EditFolderModal: React.FC<EditFolderModalProps> = ({ 
-  isOpen, 
-  onClose, 
-  onSave, 
-  initialData = {} 
-}) => {
+const EditFolderModal = ({ isOpen, onClose, onSave, initialData = {} }) => {
   const [name, setName] = useState(initialData.name || 'My Profile');
   const [icon, setIcon] = useState(initialData.icon || 'palette');
   const [color, setColor] = useState(initialData.color || '#f97316');
   const [searchQuery, setSearchQuery] = useState('');
-  const colorSliderRef = useRef<HTMLDivElement>(null);
+  const colorSliderRef = useRef(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
 
-  // Icônes sans Building (remplacé par Briefcase)
+  // Toutes les icônes lucide disponibles - COLLECTION COMPLÈTE
   const allLucideIcons = [
-    { id: 'folder', icon: Folder }, { id: 'file', icon: FileText }, { id: 'home', icon: Home }, 
-    { id: 'star', icon: Star }, { id: 'heart', icon: Heart }, { id: 'target', icon: Target }, 
-    { id: 'lightbulb', icon: Lightbulb }, { id: 'palette', icon: Palette },
-    { id: 'briefcase', icon: Briefcase }, { id: 'users', icon: Users }, 
-    { id: 'chart', icon: BarChart3 }, { id: 'trending', icon: TrendingUp }, 
-    { id: 'globe', icon: Globe }, { id: 'camera', icon: Camera }, 
-    { id: 'video', icon: Video }, { id: 'music', icon: Music }, 
-    { id: 'image', icon: Image }, { id: 'mic', icon: Mic }, 
-    { id: 'code', icon: Code }, { id: 'smartphone', icon: Smartphone }, 
-    { id: 'database', icon: Database }, { id: 'settings', icon: Settings }
+    // Essentials
+    { id: 'folder', icon: Folder }, { id: 'file', icon: FileText }, { id: 'home', icon: Home }, { id: 'star', icon: Star }, 
+    { id: 'heart', icon: Heart }, { id: 'target', icon: Target }, { id: 'lightbulb', icon: Lightbulb }, { id: 'palette', icon: Palette },
+    
+    // Business & Finance
+    { id: 'briefcase', icon: Briefcase }, { id: 'users', icon: Users }, { id: 'building', icon: Building }, { id: 'chart', icon: BarChart3 }, 
+    { id: 'trending', icon: TrendingUp }, { id: 'globe', icon: Globe }, { id: 'dollar-sign', icon: DollarSign },
+    
+    // Creative & Media
+    { id: 'camera', icon: Camera }, { id: 'video', icon: Video }, { id: 'music', icon: Music }, { id: 'image', icon: Image }, 
+    { id: 'mic', icon: Mic }, { id: 'headphones', icon: Headphones }, { id: 'speaker', icon: Speaker },
+    
+    // Technology
+    { id: 'code', icon: Code }, { id: 'smartphone', icon: Smartphone }, { id: 'wifi', icon: Wifi }, { id: 'database', icon: Database }, 
+    { id: 'wrench', icon: Wrench }, { id: 'shield', icon: Shield }, { id: 'battery', icon: Battery },
+    
+    // Communication
+    { id: 'message', icon: MessageSquare }, { id: 'mail', icon: Mail }, { id: 'phone', icon: Phone }, { id: 'bell', icon: Bell },
+    
+    // Navigation & Location
+    { id: 'map', icon: Map }, { id: 'compass', icon: Compass }, { id: 'map-pin', icon: MapPin },
+    
+    // Time & Calendar
+    { id: 'clock', icon: Clock }, { id: 'calendar', icon: Calendar },
+    
+    // Weather & Nature
+    { id: 'sun', icon: Sun }, { id: 'moon', icon: Moon }, { id: 'cloud', icon: Cloud },
+    
+    // Actions & Controls
+    { id: 'plus', icon: Plus }, { id: 'minus', icon: Minus }, { id: 'edit', icon: Edit }, { id: 'save', icon: Save }, 
+    { id: 'download', icon: Download }, { id: 'upload', icon: Upload }, { id: 'trash', icon: Trash2 }, { id: 'check', icon: Check },
+    
+    // Interface & System
+    { id: 'settings', icon: Settings }, { id: 'search', icon: Search }, { id: 'eye', icon: Eye }, { id: 'eye-off', icon: EyeOff }, 
+    { id: 'lock', icon: Lock }, { id: 'unlock', icon: Unlock }, { id: 'key', icon: Key },
+    
+    // Status & Info
+    { id: 'alert', icon: AlertCircle }, { id: 'info', icon: Info }, { id: 'help', icon: HelpCircle }, { id: 'flag', icon: Flag },
+    
+    // Transport & Delivery
+    { id: 'truck', icon: Truck }, { id: 'gift', icon: Gift },
+    
+    // Books & Learning
+    { id: 'book', icon: BookOpen }
   ];
 
   const iconsPerPage = 24;
+  const [currentPage, setCurrentPage] = useState(0);
   const totalPages = Math.ceil(allLucideIcons.length / iconsPerPage);
 
   // Filtrer et paginer les icônes
@@ -49,8 +67,8 @@ const EditFolderModal: React.FC<EditFolderModalProps> = ({
   );
   
   const paginatedIcons = searchQuery 
-    ? filteredIcons.slice(0, iconsPerPage)
-    : allLucideIcons.slice(currentPage * iconsPerPage, (currentPage + 1) * iconsPerPage);
+  ? filteredIcons.slice(0, iconsPerPage)
+  : allLucideIcons.slice(currentPage * iconsPerPage, (currentPage + 1) * iconsPerPage);
 
   // Couleurs prédéfinies avec leurs valeurs hex
   const predefinedColors = [
@@ -67,7 +85,7 @@ const EditFolderModal: React.FC<EditFolderModalProps> = ({
   ];
 
   // Gestion du slider de couleur
-  const handleColorSlider = (e: React.MouseEvent) => {
+  const handleColorSlider = (e) => {
     if (!colorSliderRef.current) return;
     
     const rect = colorSliderRef.current.getBoundingClientRect();
@@ -80,15 +98,15 @@ const EditFolderModal: React.FC<EditFolderModalProps> = ({
     setColor(hsl);
   };
 
-  const handleMouseDown = (e: React.MouseEvent) => {
+  const handleMouseDown = (e) => {
     setIsDragging(true);
     handleColorSlider(e);
   };
 
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e) => {
       if (isDragging) {
-        handleColorSlider(e as any);
+        handleColorSlider(e);
       }
     };
 
@@ -124,46 +142,107 @@ const EditFolderModal: React.FC<EditFolderModalProps> = ({
         </div>
 
         <div className="space-y-6 flex-1 overflow-y-auto">
-          {/* Nom du dossier */}
+          {/* Folder Name */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Folder Name
-            </label>
+            <label className="text-sm font-medium text-gray-700 mb-3 block">Folder Name</label>
             <input
-              type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              placeholder="Enter folder name..."
+              className="w-full px-4 py-3 border border-gray-200 rounded-2xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"
+              placeholder="Enter folder name"
             />
           </div>
 
-          {/* Sélection d'icône */}
+          {/* Color Picker */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-4">
-              Choose Icon
-            </label>
+            <label className="text-sm font-medium text-gray-700 mb-3 block">Choose Color</label>
             
-            {/* Barre de recherche */}
+            {/* Innovative Circle Line Color Picker */}
+            <div className="mb-4">
+              <div 
+                ref={colorSliderRef}
+                className="relative flex items-center justify-between p-2 cursor-pointer"
+                onMouseDown={handleMouseDown}
+              >
+                {/* Circles representing the color spectrum */}
+                {Array.from({ length: 20 }, (_, i) => {
+                  const hue = (i / 19) * 360;
+                  const circleColor = `hsl(${hue}, 70%, 55%)`;
+                  const isSelected = Math.abs(parseInt(color.match(/\d+/)?.[0] || '0') - hue) < 18;
+                  
+                  return (
+                    <div
+                      key={i}
+                      className={`w-6 h-6 rounded-full transition-all duration-200 hover:scale-125 cursor-pointer ${
+                        isSelected ? 'scale-150 ring-4 ring-white ring-opacity-80 shadow-2xl' : 'hover:shadow-lg'
+                      }`}
+                      style={{ backgroundColor: circleColor }}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setColor(circleColor);
+                      }}
+                    />
+                  );
+                })}
+              </div>
+              
+              {/* Connecting line behind circles */}
+              {/* Ligne gradient supprimée temporairement */}
+
+            </div>
+
+            {/* Quick Color Presets */}
+            <div className="grid grid-cols-5 gap-2 mb-4">
+              {predefinedColors.slice(0, 10).map((colorOption) => (
+                <button
+                  key={colorOption.value}
+                  onClick={() => setColor(colorOption.value)}
+                  className={`w-10 h-10 rounded-full transition-all hover:scale-110 border-3 ${
+                    color === colorOption.value ? 'border-gray-800 shadow-xl' : 'border-white shadow-md'
+                  }`}
+                  style={{ backgroundColor: colorOption.value }}
+                />
+              ))}
+            </div>
+            
+            {/* Current Color Display */}
+            <div className="flex items-center justify-center gap-3 p-3 bg-gray-50 rounded-xl">
+              <div 
+                className="w-8 h-8 rounded-full border-2 border-white shadow-lg"
+                style={{ backgroundColor: color }}
+              />
+              <div className="text-center">
+                <p className="text-xs font-medium text-gray-700">Selected Color</p>
+                <p className="text-xs text-gray-500 font-mono">{color}</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Icon Picker */}
+          <div>
+            <label className="text-sm font-medium text-gray-700 mb-3 block">Choose Icon</label>
+            
+            {/* Search Icons */}
             <div className="relative mb-4">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+              <Search size={16} className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="Search icons..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                className="w-full pl-10 pr-4 py-2 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500"
               />
             </div>
-            
-            <div className="border border-gray-100 rounded-xl p-4 bg-gray-50/50">
-              {/* Grille d'icônes */}
-              <div className="grid grid-cols-6 gap-2 mb-4">
+
+            {/* Icons Grid avec Pagination */}
+            <div className="space-y-4">
+              {/* Grid des icônes */}
+              <div className="grid grid-cols-8 gap-2 min-h-[240px]">
                 {paginatedIcons.map(({ id, icon: IconComponent }) => (
                   <button
                     key={id}
                     onClick={() => setIcon(id)}
-                    className={`group relative w-12 h-12 rounded-xl flex items-center justify-center transition-all hover:scale-105 ${
+                    className={`p-3 rounded-xl transition-all hover:scale-105 group relative ${
                       icon === id 
                         ? 'bg-black text-white shadow-xl scale-105' 
                         : 'hover:bg-gray-50 text-gray-600 border border-gray-100'
@@ -255,55 +334,6 @@ const EditFolderModal: React.FC<EditFolderModalProps> = ({
                   </button>
                 </div>
               )}
-            </div>
-          </div>
-
-          {/* Sélection de couleur */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-4">
-              Choose Color
-            </label>
-            
-            {/* Couleurs prédéfinies */}
-            <div className="grid grid-cols-5 gap-3 mb-4">
-              {predefinedColors.map((colorOption) => (
-                <button
-                  key={colorOption.name}
-                  onClick={() => setColor(colorOption.value)}
-                  className={`w-12 h-12 rounded-xl transition-all hover:scale-110 ${
-                    color === colorOption.value ? 'ring-2 ring-offset-2 ring-gray-900' : ''
-                  }`}
-                  style={{ backgroundColor: colorOption.value }}
-                  title={colorOption.name}
-                />
-              ))}
-            </div>
-            
-            {/* Slider de couleur personnalisé */}
-            <div 
-              ref={colorSliderRef}
-              className="w-full h-8 rounded-lg cursor-pointer relative"
-              style={{
-                background: 'linear-gradient(to right, hsl(0, 70%, 55%), hsl(60, 70%, 55%), hsl(120, 70%, 55%), hsl(180, 70%, 55%), hsl(240, 70%, 55%), hsl(300, 70%, 55%), hsl(360, 70%, 55%))'
-              }}
-              onMouseDown={handleMouseDown}
-            >
-              {/* Indicateur de position */}
-              <div 
-                className="absolute top-1/2 transform -translate-y-1/2 w-4 h-4 bg-white border-2 border-gray-800 rounded-full shadow-lg pointer-events-none"
-                style={{
-                  left: `${(parseInt(color.match(/\d+/)?.[0] || '0') / 360) * 100}%`
-                }}
-              />
-            </div>
-            
-            {/* Aperçu de la couleur */}
-            <div className="flex items-center gap-3 mt-3">
-              <div 
-                className="w-8 h-8 rounded-lg border border-gray-200" 
-                style={{ backgroundColor: color }}
-              />
-              <span className="text-sm text-gray-600">{color}</span>
             </div>
           </div>
         </div>

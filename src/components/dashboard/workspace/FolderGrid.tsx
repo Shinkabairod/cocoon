@@ -1,6 +1,6 @@
 // src/components/dashboard/workspace/FolderGrid.tsx
 import React from 'react';
-import { FolderCard } from './FolderCard';
+import FolderCard from './FolderCard';
 
 interface FolderGridProps {
   folders: any[];
