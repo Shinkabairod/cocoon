@@ -1,3 +1,4 @@
+// src/components/dashboard/MyWorkspace.tsx - Version finale propre
 import React, { useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -19,27 +20,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import {
-  FolderOpen,
-  FileText,
-  Image,
-  Video,
-  Music,
-  File,
-  Link,
-  Download,
-  Upload,
-  Plus,
-  Search,
-  RefreshCw,
-  Edit,
-  Trash2,
-  Eye,
-  X,
-  ArrowLeft,
-  Type
-} from 'lucide-react';
-
 import {
   FolderOpen,
   FileText,
@@ -144,7 +124,6 @@ const MyWorkspace = () => {
   const [showAddFileModal, setShowAddFileModal] = useState(false);
   const [showFilePreview, setShowFilePreview] = useState<any>(null);
   const [editingFolder, setEditingFolder] = useState<any>(null);
-  const [draggedFile, setDraggedFile] = useState<any>(null);
   
   // Form states
   const [newFolder, setNewFolder] = useState({
@@ -229,9 +208,8 @@ const MyWorkspace = () => {
   React.useEffect(() => {
     try {
       localStorage.setItem('myworkspace_folders', JSON.stringify(folders));
-      console.log('✅ Folders saved to localStorage');
     } catch (error) {
-      console.error('❌ Error saving folders to localStorage:', error);
+      console.error('Error saving folders to localStorage:', error);
       toast({
         title: "⚠️ Save Warning",
         description: "Unable to save data locally. Changes may be lost on refresh.",
@@ -239,18 +217,6 @@ const MyWorkspace = () => {
       });
     }
   }, [folders]);
-
-  // Clear all data function (for testing/reset)
-  const clearAllData = () => {
-    if (window.confirm('Are you sure you want to clear all workspace data? This cannot be undone.')) {
-      localStorage.removeItem('myworkspace_folders');
-      setFolders(getInitialFolders());
-      toast({
-        title: "🗑️ Data Cleared",
-        description: "All workspace data has been reset to defaults."
-      });
-    }
-  };
 
   // Export data function
   const exportData = () => {
@@ -302,9 +268,10 @@ const MyWorkspace = () => {
       }
     };
     reader.readAsText(file);
-    // Reset file input
     event.target.value = '';
   };
+
+  // File operations
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -515,8 +482,8 @@ const MyWorkspace = () => {
           <Button variant="ghost" size="sm" onClick={() => setSelectedFolder(null)}>
             <ArrowLeft className="h-4 w-4" />
           </Button>
-          <div className={`w-10 h-10 ${colorSchemes[folder.colorScheme].accent} rounded-lg flex items-center justify-center text-white shadow-sm`}>
-            <span className="text-lg">{folder.iconData.icon}</span>
+          <div className={`w-10 h-10 ${getColorScheme(folder.color).accent} rounded-lg flex items-center justify-center text-white shadow-sm backdrop-blur-sm bg-opacity-90`}>
+            <folder.iconData.icon className="h-5 w-5" />
           </div>
           <div>
             <h2 className="text-2xl font-bold">{folder.name}</h2>
@@ -672,10 +639,6 @@ const MyWorkspace = () => {
           <Button variant="outline" size="sm" onClick={() => document.getElementById('import-input')?.click()}>
             <Upload className="h-4 w-4 mr-1" />
             Import
-          </Button>
-          <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
-            <RefreshCw className="h-4 w-4 mr-1" />
-            Refresh
           </Button>
           <Button onClick={() => setShowNewFolderModal(true)} className="bg-purple-600 hover:bg-purple-700">
             <Plus className="h-4 w-4 mr-1" />
@@ -1025,227 +988,6 @@ const MyWorkspace = () => {
                       </SelectItem>
                     );
                   })}
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowAddFileModal(false)}>
-                Cancel
-              </Button>
-              <Button onClick={addFile} disabled={!newFile.name.trim() || !newFile.folderId}>
-                Add File
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* File Preview Modal */}
-      <FilePreview file={showFilePreview} onClose={() => setShowFilePreview(null)} />
-
-      {/* Hidden file inputs */}
-      <input
-        type="file"
-        ref={fileInputRef}
-        onChange={handleFileUpload}
-        style={{ display: 'none' }}
-        accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.mp4,.avi,.mkv,.mp3,.wav"
-      />
-      
-      <input
-        id="import-input"
-        type="file"
-        onChange={importData}
-        accept=".json"
-        style={{ display: 'none' }}
-      />
-    </div>
-  );
-};
-
-export default MyWorkspace;
-            
-            <div>
-              <label className="text-sm font-medium">Category</label>
-              <Select value={newFolder.category} onValueChange={(value) => setNewFolder(prev => ({ ...prev, category: value }))}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Personal">Personal</SelectItem>
-                  <SelectItem value="Resources">Resources</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowNewFolderModal(false)}>
-                Cancel
-              </Button>
-              <Button onClick={addFolder} disabled={!newFolder.name.trim()}>
-                Create Folder
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Edit Folder Modal */}
-      <Dialog open={showEditFolderModal} onOpenChange={setShowEditFolderModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Edit Folder</DialogTitle>
-            <DialogDescription>
-              Modify your folder settings
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">Folder Name</label>
-              <Input
-                placeholder="Folder name..."
-                value={newFolder.name}
-                onChange={(e) => setNewFolder(prev => ({ ...prev, name: e.target.value }))}
-              />
-            </div>
-            
-            <div>
-              <label className="text-sm font-medium">Icon & Color</label>
-              <div className="grid grid-cols-4 gap-3 mt-2 max-h-48 overflow-y-auto">
-                {modernIcons.map((iconData, index) => (
-                  <div
-                    key={index}
-                    className={`flex flex-col items-center p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                      newFolder.iconData.icon === iconData.icon ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                    onClick={() => setNewFolder(prev => ({ ...prev, iconData }))}
-                  >
-                    <div className={`w-8 h-8 ${iconData.color} rounded-lg flex items-center justify-center text-white mb-1`}>
-                      <span className="text-sm">{iconData.icon}</span>
-                    </div>
-                    <span className="text-xs text-gray-600 text-center">{iconData.name}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <label className="text-sm font-medium">Color Theme</label>
-              <div className="grid grid-cols-4 gap-2 mt-2">
-                {colorSchemes.map((scheme, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setNewFolder(prev => ({ ...prev, colorScheme: index }))}
-                    className={`h-10 ${scheme.bg} ${scheme.border} ${newFolder.colorScheme === index ? 'ring-2 ring-blue-500' : ''}`}
-                  >
-                    <div className={`w-4 h-4 ${scheme.accent} rounded-full`} />
-                  </Button>
-                ))}
-              </div>
-            </div>
-            
-            <div className="flex justify-end gap-2">
-              <Button variant="outline" onClick={() => setShowEditFolderModal(false)}>
-                Cancel
-              </Button>
-              <Button onClick={editFolder} disabled={!newFolder.name.trim()}>
-                Save Changes
-              </Button>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-
-      {/* Add File Modal */}
-      <Dialog open={showAddFileModal} onOpenChange={setShowAddFileModal}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Add New File</DialogTitle>
-            <DialogDescription>
-              Upload a file, add a link, or write a text note
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium">File Name</label>
-              <Input
-                placeholder="My file..."
-                value={newFile.name}
-                onChange={(e) => setNewFile(prev => ({ ...prev, name: e.target.value }))}
-              />
-            </div>
-            
-            <div>
-              <label className="text-sm font-medium">Type</label>
-              <Select value={newFile.type} onValueChange={(value) => setNewFile(prev => ({ ...prev, type: value }))}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="text">📝 Text Note</SelectItem>
-                  <SelectItem value="file">📄 File Upload</SelectItem>
-                  <SelectItem value="link">🔗 Link</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {newFile.type === 'text' && (
-              <div>
-                <label className="text-sm font-medium">Content</label>
-                <Textarea
-                  placeholder="Write your note here..."
-                  value={newFile.content}
-                  onChange={(e) => setNewFile(prev => ({ ...prev, content: e.target.value }))}
-                  rows={6}
-                />
-              </div>
-            )}
-
-            {newFile.type === 'file' && (
-              <div>
-                <label className="text-sm font-medium">Choose File</label>
-                <Input
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleFileUpload}
-                  accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.mp4,.avi,.mkv,.mp3,.wav"
-                />
-                {newFile.file && (
-                  <p className="text-sm text-gray-500 mt-1">
-                    Selected: {newFile.file.name} ({formatFileSize(newFile.file.size)})
-                  </p>
-                )}
-              </div>
-            )}
-
-            {newFile.type === 'link' && (
-              <div>
-                <label className="text-sm font-medium">URL</label>
-                <Input
-                  placeholder="https://..."
-                  value={newFile.url}
-                  onChange={(e) => setNewFile(prev => ({ ...prev, url: e.target.value }))}
-                />
-              </div>
-            )}
-            
-            <div>
-              <label className="text-sm font-medium">Add to Folder</label>
-              <Select value={newFile.folderId} onValueChange={(value) => setNewFile(prev => ({ ...prev, folderId: value }))}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select folder..." />
-                </SelectTrigger>
-                <SelectContent>
-                  {folders[selectedCategory as keyof typeof folders].map(folder => (
-                    <SelectItem key={folder.id} value={folder.id}>
-                      {folder.iconData.icon} {folder.name}
-                    </SelectItem>
-                  ))}
                 </SelectContent>
               </Select>
             </div>
