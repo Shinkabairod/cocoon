@@ -317,7 +317,7 @@ const MyWorkspace = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <FolderOpen className="h-8 w-8 text-purple-600" />
-          <h1 className="text-3xl font-bold text-gray-900">Workspace</h1>
+          <h1 className="text-3xl font-bold text-gray-900">My Workspace</h1>
         </div>
         <div className="flex items-center space-x-2">
           <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
