@@ -799,5 +799,3 @@ const MyWorkspace = () => {
 };
 
 export default MyWorkspace;
-                                <div 
-                
