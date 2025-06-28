@@ -10,7 +10,7 @@ const ScrollingButtonsSection: React.FC<ScrollingButtonsSectionProps> = ({
   scrollingButtons,
   onAuthRedirect
 }) => {
-  return <section className="bg-gray-50 relative overflow-hidden my-[30px] py-[30px]">
+  return <section className="">
       <div className="relative z-10 my-0">
         <div className="text-center mb-12">
           {/* Optional section title could go here */}
