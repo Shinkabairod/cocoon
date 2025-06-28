@@ -1,4 +1,4 @@
-
+// src/components/shared/ColorSelector.tsx
 import React from 'react';
 import { colorOptions } from '@/lib/colorConfig';
 
