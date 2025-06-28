@@ -1,4 +1,4 @@
-
+// src/hooks/useWorkspaceData.ts
 import { useState, useEffect } from 'react';
 import { modernIcons } from '@/lib/iconConfig';
 
