@@ -247,18 +247,99 @@ const Dashboard = () => {
   // Fonctions de rendu pour chaque page avec design amélioré
   // Remplacez votre fonction renderWelcomePage() par celle-ci dans Dashboard.tsx :
 
+  // Dans votre Dashboard.tsx, REMPLACEZ renderWelcomePage() par ceci :
+
   const renderWelcomePage = () => {
-    // ✅ Récupérer les vraies stats du Workspace
+    // ✅ Récupérer les vraies stats du Workspace en temps réel
     const realStats = getStats();
   
     return (
       <div className="space-y-8">
-        {/* ✅ Stats cards avec vraies données */}
-        <DashboardStats stats={realStats} />
+        {/* ✅ VRAIES STATS EN TEMPS RÉEL - CARDS COLORÉES */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 hover:shadow-lg transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-blue-500 rounded-xl p-3 shadow-lg">
+                  <FolderOpen className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-blue-700">Total Dossiers</p>
+                  <p className="text-3xl font-bold text-blue-900">
+                    {loading ? (
+                      <div className="w-8 h-8 bg-blue-200 rounded animate-pulse"></div>
+                    ) : (
+                      realStats.totalFolders
+                    )}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200 hover:shadow-lg transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-green-500 rounded-xl p-3 shadow-lg">
+                  <FileText className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-green-700">Total Fichiers</p>
+                  <p className="text-3xl font-bold text-green-900">
+                    {loading ? (
+                      <div className="w-8 h-8 bg-green-200 rounded animate-pulse"></div>
+                    ) : (
+                      realStats.totalFiles
+                    )}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200 hover:shadow-lg transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-purple-500 rounded-xl p-3 shadow-lg">
+                  <User className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-purple-700">Personnel</p>
+                  <p className="text-3xl font-bold text-purple-900">
+                    {loading ? (
+                      <div className="w-8 h-8 bg-purple-200 rounded animate-pulse"></div>
+                    ) : (
+                      realStats.personalFiles
+                    )}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200 hover:shadow-lg transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-orange-500 rounded-xl p-3 shadow-lg">
+                  <Upload className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-orange-700">Ressources</p>
+                  <p className="text-3xl font-bold text-orange-900">
+                    {loading ? (
+                      <div className="w-8 h-8 bg-orange-200 rounded animate-pulse"></div>
+                    ) : (
+                      realStats.resourceFiles
+                    )}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
         
         {/* Hero Section avec design cohérent */}
         <div className="bg-gradient-to-br from-black via-gray-900 to-black rounded-2xl p-8 text-white overflow-hidden relative">
-          {/* Pattern background subtil */}
           <div className="absolute inset-0 opacity-[0.03]" style={{
             backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
           }} />
@@ -276,13 +357,13 @@ const Dashboard = () => {
               <div className="flex items-center gap-4">
                 <div className="text-center">
                   <div className="text-2xl font-bold text-white">
-                    {realStats.totalFiles}
+                    {loading ? '...' : realStats.totalFiles}
                   </div>
                   <div className="text-sm text-gray-400">Files Created</div>
                 </div>
                 <div className="text-center">
                   <div className="text-2xl font-bold text-white">
-                    {realStats.totalFolders}
+                    {loading ? '...' : realStats.totalFolders}
                   </div>
                   <div className="text-sm text-gray-400">Folders</div>
                 </div>
@@ -290,7 +371,7 @@ const Dashboard = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-white/10 backdrop-blur rounded-lg p-4">
+              <div className="bg-white/10 backdrop-blur rounded-lg p-4 hover:bg-white/15 transition-colors">
                 <div className="flex items-center gap-3">
                   <div className="bg-blue-500 rounded-lg p-2">
                     <FileText className="h-5 w-5 text-white" />
@@ -302,7 +383,7 @@ const Dashboard = () => {
                 </div>
               </div>
               
-              <div className="bg-white/10 backdrop-blur rounded-lg p-4">
+              <div className="bg-white/10 backdrop-blur rounded-lg p-4 hover:bg-white/15 transition-colors">
                 <div className="flex items-center gap-3">
                   <div className="bg-purple-500 rounded-lg p-2">
                     <Sparkles className="h-5 w-5 text-white" />
@@ -314,7 +395,7 @@ const Dashboard = () => {
                 </div>
               </div>
               
-              <div className="bg-white/10 backdrop-blur rounded-lg p-4">
+              <div className="bg-white/10 backdrop-blur rounded-lg p-4 hover:bg-white/15 transition-colors">
                 <div className="flex items-center gap-3">
                   <div className="bg-green-500 rounded-lg p-2">
                     <Target className="h-5 w-5 text-white" />
@@ -329,9 +410,9 @@ const Dashboard = () => {
           </div>
         </div>
   
-        {/* Quick Action Cards */}
+        {/* Quick Action Cards avec vraies stats */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActivePage('workspace')}>
+          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105" onClick={() => setActivePage('workspace')}>
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="bg-blue-100 rounded-lg p-3">
@@ -341,14 +422,14 @@ const Dashboard = () => {
                   <h3 className="font-semibold text-gray-900">My Workspace</h3>
                   <p className="text-sm text-gray-600">Organize your files</p>
                   <p className="text-xs text-blue-600 mt-1">
-                    {realStats.totalFiles} files, {realStats.totalFolders} folders
+                    {loading ? 'Loading...' : `${realStats.totalFiles} files, ${realStats.totalFolders} folders`}
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
   
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActivePage('creation')}>
+          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105" onClick={() => setActivePage('creation')}>
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="bg-green-100 rounded-lg p-3">
@@ -363,7 +444,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
   
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActivePage('monetization')}>
+          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105" onClick={() => setActivePage('monetization')}>
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="bg-purple-100 rounded-lg p-3">
@@ -378,7 +459,7 @@ const Dashboard = () => {
             </CardContent>
           </Card>
   
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActivePage('settings')}>
+          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105" onClick={() => setActivePage('settings')}>
             <CardContent className="p-6">
               <div className="flex items-center gap-4">
                 <div className="bg-gray-100 rounded-lg p-3">
@@ -394,7 +475,7 @@ const Dashboard = () => {
           </Card>
         </div>
   
-        {/* Recent Activity */}
+        {/* Recent Activity avec vraies données */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
@@ -409,9 +490,12 @@ const Dashboard = () => {
                   <FileText className="h-4 w-4 text-blue-600" />
                 </div>
                 <div className="flex-1">
-                  <p className="font-medium">Workspace files loaded</p>
+                  <p className="font-medium">Workspace synchronized</p>
                   <p className="text-sm text-gray-600">
-                    {realStats.personalFiles} personal files, {realStats.resourceFiles} resources
+                    {loading 
+                      ? 'Loading workspace data...' 
+                      : `${realStats.personalFiles} personal files, ${realStats.resourceFiles} resources loaded`
+                    }
                   </p>
                 </div>
                 <span className="text-xs text-gray-500">Just now</span>
@@ -423,9 +507,9 @@ const Dashboard = () => {
                 </div>
                 <div className="flex-1">
                   <p className="font-medium">Profile synchronized</p>
-                  <p className="text-sm text-gray-600">Your data is up to date</p>
+                  <p className="text-sm text-gray-600">All your data is up to date and saved</p>
                 </div>
-                <span className="text-xs text-gray-500">5 min ago</span>
+                <span className="text-xs text-gray-500">2 min ago</span>
               </div>
             </div>
           </CardContent>
