@@ -269,9 +269,7 @@ const Dashboard = () => {
                 <h1 className="text-3xl font-bold mb-2 text-slate-50">
                   Hello {displayName}! 👋
                 </h1>
-                <p className="text-gray-300 text-lg">
-                  Ready to create some amazing content today?
-                </p>
+                
               </div>
               <div className="flex items-center gap-4">
                 <div className="text-center">
