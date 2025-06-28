@@ -129,7 +129,7 @@ class WorkspaceService {
           metadata: {
             folderId: file.folderId,
             lastModified: file.lastModified
-          }
+          } as any
         });
 
       if (error) {
@@ -161,13 +161,13 @@ class WorkspaceService {
         return [];
       }
 
-      return files.map(file => ({
+      return (files || []).map(file => ({
         id: file.id.toString(),
         name: file.path.split('/').pop() || '',
         type: file.file_type as any || 'text',
         content: file.content || '',
         lastModified: file.updated_at?.split('T')[0] || '',
-        folderId: file.metadata?.folderId || 'default',
+        folderId: (file.metadata as any)?.folderId || 'default',
         userId: file.user_id || ''
       }));
 
@@ -185,7 +185,7 @@ class WorkspaceService {
       const { error } = await supabase
         .from('vault_files')
         .delete()
-        .eq('id', fileId)
+        .eq('id', parseInt(fileId))
         .eq('user_id', userId);
 
       if (error) {
@@ -240,12 +240,12 @@ ${data.contentGoal || 'Définir mes objectifs de création de contenu'}
 
 ## 🎬 Types de contenu visés
 ${Array.isArray(data.contentTypes) ? 
-  data.contentTypes.map(type => `- ${type}`).join('\n') : 
+  data.contentTypes.map((type: string) => `- ${type}`).join('\n') : 
   '- À définir'}
 
 ## 📱 Plateformes prioritaires
 ${Array.isArray(data.platforms) ? 
-  data.platforms.map(platform => `- ${platform}`).join('\n') : 
+  data.platforms.map((platform: string) => `- ${platform}`).join('\n') : 
   '- À définir'}
 
 ## 🎯 Audience cible
@@ -292,12 +292,12 @@ ${data.monetizationIntent || 'À définir'}
 
 ## Plateformes sélectionnées
 ${platforms.length > 0 ? 
-  platforms.map(platform => `### ${platform}\n- Stratégie: À définir\n- Fréquence: À planifier\n- Objectifs: À fixer\n`).join('\n') :
+  platforms.map((platform: string) => `### ${platform}\n- Stratégie: À définir\n- Fréquence: À planifier\n- Objectifs: À fixer\n`).join('\n') :
   'Aucune plateforme sélectionnée'}
 
 ## Types de contenu par plateforme
 ${Array.isArray(data.contentTypes) ? 
-  data.contentTypes.map(type => `- ${type}`).join('\n') : 
+  data.contentTypes.map((type: string) => `- ${type}`).join('\n') : 
   '- À définir'}
 
 ## Planning de publication
@@ -315,7 +315,7 @@ ${data.contentChallenge || data.mainChallenges || 'À identifier'}
 
 ## 🛠️ Équipement disponible
 ${Array.isArray(data.equipmentOwned) ? 
-  data.equipmentOwned.map(equipment => `- ${equipment}`).join('\n') : 
+  data.equipmentOwned.map((equipment: string) => `- ${equipment}`).join('\n') : 
   '- À inventorier'}
 
 ## ⏰ Contraintes de temps
