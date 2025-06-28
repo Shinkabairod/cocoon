@@ -296,7 +296,7 @@ const MyWorkspace = () => {
                 <CardContent className="p-0">
                   <div className="h-[400px] overflow-y-auto px-4">
                     {filteredFolders.map(folder => <div key={folder.id} className="mb-2">
-                        <div onClick={() => toggleFolder(folder.id)} className="flex items-center justify-between p-2 rounded cursor-pointer group bg-slate-200">
+                        <div onClick={() => toggleFolder(folder.id)} className="flex items-center justify-between p-2 cursor-pointer group bg-slate-200 rounded-none py-0 px-[10px]">
                           <div className="">
                             <div style={{
                           backgroundColor: folder.color + '30',
