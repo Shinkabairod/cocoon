@@ -1,45 +1,36 @@
-import { useState } from 'react';
 
-interface ChatMessage {
-  text: string;
-  isUser: boolean;
-  timestamp: Date;
-}
+import { useState } from 'react';
 
 export const useChatManagement = () => {
   const [chatInput, setChatInput] = useState('');
-  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([]);
+  const [chatMessages, setChatMessages] = useState([]);
   const [isGenerating, setIsGenerating] = useState(false);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = () => {
     if (!chatInput.trim() || isGenerating) return;
-    
-    const userMessage: ChatMessage = { 
-      text: chatInput, 
-      isUser: true, 
-      timestamp: new Date() 
+
+    const userMessage = {
+      id: Date.now(),
+      sender: 'user',
+      content: chatInput,
+      timestamp: new Date()
     };
-    
+
     setChatMessages(prev => [...prev, userMessage]);
     setChatInput('');
     setIsGenerating(true);
 
-    try {
-      // Simuler appel API IA (à remplacer par vraie API)
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      const aiResponse: ChatMessage = { 
-        text: "Je comprends votre demande. Voici ma suggestion basée sur vos ressources personnelles...", 
-        isUser: false,
+    // Simulate AI response
+    setTimeout(() => {
+      const aiMessage = {
+        id: Date.now() + 1,
+        sender: 'ai',
+        content: 'Merci pour votre message ! Je suis là pour vous aider avec vos créations de contenu.',
         timestamp: new Date()
       };
-      
-      setChatMessages(prev => [...prev, aiResponse]);
-    } catch (error) {
-      console.error('Erreur chat:', error);
-    } finally {
+      setChatMessages(prev => [...prev, aiMessage]);
       setIsGenerating(false);
-    }
+    }, 1500);
   };
 
   return {
