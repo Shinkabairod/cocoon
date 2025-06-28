@@ -180,7 +180,7 @@ const MyWorkspace = () => {
 
           <Dialog open={isNewFolderOpen} onOpenChange={setIsNewFolderOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="bg-violet-600 hover:bg-violet-500 text-slate-50">
                 <FolderPlus className="h-4 w-4 mr-2" />
                 Nouveau Dossier
               </Button>
@@ -222,7 +222,7 @@ const MyWorkspace = () => {
 
           <Dialog open={isNewFileOpen} onOpenChange={setIsNewFileOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" size="sm">
+              <Button variant="outline" size="sm" className="text-black bg-violet-400 hover:bg-violet-300">
                 <Plus className="h-4 w-4 mr-2" />
                 Nouveau Fichier
               </Button>
