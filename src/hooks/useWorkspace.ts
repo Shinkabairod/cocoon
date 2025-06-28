@@ -333,4 +333,206 @@ export const useWorkspace = () => {
       // 1. Sauvegarder dans Supabase d'abord
       const updated = await workspaceService.updateFile(fileId, newContent, user.id);
       
-      if (!update
+      if (!updated) {
+        toast({
+          title: "❌ Erreur de sauvegarde",
+          description: "Impossible de sauvegarder les modifications",
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      // 2. Mettre à jour l'interface localement
+      setFolders(prev => prev.map(folder => ({
+        ...folder,
+        files: folder.files.map(file => 
+          file.id === fileId 
+            ? { 
+                ...file, 
+                content: newContent, 
+                lastModified: new Date().toISOString().split('T')[0] 
+              }
+            : file
+        )
+      })));
+
+      toast({
+        title: "✅ Fichier sauvegardé",
+        description: "Vos modifications ont été enregistrées."
+      });
+      
+      return true;
+
+    } catch (error) {
+      console.error('❌ Error updating file:', error);
+      toast({
+        title: "❌ Erreur",
+        description: "Une erreur s'est produite lors de la sauvegarde",
+        variant: "destructive"
+      });
+      return false;
+    }
+  };
+
+  // ✅ Supprimer un fichier - PERSISTENCE TOTALE
+  const deleteFile = async (fileId: string) => {
+    if (!user) return false;
+
+    try {
+      // 1. Supprimer de Supabase d'abord
+      const deleted = await workspaceService.deleteFile(fileId, user.id);
+      
+      if (!deleted) {
+        toast({
+          title: "❌ Erreur de suppression",
+          description: "Impossible de supprimer le fichier",
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      // 2. Mettre à jour l'interface localement
+      setFolders(prev => prev.map(folder => ({
+        ...folder,
+        files: folder.files.filter(file => file.id !== fileId)
+      })));
+
+      toast({
+        title: "✅ Fichier supprimé",
+        description: "Le fichier a été supprimé."
+      });
+      
+      return true;
+
+    } catch (error) {
+      console.error('❌ Error deleting file:', error);
+      toast({
+        title: "❌ Erreur",
+        description: "Une erreur s'est produite lors de la suppression",
+        variant: "destructive"
+      });
+      return false;
+    }
+  };
+
+  // ✅ Déplacer un fichier - PERSISTENCE TOTALE
+  const moveFile = async (fileId: string, newFolderId: string) => {
+    if (!user) return false;
+
+    let fileToMove: WorkspaceFile | null = null;
+    
+    // Trouver le fichier à déplacer
+    for (const folder of folders) {
+      const file = folder.files.find(f => f.id === fileId);
+      if (file) {
+        fileToMove = file;
+        break;
+      }
+    }
+
+    if (!fileToMove) {
+      toast({
+        title: "❌ Erreur",
+        description: "Fichier introuvable",
+        variant: "destructive"
+      });
+      return false;
+    }
+
+    try {
+      // 1. Déplacer dans Supabase d'abord
+      const moved = await workspaceService.moveFile(fileId, newFolderId, fileToMove.name, user.id);
+      
+      if (!moved) {
+        toast({
+          title: "❌ Erreur de déplacement",
+          description: "Impossible de déplacer le fichier",
+          variant: "destructive"
+        });
+        return false;
+      }
+
+      // 2. Mettre à jour l'interface localement
+      setFolders(prev => {
+        // Retirer le fichier de son dossier actuel
+        const foldersWithoutFile = prev.map(folder => ({
+          ...folder,
+          files: folder.files.filter(file => file.id !== fileId)
+        }));
+
+        // Ajouter le fichier au nouveau dossier
+        return foldersWithoutFile.map(folder => 
+          folder.id === newFolderId
+            ? { 
+                ...folder, 
+                files: [...folder.files, { ...fileToMove!, folderId: newFolderId }] 
+              }
+            : folder
+        );
+      });
+
+      toast({
+        title: "✅ Fichier déplacé",
+        description: "Le fichier a été déplacé vers le nouveau dossier."
+      });
+      
+      return true;
+
+    } catch (error) {
+      console.error('❌ Error moving file:', error);
+      toast({
+        title: "❌ Erreur",
+        description: "Une erreur s'est produite lors du déplacement",
+        variant: "destructive"
+      });
+      return false;
+    }
+  };
+
+  // Filtrer les dossiers
+  const getFilteredFolders = (type: 'personal' | 'resources', searchQuery: string = '') => {
+    return folders.filter(folder => {
+      const matchesType = folder.type === type;
+      const matchesSearch = searchQuery === '' || 
+        folder.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        folder.files.some(file => 
+          file.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          file.content?.toLowerCase().includes(searchQuery.toLowerCase())
+        );
+      return matchesType && matchesSearch;
+    });
+  };
+
+  // Statistiques EN TEMPS RÉEL
+  const getStats = () => {
+    const totalFiles = folders.reduce((sum, folder) => sum + folder.files.length, 0);
+    const personalFiles = folders
+      .filter(f => f.type === 'personal')
+      .reduce((sum, folder) => sum + folder.files.length, 0);
+    const resourceFiles = folders
+      .filter(f => f.type === 'resources')
+      .reduce((sum, folder) => sum + folder.files.length, 0);
+
+    return {
+      totalFolders: folders.length,
+      totalFiles,
+      personalFiles,
+      resourceFiles
+    };
+  };
+
+  return {
+    folders,
+    loading,
+    addFolder,
+    deleteFolder,
+    toggleFolder,
+    addFile,
+    updateFile,
+    deleteFile,
+    moveFile,
+    getFilteredFolders,
+    getStats,
+    refreshWorkspace: loadWorkspaceData
+  };
+};
