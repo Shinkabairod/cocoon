@@ -255,7 +255,7 @@ const CreationsSection: React.FC<CreationsSectionProps> = ({
         </div>
         
         <div className="flex gap-2">
-          {activeTab === 'buttons' && <Button className="bg-purple-600">
+          {activeTab === 'buttons' && <Button className="bg-purple-600 hover:bg-purple-500">
               <Plus className="h-4 w-4 mr-2" />
               Nouveau Bouton
             </Button>}
