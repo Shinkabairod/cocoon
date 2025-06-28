@@ -1064,10 +1064,7 @@ const MyWorkspace = () => {
   );
 };
 
-export default MyWorkspace; index ? 'ring-2 ring-blue-500' : ''}`}
-                  >
-                    <div className={`w-4 h-4 ${scheme.accent} rounded-full`} />
-                  </Button>
+export default MyWorkspace;
                 ))}
               </div>
             </div>
