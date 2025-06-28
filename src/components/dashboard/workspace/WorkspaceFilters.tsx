@@ -1,4 +1,4 @@
-
+// src/components/dashboard/workspace/WorkspaceFilters.tsx
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,7 +12,7 @@ interface WorkspaceFiltersProps {
   categoryCounts: { Personal: number; Resources: number };
 }
 
-const WorkspaceFilters: React.FC<WorkspaceFiltersProps> = ({
+export const WorkspaceFilters: React.FC<WorkspaceFiltersProps> = ({
   searchQuery,
   onSearchChange,
   selectedCategory,
@@ -47,5 +47,3 @@ const WorkspaceFilters: React.FC<WorkspaceFiltersProps> = ({
     </div>
   </div>
 );
-
-export default WorkspaceFilters;
