@@ -1,3 +1,4 @@
+// src/components/dashboard/MyWorkspace.tsx - Version propre et fonctionnelle
 import React, { useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -22,6 +23,18 @@ import {
   FolderOpen,
   FileText,
   Image,
+  Video,
+  Music,
+  File,
+  Link,
+  Download,
+  Upload,
+  Plus,
+  Search,
+  RefreshCw,
+  Edit,
+  Trash2
+} from 'lucide-react';
 
 // File type icons mapping
 const fileTypeIcons = {
@@ -42,7 +55,7 @@ const fileTypeIcons = {
   mp3: Music,
   wav: Music,
   link: Link,
-  default: FileIcon
+  default: File
 };
 
 // Color schemes for folders
@@ -70,8 +83,8 @@ const MyWorkspace = () => {
   const [showNewFolderModal, setShowNewFolderModal] = useState(false);
   const [showEditFolderModal, setShowEditFolderModal] = useState(false);
   const [showAddFileModal, setShowAddFileModal] = useState(false);
-  const [editingFolder, setEditingFolder] = useState(null);
-  const [draggedFile, setDraggedFile] = useState(null);
+  const [editingFolder, setEditingFolder] = useState<any>(null);
+  const [draggedFile, setDraggedFile] = useState<any>(null);
   
   // Form states
   const [newFolder, setNewFolder] = useState({
@@ -86,7 +99,7 @@ const MyWorkspace = () => {
     type: 'file',
     url: '',
     folderId: '',
-    file: null
+    file: null as File | null
   });
 
   // Sample data structure
@@ -148,7 +161,7 @@ const MyWorkspace = () => {
   });
 
   // File operations
-  const handleFileUpload = (event) => {
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
       setNewFile(prev => ({ ...prev, file, name: file.name }));
@@ -158,7 +171,7 @@ const MyWorkspace = () => {
   const addFile = () => {
     if (!newFile.name.trim() || !newFile.folderId) return;
     
-    const targetFolder = folders[selectedCategory].find(f => f.id === newFile.folderId);
+    const targetFolder = folders[selectedCategory as keyof typeof folders].find(f => f.id === newFile.folderId);
     if (!targetFolder) return;
 
     const fileData = {
@@ -172,7 +185,7 @@ const MyWorkspace = () => {
 
     setFolders(prev => ({
       ...prev,
-      [selectedCategory]: prev[selectedCategory].map(folder =>
+      [selectedCategory]: prev[selectedCategory as keyof typeof prev].map(folder =>
         folder.id === newFile.folderId
           ? { ...folder, files: [...folder.files, fileData] }
           : folder
@@ -201,7 +214,7 @@ const MyWorkspace = () => {
 
     setFolders(prev => ({
       ...prev,
-      [newFolder.category]: [...prev[newFolder.category], folderData]
+      [newFolder.category as keyof typeof prev]: [...prev[newFolder.category as keyof typeof prev], folderData]
     }));
 
     setNewFolder({ name: '', emoji: '📁', colorScheme: 0, category: 'Personal' });
@@ -218,7 +231,7 @@ const MyWorkspace = () => {
     
     setFolders(prev => ({
       ...prev,
-      [selectedCategory]: prev[selectedCategory].map(folder =>
+      [selectedCategory]: prev[selectedCategory as keyof typeof prev].map(folder =>
         folder.id === editingFolder.id
           ? { ...folder, name: newFolder.name, emoji: newFolder.emoji, colorScheme: newFolder.colorScheme }
           : folder
@@ -235,10 +248,10 @@ const MyWorkspace = () => {
     });
   };
 
-  const deleteFolder = (folderId) => {
+  const deleteFolder = (folderId: string) => {
     setFolders(prev => ({
       ...prev,
-      [selectedCategory]: prev[selectedCategory].filter(folder => folder.id !== folderId)
+      [selectedCategory]: prev[selectedCategory as keyof typeof prev].filter(folder => folder.id !== folderId)
     }));
     
     toast({
@@ -248,22 +261,22 @@ const MyWorkspace = () => {
   };
 
   // Drag and drop handlers
-  const handleDragStart = (file, sourceFolderId) => {
+  const handleDragStart = (file: any, sourceFolderId: string) => {
     setDraggedFile({ ...file, sourceFolderId });
   };
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
   };
 
-  const handleDrop = (e, targetFolderId) => {
+  const handleDrop = (e: React.DragEvent, targetFolderId: string) => {
     e.preventDefault();
     if (!draggedFile || draggedFile.sourceFolderId === targetFolderId) return;
 
     // Remove file from source folder
     setFolders(prev => ({
       ...prev,
-      [selectedCategory]: prev[selectedCategory].map(folder => {
+      [selectedCategory]: prev[selectedCategory as keyof typeof prev].map(folder => {
         if (folder.id === draggedFile.sourceFolderId) {
           return { ...folder, files: folder.files.filter(f => f.id !== draggedFile.id) };
         }
@@ -283,17 +296,17 @@ const MyWorkspace = () => {
   };
 
   // Utility functions
-  const getFileType = (filename) => {
+  const getFileType = (filename: string) => {
     const extension = filename.split('.').pop()?.toLowerCase();
-    if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension)) return 'image';
-    if (['mp4', 'avi', 'mkv', 'mov'].includes(extension)) return 'video';
-    if (['mp3', 'wav', 'flac', 'aac'].includes(extension)) return 'audio';
-    if (['pdf'].includes(extension)) return 'pdf';
-    if (['doc', 'docx'].includes(extension)) return 'doc';
+    if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension || '')) return 'image';
+    if (['mp4', 'avi', 'mkv', 'mov'].includes(extension || '')) return 'video';
+    if (['mp3', 'wav', 'flac', 'aac'].includes(extension || '')) return 'audio';
+    if (['pdf'].includes(extension || '')) return 'pdf';
+    if (['doc', 'docx'].includes(extension || '')) return 'doc';
     return extension || 'file';
   };
 
-  const formatFileSize = (bytes) => {
+  const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 B';
     const k = 1024;
     const sizes = ['B', 'KB', 'MB', 'GB'];
@@ -301,12 +314,12 @@ const MyWorkspace = () => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
   };
 
-  const getFileIcon = (type) => {
-    const IconComponent = fileTypeIcons[type] || fileTypeIcons.default;
+  const getFileIcon = (type: string) => {
+    const IconComponent = fileTypeIcons[type as keyof typeof fileTypeIcons] || fileTypeIcons.default;
     return <IconComponent className="h-4 w-4" />;
   };
 
-  const filteredFolders = folders[selectedCategory].filter(folder =>
+  const filteredFolders = folders[selectedCategory as keyof typeof folders].filter(folder =>
     folder.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     folder.files.some(file => file.name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
@@ -684,7 +697,7 @@ const MyWorkspace = () => {
                   <SelectValue placeholder="Select folder..." />
                 </SelectTrigger>
                 <SelectContent>
-                  {folders[selectedCategory].map(folder => (
+                  {folders[selectedCategory as keyof typeof folders].map(folder => (
                     <SelectItem key={folder.id} value={folder.id}>
                       {folder.emoji} {folder.name}
                     </SelectItem>
