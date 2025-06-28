@@ -1,0 +1,46 @@
+// src/lib/iconConfig.ts
+import {
+  FileText,
+  Target,
+  Lightbulb,
+  Building2,
+  Smartphone,
+  Zap,
+  Palette,
+  Clapperboard,
+  BarChart3,
+  Star,
+  Wrench,
+  BookOpen,
+  AudioWaveform,
+  ImageIcon,
+  Briefcase,
+  Tent,
+  Globe,
+  Lock,
+  TrendingUp,
+  FolderOpen
+} from 'lucide-react';
+
+export const modernIcons = [
+  { icon: FileText, name: 'Document' },
+  { icon: FolderOpen, name: 'Folder' },
+  { icon: Target, name: 'Target' },
+  { icon: Lightbulb, name: 'Idea' },
+  { icon: Building2, name: 'Business' },
+  { icon: Smartphone, name: 'Mobile' },
+  { icon: Zap, name: 'Energy' },
+  { icon: Palette, name: 'Design' },
+  { icon: Clapperboard, name: 'Video' },
+  { icon: BarChart3, name: 'Analytics' },
+  { icon: Star, name: 'Star' },
+  { icon: Wrench, name: 'Tools' },
+  { icon: BookOpen, name: 'Books' },
+  { icon: AudioWaveform, name: 'Music' },
+  { icon: ImageIcon, name: 'Images' },
+  { icon: Briefcase, name: 'Work' },
+  { icon: Tent, name: 'Fun' },
+  { icon: Globe, name: 'Global' },
+  { icon: Lock, name: 'Security' },
+  { icon: TrendingUp, name: 'Growth' }
+];
