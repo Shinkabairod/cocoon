@@ -39,6 +39,14 @@ const MyWorkspace = () => {
     importData
   } = useWorkspaceData();
 
+  // Handle import function properly
+  const handleImport = () => {
+    const input = document.getElementById('import-input') as HTMLInputElement;
+    if (input) {
+      input.click();
+    }
+  };
+
   // Filter folders based on search and category
   const filteredFolders = folders[selectedCategory as keyof typeof folders]?.filter(folder =>
     folder.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -115,7 +123,7 @@ const MyWorkspace = () => {
       <WorkspaceHeader
         foldersCount={folders.Personal.length + folders.Resources.length}
         onExport={exportData}
-        onImport={importData}
+        onImport={handleImport}
         onNewFolder={() => setShowNewFolderModal(true)}
         onAddFile={() => setShowAddFileModal(true)}
       />
@@ -169,6 +177,15 @@ const MyWorkspace = () => {
       <FilePreview 
         file={showFilePreview} 
         onClose={() => setShowFilePreview(null)} 
+      />
+
+      {/* Hidden import input */}
+      <input
+        id="import-input"
+        type="file"
+        onChange={importData}
+        accept=".json"
+        style={{ display: 'none' }}
       />
     </div>
   );
