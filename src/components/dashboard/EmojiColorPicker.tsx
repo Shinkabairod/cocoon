@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -5,7 +6,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 // Emojis 2D simples organisés par catégories
 const EMOJI_CATEGORIES = {
   files: ['📄', '📝', '📋', '📊', '📈', '📉', '🗂️', '📁'],
-  creative: ['🎨', '🎬', '🎭', '🎪', '🎯', '🎲', '✨', '💡'],
+  creative: ['🎨', '🎬', '🎭', '🎪', '🎯', '🎲', '🎨', '✨'],
   tech: ['💻', '🖥️', '⌨️', '🖱️', '💾', '💿', '📱', '🔧'],
   business: ['💼', '💰', '💵', '💳', '📊', '📈', '🏢', '🎯'],
   education: ['📚', '📖', '📝', '🎓', '📐', '📏', '🔬', '🧮'],
@@ -49,21 +50,9 @@ const EmojiColorPicker: React.FC<EmojiColorPickerProps> = ({
     onClose();
   };
 
-  const getCategoryName = (category: string) => {
-    switch (category) {
-      case 'files': return 'Fichiers';
-      case 'creative': return 'Créatif';
-      case 'tech': return 'Tech';
-      case 'business': return 'Business';
-      case 'education': return 'Éducation';
-      case 'misc': return 'Divers';
-      default: return category;
-    }
-  };
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Choisir un emoji et une couleur</DialogTitle>
         </DialogHeader>
@@ -72,25 +61,27 @@ const EmojiColorPicker: React.FC<EmojiColorPickerProps> = ({
           {/* Aperçu */}
           <div className="text-center p-4 bg-gray-50 rounded-lg">
             <div 
-              className="text-4xl mb-2 inline-block p-3 rounded-lg border-2"
-              style={{ 
-                backgroundColor: selectedColor + '20', 
-                borderColor: selectedColor 
-              }}
+              className="text-4xl mb-2 inline-block p-2 rounded-lg"
+              style={{ backgroundColor: selectedColor + '20', border: `2px solid ${selectedColor}` }}
             >
               {selectedEmoji}
             </div>
-            <p className="text-sm text-gray-600 font-medium">Aperçu</p>
+            <p className="text-sm text-gray-600">Aperçu</p>
           </div>
 
           {/* Sélection d'emoji */}
-          <div className="space-y-4">
+          <div className="space-y-3">
             <h3 className="font-medium text-sm">Choisir un emoji :</h3>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {Object.entries(EMOJI_CATEGORIES).map(([category, emojis]) => (
                 <div key={category}>
                   <p className="text-xs font-medium text-gray-500 mb-2 capitalize">
-                    {getCategoryName(category)}
+                    {category === 'files' ? 'Fichiers' :
+                     category === 'creative' ? 'Créatif' :
+                     category === 'tech' ? 'Tech' :
+                     category === 'business' ? 'Business' :
+                     category === 'education' ? 'Éducation' :
+                     'Divers'}
                   </p>
                   <div className="grid grid-cols-8 gap-1">
                     {emojis.map((emoji, index) => (
@@ -98,10 +89,8 @@ const EmojiColorPicker: React.FC<EmojiColorPickerProps> = ({
                         key={`${category}-${index}`}
                         variant="ghost"
                         size="sm"
-                        className={`h-10 w-10 p-0 text-xl hover:bg-gray-100 transition-all ${
-                          selectedEmoji === emoji 
-                            ? 'bg-blue-100 border-2 border-blue-500 scale-110' 
-                            : 'border border-gray-200'
+                        className={`h-10 w-10 p-0 text-xl hover:bg-gray-100 ${
+                          selectedEmoji === emoji ? 'bg-blue-100 border-2 border-blue-500' : ''
                         }`}
                         onClick={() => setSelectedEmoji(emoji)}
                       >
@@ -117,48 +106,69 @@ const EmojiColorPicker: React.FC<EmojiColorPickerProps> = ({
           {/* Sélection de couleur */}
           <div className="space-y-3">
             <h3 className="font-medium text-sm">Choisir une couleur :</h3>
-            <div className="grid grid-cols-5 gap-2">
+            <div className="flex flex-wrap gap-2">
               {COLORS.map((color) => (
                 <Button
                   key={color}
                   variant="ghost"
                   size="sm"
-                  className={`h-10 w-10 p-0 rounded-lg border-2 transition-all hover:scale-110 ${
-                    selectedColor === color 
-                      ? 'border-gray-800 scale-110 shadow-lg' 
-                      : 'border-gray-300'
+                  className={`h-8 w-8 p-0 rounded-full border-2 ${
+                    selectedColor === color ? 'border-gray-800 scale-110' : 'border-gray-300'
                   }`}
                   style={{ backgroundColor: color }}
                   onClick={() => setSelectedColor(color)}
-                >
-                  {selectedColor === color && (
-                    <span className="text-white font-bold text-lg">✓</span>
-                  )}
-                </Button>
+                />
               ))}
             </div>
           </div>
 
           {/* Boutons d'action */}
-          <div className="flex gap-2 pt-4 border-t">
-            <Button 
-              variant="outline" 
-              onClick={onClose} 
-              className="flex-1"
-            >
+          <div className="flex gap-2 pt-4">
+            <Button variant="outline" onClick={onClose} className="flex-1">
               Annuler
             </Button>
-            <Button 
-              onClick={handleConfirm} 
-              className="flex-1"
-              style={{ backgroundColor: selectedColor }}
-            >
+            <Button onClick={handleConfirm} className="flex-1">
               Confirmer
             </Button>
           </div>
         </div>
       </DialogContent>
     </Dialog>
+  );
+};
+
+// Composant pour les stats Dashboard Home
+export const DashboardStats: React.FC<{ stats: any }> = ({ stats }) => {
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="bg-white rounded-lg p-4 shadow-sm border">
+        <div className="text-center">
+          <p className="text-sm font-medium text-gray-600">Total Dossiers</p>
+          <p className="text-2xl font-bold text-gray-900">{stats?.totalFolders || 7}</p>
+        </div>
+      </div>
+      
+      <div className="bg-white rounded-lg p-4 shadow-sm border">
+        <div className="text-center">
+          <p className="text-sm font-medium text-gray-600">Total Fichiers</p>
+          <p className="text-2xl font-bold text-gray-900">{stats?.totalFiles || 5}</p>
+        </div>
+      </div>
+      
+      <div className="bg-white rounded-lg p-4 shadow-sm border">
+        <div className="text-center">
+          <p className="text-sm font-medium text-gray-600">Personnel</p>
+          <p className="text-2xl font-bold text-blue-600">{stats?.personalFiles || 5}</p>
+        </div>
+      </div>
+      
+      <div className="bg-white rounded-lg p-4 shadow-sm border">
+        <div className="text-center">
+          <p className="text-sm font-medium text-gray-600">Ressources</p>
+          <p className="text-2xl font-bold text-purple-600">{stats?.resourceFiles || 0}</p>
+        </div>
+      </div>
+    </div>
   );
 };
 
