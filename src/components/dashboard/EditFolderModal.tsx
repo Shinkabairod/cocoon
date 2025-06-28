@@ -66,10 +66,9 @@ const EditFolderModal = ({ isOpen, onClose, onSave, initialData = {} }) => {
     iconData.id.toLowerCase().includes(searchQuery.toLowerCase())
   );
   
-  const paginatedIcons = filteredIcons.slice(
-    currentPage * iconsPerPage, 
-    (currentPage + 1) * iconsPerPage
-  );
+  const paginatedIcons = searchQuery 
+  ? filteredIcons.slice(0, iconsPerPage)
+  : allLucideIcons.slice(currentPage * iconsPerPage, (currentPage + 1) * iconsPerPage);
 
   // Couleurs prédéfinies avec leurs valeurs hex
   const predefinedColors = [
@@ -188,9 +187,8 @@ const EditFolderModal = ({ isOpen, onClose, onSave, initialData = {} }) => {
               </div>
               
               {/* Connecting line behind circles */}
-              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                <div className="w-full h-0.5 bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-cyan-500 via-blue-500 via-purple-500 to-red-500 opacity-30 rounded-full" />
-              </div>
+              {/* Ligne gradient supprimée temporairement */}
+
             </div>
 
             {/* Quick Color Presets */}
