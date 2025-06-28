@@ -1,4 +1,4 @@
-
+// src/lib/colorSchemes.ts
 import { colorOptions } from './colorConfig';
 
 export const getColorScheme = (colorValue: string) => {
