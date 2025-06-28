@@ -40,41 +40,96 @@ import {
   Type
 } from 'lucide-react';
 
-// Modern 2D icons with colors (inspired by Notion style)
+import {
+  FolderOpen,
+  FileText,
+  Image,
+  Video,
+  Music,
+  File,
+  Link,
+  Download,
+  Upload,
+  Plus,
+  Search,
+  RefreshCw,
+  Edit,
+  Trash2,
+  Eye,
+  X,
+  ArrowLeft,
+  Type,
+  Target,
+  Lightbulb,
+  Building2,
+  Smartphone,
+  Zap,
+  Palette,
+  Clapperboard,
+  BarChart3,
+  Star,
+  Wrench,
+  BookOpen,
+  AudioWaveform,
+  ImageIcon,
+  Briefcase,
+  Tent,
+  Globe,
+  Lock,
+  TrendingUp
+} from 'lucide-react';
+
+// Modern Lucide icons
 const modernIcons = [
-  { icon: '📄', name: 'Document', color: 'bg-blue-500' },
-  { icon: '📁', name: 'Folder', color: 'bg-yellow-500' },
-  { icon: '🎯', name: 'Target', color: 'bg-red-500' },
-  { icon: '💡', name: 'Idea', color: 'bg-yellow-400' },
-  { icon: '🏢', name: 'Business', color: 'bg-gray-600' },
-  { icon: '📱', name: 'Mobile', color: 'bg-purple-500' },
-  { icon: '⚡', name: 'Energy', color: 'bg-orange-500' },
-  { icon: '🎨', name: 'Design', color: 'bg-pink-500' },
-  { icon: '🎬', name: 'Video', color: 'bg-red-600' },
-  { icon: '📊', name: 'Analytics', color: 'bg-green-500' },
-  { icon: '🌟', name: 'Star', color: 'bg-yellow-300' },
-  { icon: '🔧', name: 'Tools', color: 'bg-gray-500' },
-  { icon: '📚', name: 'Books', color: 'bg-indigo-500' },
-  { icon: '🎵', name: 'Music', color: 'bg-purple-600' },
-  { icon: '🖼️', name: 'Images', color: 'bg-blue-400' },
-  { icon: '💼', name: 'Work', color: 'bg-gray-700' },
-  { icon: '🎪', name: 'Fun', color: 'bg-pink-400' },
-  { icon: '🌍', name: 'Global', color: 'bg-green-600' },
-  { icon: '🔒', name: 'Security', color: 'bg-red-700' },
-  { icon: '📈', name: 'Growth', color: 'bg-emerald-500' }
+  { icon: FileText, name: 'Document' },
+  { icon: FolderOpen, name: 'Folder' },
+  { icon: Target, name: 'Target' },
+  { icon: Lightbulb, name: 'Idea' },
+  { icon: Building2, name: 'Business' },
+  { icon: Smartphone, name: 'Mobile' },
+  { icon: Zap, name: 'Energy' },
+  { icon: Palette, name: 'Design' },
+  { icon: Clapperboard, name: 'Video' },
+  { icon: BarChart3, name: 'Analytics' },
+  { icon: Star, name: 'Star' },
+  { icon: Wrench, name: 'Tools' },
+  { icon: BookOpen, name: 'Books' },
+  { icon: AudioWaveform, name: 'Music' },
+  { icon: ImageIcon, name: 'Images' },
+  { icon: Briefcase, name: 'Work' },
+  { icon: Tent, name: 'Fun' },
+  { icon: Globe, name: 'Global' },
+  { icon: Lock, name: 'Security' },
+  { icon: TrendingUp, name: 'Growth' }
 ];
 
-// Color schemes with transparency
-const colorSchemes = [
-  { bg: 'bg-blue-50/70', border: 'border-blue-200/50', text: 'text-blue-700', accent: 'bg-blue-500/90', hover: 'hover:bg-blue-100/80' },
-  { bg: 'bg-green-50/70', border: 'border-green-200/50', text: 'text-green-700', accent: 'bg-green-500/90', hover: 'hover:bg-green-100/80' },
-  { bg: 'bg-purple-50/70', border: 'border-purple-200/50', text: 'text-purple-700', accent: 'bg-purple-500/90', hover: 'hover:bg-purple-100/80' },
-  { bg: 'bg-orange-50/70', border: 'border-orange-200/50', text: 'text-orange-700', accent: 'bg-orange-500/90', hover: 'hover:bg-orange-100/80' },
-  { bg: 'bg-pink-50/70', border: 'border-pink-200/50', text: 'text-pink-700', accent: 'bg-pink-500/90', hover: 'hover:bg-pink-100/80' },
-  { bg: 'bg-yellow-50/70', border: 'border-yellow-200/50', text: 'text-yellow-700', accent: 'bg-yellow-500/90', hover: 'hover:bg-yellow-100/80' },
-  { bg: 'bg-indigo-50/70', border: 'border-indigo-200/50', text: 'text-indigo-700', accent: 'bg-indigo-500/90', hover: 'hover:bg-indigo-100/80' },
-  { bg: 'bg-red-50/70', border: 'border-red-200/50', text: 'text-red-700', accent: 'bg-red-500/90', hover: 'hover:bg-red-100/80' },
+// Color options
+const colorOptions = [
+  { name: 'Blue', value: 'blue', bg: 'bg-blue-500', light: 'bg-blue-50/80', border: 'border-blue-200/60' },
+  { name: 'Green', value: 'green', bg: 'bg-green-500', light: 'bg-green-50/80', border: 'border-green-200/60' },
+  { name: 'Purple', value: 'purple', bg: 'bg-purple-500', light: 'bg-purple-50/80', border: 'border-purple-200/60' },
+  { name: 'Orange', value: 'orange', bg: 'bg-orange-500', light: 'bg-orange-50/80', border: 'border-orange-200/60' },
+  { name: 'Pink', value: 'pink', bg: 'bg-pink-500', light: 'bg-pink-50/80', border: 'border-pink-200/60' },
+  { name: 'Yellow', value: 'yellow', bg: 'bg-yellow-500', light: 'bg-yellow-50/80', border: 'border-yellow-200/60' },
+  { name: 'Indigo', value: 'indigo', bg: 'bg-indigo-500', light: 'bg-indigo-50/80', border: 'border-indigo-200/60' },
+  { name: 'Red', value: 'red', bg: 'bg-red-500', light: 'bg-red-50/80', border: 'border-red-200/60' },
+  { name: 'Emerald', value: 'emerald', bg: 'bg-emerald-500', light: 'bg-emerald-50/80', border: 'border-emerald-200/60' },
+  { name: 'Cyan', value: 'cyan', bg: 'bg-cyan-500', light: 'bg-cyan-50/80', border: 'border-cyan-200/60' },
+  { name: 'Rose', value: 'rose', bg: 'bg-rose-500', light: 'bg-rose-50/80', border: 'border-rose-200/60' },
+  { name: 'Violet', value: 'violet', bg: 'bg-violet-500', light: 'bg-violet-50/80', border: 'border-violet-200/60' }
 ];
+
+// Color schemes with higher transparency
+const getColorScheme = (colorValue: string) => {
+  const color = colorOptions.find(c => c.value === colorValue) || colorOptions[0];
+  return {
+    bg: color.light,
+    border: color.border,
+    text: `text-${color.value}-700`,
+    accent: color.bg,
+    hover: `hover:bg-${color.value}-100/90`
+  };
+};
 
 const MyWorkspace = () => {
   const { toast } = useToast();
@@ -95,7 +150,7 @@ const MyWorkspace = () => {
   const [newFolder, setNewFolder] = useState({
     name: '',
     iconData: modernIcons[0],
-    colorScheme: 0,
+    color: 'blue',
     category: 'Personal'
   });
   
@@ -126,7 +181,7 @@ const MyWorkspace = () => {
           id: '1', 
           name: 'My Profile', 
           iconData: modernIcons[0],
-          colorScheme: 0, 
+          color: 'blue', 
           files: [
             { id: 'f1', name: 'Resume.pdf', type: 'pdf', size: '2.5 MB', date: '2024-01-15', content: null, url: null },
             { id: 'f2', name: 'Bio', type: 'text', size: '1.2 KB', date: '2024-01-20', content: 'I am a passionate content creator with 5 years of experience in digital marketing and social media management...', url: null }
@@ -136,7 +191,7 @@ const MyWorkspace = () => {
           id: '2', 
           name: 'My Goals', 
           iconData: modernIcons[2],
-          colorScheme: 1, 
+          color: 'green', 
           files: [
             { id: 'f3', name: '2024 Objectives', type: 'text', size: '800 B', date: '2024-01-01', content: '1. Grow YouTube channel to 100K subscribers\n2. Launch online course\n3. Increase revenue by 50%\n4. Build personal brand', url: null },
             { id: 'f4', name: 'vision-board.jpg', type: 'image', size: '5.2 MB', date: '2024-01-10', content: null, url: null },
@@ -147,7 +202,7 @@ const MyWorkspace = () => {
           id: '3', 
           name: 'My Business', 
           iconData: modernIcons[4],
-          colorScheme: 2, 
+          color: 'purple', 
           files: [
             { id: 'f6', name: 'Business Plan', type: 'text', size: '2.1 KB', date: '2024-01-05', content: 'Executive Summary:\nOur company focuses on creating educational content for entrepreneurs...', url: null },
             { id: 'f7', name: 'Financial Projections', type: 'link', url: 'https://sheets.google.com', date: '2024-01-18', content: null, size: 'N/A' }
@@ -157,7 +212,7 @@ const MyWorkspace = () => {
           id: '4', 
           name: 'My Platforms', 
           iconData: modernIcons[5],
-          colorScheme: 3, 
+          color: 'orange', 
           files: [
             { id: 'f8', name: 'Content Calendar', type: 'text', size: '1.8 KB', date: '2024-01-22', content: 'Week 1: Introduction to AI\nWeek 2: Productivity Tools\nWeek 3: Content Creation Tips...', url: null },
             { id: 'f9', name: 'Instagram Analytics', type: 'link', url: 'https://instagram.com/insights', date: '2024-01-25', content: null, size: 'N/A' }
@@ -298,7 +353,7 @@ const MyWorkspace = () => {
       id: `folder_${Date.now()}`,
       name: newFolder.name,
       iconData: newFolder.iconData,
-      colorScheme: newFolder.colorScheme,
+      color: newFolder.color,
       files: []
     };
 
@@ -307,7 +362,7 @@ const MyWorkspace = () => {
       [newFolder.category as keyof typeof prev]: [...prev[newFolder.category as keyof typeof prev], folderData]
     }));
 
-    setNewFolder({ name: '', iconData: modernIcons[0], colorScheme: 0, category: 'Personal' });
+    setNewFolder({ name: '', iconData: modernIcons[0], color: 'blue', category: 'Personal' });
     setShowNewFolderModal(false);
     
     toast({
@@ -323,14 +378,14 @@ const MyWorkspace = () => {
       ...prev,
       [selectedCategory]: prev[selectedCategory as keyof typeof prev].map(folder =>
         folder.id === editingFolder.id
-          ? { ...folder, name: newFolder.name, iconData: newFolder.iconData, colorScheme: newFolder.colorScheme }
+          ? { ...folder, name: newFolder.name, iconData: newFolder.iconData, color: newFolder.color }
           : folder
       )
     }));
 
     setEditingFolder(null);
     setShowEditFolderModal(false);
-    setNewFolder({ name: '', iconData: modernIcons[0], colorScheme: 0, category: 'Personal' });
+    setNewFolder({ name: '', iconData: modernIcons[0], color: 'blue', category: 'Personal' });
     
     toast({
       title: "✅ Folder Updated",
@@ -665,16 +720,16 @@ const MyWorkspace = () => {
       {/* Compact Folders Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {filteredFolders.map((folder) => {
-          const colorScheme = colorSchemes[folder.colorScheme];
+          const colorScheme = getColorScheme(folder.color);
           return (
             <Card 
               key={folder.id} 
-              className={`${colorScheme.bg} ${colorScheme.border} ${colorScheme.hover} border-2 transition-all duration-200 cursor-pointer group relative backdrop-blur-sm`}
+              className={`${colorScheme.bg} ${colorScheme.border} ${colorScheme.hover} border-2 transition-all duration-200 cursor-pointer group relative backdrop-blur-md bg-opacity-60`}
               onClick={() => setSelectedFolder(folder)}
             >
               <CardContent className="p-4 text-center">
-                <div className={`w-12 h-12 ${colorScheme.accent} rounded-xl flex items-center justify-center text-white shadow-sm mx-auto mb-2 backdrop-blur-sm`}>
-                  <span className="text-xl">{folder.iconData.icon}</span>
+                <div className={`w-12 h-12 ${colorScheme.accent} rounded-xl flex items-center justify-center text-white shadow-sm mx-auto mb-2 backdrop-blur-sm bg-opacity-90`}>
+                  <folder.iconData.icon className="h-6 w-6" />
                 </div>
                 <h3 className={`font-medium text-sm ${colorScheme.text} truncate mb-1`}>
                   {folder.name}
@@ -686,14 +741,14 @@ const MyWorkspace = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-6 w-6 p-0 bg-white/80 hover:bg-white"
+                    className="h-6 w-6 p-0 bg-white/90 hover:bg-white backdrop-blur-sm"
                     onClick={(e) => {
                       e.stopPropagation();
                       setEditingFolder(folder);
                       setNewFolder({
                         name: folder.name,
                         iconData: folder.iconData,
-                        colorScheme: folder.colorScheme,
+                        color: folder.color,
                         category: selectedCategory
                       });
                       setShowEditFolderModal(true);
@@ -704,7 +759,7 @@ const MyWorkspace = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-6 w-6 p-0 bg-white/80 hover:bg-white text-red-500"
+                    className="h-6 w-6 p-0 bg-white/90 hover:bg-white text-red-500 backdrop-blur-sm"
                     onClick={(e) => {
                       e.stopPropagation();
                       deleteFolder(folder.id);
@@ -740,35 +795,276 @@ const MyWorkspace = () => {
             </div>
             
             <div>
-              <label className="text-sm font-medium">Icon & Color</label>
-              <div className="grid grid-cols-4 gap-3 mt-2 max-h-48 overflow-y-auto">
-                {modernIcons.map((iconData, index) => (
-                  <div
-                    key={index}
-                    className={`flex flex-col items-center p-3 rounded-lg border-2 cursor-pointer transition-all ${
-                      newFolder.iconData.icon === iconData.icon ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
-                    }`}
-                    onClick={() => setNewFolder(prev => ({ ...prev, iconData }))}
-                  >
-                    <div className={`w-8 h-8 ${iconData.color} rounded-lg flex items-center justify-center text-white mb-1`}>
-                      <span className="text-sm">{iconData.icon}</span>
+              <label className="text-sm font-medium">Choose Icon</label>
+              <div className="grid grid-cols-5 gap-3 mt-2 max-h-48 overflow-y-auto border rounded-lg p-3 bg-gray-50/50">
+                {modernIcons.map((iconData, index) => {
+                  const IconComponent = iconData.icon;
+                  return (
+                    <div
+                      key={index}
+                      className={`flex flex-col items-center p-3 rounded-lg border-2 cursor-pointer transition-all backdrop-blur-sm ${
+                        newFolder.iconData.name === iconData.name ? 'border-blue-500 bg-blue-50/80' : 'border-gray-200/60 hover:border-gray-300/80 bg-white/60'
+                      }`}
+                      onClick={() => setNewFolder(prev => ({ ...prev, iconData }))}
+                    >
+                      <div className="w-8 h-8 flex items-center justify-center mb-1">
+                        <IconComponent className="h-5 w-5 text-gray-600" />
+                      </div>
+                      <span className="text-xs text-gray-600 text-center">{iconData.name}</span>
                     </div>
-                    <span className="text-xs text-gray-600 text-center">{iconData.name}</span>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
             <div>
-              <label className="text-sm font-medium">Color Theme</label>
-              <div className="grid grid-cols-4 gap-2 mt-2">
-                {colorSchemes.map((scheme, index) => (
-                  <Button
-                    key={index}
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setNewFolder(prev => ({ ...prev, colorScheme: index }))}
-                    className={`h-10 ${scheme.bg} ${scheme.border} ${newFolder.colorScheme === index ? 'ring-2 ring-blue-500' : ''}`}
+              <label className="text-sm font-medium">Choose Color</label>
+              <div className="grid grid-cols-6 gap-2 mt-2">
+                {colorOptions.map((color) => (
+                  <div
+                    key={color.value}
+                    className={`flex flex-col items-center p-2 rounded-lg border-2 cursor-pointer transition-all ${
+                      newFolder.color === color.value ? 'border-blue-500 bg-blue-50/80' : 'border-gray-200/60 hover:border-gray-300/80'
+                    }`}
+                    onClick={() => setNewFolder(prev => ({ ...prev, color: color.value }))}
+                  >
+                    <div className={`w-6 h-6 ${color.bg} rounded-lg mb-1`} />
+                    <span className="text-xs text-gray-600">{color.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium">Category</label>
+              <Select value={newFolder.category} onValueChange={(value) => setNewFolder(prev => ({ ...prev, category: value }))}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Personal">Personal</SelectItem>
+                  <SelectItem value="Resources">Resources</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setShowNewFolderModal(false)}>
+                Cancel
+              </Button>
+              <Button onClick={addFolder} disabled={!newFolder.name.trim()}>
+                Create Folder
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Folder Modal */}
+      <Dialog open={showEditFolderModal} onOpenChange={setShowEditFolderModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Edit Folder</DialogTitle>
+            <DialogDescription>
+              Modify your folder settings
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">Folder Name</label>
+              <Input
+                placeholder="Folder name..."
+                value={newFolder.name}
+                onChange={(e) => setNewFolder(prev => ({ ...prev, name: e.target.value }))}
+              />
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium">Choose Icon</label>
+              <div className="grid grid-cols-5 gap-3 mt-2 max-h-48 overflow-y-auto border rounded-lg p-3 bg-gray-50/50">
+                {modernIcons.map((iconData, index) => {
+                  const IconComponent = iconData.icon;
+                  return (
+                    <div
+                      key={index}
+                      className={`flex flex-col items-center p-3 rounded-lg border-2 cursor-pointer transition-all backdrop-blur-sm ${
+                        newFolder.iconData.name === iconData.name ? 'border-blue-500 bg-blue-50/80' : 'border-gray-200/60 hover:border-gray-300/80 bg-white/60'
+                      }`}
+                      onClick={() => setNewFolder(prev => ({ ...prev, iconData }))}
+                    >
+                      <div className="w-8 h-8 flex items-center justify-center mb-1">
+                        <IconComponent className="h-5 w-5 text-gray-600" />
+                      </div>
+                      <span className="text-xs text-gray-600 text-center">{iconData.name}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div>
+              <label className="text-sm font-medium">Choose Color</label>
+              <div className="grid grid-cols-6 gap-2 mt-2">
+                {colorOptions.map((color) => (
+                  <div
+                    key={color.value}
+                    className={`flex flex-col items-center p-2 rounded-lg border-2 cursor-pointer transition-all ${
+                      newFolder.color === color.value ? 'border-blue-500 bg-blue-50/80' : 'border-gray-200/60 hover:border-gray-300/80'
+                    }`}
+                    onClick={() => setNewFolder(prev => ({ ...prev, color: color.value }))}
+                  >
+                    <div className={`w-6 h-6 ${color.bg} rounded-lg mb-1`} />
+                    <span className="text-xs text-gray-600">{color.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setShowEditFolderModal(false)}>
+                Cancel
+              </Button>
+              <Button onClick={editFolder} disabled={!newFolder.name.trim()}>
+                Save Changes
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Add File Modal */}
+      <Dialog open={showAddFileModal} onOpenChange={setShowAddFileModal}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Add New File</DialogTitle>
+            <DialogDescription>
+              Upload a file, add a link, or write a text note
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">File Name</label>
+              <Input
+                placeholder="My file..."
+                value={newFile.name}
+                onChange={(e) => setNewFile(prev => ({ ...prev, name: e.target.value }))}
+              />
+            </div>
+            
+            <div>
+              <label className="text-sm font-medium">Type</label>
+              <Select value={newFile.type} onValueChange={(value) => setNewFile(prev => ({ ...prev, type: value }))}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="text">📝 Text Note</SelectItem>
+                  <SelectItem value="file">📄 File Upload</SelectItem>
+                  <SelectItem value="link">🔗 Link</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {newFile.type === 'text' && (
+              <div>
+                <label className="text-sm font-medium">Content</label>
+                <Textarea
+                  placeholder="Write your note here..."
+                  value={newFile.content}
+                  onChange={(e) => setNewFile(prev => ({ ...prev, content: e.target.value }))}
+                  rows={6}
+                />
+              </div>
+            )}
+
+            {newFile.type === 'file' && (
+              <div>
+                <label className="text-sm font-medium">Choose File</label>
+                <Input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileUpload}
+                  accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.mp4,.avi,.mkv,.mp3,.wav"
+                />
+                {newFile.file && (
+                  <p className="text-sm text-gray-500 mt-1">
+                    Selected: {newFile.file.name} ({formatFileSize(newFile.file.size)})
+                  </p>
+                )}
+              </div>
+            )}
+
+            {newFile.type === 'link' && (
+              <div>
+                <label className="text-sm font-medium">URL</label>
+                <Input
+                  placeholder="https://..."
+                  value={newFile.url}
+                  onChange={(e) => setNewFile(prev => ({ ...prev, url: e.target.value }))}
+                />
+              </div>
+            )}
+            
+            <div>
+              <label className="text-sm font-medium">Add to Folder</label>
+              <Select value={newFile.folderId} onValueChange={(value) => setNewFile(prev => ({ ...prev, folderId: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select folder..." />
+                </SelectTrigger>
+                <SelectContent>
+                  {folders[selectedCategory as keyof typeof folders].map(folder => {
+                    const IconComponent = folder.iconData.icon;
+                    return (
+                      <SelectItem key={folder.id} value={folder.id}>
+                        <div className="flex items-center gap-2">
+                          <IconComponent className="h-4 w-4" />
+                          {folder.name}
+                        </div>
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" onClick={() => setShowAddFileModal(false)}>
+                Cancel
+              </Button>
+              <Button onClick={addFile} disabled={!newFile.name.trim() || !newFile.folderId}>
+                Add File
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* File Preview Modal */}
+      <FilePreview file={showFilePreview} onClose={() => setShowFilePreview(null)} />
+
+      {/* Hidden file inputs */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileUpload}
+        style={{ display: 'none' }}
+        accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.mp4,.avi,.mkv,.mp3,.wav"
+      />
+      
+      <input
+        id="import-input"
+        type="file"
+        onChange={importData}
+        accept=".json"
+        style={{ display: 'none' }}
+      />
+    </div>
+  );
+};
+
+export default MyWorkspace; index ? 'ring-2 ring-blue-500' : ''}`}
                   >
                     <div className={`w-4 h-4 ${scheme.accent} rounded-full`} />
                   </Button>
