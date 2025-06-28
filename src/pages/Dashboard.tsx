@@ -148,11 +148,11 @@ const Dashboard = () => {
   // Navigation items pour la sidebar (ORDRE MODIFIÉ)
   const navItems = [
     { id: 'welcome', icon: Home, label: "Home", path: "/dashboard" },
-    { id: 'resources', icon: FolderOpen, label: "My Workspace", path: "/dashboard/resources" },
+    { id: 'workspace', icon: FolderOpen, label: "My Workspace", path: "/dashboard/workspace" },
     { id: 'creation', icon: FileText, label: "My Creations", path: "/dashboard/scripts" },
     { id: 'monetization', icon: Crown, label: "My AI Bot", path: "/dashboard/monetization" },
     { id: 'settings', icon: Settings, label: "Settings", path: "/dashboard/settings" },
-  ];
+];
   
   const accountItems = [
     { icon: HelpCircle, label: "Help & Support", path: "/dashboard/support" },
