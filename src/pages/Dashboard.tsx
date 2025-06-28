@@ -266,7 +266,7 @@ const Dashboard = () => {
           <div className="relative z-10">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h1 className="text-3xl font-bold mb-2 text-violet-600">
+                <h1 className="text-3xl font-bold mb-2 text-slate-50">
                   Hello {displayName}! 👋
                 </h1>
                 <p className="text-gray-300 text-lg">
