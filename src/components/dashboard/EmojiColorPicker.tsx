@@ -1,123 +1,114 @@
+
 import React, { useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Card, CardContent } from '@/components/ui/card';
+import { IconSelector } from '@/components/shared/IconSelector';
+import { ColorSelector } from '@/components/shared/ColorSelector';
+import { modernIcons } from '@/lib/iconConfig';
 
-// Emojis 2D simples organisés par catégories
-const EMOJI_CATEGORIES = {
-  files: ['📄', '📝', '📋', '📊', '📈', '📉', '🗂️', '📁'],
-  creative: ['🎨', '🎬', '🎭', '🎪', '🎯', '🎲', '🎨', '✨'],
-  tech: ['💻', '🖥️', '⌨️', '🖱️', '💾', '💿', '📱', '🔧'],
-  business: ['💼', '💰', '💵', '💳', '📊', '📈', '🏢', '🎯'],
-  education: ['📚', '📖', '📝', '🎓', '📐', '📏', '🔬', '🧮'],
-  misc: ['⭐', '❤️', '🔥', '💡', '🚀', '⚡', '🎉', '🏆']
-};
-
-// Couleurs disponibles
-const COLORS = ['#3B82F6',
-// blue
-'#EF4444',
-// red
-'#10B981',
-// green
-'#F59E0B',
-// yellow
-'#8B5CF6',
-// purple
-'#EC4899',
-// pink
-'#06B6D4',
-// cyan
-'#84CC16',
-// lime
-'#F97316',
-// orange
-'#6B7280' // gray
-];
 interface EmojiColorPickerProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelect: (emoji: string, color: string) => void;
-  currentEmoji?: string;
-  currentColor?: string;
+  onSave: (data: { name: string; icon: any; color: string; category: string }) => void;
+  initialData?: any;
+  title: string;
+  description: string;
 }
+
 const EmojiColorPicker: React.FC<EmojiColorPickerProps> = ({
   isOpen,
   onClose,
-  onSelect,
-  currentEmoji = '📁',
-  currentColor = '#3B82F6'
+  onSave,
+  initialData,
+  title,
+  description
 }) => {
-  const [selectedEmoji, setSelectedEmoji] = useState(currentEmoji);
-  const [selectedColor, setSelectedColor] = useState(currentColor);
-  const handleConfirm = () => {
-    onSelect(selectedEmoji, selectedColor);
+  const [name, setName] = useState(initialData?.name || '');
+  const [selectedIcon, setSelectedIcon] = useState(initialData?.iconData || modernIcons[0]);
+  const [selectedColor, setSelectedColor] = useState(initialData?.color || 'blue');
+  const [category, setCategory] = useState(initialData?.category || 'Personal');
+
+  const handleSave = () => {
+    if (!name.trim()) return;
+    
+    onSave({
+      name: name.trim(),
+      icon: selectedIcon,
+      color: selectedColor,
+      category
+    });
+    
+    // Reset form
+    setName('');
+    setSelectedIcon(modernIcons[0]);
+    setSelectedColor('blue');
+    setCategory('Personal');
     onClose();
   };
-  return <Dialog open={isOpen} onOpenChange={onClose}>
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
-          <DialogTitle>Choisir un emoji et une couleur</DialogTitle>
+          <DialogTitle>{title}</DialogTitle>
+          <p className="text-sm text-gray-600">{description}</p>
         </DialogHeader>
         
         <div className="space-y-6">
-          {/* Aperçu */}
-          <div className="text-center p-4 bg-gray-50 rounded-lg">
-            <div className="text-4xl mb-2 inline-block p-2 rounded-lg" style={{
-            backgroundColor: selectedColor + '20',
-            border: `2px solid ${selectedColor}`
-          }}>
-              {selectedEmoji}
-            </div>
-            <p className="text-sm text-gray-600">Aperçu</p>
+          <div>
+            <label className="text-sm font-medium">Folder Name</label>
+            <Input
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter folder name..."
+              className="mt-1"
+            />
           </div>
 
-          {/* Sélection d'emoji */}
-          <div className="space-y-3">
-            <h3 className="font-medium text-sm">Choisir un emoji :</h3>
-            <div className="space-y-3">
-              {Object.entries(EMOJI_CATEGORIES).map(([category, emojis]) => <div key={category}>
-                  <p className="text-xs font-medium text-gray-500 mb-2 capitalize">
-                    {category === 'files' ? 'Fichiers' : category === 'creative' ? 'Créatif' : category === 'tech' ? 'Tech' : category === 'business' ? 'Business' : category === 'education' ? 'Éducation' : 'Divers'}
-                  </p>
-                  <div className="grid grid-cols-8 gap-1">
-                    {emojis.map((emoji, index) => <Button key={`${category}-${index}`} variant="ghost" size="sm" className={`h-10 w-10 p-0 text-xl hover:bg-gray-100 ${selectedEmoji === emoji ? 'bg-blue-100 border-2 border-blue-500' : ''}`} onClick={() => setSelectedEmoji(emoji)}>
-                        {emoji}
-                      </Button>)}
-                  </div>
-                </div>)}
-            </div>
-          </div>
-
-          {/* Sélection de couleur */}
-          <div className="space-y-3">
-            <h3 className="font-medium text-sm">Choisir une couleur :</h3>
-            <div className="flex flex-wrap gap-2">
-              {COLORS.map(color => <Button key={color} variant="ghost" size="sm" className={`h-8 w-8 p-0 rounded-full border-2 ${selectedColor === color ? 'border-gray-800 scale-110' : 'border-gray-300'}`} style={{
-              backgroundColor: color
-            }} onClick={() => setSelectedColor(color)} />)}
+          <div>
+            <label className="text-sm font-medium">Category</label>
+            <div className="flex gap-2 mt-2">
+              <Button
+                variant={category === 'Personal' ? 'default' : 'outline'}
+                onClick={() => setCategory('Personal')}
+                size="sm"
+              >
+                👤 Personal
+              </Button>
+              <Button
+                variant={category === 'Resources' ? 'default' : 'outline'}
+                onClick={() => setCategory('Resources')}
+                size="sm"
+              >
+                📁 Resources
+              </Button>
             </div>
           </div>
 
-          {/* Boutons d'action */}
+          <IconSelector
+            selectedIcon={selectedIcon}
+            onIconSelect={setSelectedIcon}
+          />
+
+          <ColorSelector
+            selectedColor={selectedColor}
+            onColorSelect={setSelectedColor}
+          />
+
           <div className="flex gap-2 pt-4">
             <Button variant="outline" onClick={onClose} className="flex-1">
-              Annuler
+              Cancel
             </Button>
-            <Button onClick={handleConfirm} className="flex-1">
-              Confirmer
+            <Button onClick={handleSave} className="flex-1" disabled={!name.trim()}>
+              Save Folder
             </Button>
           </div>
         </div>
       </DialogContent>
-    </Dialog>;
+    </Dialog>
+  );
 };
 
-// Composant pour les stats Dashboard Home
-export const DashboardStats: React.FC<{
-  stats: any;
-}> = ({
-  stats
-}) => {
-  return;
-};
 export default EmojiColorPicker;
