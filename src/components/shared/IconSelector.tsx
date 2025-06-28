@@ -1,4 +1,4 @@
-
+// src/components/shared/IconSelector.tsx
 import React from 'react';
 import { modernIcons } from '@/lib/iconConfig';
 
