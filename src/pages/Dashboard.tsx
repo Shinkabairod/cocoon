@@ -1,8 +1,6 @@
 // src/pages/Dashboard.tsx - Version améliorée avec design cohérent et VRAIS composants
 import SettingsSection from '@/components/dashboard/SettingsSection';
 import React, { useState, useEffect } from 'react';
-import { useWorkspace } from '@/hooks/useWorkspace';
-import { DashboardStats } from '@/components/dashboard/EmojiColorPicker';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { useUserStats } from '@/hooks/useUserStats';
@@ -96,6 +94,7 @@ import CreationsSection from '@/components/dashboard/CreationsSection';
 const Dashboard = () => {
   const { user } = useAuth();
   const { onboardingData } = useOnboarding();
+  const { getStats } = useWorkspace();
   const { data: userStats, isLoading, refetch } = useUserStats(user?.id);
   const { toast } = useToast();
   const [activePage, setActivePage] = useState('welcome');
