@@ -1,4 +1,4 @@
-
+// src/lib/colorConfig.ts
 export const colorOptions = [
   { name: 'Blue', value: 'blue', bg: 'bg-blue-500', light: 'bg-blue-50/80', border: 'border-blue-200/60' },
   { name: 'Green', value: 'green', bg: 'bg-green-500', light: 'bg-green-50/80', border: 'border-green-200/60' },
