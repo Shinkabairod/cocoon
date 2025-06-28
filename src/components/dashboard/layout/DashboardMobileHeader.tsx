@@ -1,3 +1,4 @@
+// src/components/dashboard/layout/DashboardMobileHeader.tsx
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu } from 'lucide-react';
