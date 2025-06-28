@@ -15,23 +15,10 @@ interface DashboardSidebarProps {
   getUserName: () => string;
 }
 
-const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
-  isMobile,
-  sidebarOpen,
-  setSidebarOpen,
-  activePage,
-  navigationItems,
-  handleNavigation,
-  user,
-  getUserName
+export const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
+  isMobile, sidebarOpen, setSidebarOpen, activePage, navigationItems, handleNavigation, user, getUserName
 }) => (
-  <div className={`
-    ${isMobile ? 'fixed inset-y-0 left-0 z-50 w-64' : 'w-64'} 
-    bg-white border-r border-gray-200 flex flex-col
-    ${isMobile && !sidebarOpen ? 'transform -translate-x-full' : ''}
-    transition-transform duration-200 ease-in-out
-  `}>
-    {/* Header */}
+  <div className={`${isMobile ? 'fixed inset-y-0 left-0 z-50 w-64' : 'w-64'} bg-white border-r border-gray-200 flex flex-col ${isMobile && !sidebarOpen ? 'transform -translate-x-full' : ''} transition-transform duration-200 ease-in-out`}>
     <div className="flex items-center justify-between p-4 border-b">
       <div className="flex items-center space-x-2">
         <div className="h-8 w-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
@@ -45,23 +32,14 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
         </Button>
       )}
     </div>
-
-    {/* Navigation */}
     <nav className="flex-1 p-4 space-y-2">
       {navigationItems.map((item) => (
-        <Button
-          key={item.id}
-          variant={activePage === item.id ? "default" : "ghost"}
-          className="w-full justify-start"
-          onClick={() => handleNavigation(item.id)}
-        >
+        <Button key={item.id} variant={activePage === item.id ? "default" : "ghost"} className="w-full justify-start" onClick={() => handleNavigation(item.id)}>
           <item.icon className="h-4 w-4 mr-2" />
           {item.label}
         </Button>
       ))}
     </nav>
-
-    {/* Footer utilisateur */}
     <div className="p-4 border-t">
       <div className="flex items-center space-x-2">
         <Avatar className="h-8 w-8">
@@ -76,5 +54,3 @@ const DashboardSidebar: React.FC<DashboardSidebarProps> = ({
     </div>
   </div>
 );
-
-export default DashboardSidebar;
