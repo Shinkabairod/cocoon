@@ -163,7 +163,7 @@ const MyWorkspace = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl flex items-center gap-2 font-bold text-violet-600">
+          <h2 className="flex items-center gap-2 font-bold text-violet-600 text-5xl">
             <FolderOpen className="h-6 w-6" />
             My Workspace
           </h2>
