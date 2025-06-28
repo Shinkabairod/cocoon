@@ -1,4 +1,4 @@
-
+// src/lib/iconConfig.ts
 import {
   FileText,
   Target,
