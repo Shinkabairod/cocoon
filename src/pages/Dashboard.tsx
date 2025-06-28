@@ -461,7 +461,9 @@ const Dashboard = () => {
         );
       case 'settings': 
         return <SettingsSection />;
-      default: 
+      case 'workspace':  // ✅ NOUVEAU
+        return <MyWorkspace />;
+      default:
         return renderWelcomePage();
     }
   };
