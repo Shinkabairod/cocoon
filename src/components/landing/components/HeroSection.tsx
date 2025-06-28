@@ -19,7 +19,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({
   return <section className="pt-20 pb-0 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* NOUVEAU: Fond géométrique plus actif */}
       <div className="absolute inset-0 opacity-40">
-        <svg width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 w-full h-full py-0 my-0">
+        <svg width="100%" height="100%" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 w-full h-full my-[15px] py-0">
           <defs>
             {/* Dégradés subtils en gris */}
             <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
