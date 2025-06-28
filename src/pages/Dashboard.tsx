@@ -1,6 +1,8 @@
 // src/pages/Dashboard.tsx - Version améliorée avec design cohérent et VRAIS composants
 import SettingsSection from '@/components/dashboard/SettingsSection';
 import React, { useState, useEffect } from 'react';
+import { useWorkspace } from '@/hooks/useWorkspace';
+import { DashboardStats } from '@/components/dashboard/EmojiColorPicker';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { useUserStats } from '@/hooks/useUserStats';
@@ -242,194 +244,88 @@ const Dashboard = () => {
   const { displayName, initials } = getUserDisplayInfo();
 
   // Fonctions de rendu pour chaque page avec design amélioré
-  // Remplacez votre fonction renderWelcomePage() par celle-ci dans Dashboard.tsx :
-
-  const renderWelcomePage = () => {
-    // ✅ Récupérer les vraies stats du Workspace
-    const realStats = getStats();
-  
-    return (
-      <div className="space-y-8">
-        {/* ✅ Stats cards avec vraies données */}
-        <DashboardStats stats={realStats} />
+  const renderWelcomePage = () => (
+    <div className="space-y-8">
+      {/* Hero Section avec design cohérent */}
+      <div className="bg-gradient-to-br from-black via-gray-900 to-black rounded-2xl p-8 text-white overflow-hidden relative">
+        {/* Pattern background subtil */}
+        <div className="absolute inset-0 opacity-[0.03]" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+        }} />
         
-        {/* Hero Section avec design cohérent */}
-        <div className="bg-gradient-to-br from-black via-gray-900 to-black rounded-2xl p-8 text-white overflow-hidden relative">
-          {/* Pattern background subtil */}
-          <div className="absolute inset-0 opacity-[0.03]" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-          }} />
-          
-          <div className="relative z-10">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h1 className="text-3xl font-bold mb-2">
-                  Hello {displayName}! 👋
-                </h1>
-                <p className="text-gray-300 text-lg">
-                  Ready to create some amazing content today?
-                </p>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-white">
-                    {realStats.totalFiles}
-                  </div>
-                  <div className="text-sm text-gray-400">Files Created</div>
-                </div>
-                <div className="text-center">
-                  <div className="text-2xl font-bold text-white">
-                    {realStats.totalFolders}
-                  </div>
-                  <div className="text-sm text-gray-400">Folders</div>
-                </div>
-              </div>
+        <div className="relative z-10">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="text-3xl font-bold mb-2">
+                Hello {displayName}! 👋
+              </h1>
+              <p className="text-white/80">
+                Your creative workspace awaits
+              </p>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="bg-white/10 backdrop-blur rounded-lg p-4">
-                <div className="flex items-center gap-3">
-                  <div className="bg-blue-500 rounded-lg p-2">
-                    <FileText className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">Quick Actions</p>
-                    <p className="text-sm text-gray-300">Create content fast</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white/10 backdrop-blur rounded-lg p-4">
-                <div className="flex items-center gap-3">
-                  <div className="bg-purple-500 rounded-lg p-2">
-                    <Sparkles className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">AI Assistant</p>
-                    <p className="text-sm text-gray-300">Smart suggestions</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-white/10 backdrop-blur rounded-lg p-4">
-                <div className="flex items-center gap-3">
-                  <div className="bg-green-500 rounded-lg p-2">
-                    <Target className="h-5 w-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="font-semibold">Analytics</p>
-                    <p className="text-sm text-gray-300">Track progress</p>
-                  </div>
-                </div>
-              </div>
+            <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+              <Crown className="h-4 w-4 text-yellow-400" />
+              <span className="text-sm font-medium">Pro Plan</span>
             </div>
           </div>
+
+          {/* Stats rapides */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            {[
+              { label: 'Created Content', value: 12, icon: FileText },
+              { label: 'Resources', value: folders.resources.length + folders.personal.length, icon: FolderOpen },
+              { label: 'AI Conversations', value: 5, icon: MessageSquare },
+              { label: 'Progress', value: 68, suffix: '%', icon: Target }
+            ].map((stat, index) => (
+              <div key={stat.label} className="bg-white/10 backdrop-blur-sm rounded-xl p-4 text-center">
+                <stat.icon className="h-5 w-5 mx-auto mb-2 text-white/80" />
+                <div className="text-2xl font-bold mb-1">
+                  {stat.value}{stat.suffix || ''}
+                </div>
+                <div className="text-xs text-white/60">{stat.label}</div>
+              </div>
+            ))}
+          </div>
         </div>
-  
-        {/* Quick Action Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActivePage('workspace')}>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="bg-blue-100 rounded-lg p-3">
-                  <FolderOpen className="h-6 w-6 text-blue-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">My Workspace</h3>
-                  <p className="text-sm text-gray-600">Organize your files</p>
-                  <p className="text-xs text-blue-600 mt-1">
-                    {realStats.totalFiles} files, {realStats.totalFolders} folders
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-  
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActivePage('creation')}>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="bg-green-100 rounded-lg p-3">
-                  <FileText className="h-6 w-6 text-green-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Create Content</h3>
-                  <p className="text-sm text-gray-600">Generate scripts & ideas</p>
-                  <p className="text-xs text-green-600 mt-1">AI-powered creation</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-  
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActivePage('monetization')}>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="bg-purple-100 rounded-lg p-3">
-                  <Crown className="h-6 w-6 text-purple-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">AI Bot</h3>
-                  <p className="text-sm text-gray-600">Advanced features</p>
-                  <p className="text-xs text-purple-600 mt-1">Premium coming soon</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-  
-          <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setActivePage('settings')}>
-            <CardContent className="p-6">
-              <div className="flex items-center gap-4">
-                <div className="bg-gray-100 rounded-lg p-3">
-                  <Settings className="h-6 w-6 text-gray-600" />
-                </div>
-                <div>
-                  <h3 className="font-semibold text-gray-900">Settings</h3>
-                  <p className="text-sm text-gray-600">Manage your account</p>
-                  <p className="text-xs text-gray-600 mt-1">Profile & preferences</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-  
-        {/* Recent Activity */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5" />
-              Recent Activity
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="bg-blue-100 rounded-full p-2">
-                  <FileText className="h-4 w-4 text-blue-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium">Workspace files loaded</p>
-                  <p className="text-sm text-gray-600">
-                    {realStats.personalFiles} personal files, {realStats.resourceFiles} resources
-                  </p>
-                </div>
-                <span className="text-xs text-gray-500">Just now</span>
-              </div>
-              
-              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-                <div className="bg-green-100 rounded-full p-2">
-                  <CheckCircle className="h-4 w-4 text-green-600" />
-                </div>
-                <div className="flex-1">
-                  <p className="font-medium">Profile synchronized</p>
-                  <p className="text-sm text-gray-600">Your data is up to date</p>
-                </div>
-                <span className="text-xs text-gray-500">5 min ago</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
-    );
-  };
+
+      {/* Section principale avec UserSettingsSection RÉEL */}
+      <UserSettingsSection />
+
+      {/* Actions rapides */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-xl font-semibold">
+            <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">Quick Actions</span>
+          </h2>
+          <button className="text-sm text-gray-600 hover:text-black transition-colors flex items-center gap-1">
+            View All <ArrowRight className="h-4 w-4" />
+          </button>
+        </div>
+        
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {[
+            { icon: Video, label: 'Video Script', color: 'from-red-500 to-red-600', desc: 'Create optimized script', action: () => setActivePage('creation') },
+            { icon: MessageSquare, label: 'AI Chat', color: 'from-purple-500 to-purple-600', desc: 'Smart assistant', action: () => setActiveModal('chat') },
+            { icon: Upload, label: 'Upload Resources', color: 'from-blue-500 to-blue-600', desc: 'Add files', action: () => setActivePage('resources') },
+            { icon: Settings, label: 'Settings', color: 'from-green-500 to-green-600', desc: 'Configure account', action: () => setActivePage('settings') }
+          ].map((action, index) => (
+            <button
+              key={action.label}
+              className="group bg-white rounded-xl p-6 shadow-sm border border-gray-100 hover:shadow-lg transition-all duration-200 hover:-translate-y-1 text-left"
+              onClick={action.action}
+            >
+              <div className={`w-12 h-12 bg-gradient-to-br ${action.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
+                <action.icon className="h-6 w-6 text-white" />
+              </div>
+              <h3 className="font-semibold mb-1">{action.label}</h3>
+              <p className="text-sm text-gray-600">{action.desc}</p>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
 
   const renderResourcesPage = () => (
     <div className="space-y-6">
