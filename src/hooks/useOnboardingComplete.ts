@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOnboarding } from '@/contexts/OnboardingContext';
@@ -31,7 +30,7 @@ export const useOnboardingComplete = () => {
         .from('user_profiles')
         .upsert({
           user_id: user.id,
-          onboarding_data: onboardingData,
+          profile_data: onboardingData,  // ✅ Changé de onboarding_data à profile_data
           onboarding_completed: true,
           updated_at: new Date().toISOString()
         });
