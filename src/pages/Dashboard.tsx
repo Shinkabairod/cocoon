@@ -1,6 +1,9 @@
-// src/pages/Dashboard.tsx - Version complètement corrigée
+// src/pages/Dashboard.tsx - Version améliorée avec design cohérent et VRAIS composants
+import SettingsSection from '@/components/dashboard/SettingsSection';
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useWorkspace } from '@/hooks/useWorkspace';
+import { DashboardStats } from '@/components/dashboard/EmojiColorPicker';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { useUserStats } from '@/hooks/useUserStats';
 import { huggingfaceService } from '@/services/huggingfaceService';
@@ -11,6 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
+import MyWorkspace from '@/components/dashboard/MyWorkspace';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -84,15 +88,15 @@ import {
   BookOpen
 } from 'lucide-react';
 
-// ✅ IMPORTS CORRIGES - Composants Dashboard existants
+// Import des composants Dashboard EXISTANTS
+import UserSettingsSection from '@/components/dashboard/UserSettingsSection';
 import OnboardingDataSection from '@/components/dashboard/OnboardingDataSection';
 import CreationsSection from '@/components/dashboard/CreationsSection';
-import SettingsSection from '@/components/dashboard/SettingsSection';
-import ConnectionTest from '@/components/dashboard/ConnectionTest';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const { onboardingData } = useOnboarding();
+  const { getStats } = useWorkspace();
   const { data: userStats, isLoading, refetch } = useUserStats(user?.id);
   const { toast } = useToast();
   const [activePage, setActivePage] = useState('welcome');
@@ -126,400 +130,910 @@ const Dashboard = () => {
 
   // États pour les modales
   const [showNewFolderModal, setShowNewFolderModal] = useState(false);
-  const [newFolder, setNewFolder] = useState({ name: '', emoji: '📁', category: 'resources' });
+  const [showNewItemModal, setShowNewItemModal] = useState(false);
+  const [showRenameFolderModal, setShowRenameFolderModal] = useState(false);
+  const [showFilePreviewModal, setShowFilePreviewModal] = useState(false);
+  const [selectedFolder, setSelectedFolder] = useState(null);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [newFolderName, setNewFolderName] = useState('');
+  const [newFolderEmoji, setNewFolderEmoji] = useState('📁');
+  const [renameFolderData, setRenameFolderData] = useState({ id: '', name: '', emoji: '' });
 
-  // ✅ FONCTION UTILITAIRES AJOUTÉES
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Bonjour';
-    if (hour < 18) return 'Bon après-midi';
-    return 'Bonsoir';
-  };
+  // États pour nouveau item
+  const [newItemData, setNewItemData] = useState({
+    name: '',
+    type: 'text',
+    content: '',
+    url: '',
+    file: null
+  });
 
-  const getUserName = () => {
-    return user?.user_metadata?.full_name || 
-           user?.email?.split('@')[0] || 
-           'Créateur';
-  };
-
-  // ✅ FONCTION DE NAVIGATION
-  const handleNavigation = (page: string) => {
-    setActivePage(page);
-    if (isMobile) setSidebarOpen(false);
-  };
-
-  // Menu de navigation
-  const navigationItems = [
-    { id: 'welcome', label: 'Accueil', icon: Home },
-    { id: 'chat', label: 'Chat IA', icon: MessageSquare },
-    { id: 'resources', label: 'Ressources', icon: Folder },
-    { id: 'creations', label: 'Créations', icon: Sparkles },
-    { id: 'stats', label: 'Analytics', icon: BarChart3 },
-    { id: 'onboarding', label: 'Mon Profil', icon: User },
-    { id: 'settings', label: 'Paramètres', icon: Settings },
+  // Navigation items pour la sidebar (ORDRE MODIFIÉ)
+  const navItems = [
+    { id: 'welcome', icon: Home, label: "Home", path: "/dashboard" },
+    { id: 'workspace', icon: FolderOpen, label: "My Workspace", path: "/dashboard/workspace" },
+    { id: 'creation', icon: FileText, label: "My Creations", path: "/dashboard/scripts" },
+    { id: 'monetization', icon: Crown, label: "My AI Bot", path: "/dashboard/monetization" },
+    { id: 'settings', icon: Settings, label: "Settings", path: "/dashboard/settings" },
+];
+  
+  const accountItems = [
+    { icon: HelpCircle, label: "Help & Support", path: "/dashboard/support" },
   ];
 
-  // ✅ COMPOSANT SIDEBAR COMPLET
-  const Sidebar = () => (
-    <div className={`
-      ${isMobile ? 'fixed inset-y-0 left-0 z-50 w-64' : 'w-64'} 
-      bg-white border-r border-gray-200 flex flex-col
-      ${isMobile && !sidebarOpen ? 'transform -translate-x-full' : ''}
-      transition-transform duration-200 ease-in-out
-    `}>
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b">
-        <div className="flex items-center space-x-2">
-          <div className="h-8 w-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
-            <Sparkles className="h-4 w-4 text-white" />
-          </div>
-          <span className="font-bold text-lg">Cocoon AI</span>
-        </div>
-        {isMobile && (
-          <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(false)}>
-            <X className="h-4 w-4" />
-          </Button>
-        )}
-      </div>
-
-      {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2">
-        {navigationItems.map((item) => (
-          <Button
-            key={item.id}
-            variant={activePage === item.id ? "default" : "ghost"}
-            className="w-full justify-start"
-            onClick={() => handleNavigation(item.id)}
-          >
-            <item.icon className="h-4 w-4 mr-2" />
-            {item.label}
-          </Button>
-        ))}
-      </nav>
-
-      {/* Footer */}
-      <div className="p-4 border-t">
-        <div className="flex items-center space-x-2">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={user?.user_metadata?.avatar_url} />
-            <AvatarFallback>{getUserName().charAt(0).toUpperCase()}</AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">{getUserName()}</p>
-            <p className="text-xs text-muted-foreground truncate">{user?.email}</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
-  // ✅ PAGE D'ACCUEIL AVEC GESTION ISLOADING
-  const WelcomePage = () => (
-    <div className="space-y-6">
-      {/* Header de bienvenue */}
-      <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg p-6 text-white">
-        <h1 className="text-2xl font-bold mb-2">
-          {getGreeting()} {getUserName()} ! 👋
-        </h1>
-        <p className="opacity-90">
-          Prêt à créer du contenu exceptionnel aujourd'hui ?
-        </p>
-      </div>
-
-      {/* Stats rapides avec loading */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <MessageSquare className="h-8 w-8 text-blue-500" />
-              <div>
-                <p className="text-2xl font-bold">
-                  {isLoading ? '...' : (userStats?.totalChats || 0)}
-                </p>
-                <p className="text-sm text-muted-foreground">Conversations IA</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <FileText className="h-8 w-8 text-green-500" />
-              <div>
-                <p className="text-2xl font-bold">
-                  {isLoading ? '...' : (userStats?.totalScripts || 0)}
-                </p>
-                <p className="text-sm text-muted-foreground">Scripts créés</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <Upload className="h-8 w-8 text-orange-500" />
-              <div>
-                <p className="text-2xl font-bold">
-                  {isLoading ? '...' : (userStats?.totalUploads || 0)}
-                </p>
-                <p className="text-sm text-muted-foreground">Ressources ajoutées</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-2">
-              <TrendingUp className="h-8 w-8 text-purple-500" />
-              <div>
-                <p className="text-2xl font-bold">
-                  {isLoading ? '...' : (userStats?.streak || 0)}
-                </p>
-                <p className="text-sm text-muted-foreground">Jours actifs</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Actions rapides */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Actions rapides</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Button 
-              className="h-20 flex flex-col items-center justify-center space-y-2"
-              onClick={() => handleNavigation('chat')}
-            >
-              <MessageSquare className="h-6 w-6" />
-              <span>Nouveau Chat</span>
-            </Button>
-            
-            <Button 
-              variant="outline"
-              className="h-20 flex flex-col items-center justify-center space-y-2"
-              onClick={() => handleNavigation('resources')}
-            >
-              <Upload className="h-6 w-6" />
-              <span>Ajouter Ressource</span>
-            </Button>
-            
-            <Button 
-              variant="outline"
-              className="h-20 flex flex-col items-center justify-center space-y-2"
-              onClick={() => handleNavigation('creations')}
-            >
-              <Sparkles className="h-6 w-6" />
-              <span>Mes Créations</span>
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Test de connexion */}
-      <ConnectionTest />
-    </div>
-  );
-
-  // ✅ CHAT IA PAGE COMPLETE
-  const ChatPage = () => {
-    const handleSendMessage = async () => {
-      if (!chatInput.trim() || isGenerating) return;
-      
-      const userMessage = { text: chatInput, isUser: true };
-      setChatMessages(prev => [...prev, userMessage]);
-      setChatInput('');
+  // Toutes vos fonctions existantes CONSERVÉES
+  const handleExecuteCustomButton = async (buttonData, placeholderValues) => {
+    try {
       setIsGenerating(true);
+      // Utilise la méthode askAI avec le prompt comme question
+      const result = await huggingfaceService.askAI(buttonData.prompt);
+      setGeneratedContent(result);
+      toast({
+        title: "✅ Content Generated",
+        description: "Your personalized content is ready!"
+      });
+    } catch (error) {
+      console.error('Generation error:', error);
+      toast({
+        title: "❌ Error",
+        description: "Unable to generate content",
+        variant: "destructive"
+      });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
-      try {
-        // Simuler appel API IA
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        const aiResponse = { text: "Voici ma réponse à votre demande...", isUser: false };
-        setChatMessages(prev => [...prev, aiResponse]);
-      } catch (error) {
-        toast({
-          title: "Erreur",
-          description: "Impossible de contacter l'IA",
-          variant: "destructive"
-        });
-      } finally {
-        setIsGenerating(false);
-      }
-    };
+  const handleSendMessage = async () => {
+    if (!chatInput.trim()) return;
 
+    const userMessage = { type: 'user', content: chatInput };
+    setChatMessages(prev => [...prev, userMessage]);
+    setChatInput('');
+
+    try {
+      const response = await huggingfaceService.askAI(chatInput);
+      const botMessage = { type: 'bot', content: response };
+      setChatMessages(prev => [...prev, botMessage]);
+    } catch (error) {
+      console.error('Chat error:', error);
+      const errorMessage = { type: 'bot', content: 'Sorry, I cannot respond at the moment.' };
+      setChatMessages(prev => [...prev, errorMessage]);
+    }
+  };
+
+  const handleScriptGeneration = async () => {
+    if (!scriptTopic.trim()) {
+      toast({
+        title: "❌ Missing Topic",
+        description: "Please enter a topic for the script."
+      });
+      return;
+    }
+
+    try {
+      setIsGenerating(true);
+      
+      // Utilise generateScript avec le topic
+      const result = await huggingfaceService.generateScript(scriptTopic);
+      setGeneratedContent(result);
+      setIsGenerating(false);
+      
+      toast({
+        title: "✅ Script Generated",
+        description: "Your personalized script is ready!"
+      });
+      
+    } catch (error) {
+      console.error('Script generation error:', error);
+      toast({
+        title: "❌ Error",
+        description: "Unable to generate script",
+        variant: "destructive"
+      });
+      setIsGenerating(false);
+    }
+  };
+
+  // Fonction pour obtenir les informations utilisateur
+  const getUserDisplayInfo = () => {
+    const displayName = user?.user_metadata?.full_name || user?.email?.split('@')[0] || 'User';
+    const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+    return { displayName, initials };
+  };
+
+  const { displayName, initials } = getUserDisplayInfo();
+
+  // Fonctions de rendu pour chaque page avec design amélioré
+  // Remplacez votre fonction renderWelcomePage() par celle-ci dans Dashboard.tsx :
+
+  // Dans votre Dashboard.tsx, REMPLACEZ renderWelcomePage() par ceci :
+
+  const renderWelcomePage = () => {
+    // ✅ Récupérer les vraies stats du Workspace en temps réel
+    const realStats = getStats();
+  
     return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold">Chat avec l'IA</h2>
-          <Badge variant="secondary">En ligne</Badge>
-        </div>
-
-        <Card className="h-96 flex flex-col">
-          <CardHeader>
-            <CardTitle className="text-lg">Conversation</CardTitle>
-          </CardHeader>
-          <CardContent className="flex-1 flex flex-col">
-            <div className="flex-1 overflow-y-auto space-y-4 mb-4">
-              {chatMessages.length === 0 ? (
-                <div className="text-center text-muted-foreground py-8">
-                  <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Commencez une conversation avec votre assistant IA</p>
+      <div className="space-y-8">
+        {/* ✅ VRAIES STATS EN TEMPS RÉEL - CARDS COLORÉES */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200 hover:shadow-lg transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-blue-500 rounded-xl p-3 shadow-lg">
+                  <FolderOpen className="h-8 w-8 text-white" />
                 </div>
-              ) : (
-                chatMessages.map((message, index) => (
-                  <div
-                    key={index}
-                    className={`flex ${message.isUser ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div
-                      className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                        message.isUser
-                          ? 'bg-primary text-primary-foreground'
-                          : 'bg-muted'
-                      }`}
-                    >
-                      {message.text}
-                    </div>
+                <div>
+                  <p className="text-sm font-medium text-blue-700">Total Dossiers</p>
+                  <p className="text-3xl font-bold text-blue-900">
+                    {loading ? (
+                      <div className="w-8 h-8 bg-blue-200 rounded animate-pulse"></div>
+                    ) : (
+                      realStats.totalFolders
+                    )}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200 hover:shadow-lg transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-green-500 rounded-xl p-3 shadow-lg">
+                  <FileText className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-green-700">Total Fichiers</p>
+                  <p className="text-3xl font-bold text-green-900">
+                    {loading ? (
+                      <div className="w-8 h-8 bg-green-200 rounded animate-pulse"></div>
+                    ) : (
+                      realStats.totalFiles
+                    )}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200 hover:shadow-lg transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-purple-500 rounded-xl p-3 shadow-lg">
+                  <User className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-purple-700">Personnel</p>
+                  <p className="text-3xl font-bold text-purple-900">
+                    {loading ? (
+                      <div className="w-8 h-8 bg-purple-200 rounded animate-pulse"></div>
+                    ) : (
+                      realStats.personalFiles
+                    )}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="bg-gradient-to-br from-orange-50 to-orange-100 border-orange-200 hover:shadow-lg transition-shadow">
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-orange-500 rounded-xl p-3 shadow-lg">
+                  <Upload className="h-8 w-8 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-orange-700">Ressources</p>
+                  <p className="text-3xl font-bold text-orange-900">
+                    {loading ? (
+                      <div className="w-8 h-8 bg-orange-200 rounded animate-pulse"></div>
+                    ) : (
+                      realStats.resourceFiles
+                    )}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        
+        {/* Hero Section avec design cohérent */}
+        <div className="bg-gradient-to-br from-black via-gray-900 to-black rounded-2xl p-8 text-white overflow-hidden relative">
+          <div className="absolute inset-0 opacity-[0.03]" style={{
+            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='1'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
+          }} />
+          
+          <div className="relative z-10">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h1 className="text-3xl font-bold mb-2">
+                  Hello {displayName}! 👋
+                </h1>
+                <p className="text-gray-300 text-lg">
+                  Ready to create some amazing content today?
+                </p>
+              </div>
+              <div className="flex items-center gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-white">
+                    {loading ? '...' : realStats.totalFiles}
                   </div>
-                ))
-              )}
+                  <div className="text-sm text-gray-400">Files Created</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-white">
+                    {loading ? '...' : realStats.totalFolders}
+                  </div>
+                  <div className="text-sm text-gray-400">Folders</div>
+                </div>
+              </div>
             </div>
             
-            <div className="flex space-x-2">
-              <Textarea
-                placeholder="Écrivez votre message..."
-                value={chatInput}
-                onChange={(e) => setChatInput(e.target.value)}
-                className="flex-1"
-                rows={2}
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSendMessage();
-                  }
-                }}
-              />
-              <Button 
-                onClick={handleSendMessage}
-                disabled={!chatInput.trim() || isGenerating}
-              >
-                {isGenerating ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Send className="h-4 w-4" />
-                )}
-              </Button>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="bg-white/10 backdrop-blur rounded-lg p-4 hover:bg-white/15 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="bg-blue-500 rounded-lg p-2">
+                    <FileText className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">Quick Actions</p>
+                    <p className="text-sm text-gray-300">Create content fast</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white/10 backdrop-blur rounded-lg p-4 hover:bg-white/15 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="bg-purple-500 rounded-lg p-2">
+                    <Sparkles className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">AI Assistant</p>
+                    <p className="text-sm text-gray-300">Smart suggestions</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-white/10 backdrop-blur rounded-lg p-4 hover:bg-white/15 transition-colors">
+                <div className="flex items-center gap-3">
+                  <div className="bg-green-500 rounded-lg p-2">
+                    <Target className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <p className="font-semibold">Analytics</p>
+                    <p className="text-sm text-gray-300">Track progress</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        {/* Quick Action Cards avec vraies stats */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105" onClick={() => setActivePage('workspace')}>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-blue-100 rounded-lg p-3">
+                  <FolderOpen className="h-6 w-6 text-blue-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">My Workspace</h3>
+                  <p className="text-sm text-gray-600">Organize your files</p>
+                  <p className="text-xs text-blue-600 mt-1">
+                    {loading ? 'Loading...' : `${realStats.totalFiles} files, ${realStats.totalFolders} folders`}
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+  
+          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105" onClick={() => setActivePage('creation')}>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-green-100 rounded-lg p-3">
+                  <FileText className="h-6 w-6 text-green-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Create Content</h3>
+                  <p className="text-sm text-gray-600">Generate scripts & ideas</p>
+                  <p className="text-xs text-green-600 mt-1">AI-powered creation</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+  
+          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105" onClick={() => setActivePage('monetization')}>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-purple-100 rounded-lg p-3">
+                  <Crown className="h-6 w-6 text-purple-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">AI Bot</h3>
+                  <p className="text-sm text-gray-600">Advanced features</p>
+                  <p className="text-xs text-purple-600 mt-1">Premium coming soon</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+  
+          <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer hover:scale-105" onClick={() => setActivePage('settings')}>
+            <CardContent className="p-6">
+              <div className="flex items-center gap-4">
+                <div className="bg-gray-100 rounded-lg p-3">
+                  <Settings className="h-6 w-6 text-gray-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-gray-900">Settings</h3>
+                  <p className="text-sm text-gray-600">Manage your account</p>
+                  <p className="text-xs text-gray-600 mt-1">Profile & preferences</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+  
+        {/* Recent Activity avec vraies données */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Clock className="h-5 w-5" />
+              Recent Activity
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <div className="bg-blue-100 rounded-full p-2">
+                  <FileText className="h-4 w-4 text-blue-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium">Workspace synchronized</p>
+                  <p className="text-sm text-gray-600">
+                    {loading 
+                      ? 'Loading workspace data...' 
+                      : `${realStats.personalFiles} personal files, ${realStats.resourceFiles} resources loaded`
+                    }
+                  </p>
+                </div>
+                <span className="text-xs text-gray-500">Just now</span>
+              </div>
+              
+              <div className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
+                <div className="bg-green-100 rounded-full p-2">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                </div>
+                <div className="flex-1">
+                  <p className="font-medium">Profile synchronized</p>
+                  <p className="text-sm text-gray-600">All your data is up to date and saved</p>
+                </div>
+                <span className="text-xs text-gray-500">2 min ago</span>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
     );
-  }; lg:max-w-md px-4 py-2 rounded-lg ${
-                      message.isUser
-                        ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted'
-                    }`}
-                  >
-                    {message.text}
-                  </div>
-                </div>
-              ))
-            )}
+  };
+
+  const renderResourcesPage = () => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-bold flex items-center gap-2">
+            <Folder className="h-6 w-6" />
+            <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">My Resources</span>
+          </h2>
+          <p className="text-gray-600">
+            Organize your files and resources for AI
+          </p>
+        </div>
+        <Button 
+          onClick={() => setShowNewFolderModal(true)}
+          className="bg-black text-white hover:bg-gray-800 transition-colors"
+        >
+          <Plus className="h-4 w-4 mr-2" />
+          New Folder
+        </Button>
+      </div>
+
+      {/* Catégories */}
+      <div className="flex gap-2">
+        <Button
+          variant={activeCategory === 'resources' ? 'default' : 'outline'}
+          onClick={() => setActiveCategory('resources')}
+          className={`gap-2 ${activeCategory === 'resources' ? 'bg-black text-white' : ''}`}
+        >
+          <Folder className="h-4 w-4" />
+          Resources
+        </Button>
+        <Button
+          variant={activeCategory === 'personal' ? 'default' : 'outline'}
+          onClick={() => setActiveCategory('personal')}
+          className={`gap-2 ${activeCategory === 'personal' ? 'bg-black text-white' : ''}`}
+        >
+          <User className="h-4 w-4" />
+          Personal
+        </Button>
+      </div>
+
+      {/* Grille des dossiers avec design de la landing page */}
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {folders[activeCategory].map((folder) => (
+          <div key={folder.id} className="bg-gradient-to-br from-violet-50/50 to-purple-50/50 border border-violet-200/30 rounded-xl p-6 hover:shadow-lg transition-all duration-200 hover:-translate-y-1 cursor-pointer backdrop-blur-sm">
+            <div className="text-center">
+              <div className="text-3xl mb-3 filter grayscale-0">{folder.emoji}</div>
+              <h3 className="font-semibold text-gray-900 mb-1">{folder.name}</h3>
+              <p className="text-xs text-gray-600">{folder.items.length} items</p>
+            </div>
           </div>
-          
-          <div className="flex space-x-2">
-            <Textarea
-              placeholder="Écrivez votre message..."
-              value={chatInput}
-              onChange={(e) => setChatInput(e.target.value)}
-              className="flex-1"
-              rows={2}
-            />
-            <Button 
-              onClick={() => {/* Ajouter logique de chat */}}
-              disabled={!chatInput.trim() || isGenerating}
-            >
-              {isGenerating ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
-                <Send className="h-4 w-4" />
-              )}
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
+        ))}
+      </div>
     </div>
   );
 
-  // ✅ RENDU PRINCIPAL COMPLET
-  return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Overlay mobile */}
-      {isMobile && sidebarOpen && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 z-40"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
+  // Fonction pour ajouter un nouvel item
+  const addItem = async () => {
+    if (!newItemData.name.trim() || !selectedFolder) return;
 
-      {/* Sidebar */}
-      <Sidebar />
+    try {
+      const newItem = {
+        id: Date.now().toString(),
+        name: newItemData.name,
+        type: newItemData.type,
+        content: newItemData.content,
+        url: newItemData.url,
+        file: newItemData.file,
+        createdAt: new Date().toISOString(),
+        source: 'manual'
+      };
 
-      {/* Contenu principal */}
-      <div className="flex-1 flex flex-col">
-        {/* Header mobile */}
-        {isMobile && (
-          <div className="bg-white border-b p-4 flex items-center justify-between">
-            <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(true)}>
-              <Menu className="h-4 w-4" />
+      setFolders(prev => ({
+        ...prev,
+        [activeCategory]: prev[activeCategory].map(folder =>
+          folder.id === selectedFolder.id
+            ? { ...folder, items: [...folder.items, newItem] }
+            : folder
+        )
+      }));
+
+      setShowNewItemModal(false);
+      setNewItemData({ name: '', type: 'text', content: '', url: '', file: null });
+      setSelectedFolder(null);
+
+      toast({
+        title: "✅ Item Added",
+        description: `${newItemData.name} has been added to ${selectedFolder.name}`
+      });
+    } catch (error) {
+      console.error('Error adding item:', error);
+      toast({
+        title: "❌ Error",
+        description: "Unable to add item",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Fonction pour upload de fichier
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setNewItemData(prev => ({ ...prev, file, name: file.name }));
+    }
+  };
+
+  // Rendu conditionnel du contenu principal
+  const renderMainContent = () => {
+    switch(activePage) {
+      case 'welcome': 
+        return renderWelcomePage();
+      case 'resources': 
+        return renderResourcesPage();
+      case 'creation': 
+        return (
+          <CreationsSection 
+            folders={folders}
+            onExecuteButton={handleExecuteCustomButton}
+          />
+        );
+      case 'monetization': 
+        return (
+          <div className="text-center py-12">
+            <Crown className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
+            <h2 className="text-2xl font-semibold mb-2">
+              <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">My AI Bot</span>
+            </h2>
+            <p className="text-gray-600 mb-6">Premium feature - Coming soon</p>
+            <Button className="bg-black text-white" disabled>
+              In Development
             </Button>
-            <h1 className="font-semibold">Cocoon AI</h1>
-            <div className="w-8" />
+          </div>
+        );
+      case 'settings': 
+        return <SettingsSection />;
+      case 'workspace':  // ✅ NOUVEAU
+        return <MyWorkspace />;
+      default:
+        return renderWelcomePage();
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      {/* Header amélioré */}
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-40">
+        <div className="flex items-center justify-between h-16 px-6">
+          {/* Logo et menu mobile */}
+          <div className="flex items-center gap-4">
+            {isMobile && (
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setSidebarOpen(true)}
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+            )}
+            
+            <div className="flex items-center gap-3">
+              <div className="relative">
+                <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                  <div className="w-3 h-3 bg-white transform rotate-45 rounded-sm"></div>
+                </div>
+              </div>
+              <span className="text-xl font-bold">Cocoon AI</span>
+            </div>
+          </div>
+
+          {/* Search bar */}
+          <div className="hidden md:flex items-center flex-1 max-w-md mx-6">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+              <input 
+                type="text"
+                placeholder="Search..."
+                className="w-full pl-10 pr-4 py-2 bg-gray-100 border-none rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:bg-white transition-all"
+              />
+            </div>
+          </div>
+
+          {/* Actions utilisateur */}
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setActiveModal('chat')}
+              className="relative"
+            >
+              <MessageSquare className="h-5 w-5" />
+            </Button>
+            
+            <Button
+              variant="ghost"
+              size="sm"
+              className="relative"
+            >
+              <Bell className="h-5 w-5" />
+              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+            </Button>
+            
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">{initials}</span>
+              </div>
+              <div className="hidden md:block">
+                <div className="font-medium">{displayName}</div>
+                <div className="text-xs text-gray-500">Pro Plan</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="flex">
+        {/* Sidebar Desktop */}
+        {!isMobile && (
+          <aside className="w-64 bg-white border-r border-gray-200 h-[calc(100vh-64px)] sticky top-16 flex flex-col">
+            <nav className="flex-1 p-4">
+              <div className="space-y-1">
+                {navItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setActivePage(item.id)}
+                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-all ${
+                      activePage === item.id 
+                        ? 'bg-black text-white' 
+                        : 'text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    <item.icon className="h-5 w-5" />
+                    <span className="font-medium">{item.label}</span>
+                  </button>
+                ))}
+              </div>
+              
+              <div className="mt-8">
+                <h3 className="text-xs uppercase font-medium text-gray-500 mb-2 px-3">
+                  Account
+                </h3>
+                <div className="space-y-1">
+                  {accountItems.map((item, index) => (
+                    <button
+                      key={index}
+                      className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left text-gray-700 hover:bg-gray-100 transition-all"
+                    >
+                      <item.icon className="h-5 w-5" />
+                      <span className="font-medium">{item.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </nav>
+            
+            <div className="p-4 border-t">
+              <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left text-gray-500 hover:bg-gray-100 transition-all">
+                <LogOut className="h-5 w-5" />
+                <span className="font-medium">Sign Out</span>
+              </button>
+            </div>
+          </aside>
+        )}
+
+        {/* Sidebar Mobile */}
+        {isMobile && sidebarOpen && (
+          <div className="fixed inset-0 z-50">
+            <div className="fixed inset-0 bg-black/50" onClick={() => setSidebarOpen(false)} />
+            <aside className="fixed left-0 top-0 h-full w-64 bg-white shadow-xl">
+              <div className="flex items-center justify-between p-4 border-b">
+                <span className="font-semibold">Menu</span>
+                <Button variant="ghost" size="sm" onClick={() => setSidebarOpen(false)}>
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+              <nav className="p-4">
+                <div className="space-y-1">
+                  {navItems.map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setActivePage(item.id);
+                        setSidebarOpen(false);
+                      }}
+                      className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left transition-all ${
+                        activePage === item.id 
+                          ? 'bg-black text-white' 
+                          : 'text-gray-700 hover:bg-gray-100'
+                      }`}
+                    >
+                      <item.icon className="h-5 w-5" />
+                      <span className="font-medium">{item.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </nav>
+            </aside>
           </div>
         )}
 
-        {/* Contenu */}
-        <main className="flex-1 p-6">
-          {activePage === 'welcome' && <WelcomePage />}
-          {activePage === 'chat' && <ChatPage />}
-          {activePage === 'resources' && (
-            <div>
-              <h2 className="text-2xl font-bold mb-6">Mes Ressources</h2>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="text-center text-muted-foreground">
-                    <Folder className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>Section Ressources en développement</p>
-                    <p className="text-sm">Bientôt disponible pour gérer vos fichiers</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-          {activePage === 'creations' && <CreationsSection />}
-          {activePage === 'stats' && (
-            <div className="space-y-6">
-              <h2 className="text-2xl font-bold">Analytics</h2>
-              <Card>
-                <CardContent className="p-6">
-                  <div className="text-center text-muted-foreground">
-                    <BarChart3 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                    <p>Analytics en développement</p>
-                    <p className="text-sm">Statistiques détaillées bientôt disponibles</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
-          {activePage === 'onboarding' && <OnboardingDataSection />}
-          {activePage === 'settings' && <SettingsSection />}
+        {/* Main Content */}
+        <main className={`flex-1 p-6 ${isMobile ? '' : 'ml-0'}`}>
+          {renderMainContent()}
         </main>
       </div>
+
+      {/* Modal Chat IA */}
+      {activeModal === 'chat' && (
+        <Dialog open={true} onOpenChange={() => setActiveModal(null)}>
+          <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
+            <DialogHeader>
+              <DialogTitle className="flex items-center gap-2">
+                <MessageSquare className="h-5 w-5" />
+                AI Assistant
+              </DialogTitle>
+            </DialogHeader>
+            
+            <div className="space-y-4">
+              {/* Messages */}
+              <div className="bg-gray-50 rounded-lg p-4 max-h-96 overflow-y-auto">
+                {chatMessages.length > 0 ? (
+                  <div className="space-y-4">
+                    {chatMessages.map((message, index) => (
+                      <div key={index} className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}>
+                        <div className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                          message.type === 'user' 
+                            ? 'bg-black text-white' 
+                            : 'bg-white border shadow-sm'
+                        }`}>
+                          {message.content}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center py-8 text-gray-500">
+                    <MessageSquare className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                    <p>Start a conversation with your AI assistant</p>
+                  </div>
+                )}
+              </div>
+              
+              {/* Input */}
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Type your message..."
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  className="flex-1"
+                />
+                <Button 
+                  onClick={handleSendMessage}
+                  disabled={!chatInput.trim()}
+                  className="bg-black text-white hover:bg-gray-800"
+                >
+                  <Send className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Modales existantes pour les dossiers */}
+      {showNewFolderModal && (
+        <Dialog open={true} onOpenChange={() => setShowNewFolderModal(false)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>New Folder</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-4">
+              <div>
+                <Label>Folder Name</Label>
+                <Input
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  placeholder="Folder name"
+                />
+              </div>
+              <div>
+                <Label>Emoji</Label>
+                <Input
+                  value={newFolderEmoji}
+                  onChange={(e) => setNewFolderEmoji(e.target.value)}
+                  placeholder="📁"
+                />
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  onClick={() => {
+                    // Logique de création de dossier
+                    const newFolder = {
+                      id: Date.now().toString(),
+                      name: newFolderName,
+                      emoji: newFolderEmoji,
+                      items: []
+                    };
+                    
+                    setFolders(prev => ({
+                      ...prev,
+                      [activeCategory]: [...prev[activeCategory], newFolder]
+                    }));
+                    
+                    setShowNewFolderModal(false);
+                    setNewFolderName('');
+                    setNewFolderEmoji('📁');
+                    
+                    toast({
+                      title: "✅ Folder Created",
+                      description: `${newFolderName} has been created successfully`
+                    });
+                  }}
+                  className="bg-black text-white"
+                >
+                  Create
+                </Button>
+                <Button variant="outline" onClick={() => setShowNewFolderModal(false)}>
+                  Cancel
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      {/* Modal pour ajouter un nouvel item */}
+      {showNewItemModal && (
+        <Dialog open={true} onOpenChange={() => setShowNewItemModal(false)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New Item</DialogTitle>
+              <DialogDescription>
+                Add a new item to {selectedFolder?.name}
+              </DialogDescription>
+            </DialogHeader>
+            
+            <div className="space-y-4">
+              <div>
+                <Label htmlFor="itemName">Name</Label>
+                <Input
+                  id="itemName"
+                  placeholder="Item name"
+                  value={newItemData.name}
+                  onChange={(e) => setNewItemData(prev => ({ ...prev, name: e.target.value }))}
+                />
+              </div>
+              
+              <div>
+                <Label htmlFor="itemType">Type</Label>
+                <Select value={newItemData.type} onValueChange={(value) => setNewItemData(prev => ({ ...prev, type: value }))}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="text">Text Note</SelectItem>
+                    <SelectItem value="file">File</SelectItem>
+                    <SelectItem value="link">Link</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              {newItemData.type === 'text' && (
+                <div>
+                  <Label htmlFor="itemContent">Content</Label>
+                  <Textarea
+                    id="itemContent"
+                    placeholder="Enter your text content..."
+                    value={newItemData.content}
+                    onChange={(e) => setNewItemData(prev => ({ ...prev, content: e.target.value }))}
+                    rows={4}
+                  />
+                </div>
+              )}
+              
+              {newItemData.type === 'file' && (
+                <div>
+                  <Label htmlFor="itemFile">File</Label>
+                  <Input
+                    id="itemFile"
+                    type="file"
+                    onChange={handleFileUpload}
+                  />
+                  {newItemData.file && (
+                    <div className="mt-2 p-2 bg-gray-50 rounded text-sm">
+                      Selected file: {newItemData.file.name}
+                    </div>
+                  )}
+                </div>
+              )}
+              
+              {newItemData.type === 'link' && (
+                <div>
+                  <Label htmlFor="itemUrl">URL</Label>
+                  <Input
+                    id="itemUrl"
+                    type="url"
+                    placeholder="https://..."
+                    value={newItemData.url}
+                    onChange={(e) => setNewItemData(prev => ({ ...prev, url: e.target.value }))}
+                  />
+                </div>
+              )}
+              
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => setShowNewItemModal(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={addItem} className="bg-black text-white">
+                  Add Item
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 };
