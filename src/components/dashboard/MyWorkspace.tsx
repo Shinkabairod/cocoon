@@ -1,9 +1,9 @@
-// src/components/dashboard/MyWorkspace.tsx - Version propre et fonctionnelle
 import React, { useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import {
   Dialog,
@@ -33,45 +33,48 @@ import {
   Search,
   RefreshCw,
   Edit,
-  Trash2
+  Trash2,
+  Eye,
+  X,
+  ArrowLeft,
+  Type
 } from 'lucide-react';
 
-// File type icons mapping
-const fileTypeIcons = {
-  pdf: FileText,
-  doc: FileText,
-  docx: FileText,
-  txt: FileText,
-  image: Image,
-  jpg: Image,
-  jpeg: Image,
-  png: Image,
-  gif: Image,
-  video: Video,
-  mp4: Video,
-  avi: Video,
-  mkv: Video,
-  audio: Music,
-  mp3: Music,
-  wav: Music,
-  link: Link,
-  default: File
-};
-
-// Color schemes for folders
-const colorSchemes = [
-  { bg: 'bg-blue-50', border: 'border-blue-200', text: 'text-blue-700', accent: 'bg-blue-500' },
-  { bg: 'bg-green-50', border: 'border-green-200', text: 'text-green-700', accent: 'bg-green-500' },
-  { bg: 'bg-purple-50', border: 'border-purple-200', text: 'text-purple-700', accent: 'bg-purple-500' },
-  { bg: 'bg-orange-50', border: 'border-orange-200', text: 'text-orange-700', accent: 'bg-orange-500' },
-  { bg: 'bg-pink-50', border: 'border-pink-200', text: 'text-pink-700', accent: 'bg-pink-500' },
-  { bg: 'bg-yellow-50', border: 'border-yellow-200', text: 'text-yellow-700', accent: 'bg-yellow-500' },
-  { bg: 'bg-indigo-50', border: 'border-indigo-200', text: 'text-indigo-700', accent: 'bg-indigo-500' },
-  { bg: 'bg-red-50', border: 'border-red-200', text: 'text-red-700', accent: 'bg-red-500' },
+// Modern 2D icons with colors (inspired by Notion style)
+const modernIcons = [
+  { icon: '📄', name: 'Document', color: 'bg-blue-500' },
+  { icon: '📁', name: 'Folder', color: 'bg-yellow-500' },
+  { icon: '🎯', name: 'Target', color: 'bg-red-500' },
+  { icon: '💡', name: 'Idea', color: 'bg-yellow-400' },
+  { icon: '🏢', name: 'Business', color: 'bg-gray-600' },
+  { icon: '📱', name: 'Mobile', color: 'bg-purple-500' },
+  { icon: '⚡', name: 'Energy', color: 'bg-orange-500' },
+  { icon: '🎨', name: 'Design', color: 'bg-pink-500' },
+  { icon: '🎬', name: 'Video', color: 'bg-red-600' },
+  { icon: '📊', name: 'Analytics', color: 'bg-green-500' },
+  { icon: '🌟', name: 'Star', color: 'bg-yellow-300' },
+  { icon: '🔧', name: 'Tools', color: 'bg-gray-500' },
+  { icon: '📚', name: 'Books', color: 'bg-indigo-500' },
+  { icon: '🎵', name: 'Music', color: 'bg-purple-600' },
+  { icon: '🖼️', name: 'Images', color: 'bg-blue-400' },
+  { icon: '💼', name: 'Work', color: 'bg-gray-700' },
+  { icon: '🎪', name: 'Fun', color: 'bg-pink-400' },
+  { icon: '🌍', name: 'Global', color: 'bg-green-600' },
+  { icon: '🔒', name: 'Security', color: 'bg-red-700' },
+  { icon: '📈', name: 'Growth', color: 'bg-emerald-500' }
 ];
 
-// Available emojis for folders
-const availableEmojis = ['📁', '🎬', '🎨', '📱', '💡', '🎯', '🏢', '⚡', '📚', '🎵', '🖼️', '📊', '💼', '🔧', '🎪', '🌟'];
+// Color schemes with transparency
+const colorSchemes = [
+  { bg: 'bg-blue-50/70', border: 'border-blue-200/50', text: 'text-blue-700', accent: 'bg-blue-500/90', hover: 'hover:bg-blue-100/80' },
+  { bg: 'bg-green-50/70', border: 'border-green-200/50', text: 'text-green-700', accent: 'bg-green-500/90', hover: 'hover:bg-green-100/80' },
+  { bg: 'bg-purple-50/70', border: 'border-purple-200/50', text: 'text-purple-700', accent: 'bg-purple-500/90', hover: 'hover:bg-purple-100/80' },
+  { bg: 'bg-orange-50/70', border: 'border-orange-200/50', text: 'text-orange-700', accent: 'bg-orange-500/90', hover: 'hover:bg-orange-100/80' },
+  { bg: 'bg-pink-50/70', border: 'border-pink-200/50', text: 'text-pink-700', accent: 'bg-pink-500/90', hover: 'hover:bg-pink-100/80' },
+  { bg: 'bg-yellow-50/70', border: 'border-yellow-200/50', text: 'text-yellow-700', accent: 'bg-yellow-500/90', hover: 'hover:bg-yellow-100/80' },
+  { bg: 'bg-indigo-50/70', border: 'border-indigo-200/50', text: 'text-indigo-700', accent: 'bg-indigo-500/90', hover: 'hover:bg-indigo-100/80' },
+  { bg: 'bg-red-50/70', border: 'border-red-200/50', text: 'text-red-700', accent: 'bg-red-500/90', hover: 'hover:bg-red-100/80' },
+];
 
 const MyWorkspace = () => {
   const { toast } = useToast();
@@ -80,16 +83,18 @@ const MyWorkspace = () => {
   // State management
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Personal');
+  const [selectedFolder, setSelectedFolder] = useState<any>(null);
   const [showNewFolderModal, setShowNewFolderModal] = useState(false);
   const [showEditFolderModal, setShowEditFolderModal] = useState(false);
   const [showAddFileModal, setShowAddFileModal] = useState(false);
+  const [showFilePreview, setShowFilePreview] = useState<any>(null);
   const [editingFolder, setEditingFolder] = useState<any>(null);
   const [draggedFile, setDraggedFile] = useState<any>(null);
   
   // Form states
   const [newFolder, setNewFolder] = useState({
     name: '',
-    emoji: '📁',
+    iconData: modernIcons[0],
     colorScheme: 0,
     category: 'Personal'
   });
@@ -98,69 +103,153 @@ const MyWorkspace = () => {
     name: '',
     type: 'file',
     url: '',
+    content: '',
     folderId: '',
     file: null as File | null
   });
 
-  // Sample data structure
-  const [folders, setFolders] = useState({
-    Personal: [
-      { 
-        id: '1', 
-        name: 'My Profile', 
-        emoji: '👤', 
-        colorScheme: 0, 
-        files: [
-          { id: 'f1', name: 'Resume.pdf', type: 'pdf', size: '2.5 MB', date: '2024-01-15' },
-          { id: 'f2', name: 'Bio.txt', type: 'txt', size: '1.2 KB', date: '2024-01-20' }
-        ] 
-      },
-      { 
-        id: '2', 
-        name: 'My Goals', 
-        emoji: '🎯', 
-        colorScheme: 1, 
-        files: [
-          { id: 'f3', name: '2024-objectives.pdf', type: 'pdf', size: '3.1 MB', date: '2024-01-01' },
-          { id: 'f4', name: 'vision-board.jpg', type: 'image', size: '5.2 MB', date: '2024-01-10' },
-          { id: 'f5', name: 'motivation-video.mp4', type: 'video', size: '25.8 MB', date: '2024-01-12' }
-        ] 
-      },
-      { 
-        id: '3', 
-        name: 'My Business', 
-        emoji: '🏢', 
-        colorScheme: 2, 
-        files: [
-          { id: 'f6', name: 'business-plan.pdf', type: 'pdf', size: '4.7 MB', date: '2024-01-05' },
-          { id: 'f7', name: 'Financial Projections', type: 'link', url: 'https://sheets.google.com', date: '2024-01-18' }
-        ] 
-      },
-      { 
-        id: '4', 
-        name: 'My Platforms', 
-        emoji: '📱', 
-        colorScheme: 3, 
-        files: [
-          { id: 'f8', name: 'social-media-calendar.pdf', type: 'pdf', size: '2.3 MB', date: '2024-01-22' },
-          { id: 'f9', name: 'Instagram Analytics', type: 'link', url: 'https://instagram.com/insights', date: '2024-01-25' }
-        ] 
-      },
-      { 
-        id: '5', 
-        name: 'My Challenges', 
-        emoji: '⚡', 
-        colorScheme: 4, 
-        files: [
-          { id: 'f10', name: 'challenge-list.txt', type: 'txt', size: '800 B', date: '2024-01-08' },
-          { id: 'f11', name: 'solutions-brainstorm.mp3', type: 'audio', size: '12.4 MB', date: '2024-01-14' }
-        ] 
+  // Initialize folders from localStorage or use default data
+  const getInitialFolders = () => {
+    try {
+      const savedFolders = localStorage.getItem('myworkspace_folders');
+      if (savedFolders) {
+        return JSON.parse(savedFolders);
       }
-    ],
-    Resources: []
-  });
+    } catch (error) {
+      console.error('Error loading folders from localStorage:', error);
+    }
+    
+    // Default data if nothing in localStorage
+    return {
+      Personal: [
+        { 
+          id: '1', 
+          name: 'My Profile', 
+          iconData: modernIcons[0],
+          colorScheme: 0, 
+          files: [
+            { id: 'f1', name: 'Resume.pdf', type: 'pdf', size: '2.5 MB', date: '2024-01-15', content: null, url: null },
+            { id: 'f2', name: 'Bio', type: 'text', size: '1.2 KB', date: '2024-01-20', content: 'I am a passionate content creator with 5 years of experience in digital marketing and social media management...', url: null }
+          ] 
+        },
+        { 
+          id: '2', 
+          name: 'My Goals', 
+          iconData: modernIcons[2],
+          colorScheme: 1, 
+          files: [
+            { id: 'f3', name: '2024 Objectives', type: 'text', size: '800 B', date: '2024-01-01', content: '1. Grow YouTube channel to 100K subscribers\n2. Launch online course\n3. Increase revenue by 50%\n4. Build personal brand', url: null },
+            { id: 'f4', name: 'vision-board.jpg', type: 'image', size: '5.2 MB', date: '2024-01-10', content: null, url: null },
+            { id: 'f5', name: 'motivation-video.mp4', type: 'video', size: '25.8 MB', date: '2024-01-12', content: null, url: null }
+          ] 
+        },
+        { 
+          id: '3', 
+          name: 'My Business', 
+          iconData: modernIcons[4],
+          colorScheme: 2, 
+          files: [
+            { id: 'f6', name: 'Business Plan', type: 'text', size: '2.1 KB', date: '2024-01-05', content: 'Executive Summary:\nOur company focuses on creating educational content for entrepreneurs...', url: null },
+            { id: 'f7', name: 'Financial Projections', type: 'link', url: 'https://sheets.google.com', date: '2024-01-18', content: null, size: 'N/A' }
+          ] 
+        },
+        { 
+          id: '4', 
+          name: 'My Platforms', 
+          iconData: modernIcons[5],
+          colorScheme: 3, 
+          files: [
+            { id: 'f8', name: 'Content Calendar', type: 'text', size: '1.8 KB', date: '2024-01-22', content: 'Week 1: Introduction to AI\nWeek 2: Productivity Tools\nWeek 3: Content Creation Tips...', url: null },
+            { id: 'f9', name: 'Instagram Analytics', type: 'link', url: 'https://instagram.com/insights', date: '2024-01-25', content: null, size: 'N/A' }
+          ] 
+        }
+      ],
+      Resources: []
+    };
+  };
 
-  // File operations
+  const [folders, setFolders] = useState(getInitialFolders);
+
+  // Save to localStorage whenever folders change
+  React.useEffect(() => {
+    try {
+      localStorage.setItem('myworkspace_folders', JSON.stringify(folders));
+      console.log('✅ Folders saved to localStorage');
+    } catch (error) {
+      console.error('❌ Error saving folders to localStorage:', error);
+      toast({
+        title: "⚠️ Save Warning",
+        description: "Unable to save data locally. Changes may be lost on refresh.",
+        variant: "destructive"
+      });
+    }
+  }, [folders]);
+
+  // Clear all data function (for testing/reset)
+  const clearAllData = () => {
+    if (window.confirm('Are you sure you want to clear all workspace data? This cannot be undone.')) {
+      localStorage.removeItem('myworkspace_folders');
+      setFolders(getInitialFolders());
+      toast({
+        title: "🗑️ Data Cleared",
+        description: "All workspace data has been reset to defaults."
+      });
+    }
+  };
+
+  // Export data function
+  const exportData = () => {
+    try {
+      const dataStr = JSON.stringify(folders, null, 2);
+      const dataBlob = new Blob([dataStr], { type: 'application/json' });
+      const url = URL.createObjectURL(dataBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `myworkspace_backup_${new Date().toISOString().split('T')[0]}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      
+      toast({
+        title: "✅ Data Exported",
+        description: "Workspace data has been downloaded as backup file."
+      });
+    } catch (error) {
+      console.error('Export error:', error);
+      toast({
+        title: "❌ Export Failed",
+        description: "Unable to export data.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Import data function
+  const importData = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const importedData = JSON.parse(e.target?.result as string);
+        setFolders(importedData);
+        toast({
+          title: "✅ Data Imported",
+          description: "Workspace data has been successfully imported."
+        });
+      } catch (error) {
+        console.error('Import error:', error);
+        toast({
+          title: "❌ Import Failed",
+          description: "Invalid backup file format.",
+          variant: "destructive"
+        });
+      }
+    };
+    reader.readAsText(file);
+    // Reset file input
+    event.target.value = '';
+  };
   const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -177,10 +266,11 @@ const MyWorkspace = () => {
     const fileData = {
       id: `f_${Date.now()}`,
       name: newFile.name,
-      type: newFile.type === 'link' ? 'link' : getFileType(newFile.name),
-      size: newFile.file ? formatFileSize(newFile.file.size) : 'N/A',
+      type: newFile.type,
+      size: newFile.file ? formatFileSize(newFile.file.size) : (newFile.type === 'text' ? `${newFile.content.length} chars` : 'N/A'),
       date: new Date().toISOString().split('T')[0],
-      url: newFile.url || undefined
+      content: newFile.type === 'text' ? newFile.content : null,
+      url: newFile.type === 'link' ? newFile.url : null
     };
 
     setFolders(prev => ({
@@ -192,7 +282,7 @@ const MyWorkspace = () => {
       )
     }));
 
-    setNewFile({ name: '', type: 'file', url: '', folderId: '', file: null });
+    setNewFile({ name: '', type: 'file', url: '', content: '', folderId: '', file: null });
     setShowAddFileModal(false);
     
     toast({
@@ -207,7 +297,7 @@ const MyWorkspace = () => {
     const folderData = {
       id: `folder_${Date.now()}`,
       name: newFolder.name,
-      emoji: newFolder.emoji,
+      iconData: newFolder.iconData,
       colorScheme: newFolder.colorScheme,
       files: []
     };
@@ -217,7 +307,7 @@ const MyWorkspace = () => {
       [newFolder.category as keyof typeof prev]: [...prev[newFolder.category as keyof typeof prev], folderData]
     }));
 
-    setNewFolder({ name: '', emoji: '📁', colorScheme: 0, category: 'Personal' });
+    setNewFolder({ name: '', iconData: modernIcons[0], colorScheme: 0, category: 'Personal' });
     setShowNewFolderModal(false);
     
     toast({
@@ -233,14 +323,14 @@ const MyWorkspace = () => {
       ...prev,
       [selectedCategory]: prev[selectedCategory as keyof typeof prev].map(folder =>
         folder.id === editingFolder.id
-          ? { ...folder, name: newFolder.name, emoji: newFolder.emoji, colorScheme: newFolder.colorScheme }
+          ? { ...folder, name: newFolder.name, iconData: newFolder.iconData, colorScheme: newFolder.colorScheme }
           : folder
       )
     }));
 
     setEditingFolder(null);
     setShowEditFolderModal(false);
-    setNewFolder({ name: '', emoji: '📁', colorScheme: 0, category: 'Personal' });
+    setNewFolder({ name: '', iconData: modernIcons[0], colorScheme: 0, category: 'Personal' });
     
     toast({
       title: "✅ Folder Updated",
@@ -260,52 +350,7 @@ const MyWorkspace = () => {
     });
   };
 
-  // Drag and drop handlers
-  const handleDragStart = (file: any, sourceFolderId: string) => {
-    setDraggedFile({ ...file, sourceFolderId });
-  };
-
-  const handleDragOver = (e: React.DragEvent) => {
-    e.preventDefault();
-  };
-
-  const handleDrop = (e: React.DragEvent, targetFolderId: string) => {
-    e.preventDefault();
-    if (!draggedFile || draggedFile.sourceFolderId === targetFolderId) return;
-
-    // Remove file from source folder
-    setFolders(prev => ({
-      ...prev,
-      [selectedCategory]: prev[selectedCategory as keyof typeof prev].map(folder => {
-        if (folder.id === draggedFile.sourceFolderId) {
-          return { ...folder, files: folder.files.filter(f => f.id !== draggedFile.id) };
-        }
-        if (folder.id === targetFolderId) {
-          return { ...folder, files: [...folder.files, { ...draggedFile, sourceFolderId: undefined }] };
-        }
-        return folder;
-      })
-    }));
-
-    toast({
-      title: "📁 File Moved",
-      description: `${draggedFile.name} moved successfully`
-    });
-
-    setDraggedFile(null);
-  };
-
   // Utility functions
-  const getFileType = (filename: string) => {
-    const extension = filename.split('.').pop()?.toLowerCase();
-    if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(extension || '')) return 'image';
-    if (['mp4', 'avi', 'mkv', 'mov'].includes(extension || '')) return 'video';
-    if (['mp3', 'wav', 'flac', 'aac'].includes(extension || '')) return 'audio';
-    if (['pdf'].includes(extension || '')) return 'pdf';
-    if (['doc', 'docx'].includes(extension || '')) return 'doc';
-    return extension || 'file';
-  };
-
   const formatFileSize = (bytes: number) => {
     if (bytes === 0) return '0 B';
     const k = 1024;
@@ -315,14 +360,243 @@ const MyWorkspace = () => {
   };
 
   const getFileIcon = (type: string) => {
-    const IconComponent = fileTypeIcons[type as keyof typeof fileTypeIcons] || fileTypeIcons.default;
-    return <IconComponent className="h-4 w-4" />;
+    switch (type) {
+      case 'pdf':
+      case 'doc':
+      case 'docx':
+        return <FileText className="h-4 w-4 text-red-600" />;
+      case 'image':
+      case 'jpg':
+      case 'jpeg':
+      case 'png':
+      case 'gif':
+        return <Image className="h-4 w-4 text-blue-600" />;
+      case 'video':
+      case 'mp4':
+      case 'avi':
+      case 'mkv':
+        return <Video className="h-4 w-4 text-purple-600" />;
+      case 'audio':
+      case 'mp3':
+      case 'wav':
+        return <Music className="h-4 w-4 text-green-600" />;
+      case 'link':
+        return <Link className="h-4 w-4 text-blue-500" />;
+      case 'text':
+        return <Type className="h-4 w-4 text-gray-600" />;
+      default:
+        return <File className="h-4 w-4 text-gray-500" />;
+    }
   };
 
   const filteredFolders = folders[selectedCategory as keyof typeof folders].filter(folder =>
     folder.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     folder.files.some(file => file.name.toLowerCase().includes(searchQuery.toLowerCase()))
   );
+
+  // File preview component
+  const FilePreview = ({ file, onClose }: { file: any, onClose: () => void }) => (
+    <Dialog open={!!file} onOpenChange={onClose}>
+      <DialogContent className="max-w-4xl max-h-[80vh] overflow-auto">
+        <DialogHeader>
+          <div className="flex items-center justify-between">
+            <DialogTitle className="flex items-center gap-2">
+              {getFileIcon(file?.type)}
+              {file?.name}
+            </DialogTitle>
+            <Button variant="ghost" size="sm" onClick={onClose}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        </DialogHeader>
+        
+        <div className="space-y-4">
+          {file?.type === 'text' && file?.content && (
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <pre className="whitespace-pre-wrap text-sm font-mono">{file.content}</pre>
+            </div>
+          )}
+          
+          {file?.type === 'image' && (
+            <div className="flex justify-center">
+              <div className="bg-gray-100 p-4 rounded-lg">
+                <div className="w-64 h-48 bg-gray-200 rounded flex items-center justify-center">
+                  <Image className="h-12 w-12 text-gray-400" />
+                  <span className="ml-2 text-gray-500">Image Preview</span>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {file?.type === 'pdf' && (
+            <div className="bg-gray-50 p-8 rounded-lg text-center">
+              <FileText className="h-16 w-16 text-red-600 mx-auto mb-4" />
+              <p className="text-gray-600">PDF Preview</p>
+              <p className="text-sm text-gray-500 mt-2">Size: {file.size}</p>
+            </div>
+          )}
+          
+          {file?.type === 'link' && file?.url && (
+            <div className="bg-blue-50 p-4 rounded-lg">
+              <div className="flex items-center gap-2 mb-2">
+                <Link className="h-4 w-4 text-blue-600" />
+                <span className="font-medium">External Link</span>
+              </div>
+              <a href={file.url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+                {file.url}
+              </a>
+            </div>
+          )}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+
+  // Folder view component
+  const FolderView = ({ folder }: { folder: any }) => (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Button variant="ghost" size="sm" onClick={() => setSelectedFolder(null)}>
+            <ArrowLeft className="h-4 w-4" />
+          </Button>
+          <div className={`w-10 h-10 ${colorSchemes[folder.colorScheme].accent} rounded-lg flex items-center justify-center text-white shadow-sm`}>
+            <span className="text-lg">{folder.iconData.icon}</span>
+          </div>
+          <div>
+            <h2 className="text-2xl font-bold">{folder.name}</h2>
+            <p className="text-gray-600">{folder.files.length} files</p>
+          </div>
+        </div>
+        <Button onClick={() => setShowAddFileModal(true)} className="bg-purple-600 hover:bg-purple-700">
+          <Plus className="h-4 w-4 mr-1" />
+          Add File
+        </Button>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {folder.files.map((file: any) => (
+          <Card key={file.id} className="hover:shadow-md transition-shadow cursor-pointer group" onClick={() => setShowFilePreview(file)}>
+            <CardContent className="p-4">
+              <div className="flex items-start justify-between mb-3">
+                <div className="flex items-center gap-3 flex-1">
+                  <div className="p-2 bg-gray-100 rounded-lg">
+                    {getFileIcon(file.type)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium truncate">{file.name}</h4>
+                    <p className="text-sm text-gray-500">{file.size} • {file.date}</p>
+                  </div>
+                </div>
+                <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); setShowFilePreview(file); }}>
+                    <Eye className="h-3 w-3" />
+                  </Button>
+                  {file.type === 'link' && (
+                    <Button variant="ghost" size="sm" onClick={(e) => { e.stopPropagation(); window.open(file.url, '_blank'); }}>
+                      <Link className="h-3 w-3" />
+                    </Button>
+                  )}
+                </div>
+              </div>
+              
+              {file.type === 'text' && file.content && (
+                <div className="bg-gray-50 p-2 rounded text-xs">
+                  <p className="line-clamp-2">{file.content}</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+
+  if (selectedFolder) {
+    return (
+      <div className="space-y-6">
+        <FolderView folder={selectedFolder} />
+        <FilePreview file={showFilePreview} onClose={() => setShowFilePreview(null)} />
+        
+        {/* Add File Modal for folder view */}
+        <Dialog open={showAddFileModal} onOpenChange={setShowAddFileModal}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Add New File to {selectedFolder.name}</DialogTitle>
+            </DialogHeader>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="text-sm font-medium">File Name</label>
+                <Input
+                  placeholder="My file..."
+                  value={newFile.name}
+                  onChange={(e) => setNewFile(prev => ({ ...prev, name: e.target.value }))}
+                />
+              </div>
+              
+              <div>
+                <label className="text-sm font-medium">Type</label>
+                <Select value={newFile.type} onValueChange={(value) => setNewFile(prev => ({ ...prev, type: value }))}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="text">📝 Text Note</SelectItem>
+                    <SelectItem value="file">📄 File Upload</SelectItem>
+                    <SelectItem value="link">🔗 Link</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {newFile.type === 'text' && (
+                <div>
+                  <label className="text-sm font-medium">Content</label>
+                  <Textarea
+                    placeholder="Write your note here..."
+                    value={newFile.content}
+                    onChange={(e) => setNewFile(prev => ({ ...prev, content: e.target.value }))}
+                    rows={6}
+                  />
+                </div>
+              )}
+
+              {newFile.type === 'file' && (
+                <div>
+                  <label className="text-sm font-medium">Choose File</label>
+                  <Input
+                    type="file"
+                    onChange={handleFileUpload}
+                    accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.mp4,.avi,.mkv,.mp3,.wav"
+                  />
+                </div>
+              )}
+
+              {newFile.type === 'link' && (
+                <div>
+                  <label className="text-sm font-medium">URL</label>
+                  <Input
+                    placeholder="https://..."
+                    value={newFile.url}
+                    onChange={(e) => setNewFile(prev => ({ ...prev, url: e.target.value }))}
+                  />
+                </div>
+              )}
+              
+              <div className="flex justify-end gap-2">
+                <Button variant="outline" onClick={() => { setShowAddFileModal(false); setNewFile({ name: '', type: 'file', url: '', content: '', folderId: selectedFolder.id, file: null }); }}>
+                  Cancel
+                </Button>
+                <Button onClick={() => { setNewFile(prev => ({ ...prev, folderId: selectedFolder.id })); addFile(); }} disabled={!newFile.name.trim()}>
+                  Add File
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -331,8 +605,19 @@ const MyWorkspace = () => {
         <div className="flex items-center space-x-2">
           <FolderOpen className="h-8 w-8 text-purple-600" />
           <h1 className="text-3xl font-bold text-gray-900">My Workspace</h1>
+          <Badge variant="secondary" className="ml-2">
+            {folders.Personal.length + folders.Resources.length} folders
+          </Badge>
         </div>
         <div className="flex items-center space-x-2">
+          <Button variant="outline" size="sm" onClick={exportData}>
+            <Download className="h-4 w-4 mr-1" />
+            Export
+          </Button>
+          <Button variant="outline" size="sm" onClick={() => document.getElementById('import-input')?.click()}>
+            <Upload className="h-4 w-4 mr-1" />
+            Import
+          </Button>
           <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
             <RefreshCw className="h-4 w-4 mr-1" />
             Refresh
@@ -377,106 +662,56 @@ const MyWorkspace = () => {
         </div>
       </div>
 
-      {/* Folders Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* Compact Folders Grid */}
+      <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
         {filteredFolders.map((folder) => {
           const colorScheme = colorSchemes[folder.colorScheme];
           return (
             <Card 
               key={folder.id} 
-              className={`${colorScheme.bg} ${colorScheme.border} border-2 hover:shadow-lg transition-all duration-200 cursor-pointer group`}
-              onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, folder.id)}
+              className={`${colorScheme.bg} ${colorScheme.border} ${colorScheme.hover} border-2 transition-all duration-200 cursor-pointer group relative backdrop-blur-sm`}
+              onClick={() => setSelectedFolder(folder)}
             >
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-12 h-12 ${colorScheme.accent} rounded-xl flex items-center justify-center text-2xl shadow-sm`}>
-                      {folder.emoji}
-                    </div>
-                    <div>
-                      <CardTitle className={`text-lg ${colorScheme.text} group-hover:text-gray-900 transition-colors`}>
-                        {folder.name}
-                      </CardTitle>
-                      <p className="text-sm text-gray-500">{folder.files.length} files</p>
-                    </div>
-                  </div>
-                  <div className="flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setEditingFolder(folder);
-                        setNewFolder({
-                          name: folder.name,
-                          emoji: folder.emoji,
-                          colorScheme: folder.colorScheme,
-                          category: selectedCategory
-                        });
-                        setShowEditFolderModal(true);
-                      }}
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        deleteFolder(folder.id);
-                      }}
-                      className="text-red-500 hover:text-red-700"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </div>
+              <CardContent className="p-4 text-center">
+                <div className={`w-12 h-12 ${colorScheme.accent} rounded-xl flex items-center justify-center text-white shadow-sm mx-auto mb-2 backdrop-blur-sm`}>
+                  <span className="text-xl">{folder.iconData.icon}</span>
                 </div>
-              </CardHeader>
-              <CardContent className="pt-0">
-                <div className="space-y-2">
-                  {folder.files.slice(0, 3).map((file) => (
-                    <div
-                      key={file.id}
-                      className="flex items-center justify-between p-2 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow group/file"
-                      draggable
-                      onDragStart={() => handleDragStart(file, folder.id)}
-                    >
-                      <div className="flex items-center space-x-2 flex-1">
-                        <div className={`p-1 ${colorScheme.bg} rounded`}>
-                          {getFileIcon(file.type)}
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">{file.name}</p>
-                          <p className="text-xs text-gray-500">{file.size} • {file.date}</p>
-                        </div>
-                      </div>
-                      <div className="flex space-x-1 opacity-0 group-hover/file:opacity-100 transition-opacity">
-                        {file.type === 'link' && (
-                          <Button variant="ghost" size="sm" onClick={() => window.open(file.url, '_blank')}>
-                            <Link className="h-3 w-3" />
-                          </Button>
-                        )}
-                        <Button variant="ghost" size="sm">
-                          <Download className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                  {folder.files.length > 3 && (
-                    <div className="text-center py-2">
-                      <Badge variant="secondary" className={`${colorScheme.text}`}>
-                        +{folder.files.length - 3} more files
-                      </Badge>
-                    </div>
-                  )}
-                  {folder.files.length === 0 && (
-                    <div className="text-center py-4 text-gray-400">
-                      <File className="h-8 w-8 mx-auto mb-2 opacity-50" />
-                      <p className="text-sm">No files yet</p>
-                      <p className="text-xs">Drop files here or click to add</p>
-                    </div>
-                  )}
+                <h3 className={`font-medium text-sm ${colorScheme.text} truncate mb-1`}>
+                  {folder.name}
+                </h3>
+                <p className="text-xs text-gray-500">{folder.files.length} files</p>
+                
+                {/* Quick actions */}
+                <div className="absolute top-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 w-6 p-0 bg-white/80 hover:bg-white"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingFolder(folder);
+                      setNewFolder({
+                        name: folder.name,
+                        iconData: folder.iconData,
+                        colorScheme: folder.colorScheme,
+                        category: selectedCategory
+                      });
+                      setShowEditFolderModal(true);
+                    }}
+                  >
+                    <Edit className="h-3 w-3" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 w-6 p-0 bg-white/80 hover:bg-white text-red-500"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteFolder(folder.id);
+                    }}
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -505,18 +740,21 @@ const MyWorkspace = () => {
             </div>
             
             <div>
-              <label className="text-sm font-medium">Emoji</label>
-              <div className="grid grid-cols-8 gap-2 mt-2">
-                {availableEmojis.map(emoji => (
-                  <Button
-                    key={emoji}
-                    variant={newFolder.emoji === emoji ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setNewFolder(prev => ({ ...prev, emoji }))}
-                    className="h-10 w-10 p-0"
+              <label className="text-sm font-medium">Icon & Color</label>
+              <div className="grid grid-cols-4 gap-3 mt-2 max-h-48 overflow-y-auto">
+                {modernIcons.map((iconData, index) => (
+                  <div
+                    key={index}
+                    className={`flex flex-col items-center p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                      newFolder.iconData.icon === iconData.icon ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                    onClick={() => setNewFolder(prev => ({ ...prev, iconData }))}
                   >
-                    {emoji}
-                  </Button>
+                    <div className={`w-8 h-8 ${iconData.color} rounded-lg flex items-center justify-center text-white mb-1`}>
+                      <span className="text-sm">{iconData.icon}</span>
+                    </div>
+                    <span className="text-xs text-gray-600 text-center">{iconData.name}</span>
+                  </div>
                 ))}
               </div>
             </div>
@@ -584,18 +822,21 @@ const MyWorkspace = () => {
             </div>
             
             <div>
-              <label className="text-sm font-medium">Emoji</label>
-              <div className="grid grid-cols-8 gap-2 mt-2">
-                {availableEmojis.map(emoji => (
-                  <Button
-                    key={emoji}
-                    variant={newFolder.emoji === emoji ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setNewFolder(prev => ({ ...prev, emoji }))}
-                    className="h-10 w-10 p-0"
+              <label className="text-sm font-medium">Icon & Color</label>
+              <div className="grid grid-cols-4 gap-3 mt-2 max-h-48 overflow-y-auto">
+                {modernIcons.map((iconData, index) => (
+                  <div
+                    key={index}
+                    className={`flex flex-col items-center p-3 rounded-lg border-2 cursor-pointer transition-all ${
+                      newFolder.iconData.icon === iconData.icon ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                    onClick={() => setNewFolder(prev => ({ ...prev, iconData }))}
                   >
-                    {emoji}
-                  </Button>
+                    <div className={`w-8 h-8 ${iconData.color} rounded-lg flex items-center justify-center text-white mb-1`}>
+                      <span className="text-sm">{iconData.icon}</span>
+                    </div>
+                    <span className="text-xs text-gray-600 text-center">{iconData.name}</span>
+                  </div>
                 ))}
               </div>
             </div>
@@ -635,7 +876,7 @@ const MyWorkspace = () => {
           <DialogHeader>
             <DialogTitle>Add New File</DialogTitle>
             <DialogDescription>
-              Upload a file or add a link to your workspace
+              Upload a file, add a link, or write a text note
             </DialogDescription>
           </DialogHeader>
           
@@ -656,11 +897,24 @@ const MyWorkspace = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="text">📝 Text Note</SelectItem>
                   <SelectItem value="file">📄 File Upload</SelectItem>
                   <SelectItem value="link">🔗 Link</SelectItem>
                 </SelectContent>
               </Select>
             </div>
+
+            {newFile.type === 'text' && (
+              <div>
+                <label className="text-sm font-medium">Content</label>
+                <Textarea
+                  placeholder="Write your note here..."
+                  value={newFile.content}
+                  onChange={(e) => setNewFile(prev => ({ ...prev, content: e.target.value }))}
+                  rows={6}
+                />
+              </div>
+            )}
 
             {newFile.type === 'file' && (
               <div>
@@ -699,7 +953,7 @@ const MyWorkspace = () => {
                 <SelectContent>
                   {folders[selectedCategory as keyof typeof folders].map(folder => (
                     <SelectItem key={folder.id} value={folder.id}>
-                      {folder.emoji} {folder.name}
+                      {folder.iconData.icon} {folder.name}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -718,12 +972,24 @@ const MyWorkspace = () => {
         </DialogContent>
       </Dialog>
 
+      {/* File Preview Modal */}
+      <FilePreview file={showFilePreview} onClose={() => setShowFilePreview(null)} />
+
+      {/* Hidden file inputs */}
       <input
         type="file"
         ref={fileInputRef}
         onChange={handleFileUpload}
         style={{ display: 'none' }}
         accept=".pdf,.doc,.docx,.txt,.jpg,.jpeg,.png,.gif,.mp4,.avi,.mkv,.mp3,.wav"
+      />
+      
+      <input
+        id="import-input"
+        type="file"
+        onChange={importData}
+        accept=".json"
+        style={{ display: 'none' }}
       />
     </div>
   );
