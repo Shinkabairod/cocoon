@@ -1,60 +1,43 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { X, FileText, Folder, Target, Lightbulb, Briefcase, Smartphone, Zap, Palette, Video, BarChart3, Camera, Code, Dumbbell, Clock, BookOpen, Users, Wrench, Database, Home, Star, Heart, Globe, Music, Image, MessageSquare, Settings, Search, Bell, Map, Compass, Gift, Truck, Shield, Wifi, Sun, Moon, Cloud, Battery, Headphones, Mic, Speaker, Phone, Mail, Calendar, Edit, Save, Download, Upload, Trash2, Plus, Minus, Check, AlertCircle, Info, HelpCircle, Flag, Key, Lock, Unlock, Eye, EyeOff, TrendingUp, DollarSign, MapPin, ChevronLeft, ChevronRight } from 'lucide-react';
 
-const EditFolderModal = ({ isOpen, onClose, onSave, initialData = {} }) => {
+interface EditFolderModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onSave: (data: { name: string; icon: string; color: string }) => void;
+  initialData?: {
+    name?: string;
+    icon?: string;
+    color?: string;
+  };
+}
+
+const EditFolderModal: React.FC<EditFolderModalProps> = ({ 
+  isOpen, 
+  onClose, 
+  onSave, 
+  initialData = {} 
+}) => {
   const [name, setName] = useState(initialData.name || 'My Profile');
   const [icon, setIcon] = useState(initialData.icon || 'palette');
   const [color, setColor] = useState(initialData.color || '#f97316');
   const [searchQuery, setSearchQuery] = useState('');
-  const colorSliderRef = useRef(null);
+  const colorSliderRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
 
-  // Toutes les icônes lucide disponibles - COLLECTION COMPLÈTE
+  // Icônes sans Building (remplacé par Briefcase)
   const allLucideIcons = [
-    // Essentials
-    { id: 'folder', icon: Folder }, { id: 'file', icon: FileText }, { id: 'home', icon: Home }, { id: 'star', icon: Star }, 
-    { id: 'heart', icon: Heart }, { id: 'target', icon: Target }, { id: 'lightbulb', icon: Lightbulb }, { id: 'palette', icon: Palette },
-    
-    // Business & Finance
-    { id: 'briefcase', icon: Briefcase }, { id: 'users', icon: Users }, { id: 'building', icon: Building }, { id: 'chart', icon: BarChart3 }, 
-    { id: 'trending', icon: TrendingUp }, { id: 'globe', icon: Globe }, { id: 'dollar-sign', icon: DollarSign },
-    
-    // Creative & Media
-    { id: 'camera', icon: Camera }, { id: 'video', icon: Video }, { id: 'music', icon: Music }, { id: 'image', icon: Image }, 
-    { id: 'mic', icon: Mic }, { id: 'headphones', icon: Headphones }, { id: 'speaker', icon: Speaker },
-    
-    // Technology
-    { id: 'code', icon: Code }, { id: 'smartphone', icon: Smartphone }, { id: 'wifi', icon: Wifi }, { id: 'database', icon: Database }, 
-    { id: 'wrench', icon: Wrench }, { id: 'shield', icon: Shield }, { id: 'battery', icon: Battery },
-    
-    // Communication
-    { id: 'message', icon: MessageSquare }, { id: 'mail', icon: Mail }, { id: 'phone', icon: Phone }, { id: 'bell', icon: Bell },
-    
-    // Navigation & Location
-    { id: 'map', icon: Map }, { id: 'compass', icon: Compass }, { id: 'map-pin', icon: MapPin },
-    
-    // Time & Calendar
-    { id: 'clock', icon: Clock }, { id: 'calendar', icon: Calendar },
-    
-    // Weather & Nature
-    { id: 'sun', icon: Sun }, { id: 'moon', icon: Moon }, { id: 'cloud', icon: Cloud },
-    
-    // Actions & Controls
-    { id: 'plus', icon: Plus }, { id: 'minus', icon: Minus }, { id: 'edit', icon: Edit }, { id: 'save', icon: Save }, 
-    { id: 'download', icon: Download }, { id: 'upload', icon: Upload }, { id: 'trash', icon: Trash2 }, { id: 'check', icon: Check },
-    
-    // Interface & System
-    { id: 'settings', icon: Settings }, { id: 'search', icon: Search }, { id: 'eye', icon: Eye }, { id: 'eye-off', icon: EyeOff }, 
-    { id: 'lock', icon: Lock }, { id: 'unlock', icon: Unlock }, { id: 'key', icon: Key },
-    
-    // Status & Info
-    { id: 'alert', icon: AlertCircle }, { id: 'info', icon: Info }, { id: 'help', icon: HelpCircle }, { id: 'flag', icon: Flag },
-    
-    // Transport & Delivery
-    { id: 'truck', icon: Truck }, { id: 'gift', icon: Gift },
-    
-    // Books & Learning
-    { id: 'book', icon: BookOpen }
+    { id: 'folder', icon: Folder }, { id: 'file', icon: FileText }, { id: 'home', icon: Home }, 
+    { id: 'star', icon: Star }, { id: 'heart', icon: Heart }, { id: 'target', icon: Target }, 
+    { id: 'lightbulb', icon: Lightbulb }, { id: 'palette', icon: Palette },
+    { id: 'briefcase', icon: Briefcase }, { id: 'users', icon: Users }, 
+    { id: 'chart', icon: BarChart3 }, { id: 'trending', icon: TrendingUp }, 
+    { id: 'globe', icon: Globe }, { id: 'camera', icon: Camera }, 
+    { id: 'video', icon: Video }, { id: 'music', icon: Music }, 
+    { id: 'image', icon: Image }, { id: 'mic', icon: Mic }, 
+    { id: 'code', icon: Code }, { id: 'smartphone', icon: Smartphone }, 
+    { id: 'database', icon: Database }, { id: 'settings', icon: Settings }
   ];
 
   const iconsPerPage = 24;
