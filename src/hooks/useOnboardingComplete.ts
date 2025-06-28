@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useOnboarding } from '@/contexts/OnboardingContext';
@@ -24,13 +25,13 @@ export const useOnboardingComplete = () => {
     console.log('📋 Onboarding data:', onboardingData);
 
     try {
-      // 1. Save to Supabase first
+      // 1. Save to Supabase first - convert onboardingData to proper JSON
       console.log('💾 Saving to Supabase...');
       const { error: supabaseError } = await supabase
         .from('user_profiles')
         .upsert({
           user_id: user.id,
-          profile_data: onboardingData,  // ✅ Changé de onboarding_data à profile_data
+          profile_data: JSON.parse(JSON.stringify(onboardingData)), // Convert to proper JSON
           onboarding_completed: true,
           updated_at: new Date().toISOString()
         });
