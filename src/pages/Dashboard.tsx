@@ -6,7 +6,6 @@ import { useWorkspace } from '@/hooks/useWorkspace';
 import { DashboardStats } from '@/components/dashboard/EmojiColorPicker';
 import { useOnboarding } from '@/contexts/OnboardingContext';
 import { useUserStats } from '@/hooks/useUserStats';
-import { useWorkspace } from '@/hooks/useWorkspace';
 import { huggingfaceService } from '@/services/huggingfaceService';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
