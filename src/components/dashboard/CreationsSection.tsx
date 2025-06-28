@@ -245,7 +245,7 @@ const CreationsSection: React.FC<CreationsSectionProps> = ({
       {/* Header avec onglets */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2 text-violet-600">
+          <h2 className="font-bold flex items-center gap-2 text-violet-600 text-5xl">
             <Sparkles className="h-6 w-6" />
             Mes Créations
           </h2>
