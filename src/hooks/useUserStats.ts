@@ -1,3 +1,4 @@
+
 // src/hooks/useUserStats.ts
 // Hook pour récupérer et calculer les vraies stats utilisateur
 
@@ -21,11 +22,7 @@ export interface UserStats {
   timeSaved: number;
   totalScore: number;
   
-  // Nouvelles propriétés manquantes - AJOUTÉES
-  totalChats: number;
-  totalScripts: number;
-  totalUploads: number;
-  streak: number;
+  // Nouvelles propriétés manquantes
   totalResources: number;
   contentGenerated: number;
   
@@ -163,9 +160,9 @@ export const useUserStats = (userId: string | undefined) => {
       // Score créateur (algorithme simple)
       const totalScore = (scriptsGenerated * 10) + (totalChats * 5) + (totalFiles * 3) + (timeSaved * 2);
 
-      // Propriétés calculées
-      const totalResources = totalFiles;
-      const contentGenerated = scriptsGenerated + totalChats;
+      // Nouvelles propriétés calculées
+      const totalResources = totalFiles; // Même que resourcesUploaded
+      const contentGenerated = scriptsGenerated + totalChats; // Scripts + conversations
 
       // Activités récentes (basées sur les vrais fichiers)
       const recentActivities: Activity[] = vaultFiles.data?.slice(0, 5).map(file => ({
@@ -222,11 +219,7 @@ export const useUserStats = (userId: string | undefined) => {
         timeSaved,
         totalScore,
         
-        // Nouvelles propriétés ajoutées
-        totalChats,
-        totalScripts: scriptsGenerated,
-        totalUploads: totalFiles,
-        streak: 0, // TODO: calculer la vraie streak
+        // Nouvelles propriétés
         totalResources,
         contentGenerated,
         
