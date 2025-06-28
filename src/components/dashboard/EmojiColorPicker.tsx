@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
@@ -112,12 +113,4 @@ const EmojiColorPicker: React.FC<EmojiColorPickerProps> = ({
     </Dialog>;
 };
 
-// Composant pour les stats Dashboard Home
-export const DashboardStats: React.FC<{
-  stats: any;
-}> = ({
-  stats
-}) => {
-  return;
-};
 export default EmojiColorPicker;
