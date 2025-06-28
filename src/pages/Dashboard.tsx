@@ -12,6 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
+import MyWorkspace from '@/components/dashboard/MyWorkspace';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useIsMobile } from '@/hooks/use-mobile';
