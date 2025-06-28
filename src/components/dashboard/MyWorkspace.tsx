@@ -167,9 +167,7 @@ const MyWorkspace = () => {
             <FolderOpen className="h-6 w-6" />
             My Workspace
           </h2>
-          <p className="text-muted-foreground">
-            Organisez vos contenus, notes, liens et ressources (tout est sauvegardé automatiquement)
-          </p>
+          
         </div>
         
         <div className="flex items-center gap-2">
@@ -271,10 +269,7 @@ const MyWorkspace = () => {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input placeholder="Rechercher dans vos fichiers..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="pl-10" />
         </div>
-        <Button variant="outline" size="sm">
-          <Filter className="h-4 w-4 mr-2" />
-          Filtres
-        </Button>
+        
       </div>
 
       {/* Tabs Personal/Resources */}
@@ -301,12 +296,12 @@ const MyWorkspace = () => {
                 <CardContent className="p-0">
                   <div className="h-[400px] overflow-y-auto px-4">
                     {filteredFolders.map(folder => <div key={folder.id} className="mb-2">
-                        <div className="flex items-center justify-between p-2 hover:bg-muted/50 rounded cursor-pointer group" onClick={() => toggleFolder(folder.id)}>
-                          <div className="flex items-center gap-2">
-                            <div className="w-6 h-6 rounded flex items-center justify-center text-sm" style={{
+                        <div onClick={() => toggleFolder(folder.id)} className="flex items-center justify-between p-2 rounded cursor-pointer group bg-slate-200">
+                          <div className="">
+                            <div style={{
                           backgroundColor: folder.color + '30',
                           border: `1px solid ${folder.color}`
-                        }}>
+                        }} className="w-8 h-8 rounded flex items-center justify-center text-sm">
                               {folder.emoji}
                             </div>
                             <span className="font-medium">{folder.name}</span>
