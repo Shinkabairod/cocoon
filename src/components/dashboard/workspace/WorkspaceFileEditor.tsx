@@ -1,3 +1,4 @@
+
 // src/components/dashboard/workspace/WorkspaceFileEditor.tsx
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -186,62 +187,6 @@ export const WorkspaceFileEditor: React.FC<WorkspaceFileEditorProps> = ({
             )}
             <Button variant="ghost" size="sm" onClick={onClose}>
               <Icon2D icon={Icons.actions.X} size={16} />
-            </Button>
-          </div>
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="h-[calc(100%-80px)]">
-        {selectedFile.type === 'link' ? (
-          <div className="space-y-4">
-            <div className="p-4 bg-blue-50 rounded border">
-              <p className="text-sm text-blue-800 mb-2">Resource Link:</p>
-              <a 
-                href={selectedFile.url || selectedFile.content} 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-blue-600 hover:underline break-all"
-              >
-                {selectedFile.url || selectedFile.content}
-              </a>
-            </div>
-            {isEditing && (
-              <Textarea
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                placeholder="Add notes about this resource..."
-                className="min-h-32"
-              />
-            )}
-          </div>
-        ) : isEditing ? (
-          <Textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="w-full h-full resize-none font-mono text-sm"
-            placeholder="Start typing your content..."
-          />
-        ) : (
-          <div className="w-full h-full p-4 bg-gray-50 rounded border overflow-y-auto">
-            <pre className="whitespace-pre-wrap text-sm font-mono">
-              {content || 'No content yet. Click Edit to add content.'}
-            </pre>
-          </div>
-        )}
-        
-        {selectedFile.lastModified && (
-          <div className="absolute bottom-4 right-4 text-xs text-muted-foreground">
-            Last modified: {selectedFile.lastModified}
-          </div>
-        )}
-      </CardContent>
-    </Card>
-  );
-};h-4 w-4 mr-1" />
-                Edit
-              </Button>
-            )}
-            <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="h-4 w-4" />
             </Button>
           </div>
         </CardTitle>
