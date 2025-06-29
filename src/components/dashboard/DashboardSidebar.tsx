@@ -15,12 +15,15 @@ import { Link, useLocation } from "react-router-dom";
 const DashboardSidebar = () => {
   const location = useLocation();
   
-  const navItems = [
-    { icon: <Home className="h-5 w-5" />, label: "Accueil", path: "/dashboard" },
-    { icon: <FileText className="h-5 w-5" />, label: "Mes Contenus", path: "/dashboard/scripts" },
-    { icon: <Calendar className="h-5 w-5" />, label: "Calendrier", path: "/dashboard/calendar" },
-    { icon: <BookOpen className="h-5 w-5" />, label: "Ressources", path: "/dashboard/resources" },
-    { icon: <BarChart className="h-5 w-5" />, label: "Statistiques", path: "/dashboard/analytics" },
+    const navigationItems = [
+    { id: 'welcome', label: 'Dashboard', icon: Home },
+    { id: 'chat', label: 'My AI BBot', icon: MessageSquare },
+    { id: 'resources', label: 'Library', icon: Folder },
+    { id: 'workspace', label: 'Workspace', icon: Building },
+    { id: 'creations', label: 'Creations', icon: Sparkles },
+    { id: 'stats', label: 'Analytics', icon: BarChart3 },
+    { id: 'monetization', label: 'Monetization', icon: DollarSign },
+    { id: 'settings', label: 'Settings', icon: Settings }
   ];
   
   const accountItems = [
