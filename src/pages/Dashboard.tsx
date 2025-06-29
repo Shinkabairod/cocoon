@@ -20,7 +20,7 @@ import { Label } from '@/components/ui/label';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Home, Folder, Sparkles, DollarSign, Settings, Menu, X, Users, Target, TrendingUp, Clock, Shield, Zap, Upload, FileText, Image, Music, Video, Download, Trash2, Eye, Plus, MessageSquare, BarChart3, Send, Loader2, Share, MapPin, Calendar, Brain, Lightbulb, CheckCircle, Star, Globe, Lock, Save, ChevronRight, Crown, PlayCircle, Edit, Smile, User, MoreHorizontal, FolderOpen, Play, ArrowRight, Building, ExternalLink, Search, Bell, LogOut, HelpCircle, BookOpen } from 'lucide-react';
+import { Home, Folder, Sparkles, DollarSign, Settings, Menu, X, Users, Target, TrendingUp, Clock, Shield, Zap, Upload, FileText, Image, Music, Video, Download, Trash2, Eye, Plus, MessageSquare, BarChart3, Send, Loader2, Share, MapPin, Calendar, Brain, Lightbulb, CheckCircle, Star, Globe, Lock, Save, ChevronRight, Crown, PlayCircle, Edit, Smile, User, MoreHorizontal, FolderOpen, Play, ArrowRight, Building, ExternalLink, Search, Bell, LogOut, HelpCircle, BookOpen, Library } from 'lucide-react';
 
 // Import des composants Dashboard EXISTANTS
 import UserSettingsSection from '@/components/dashboard/UserSettingsSection';
@@ -123,7 +123,7 @@ const Dashboard = () => {
     file: null
   });
 
-  // Navigation items pour la sidebar (ORDRE MODIFIÉ)
+  // Navigation items pour la sidebar (ORDRE MODIFIÉ avec Library ajoutée)
   const navItems = [{
     id: 'welcome',
     icon: Home,
@@ -134,6 +134,11 @@ const Dashboard = () => {
     icon: FolderOpen,
     label: "My Workspace",
     path: "/dashboard/workspace"
+  }, {
+    id: 'library',
+    icon: BookOpen,
+    label: "Library",
+    path: "/dashboard/library"
   }, {
     id: 'creation',
     icon: FileText,
@@ -472,6 +477,20 @@ const Dashboard = () => {
         return renderWelcomePage();
       case 'resources':
         return renderResourcesPage();
+      case 'library':
+        return <div className="space-y-6">
+            <div className="text-center py-12">
+              <BookOpen className="h-16 w-16 text-purple-500 mx-auto mb-4" />
+              <h2 className="text-2xl font-semibold mb-2">
+                <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">Library</span>
+              </h2>
+              <p className="text-gray-600 mb-6">Your collection of templates and resources</p>
+              <Button className="bg-black text-white">
+                <Plus className="h-4 w-4 mr-2" />
+                Add to Library
+              </Button>
+            </div>
+          </div>;
       case 'creation':
         return <CreationsSection folders={folders} onExecuteButton={handleExecuteCustomButton} />;
       case 'monetization':
