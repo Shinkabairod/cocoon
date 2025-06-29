@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
   User, 
@@ -44,7 +43,7 @@ const UserResourcesSection = () => {
       <h2 className="text-2xl font-semibold">Your Resources</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {userResourcesSections.map((section) => (
-          <Card key={section.id} className="hover:shadow-md transition-shadow">
+          <Card key={section.id} variant="neomorphic" className="hover:shadow-md transition-shadow">
             <CardHeader className="pb-2">
               <CardTitle className="flex items-center text-lg">
                 <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center mr-3">
