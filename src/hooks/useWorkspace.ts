@@ -87,6 +87,9 @@ export const useWorkspace = () => {
   const resourceFiles = folders
     .filter(f => f.type === 'resources')
     .reduce((acc, folder) => acc + folder.files.length, 0);
+  const personalFiles = folders
+    .filter(f => f.type === 'personal')
+    .reduce((acc, folder) => acc + folder.files.length, 0);
   const videoFiles = folders
     .reduce((acc, folder) => acc + folder.files.filter(f => f.type === 'video').length, 0);
 
@@ -164,6 +167,7 @@ export const useWorkspace = () => {
       totalFolders,
       totalFiles,
       resourceFiles,
+      personalFiles, // ✅ Ajout de personalFiles
       videoFiles,
       folders: folders.length,
       storageUsed: folders.reduce((acc, folder) => 
@@ -172,7 +176,7 @@ export const useWorkspace = () => {
       storageLimit: 1000,
       lastSync: new Date().toISOString()
     };
-  }, [totalFolders, totalFiles, resourceFiles, videoFiles, folders]);
+  }, [totalFolders, totalFiles, resourceFiles, personalFiles, videoFiles, folders]);
 
   return {
     // State
@@ -185,6 +189,7 @@ export const useWorkspace = () => {
     totalFolders,
     totalFiles,
     resourceFiles,
+    personalFiles, // ✅ Export de personalFiles
     videoFiles,
     
     // Selection handlers
