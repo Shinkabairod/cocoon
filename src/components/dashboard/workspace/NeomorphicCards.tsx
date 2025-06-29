@@ -1,7 +1,36 @@
-
 // src/components/dashboard/workspace/NeomorphicCards.tsx
 import React from 'react';
-import { Icons, Icon2D } from '@/components/ui/icons';
+import { Icons, Icon2D, getIcon } from '@/components/ui/icons';
+import { FolderItem } from '@/hooks/useWorkspace';
+
+// Map des couleurs pour chaque type de dossier
+const getFolderColorClass = (folderId: string): string => {
+  const colorMap: { [key: string]: string } = {
+    'personal-profile': 'card-blue',
+    'personal-goals': 'card-green', 
+    'personal-business': 'card-purple',
+    'personal-platforms': 'card-orange',
+    'personal-challenges': 'card-red',
+    'resources-scripts': 'card-dark',
+    'resources-templates': 'card-blue'
+  };
+  return colorMap[folderId] || 'card-blue';
+};
+
+// Helper pour les descriptions des dossiers
+const getFolderDescription = (folderId: string, folderName: string): string => {
+  const descriptions: { [key: string]: string } = {
+    'personal-profile': 'Personal information and creator profile settings',
+    'personal-goals': 'Track progress and set new objectives for growth',
+    'personal-business': 'Business plans and strategy documents',
+    'personal-platforms': 'Social media accounts and analytics data',
+    'personal-challenges': 'Challenges and roadblocks to overcome',
+    'resources-scripts': 'Creative scripts for video content creation',
+    'resources-templates': 'Reusable templates and resources library'
+  };
+  
+  return descriptions[folderId] || `Files and documents for ${folderName}`;
+};
 
 interface NeomorphicCardProps {
   title: string;
@@ -32,86 +61,326 @@ export const NeomorphicCard: React.FC<NeomorphicCardProps> = ({
 
   return (
     <div 
-      className="neomorphic-card group cursor-pointer"
+      className="folder-card cursor-pointer"
       onClick={onClick}
       style={{
         width: '190px',
-        height: '254px',
-        borderRadius: '30px',
-        background: '#e0e0e0',
-        boxShadow: '15px 15px 30px #bebebe, -15px -15px 30px #ffffff',
-        transition: 'all 0.3s ease',
+        height: '280px',
+        borderRadius: '20px',
+        background: '#f5f5f5',
         position: 'relative',
-        padding: '24px',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '16px'
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.boxShadow = '20px 20px 40px #b8b8b8, -20px -20px 40px #ffffff';
-        e.currentTarget.style.transform = 'translateY(-2px)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.boxShadow = '15px 15px 30px #bebebe, -15px -15px 30px #ffffff';
-        e.currentTarget.style.transform = 'translateY(0px)';
+        padding: '1.8rem',
+        border: '2px solid #c3c6ce',
+        transition: '0.5s ease-out',
+        overflow: 'visible',
+        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+        WebkitFontSmoothing: 'antialiased',
+        MozOsxFontSmoothing: 'grayscale'
       }}
     >
-      {/* Border coloré */}
-      <div
-        className="absolute inset-0 rounded-[30px] opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-        style={{
-          background: `linear-gradient(145deg, ${color}20, ${color}10)`,
-          border: `2px solid ${color}40`
-        }}
-      />
-      
-      {/* Contenu */}
-      <div className="relative z-10 flex flex-col items-center gap-4">
-        {/* Icône */}
-        <div 
-          className="relative p-4 rounded-2xl transition-all duration-300 group-hover:scale-110"
-          style={{
-            background: '#e0e0e0',
-            boxShadow: '8px 8px 16px #bebebe, -8px -8px 16px #ffffff',
-          }}
-        >
+      <div style={{
+        height: '100%',
+        gap: '0.5em',
+        display: 'grid',
+        placeContent: 'start'
+      }}>
+        <div style={{
+          width: '50px',
+          height: '50px',
+          borderRadius: '12px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: '1rem',
+          transition: '0.3s ease',
+          alignSelf: 'start',
+          background: '#e2e8f0'
+        }}>
           <Icon2D 
             icon={IconComponent}
-            size={32}
-            color={color}
+            size={28}
+            color="#64748b"
             strokeWidth={1.5}
           />
         </div>
         
-        {/* Valeur (optionnelle) */}
         {value && (
-          <div className="text-center">
-            <div 
-              className="text-3xl font-bold mb-1"
-              style={{ color }}
-            >
-              {value}
-            </div>
+          <div style={{
+            textAlign: 'left',
+            fontSize: '1.5em',
+            fontWeight: 'bold',
+            color: color,
+            marginBottom: '0.5rem'
+          }}>
+            {value}
           </div>
         )}
         
-        {/* Texte */}
-        <div className="text-center">
-          <h3 className="font-semibold text-gray-800 text-sm mb-1">
-            {title}
-          </h3>
-          <p className="text-xs text-gray-600">
-            {subtitle}
-          </p>
+        <div style={{
+          fontSize: '1.5em',
+          fontWeight: 'bold',
+          color: 'rgb(162, 0, 255)',
+          textAlign: 'left',
+          marginBottom: '0.5rem'
+        }}>
+          {title}
         </div>
+        
+        <div style={{
+          color: 'rgb(134, 134, 134)',
+          fontSize: '0.9em',
+          lineHeight: '1.4',
+          textAlign: 'left'
+        }}>
+          {subtitle}
+        </div>
+        
+        {value && (
+          <div style={{
+            background: 'rgba(108, 0, 248, 0.1)',
+            color: '#6c00f8',
+            padding: '4px 12px',
+            borderRadius: '20px',
+            fontSize: '0.8em',
+            fontWeight: '500',
+            marginTop: '0.5rem',
+            alignSelf: 'start',
+            width: 'fit-content'
+          }}>
+            {value} files
+          </div>
+        )}
       </div>
+      
+      <button style={{
+        textDecoration: 'none',
+        textAlign: 'center',
+        transform: 'translate(-50%, 125%)',
+        width: '70%',
+        borderRadius: '1rem',
+        border: 'none',
+        backgroundColor: '#6c00f8',
+        color: '#fff',
+        fontSize: '1rem',
+        padding: '0.5rem 1rem',
+        position: 'absolute',
+        left: '50%',
+        bottom: '0',
+        opacity: 0,
+        transition: '0.3s ease-out',
+        cursor: 'pointer',
+        fontWeight: '500'
+      }}>
+        Open Folder
+      </button>
+      
+      <style jsx>{`
+        .folder-card:hover {
+          border-color: #6c00f8 !important;
+          box-shadow: 10px 5px 18px 0 rgba(255, 255, 255, 0.877) !important;
+        }
+        
+        .folder-card:hover button {
+          transform: translate(-50%, 50%) !important;
+          opacity: 1 !important;
+        }
+        
+        .folder-card:hover div:first-child div:first-child {
+          transform: scale(1.05) !important;
+          background: ${color} !important;
+        }
+        
+        .folder-card:hover div:first-child div:first-child svg {
+          color: white !important;
+        }
+      `}</style>
     </div>
   );
 };
 
-// Composant pour la grille de cards
+// Composant pour les dossiers workspace (NOUVEAU DESIGN)
+interface WorkspaceNeomorphicCardsProps {
+  folders: FolderItem[];
+  onFolderClick: (folder: FolderItem) => void;
+}
+
+export const WorkspaceNeomorphicCards: React.FC<WorkspaceNeomorphicCardsProps> = ({
+  folders,
+  onFolderClick
+}) => {
+  // Obtenir l'icône Lucide à partir du nom stocké
+  const getFolderIcon = (iconName: string) => {
+    const folderIcon = getIcon('folders', iconName);
+    if (folderIcon) return folderIcon;
+    
+    const fileIcon = getIcon('files', iconName);
+    if (fileIcon) return fileIcon;
+    
+    const businessIcon = getIcon('business', iconName);
+    if (businessIcon) return businessIcon;
+    
+    return Icons.folders.Folder;
+  };
+
+  return (
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))',
+      gap: '24px',
+      padding: '20px 0'
+    }}>
+      {folders.map((folder) => {
+        const FolderIconComponent = getFolderIcon(folder.emoji);
+        const colorClass = getFolderColorClass(folder.id);
+        
+        // Couleurs pour chaque type
+        const colorMap: { [key: string]: string } = {
+          'card-blue': '#667eea',
+          'card-green': '#4facfe',
+          'card-purple': '#a8edea',
+          'card-orange': '#fa709a',
+          'card-red': '#ff9a9e',
+          'card-dark': '#434343'
+        };
+        
+        const hoverColor = colorMap[colorClass] || '#667eea';
+        
+        return (
+          <div 
+            key={folder.id} 
+            className="folder-card cursor-pointer"
+            onClick={() => onFolderClick(folder)}
+            style={{
+              width: '190px',
+              height: '280px',
+              borderRadius: '20px',
+              background: '#f5f5f5',
+              position: 'relative',
+              padding: '1.8rem',
+              border: '2px solid #c3c6ce',
+              transition: '0.5s ease-out',
+              overflow: 'visible',
+              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
+              WebkitFontSmoothing: 'antialiased',
+              MozOsxFontSmoothing: 'grayscale'
+            }}
+          >
+            <div style={{
+              height: '100%',
+              gap: '0.5em',
+              display: 'grid',
+              placeContent: 'start'
+            }}>
+              <div 
+                className="card-icon"
+                style={{
+                  width: '50px',
+                  height: '50px',
+                  borderRadius: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginBottom: '1rem',
+                  transition: '0.3s ease',
+                  alignSelf: 'start',
+                  background: '#e2e8f0'
+                }}
+              >
+                <Icon2D 
+                  icon={FolderIconComponent}
+                  size={28}
+                  color="#64748b"
+                  strokeWidth={1.5}
+                />
+              </div>
+              
+              <div style={{
+                fontSize: '1.5em',
+                fontWeight: 'bold',
+                color: 'rgb(162, 0, 255)',
+                textAlign: 'left',
+                marginBottom: '0.5rem'
+              }}>
+                {folder.name}
+              </div>
+              
+              <div style={{
+                color: 'rgb(134, 134, 134)',
+                fontSize: '0.9em',
+                lineHeight: '1.4',
+                textAlign: 'left'
+              }}>
+                {getFolderDescription(folder.id, folder.name)}
+              </div>
+              
+              <div style={{
+                background: 'rgba(108, 0, 248, 0.1)',
+                color: '#6c00f8',
+                padding: '4px 12px',
+                borderRadius: '20px',
+                fontSize: '0.8em',
+                fontWeight: '500',
+                marginTop: '0.5rem',
+                alignSelf: 'start',
+                width: 'fit-content'
+              }}>
+                {folder.files.length} files
+              </div>
+            </div>
+            
+            <button 
+              className="card-button"
+              style={{
+                textDecoration: 'none',
+                textAlign: 'center',
+                transform: 'translate(-50%, 125%)',
+                width: '70%',
+                borderRadius: '1rem',
+                border: 'none',
+                backgroundColor: '#6c00f8',
+                color: '#fff',
+                fontSize: '1rem',
+                padding: '0.5rem 1rem',
+                position: 'absolute',
+                left: '50%',
+                bottom: '0',
+                opacity: 0,
+                transition: '0.3s ease-out',
+                cursor: 'pointer',
+                fontWeight: '500'
+              }}
+            >
+              Open Folder
+            </button>
+            
+            <style jsx>{`
+              .folder-card:hover {
+                border-color: #6c00f8 !important;
+                box-shadow: 10px 5px 18px 0 rgba(255, 255, 255, 0.877) !important;
+              }
+              
+              .folder-card:hover .card-button {
+                transform: translate(-50%, 50%) !important;
+                opacity: 1 !important;
+              }
+              
+              .folder-card:hover .card-icon {
+                transform: scale(1.05) !important;
+                background: ${hoverColor} !important;
+              }
+              
+              .folder-card:hover .card-icon svg {
+                color: ${colorClass === 'card-purple' ? '#6c00f8' : 'white'} !important;
+              }
+            `}</style>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+// Composant pour la grille de cards (pour compatibilité)
 interface NeomorphicGridProps {
   cards: Array<{
     id: string;
@@ -126,7 +395,12 @@ interface NeomorphicGridProps {
 
 export const NeomorphicGrid: React.FC<NeomorphicGridProps> = ({ cards }) => {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 justify-items-center">
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))',
+      gap: '24px',
+      justifyItems: 'center'
+    }}>
       {cards.map((card) => (
         <NeomorphicCard
           key={card.id}
@@ -140,11 +414,7 @@ export const NeomorphicGrid: React.FC<NeomorphicGridProps> = ({ cards }) => {
       ))}
     </div>
   );
-};
-
-// Cards spécifiques pour My Workspace  
-export const WorkspaceNeomorphicCards: React.FC<{
-  totalFolders: number;
+};;
   totalFiles: number;
   resourceFiles: number;
   videoFiles: number;
