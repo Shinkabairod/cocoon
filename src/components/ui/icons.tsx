@@ -27,7 +27,12 @@ import {
   MessageSquare,
   BarChart3,
   DollarSign,
-  Sparkles
+  Sparkles,
+  Save,
+  X,
+  ExternalLink,
+  ChevronRight,
+  ChevronDown
 } from 'lucide-react';
 
 // Collection d'icônes 2D organisées par catégorie
@@ -75,7 +80,12 @@ export const Icons = {
     Eye,
     Copy,
     Share,
-    Settings
+    Settings,
+    Save,
+    X,
+    ExternalLink,
+    ChevronRight,
+    ChevronDown
   }
 };
 
