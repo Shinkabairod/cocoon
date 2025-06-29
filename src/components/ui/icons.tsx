@@ -188,11 +188,7 @@ import {
   BookmarkPlus,
   Tag,
   Tags,
-  Hash,
-  
-  // Dossiers spéciaux
-  Folder,
-  FolderPlus
+  Hash
 } from 'lucide-react';
 
 // Collection d'icônes 2D organisées par catégorie
