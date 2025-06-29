@@ -1,4 +1,3 @@
-
 // src/components/dashboard/workspace/NeomorphicCards.tsx
 import React from 'react';
 import { Icons, Icon2D, getIcon } from '@/components/ui/icons';
@@ -33,173 +32,7 @@ const getFolderDescription = (folderId: string, folderName: string): string => {
   return descriptions[folderId] || `Files and documents for ${folderName}`;
 };
 
-interface NeomorphicCardProps {
-  title: string;
-  subtitle: string;
-  icon: 'FolderOpen' | 'FileText' | 'Link' | 'Upload' | 'Plus';
-  color: string;
-  onClick?: () => void;
-  value?: string | number;
-}
-
-const iconMap = {
-  FolderOpen: Icons.folders.FolderOpen,
-  FileText: Icons.files.FileText,
-  Link: Icons.files.Link,
-  Upload: Icons.actions.Upload,
-  Plus: Icons.actions.Plus
-};
-
-export const NeomorphicCard: React.FC<NeomorphicCardProps> = ({
-  title,
-  subtitle,
-  icon,
-  color,
-  onClick,
-  value
-}) => {
-  const IconComponent = iconMap[icon];
-
-  return (
-    <div 
-      className="folder-card cursor-pointer"
-      onClick={onClick}
-      style={{
-        width: '190px',
-        height: '280px',
-        borderRadius: '20px',
-        background: '#f5f5f5',
-        position: 'relative',
-        padding: '1.8rem',
-        border: '2px solid #c3c6ce',
-        transition: '0.5s ease-out',
-        overflow: 'visible',
-        fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
-        WebkitFontSmoothing: 'antialiased',
-        MozOsxFontSmoothing: 'grayscale'
-      }}
-    >
-      <div style={{
-        height: '100%',
-        gap: '0.5em',
-        display: 'grid',
-        placeContent: 'start'
-      }}>
-        <div style={{
-          width: '50px',
-          height: '50px',
-          borderRadius: '12px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom: '1rem',
-          transition: '0.3s ease',
-          alignSelf: 'start',
-          background: '#e2e8f0'
-        }}>
-          <Icon2D 
-            icon={IconComponent}
-            size={28}
-            color="#64748b"
-            strokeWidth={1.5}
-          />
-        </div>
-        
-        {value && (
-          <div style={{
-            textAlign: 'left',
-            fontSize: '1.5em',
-            fontWeight: 'bold',
-            color: color,
-            marginBottom: '0.5rem'
-          }}>
-            {value}
-          </div>
-        )}
-        
-        <div style={{
-          fontSize: '1.5em',
-          fontWeight: 'bold',
-          color: 'rgb(162, 0, 255)',
-          textAlign: 'left',
-          marginBottom: '0.5rem'
-        }}>
-          {title}
-        </div>
-        
-        <div style={{
-          color: 'rgb(134, 134, 134)',
-          fontSize: '0.9em',
-          lineHeight: '1.4',
-          textAlign: 'left'
-        }}>
-          {subtitle}
-        </div>
-        
-        {value && (
-          <div style={{
-            background: 'rgba(108, 0, 248, 0.1)',
-            color: '#6c00f8',
-            padding: '4px 12px',
-            borderRadius: '20px',
-            fontSize: '0.8em',
-            fontWeight: '500',
-            marginTop: '0.5rem',
-            alignSelf: 'start',
-            width: 'fit-content'
-          }}>
-            {value} files
-          </div>
-        )}
-      </div>
-      
-      <button style={{
-        textDecoration: 'none',
-        textAlign: 'center',
-        transform: 'translate(-50%, 125%)',
-        width: '70%',
-        borderRadius: '1rem',
-        border: 'none',
-        backgroundColor: '#6c00f8',
-        color: '#fff',
-        fontSize: '1rem',
-        padding: '0.5rem 1rem',
-        position: 'absolute',
-        left: '50%',
-        bottom: '0',
-        opacity: 0,
-        transition: '0.3s ease-out',
-        cursor: 'pointer',
-        fontWeight: '500'
-      }}>
-        Open Folder
-      </button>
-      
-      <style jsx>{`
-        .folder-card:hover {
-          border-color: #6c00f8 !important;
-          box-shadow: 10px 5px 18px 0 rgba(255, 255, 255, 0.877) !important;
-        }
-        
-        .folder-card:hover button {
-          transform: translate(-50%, 50%) !important;
-          opacity: 1 !important;
-        }
-        
-        .folder-card:hover div:first-child div:first-child {
-          transform: scale(1.05) !important;
-          background: ${color} !important;
-        }
-        
-        .folder-card:hover div:first-child div:first-child svg {
-          color: white !important;
-        }
-      `}</style>
-    </div>
-  );
-};
-
-// Composant pour les dossiers workspace (NOUVEAU DESIGN)
+// Composant pour les dossiers workspace (NOUVEAU DESIGN NEOMORPHIC)
 interface WorkspaceNeomorphicCardsProps {
   folders: FolderItem[];
   onFolderClick: (folder: FolderItem) => void;
@@ -223,288 +56,254 @@ export const WorkspaceNeomorphicCards: React.FC<WorkspaceNeomorphicCardsProps> =
     return Icons.folders.Folder;
   };
 
+  // Couleurs pour chaque type
+  const colorMap: { [key: string]: string } = {
+    'card-blue': '#667eea',
+    'card-green': '#4facfe',
+    'card-purple': '#a8edea',
+    'card-orange': '#fa709a',
+    'card-red': '#ff9a9e',
+    'card-dark': '#434343'
+  };
+
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))',
-      gap: '24px',
-      padding: '20px 0'
-    }}>
-      {folders.map((folder) => {
-        const FolderIconComponent = getFolderIcon(folder.emoji);
-        const colorClass = getFolderColorClass(folder.id);
+    <>
+      {/* Styles CSS intégrés pour le neomorphism */}
+      <style>{`
+        .neomorphic-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+          gap: 30px;
+          justify-items: center;
+          padding: 20px 0;
+        }
         
-        // Couleurs pour chaque type
-        const colorMap: { [key: string]: string } = {
-          'card-blue': '#667eea',
-          'card-green': '#4facfe',
-          'card-purple': '#a8edea',
-          'card-orange': '#fa709a',
-          'card-red': '#ff9a9e',
-          'card-dark': '#434343'
-        };
+        .neomorphic-card {
+          width: 190px;
+          height: 280px;
+          border-radius: 20px;
+          background: #f5f5f5;
+          position: relative;
+          padding: 1.8rem;
+          border: 2px solid #c3c6ce;
+          transition: 0.5s ease-out;
+          overflow: visible;
+          cursor: pointer;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+        }
         
-        const hoverColor = colorMap[colorClass] || '#667eea';
+        .neomorphic-card-details {
+          height: 100%;
+          gap: 0.5em;
+          display: grid;
+          place-content: start;
+        }
         
-        return (
-          <div 
-            key={folder.id} 
-            className="folder-card cursor-pointer"
-            onClick={() => onFolderClick(folder)}
-            style={{
-              width: '190px',
-              height: '280px',
-              borderRadius: '20px',
-              background: '#f5f5f5',
-              position: 'relative',
-              padding: '1.8rem',
-              border: '2px solid #c3c6ce',
-              transition: '0.5s ease-out',
-              overflow: 'visible',
-              fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", sans-serif',
-              WebkitFontSmoothing: 'antialiased',
-              MozOsxFontSmoothing: 'grayscale'
-            }}
-          >
-            <div style={{
-              height: '100%',
-              gap: '0.5em',
-              display: 'grid',
-              placeContent: 'start'
-            }}>
-              <div 
-                className="card-icon"
-                style={{
-                  width: '50px',
-                  height: '50px',
-                  borderRadius: '12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  marginBottom: '1rem',
-                  transition: '0.3s ease',
-                  alignSelf: 'start',
-                  background: '#e2e8f0'
-                }}
-              >
-                <Icon2D 
-                  icon={FolderIconComponent}
-                  size={28}
-                  color="#64748b"
-                  strokeWidth={1.5}
-                />
-              </div>
-              
-              <div style={{
-                fontSize: '1.5em',
-                fontWeight: 'bold',
-                color: 'rgb(162, 0, 255)',
-                textAlign: 'left',
-                marginBottom: '0.5rem'
-              }}>
-                {folder.name}
-              </div>
-              
-              <div style={{
-                color: 'rgb(134, 134, 134)',
-                fontSize: '0.9em',
-                lineHeight: '1.4',
-                textAlign: 'left'
-              }}>
-                {getFolderDescription(folder.id, folder.name)}
-              </div>
-              
-              <div style={{
-                background: 'rgba(108, 0, 248, 0.1)',
-                color: '#6c00f8',
-                padding: '4px 12px',
-                borderRadius: '20px',
-                fontSize: '0.8em',
-                fontWeight: '500',
-                marginTop: '0.5rem',
-                alignSelf: 'start',
-                width: 'fit-content'
-              }}>
-                {folder.files.length} files
-              </div>
-            </div>
-            
-            <button 
-              className="card-button"
-              style={{
-                textDecoration: 'none',
-                textAlign: 'center',
-                transform: 'translate(-50%, 125%)',
-                width: '70%',
-                borderRadius: '1rem',
-                border: 'none',
-                backgroundColor: '#6c00f8',
-                color: '#fff',
-                fontSize: '1rem',
-                padding: '0.5rem 1rem',
-                position: 'absolute',
-                left: '50%',
-                bottom: '0',
-                opacity: 0,
-                transition: '0.3s ease-out',
-                cursor: 'pointer',
-                fontWeight: '500'
-              }}
+        .neomorphic-card-icon {
+          width: 50px;
+          height: 50px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 1rem;
+          transition: 0.3s ease;
+          align-self: start;
+          background: #e2e8f0;
+        }
+        
+        .neomorphic-text-title {
+          font-size: 1.5em;
+          font-weight: bold;
+          color: rgb(162, 0, 255);
+          text-align: left;
+          margin-bottom: 0.5rem;
+        }
+        
+        .neomorphic-text-body {
+          color: rgb(134, 134, 134);
+          font-size: 0.9em;
+          line-height: 1.4;
+          text-align: left;
+        }
+        
+        .neomorphic-file-count {
+          background: rgba(108, 0, 248, 0.1);
+          color: #6c00f8;
+          padding: 4px 12px;
+          border-radius: 20px;
+          font-size: 0.8em;
+          font-weight: 500;
+          margin-top: 0.5rem;
+          align-self: start;
+          width: fit-content;
+        }
+        
+        .neomorphic-card-button {
+          text-decoration: none;
+          text-align: center;
+          transform: translate(-50%, 125%);
+          width: 70%;
+          border-radius: 1rem;
+          border: none;
+          background-color: #6c00f8;
+          color: #fff;
+          font-size: 1rem;
+          padding: 0.5rem 1rem;
+          position: absolute;
+          left: 50%;
+          bottom: 0;
+          opacity: 0;
+          transition: 0.3s ease-out;
+          cursor: pointer;
+          font-weight: 500;
+        }
+        
+        /* Hover Effects */
+        .neomorphic-card:hover {
+          border-color: #6c00f8;
+          box-shadow: 10px 5px 18px 0 rgba(255, 255, 255, 0.877);
+        }
+        
+        .neomorphic-card:hover .neomorphic-card-button {
+          transform: translate(-50%, 50%);
+          opacity: 1;
+        }
+        
+        .neomorphic-card:hover .neomorphic-card-icon {
+          transform: scale(1.05);
+          background: #6c00f8;
+        }
+        
+        .neomorphic-card:hover .neomorphic-card-icon svg {
+          color: white !important;
+        }
+        
+        /* Variantes spécifiques par couleur */
+        .card-blue:hover .neomorphic-card-icon { 
+          background: #667eea; 
+        }
+        
+        .card-green:hover .neomorphic-card-icon { 
+          background: #4facfe; 
+        }
+        
+        .card-orange:hover .neomorphic-card-icon { 
+          background: #fa709a; 
+        }
+        
+        .card-purple:hover .neomorphic-card-icon { 
+          background: #a8edea; 
+        }
+        .card-purple:hover .neomorphic-card-icon svg { 
+          color: #6c00f8 !important; 
+        }
+        
+        .card-red:hover .neomorphic-card-icon { 
+          background: #ff9a9e; 
+        }
+        
+        .card-dark:hover .neomorphic-card-icon { 
+          background: #434343; 
+        }
+      `}</style>
+
+      <div className="neomorphic-grid">
+        {folders.map((folder) => {
+          const FolderIconComponent = getFolderIcon(folder.emoji);
+          const colorClass = getFolderColorClass(folder.id);
+          
+          return (
+            <div 
+              key={folder.id} 
+              className={`neomorphic-card ${colorClass}`}
+              onClick={() => onFolderClick(folder)}
             >
-              Open Folder
-            </button>
-            
-            <style jsx>{`
-              .folder-card:hover {
-                border-color: #6c00f8 !important;
-                box-shadow: 10px 5px 18px 0 rgba(255, 255, 255, 0.877) !important;
-              }
-              
-              .folder-card:hover .card-button {
-                transform: translate(-50%, 50%) !important;
-                opacity: 1 !important;
-              }
-              
-              .folder-card:hover .card-icon {
-                transform: scale(1.05) !important;
-                background: ${hoverColor} !important;
-              }
-              
-              .folder-card:hover .card-icon svg {
-                color: ${colorClass === 'card-purple' ? '#6c00f8' : 'white'} !important;
-              }
-            `}</style>
-          </div>
-        );
-      })}
-    </div>
+              <div className="neomorphic-card-details">
+                <div className="neomorphic-card-icon">
+                  <Icon2D 
+                    icon={FolderIconComponent}
+                    size={28}
+                    color="#64748b"
+                    strokeWidth={1.5}
+                  />
+                </div>
+                
+                <div className="neomorphic-text-title">
+                  {folder.name}
+                </div>
+                
+                <div className="neomorphic-text-body">
+                  {getFolderDescription(folder.id, folder.name)}
+                </div>
+                
+                <div className="neomorphic-file-count">
+                  {folder.files?.length || 0} files
+                </div>
+              </div>
+              <button className="neomorphic-card-button">Open Folder</button>
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 };
 
-// Composant pour la grille de cards (pour compatibilité)
-interface NeomorphicGridProps {
-  cards: Array<{
-    id: string;
-    title: string;
-    subtitle: string;
-    icon: 'FolderOpen' | 'FileText' | 'Link' | 'Upload' | 'Plus';
-    color: string;
-    value?: string | number;
-    onClick?: () => void;
-  }>;
+// Composant pour les cards individuelles (si besoin)
+interface NeomorphicCardProps {
+  title: string;
+  subtitle: string;
+  icon: 'FolderOpen' | 'FileText' | 'Link' | 'Upload' | 'Plus';
+  color: string;
+  onClick?: () => void;
+  value?: string | number;
 }
 
-export const NeomorphicGrid: React.FC<NeomorphicGridProps> = ({ cards }) => {
-  return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(190px, 1fr))',
-      gap: '24px',
-      justifyItems: 'center'
-    }}>
-      {cards.map((card) => (
-        <NeomorphicCard
-          key={card.id}
-          title={card.title}
-          subtitle={card.subtitle}
-          icon={card.icon}
-          color={card.color}
-          value={card.value}
-          onClick={card.onClick}
-        />
-      ))}
-    </div>
-  );
-};
-
-// Composant pour les stats du workspace
-interface WorkspaceStatsCardsProps {
-  totalFolders: number;
-  totalFiles: number;
-  resourceFiles: number;
-  videoFiles: number;
-  onNewNote: () => void;
-  onAddLink: () => void;
-  onUploadFile: () => void;
-  onNewFolder: () => void;
-}
-
-export const WorkspaceStatsCards: React.FC<WorkspaceStatsCardsProps> = ({
-  totalFolders,
-  totalFiles,
-  resourceFiles,
-  videoFiles,
-  onNewNote,
-  onAddLink,
-  onUploadFile,
-  onNewFolder
+export const NeomorphicCard: React.FC<NeomorphicCardProps> = ({
+  title,
+  subtitle,
+  icon,
+  color,
+  onClick,
+  value
 }) => {
-  const workspaceCards = [
-    {
-      id: 'total-folders',
-      title: 'Total Folders',
-      subtitle: 'Organized workspace',
-      icon: 'FolderOpen' as const,
-      color: '#3B82F6',
-      value: totalFolders
-    },
-    {
-      id: 'total-files',
-      title: 'Total Files',
-      subtitle: 'Your content',
-      icon: 'FileText' as const,
-      color: '#10B981',
-      value: totalFiles
-    },
-    {
-      id: 'saved-links',
-      title: 'Saved Links',
-      subtitle: 'Web resources',
-      icon: 'Link' as const,
-      color: '#8B5CF6',
-      value: resourceFiles
-    },
-    {
-      id: 'video-files',
-      title: 'Video Files',
-      subtitle: 'Media content',
-      icon: 'Upload' as const,
-      color: '#F59E0B',
-      value: videoFiles
-    },
-    {
-      id: 'new-note',
-      title: 'New Note',
-      subtitle: 'Create a new note',
-      icon: 'Plus' as const,
-      color: '#3B82F6',
-      onClick: onNewNote
-    },
-    {
-      id: 'add-link',
-      title: 'Add Link',
-      subtitle: 'Save web resources',
-      icon: 'Link' as const,
-      color: '#10B981',
-      onClick: onAddLink
-    },
-    {
-      id: 'upload-file',
-      title: 'Upload Files',
-      subtitle: 'PDFs, videos, docs',
-      icon: 'Upload' as const,
-      color: '#8B5CF6',
-      onClick: onUploadFile
-    },
-    {
-      id: 'new-folder',
-      title: 'New Folder',
-      subtitle: 'Organize content',
-      icon: 'FolderOpen' as const,
-      color: '#F59E0B',
-      onClick: onNewFolder
-    }
-  ];
+  const IconComponent = getIcon('business', icon) || Icons.folders.Folder;
 
-  return <NeomorphicGrid cards={workspaceCards} />;
+  return (
+    <div 
+      className="neomorphic-card"
+      onClick={onClick}
+      style={{ cursor: onClick ? 'pointer' : 'default' }}
+    >
+      <div className="neomorphic-card-details">
+        <div className="neomorphic-card-icon">
+          <Icon2D 
+            icon={IconComponent}
+            size={28}
+            color={color}
+            strokeWidth={1.5}
+          />
+        </div>
+        
+        <div className="neomorphic-text-title">
+          {title}
+        </div>
+        
+        <div className="neomorphic-text-body">
+          {subtitle}
+        </div>
+        
+        {value && (
+          <div className="neomorphic-file-count">
+            {value}
+          </div>
+        )}
+      </div>
+      {onClick && <button className="neomorphic-card-button">Open</button>}
+    </div>
+  );
 };
+
+// Export par défaut
+export default WorkspaceNeomorphicCards;
