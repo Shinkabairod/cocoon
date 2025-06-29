@@ -1,4 +1,4 @@
-// src/hooks/useWorkspace.ts
+// src/hooks/useWorkspace.ts - Version avec données réelles Supabase + icônes UI
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { workspaceService, WorkspaceFile, WorkspaceFolder } from '@/services/workspaceService';
@@ -19,55 +19,57 @@ export const useWorkspace = () => {
   const { toast } = useToast();
   const [folders, setFolders] = useState<FolderItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedFile, setSelectedFile] = useState<WorkspaceFile | null>(null);
+  const [selectedFolder, setSelectedFolder] = useState<FolderItem | null>(null);
 
-  // Structure des dossiers par défaut (créés automatiquement si ils n'existent pas)
+  // Structure des dossiers par défaut - ICÔNES 2D LUCIDE UNIQUEMENT
   const defaultFolders: Omit<WorkspaceFolder, 'userId' | 'createdAt'>[] = [
     {
       id: 'personal-profile',
       name: 'My Profile',
-      emoji: '👤',
+      emoji: 'User',           // Icône Lucide au lieu d'emoji
       color: '#3B82F6',
       type: 'personal'
     },
     {
       id: 'personal-goals',
       name: 'My Goals',
-      emoji: '🎯',
+      emoji: 'Target',         // Icône Lucide au lieu d'emoji
       color: '#10B981',
       type: 'personal'
     },
     {
       id: 'personal-business',
       name: 'My Business',
-      emoji: '🏢',
+      emoji: 'Building',       // Icône Lucide au lieu d'emoji
       color: '#8B5CF6',
       type: 'personal'
     },
     {
       id: 'personal-platforms',
       name: 'My Platforms',
-      emoji: '📱',
+      emoji: 'Smartphone',     // Icône Lucide au lieu d'emoji
       color: '#F59E0B',
       type: 'personal'
     },
     {
       id: 'personal-challenges',
       name: 'My Challenges',
-      emoji: '⚡',
+      emoji: 'Zap',           // Icône Lucide au lieu d'emoji
       color: '#EF4444',
       type: 'personal'
     },
     {
       id: 'resources-scripts',
       name: 'Video Scripts',
-      emoji: '🎬',
+      emoji: 'Video',         // Icône Lucide au lieu d'emoji
       color: '#06B6D4',
       type: 'resources'
     },
     {
       id: 'resources-templates',
       name: 'Templates',
-      emoji: '📋',
+      emoji: 'Clipboard',     // Icône Lucide au lieu d'emoji
       color: '#84CC16',
       type: 'resources'
     }
@@ -80,17 +82,18 @@ export const useWorkspace = () => {
     }
   }, [user]);
 
+  // Chargement des données depuis Supabase
   const loadWorkspaceData = async () => {
     if (!user) return;
 
     setLoading(true);
     try {
-      console.log('📂 Loading complete workspace for user:', user.id);
+      console.log('📂 Loading workspace for user:', user.id);
 
-      // 1. Charger tous les dossiers existants depuis Supabase
+      // 1. Charger dossiers existants
       const existingFolders = await workspaceService.loadUserFolders(user.id);
       
-      // 2. Créer les dossiers par défaut s'ils n'existent pas
+      // 2. Créer dossiers par défaut si manquants
       const folderPromises = defaultFolders.map(async (defaultFolder) => {
         const exists = existingFolders.find(f => f.id === defaultFolder.id);
         if (!exists) {
@@ -109,7 +112,7 @@ export const useWorkspace = () => {
 
       const allFolders = await Promise.all(folderPromises);
 
-      // 3. Charger tous les fichiers depuis Supabase
+      // 3. Charger fichiers utilisateur + onboarding
       const [userFiles, onboardingFiles] = await Promise.all([
         workspaceService.loadUserFiles(user.id),
         workspaceService.loadOnboardingAsFiles(user.id)
@@ -117,7 +120,7 @@ export const useWorkspace = () => {
 
       const allFiles = [...userFiles, ...onboardingFiles];
 
-      // 4. Organiser les fichiers dans les dossiers
+      // 4. Organiser dans structure finale
       const organizedFolders: FolderItem[] = allFolders.map(folder => ({
         id: folder.id,
         name: folder.name,
@@ -146,393 +149,239 @@ export const useWorkspace = () => {
     }
   };
 
-  // ✅ Ajouter un nouveau dossier - PERSISTENCE TOTALE
-  const addFolder = async (name: string, emoji: string, color: string, type: 'personal' | 'resources') => {
-    if (!user) {
+  // Stats calculées en temps réel
+  const totalFolders = folders.length;
+  const totalFiles = folders.reduce((sum, folder) => sum + folder.files.length, 0);
+  const resourceFiles = folders.reduce((sum, folder) => 
+    sum + folder.files.filter(f => f.type === 'link').length, 0
+  );
+  const videoFiles = folders.reduce((sum, folder) => 
+    sum + folder.files.filter(f => f.type === 'video').length, 0
+  );
+
+  // Actions de sélection
+  const handleFileSelect = (file: WorkspaceFile) => {
+    setSelectedFile(file);
+    setSelectedFolder(null);
+    console.log('📄 File selected:', file.name);
+  };
+
+  const handleFolderSelect = (folder: FolderItem) => {
+    setSelectedFolder(folder);
+    setSelectedFile(null);
+    console.log('📁 Folder selected:', folder.name);
+  };
+
+  const handleCloseEditor = () => {
+    setSelectedFile(null);
+    setSelectedFolder(null);
+  };
+
+  // Actions CRUD avec persistance Supabase
+  const handleNewNote = async () => {
+    if (!user) return;
+    
+    const newFile: WorkspaceFile = {
+      id: `note_${Date.now()}`,
+      name: `New Note ${new Date().toLocaleDateString()}.md`,
+      type: 'text',
+      content: '# Nouvelle Note\n\nCommencez à écrire...',
+      lastModified: new Date().toISOString().split('T')[0],
+      folderId: 'personal-profile',
+      userId: user.id
+    };
+
+    try {
+      const saved = await workspaceService.saveFile(newFile);
+      if (saved) {
+        await loadWorkspaceData();
+        setSelectedFile(newFile);
+        toast({
+          title: "📝 Note créée",
+          description: "Nouvelle note ajoutée avec succès"
+        });
+      }
+    } catch (error) {
       toast({
         title: "❌ Erreur",
-        description: "Vous devez être connecté",
+        description: "Impossible de créer la note",
         variant: "destructive"
       });
-      return false;
     }
+  };
+
+  const handleAddLink = async () => {
+    const url = prompt('URL de la ressource:');
+    const title = prompt('Titre de la ressource:');
+    
+    if (!url || !title || !user) return;
+
+    const newFile: WorkspaceFile = {
+      id: `link_${Date.now()}`,
+      name: `${title}.link`,
+      type: 'link',
+      content: url,
+      url: url,
+      lastModified: new Date().toISOString().split('T')[0],
+      folderId: 'resources-templates',
+      userId: user.id
+    };
+
+    try {
+      const saved = await workspaceService.saveFile(newFile);
+      if (saved) {
+        await loadWorkspaceData();
+        toast({
+          title: "🔗 Lien ajouté",
+          description: `${title} sauvegardé`
+        });
+      }
+    } catch (error) {
+      toast({
+        title: "❌ Erreur",
+        description: "Impossible d'ajouter le lien",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleUploadFile = () => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.pdf,.doc,.docx,.txt,.md';
+    input.onchange = async (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file || !user) return;
+
+      try {
+        const reader = new FileReader();
+        reader.onload = async (event) => {
+          const content = event.target?.result as string;
+          
+          const newFile: WorkspaceFile = {
+            id: `file_${Date.now()}`,
+            name: file.name,
+            type: 'text',
+            content: content,
+            size: `${Math.round(file.size / 1024)} KB`,
+            lastModified: new Date().toISOString().split('T')[0],
+            folderId: 'personal-profile',
+            userId: user.id
+          };
+
+          const saved = await workspaceService.saveFile(newFile);
+          if (saved) {
+            await loadWorkspaceData();
+            toast({
+              title: "📁 Fichier uploadé",
+              description: file.name
+            });
+          }
+        };
+        reader.readAsText(file);
+      } catch (error) {
+        toast({
+          title: "❌ Erreur d'upload",
+          description: "Impossible d'uploader le fichier",
+          variant: "destructive"
+        });
+      }
+    };
+    input.click();
+  };
+
+  const handleNewFolder = async () => {
+    const name = prompt('Nom du dossier:');
+    const iconName = prompt('Icône du dossier (User, Target, Building, etc.):') || 'Folder';
+    
+    if (!name || !user) return;
 
     const newFolder: WorkspaceFolder = {
-      id: `${type}-${Date.now()}`,
+      id: `custom-${Date.now()}`,
       name,
-      emoji,
-      color,
-      type,
+      emoji: iconName,        // Nom d'icône Lucide au lieu d'emoji
+      color: '#3B82F6',
+      type: 'personal',
       userId: user.id,
       createdAt: new Date().toISOString(),
       isExpanded: true
     };
 
     try {
-      // 1. Sauvegarder dans Supabase d'abord
       const saved = await workspaceService.saveFolder(newFolder);
-      
-      if (!saved) {
+      if (saved) {
+        await loadWorkspaceData();
         toast({
-          title: "❌ Erreur de sauvegarde",
-          description: "Impossible de sauvegarder le dossier",
-          variant: "destructive"
+          title: "📂 Dossier créé",
+          description: name
         });
-        return false;
       }
-
-      // 2. Mettre à jour l'interface localement
-      const folderItem: FolderItem = {
-        ...newFolder,
-        files: []
-      };
-
-      setFolders(prev => [...prev, folderItem]);
-      
-      toast({
-        title: "✅ Dossier créé",
-        description: `Le dossier "${name}" a été créé et sauvegardé.`
-      });
-      
-      return true;
-
     } catch (error) {
-      console.error('❌ Error adding folder:', error);
       toast({
         title: "❌ Erreur",
-        description: "Une erreur s'est produite lors de la création",
+        description: "Impossible de créer le dossier",
         variant: "destructive"
       });
-      return false;
     }
   };
 
-  // ✅ Supprimer un dossier - PERSISTENCE TOTALE
-  const deleteFolder = async (folderId: string) => {
-    if (!user) return false;
-
-    const folder = folders.find(f => f.id === folderId);
-    if (!folder) return false;
-
-    if (folder.files.length > 0) {
-      toast({
-        title: "❌ Impossible de supprimer",
-        description: "Ce dossier contient des fichiers. Supprimez-les d'abord.",
-        variant: "destructive"
-      });
-      return false;
-    }
-
-    try {
-      // 1. Supprimer de Supabase d'abord
-      const deleted = await workspaceService.deleteFolder(folderId, user.id);
-      
-      if (!deleted) {
-        toast({
-          title: "❌ Erreur de suppression",
-          description: "Impossible de supprimer le dossier",
-          variant: "destructive"
-        });
-        return false;
-      }
-
-      // 2. Mettre à jour l'interface localement
-      setFolders(prev => prev.filter(f => f.id !== folderId));
-      
-      toast({
-        title: "✅ Dossier supprimé",
-        description: `Le dossier "${folder.name}" a été supprimé.`
-      });
-      
-      return true;
-
-    } catch (error) {
-      console.error('❌ Error deleting folder:', error);
-      toast({
-        title: "❌ Erreur",
-        description: "Une erreur s'est produite lors de la suppression",
-        variant: "destructive"
-      });
-      return false;
-    }
-  };
-
-  // ✅ Toggle l'expansion d'un dossier - LOCAL SEULEMENT
-  const toggleFolder = (folderId: string) => {
-    setFolders(prev => prev.map(folder => 
-      folder.id === folderId 
-        ? { ...folder, isExpanded: !folder.isExpanded }
-        : folder
-    ));
-  };
-
-  // ✅ Ajouter un nouveau fichier - PERSISTENCE TOTALE
-  const addFile = async (name: string, content: string, folderId: string) => {
-    if (!user) {
-      toast({
-        title: "❌ Erreur",
-        description: "Vous devez être connecté",
-        variant: "destructive"
-      });
-      return false;
-    }
-
-    const newFile: WorkspaceFile = {
-      id: `file-${Date.now()}`,
-      name: name.endsWith('.md') ? name : `${name}.md`,
-      type: 'text',
-      content,
-      lastModified: new Date().toISOString().split('T')[0],
-      folderId,
-      userId: user.id
-    };
-
-    try {
-      // 1. Sauvegarder dans Supabase d'abord
-      const saved = await workspaceService.saveFile(newFile);
-      
-      if (!saved) {
-        toast({
-          title: "❌ Erreur de sauvegarde",
-          description: "Impossible de sauvegarder le fichier",
-          variant: "destructive"
-        });
-        return false;
-      }
-
-      // 2. Mettre à jour l'interface localement
-      setFolders(prev => prev.map(folder => 
-        folder.id === folderId
-          ? { ...folder, files: [...folder.files, newFile] }
-          : folder
-      ));
-
-      toast({
-        title: "✅ Fichier créé",
-        description: `Le fichier "${newFile.name}" a été créé et sauvegardé.`
-      });
-      
-      return true;
-
-    } catch (error) {
-      console.error('❌ Error adding file:', error);
-      toast({
-        title: "❌ Erreur",
-        description: "Une erreur s'est produite lors de la création",
-        variant: "destructive"
-      });
-      return false;
-    }
-  };
-
-  // ✅ Mettre à jour un fichier - PERSISTENCE TOTALE
-  const updateFile = async (fileId: string, newContent: string) => {
+  // Sauvegarder fichier modifié
+  const handleSaveFile = async (fileId: string, content: string) => {
     if (!user) return false;
 
     try {
-      // 1. Sauvegarder dans Supabase d'abord
-      const updated = await workspaceService.updateFile(fileId, newContent, user.id);
-      
-      if (!updated) {
-        toast({
-          title: "❌ Erreur de sauvegarde",
-          description: "Impossible de sauvegarder les modifications",
-          variant: "destructive"
-        });
-        return false;
-      }
-
-      // 2. Mettre à jour l'interface localement
-      setFolders(prev => prev.map(folder => ({
-        ...folder,
-        files: folder.files.map(file => 
-          file.id === fileId 
-            ? { 
-                ...file, 
-                content: newContent, 
-                lastModified: new Date().toISOString().split('T')[0] 
-              }
-            : file
-        )
-      })));
-
-      toast({
-        title: "✅ Fichier sauvegardé",
-        description: "Vos modifications ont été enregistrées."
-      });
-      
-      return true;
-
-    } catch (error) {
-      console.error('❌ Error updating file:', error);
-      toast({
-        title: "❌ Erreur",
-        description: "Une erreur s'est produite lors de la sauvegarde",
-        variant: "destructive"
-      });
-      return false;
-    }
-  };
-
-  // ✅ Supprimer un fichier - PERSISTENCE TOTALE
-  const deleteFile = async (fileId: string) => {
-    if (!user) return false;
-
-    try {
-      // 1. Supprimer de Supabase d'abord
-      const deleted = await workspaceService.deleteFile(fileId, user.id);
-      
-      if (!deleted) {
-        toast({
-          title: "❌ Erreur de suppression",
-          description: "Impossible de supprimer le fichier",
-          variant: "destructive"
-        });
-        return false;
-      }
-
-      // 2. Mettre à jour l'interface localement
-      setFolders(prev => prev.map(folder => ({
-        ...folder,
-        files: folder.files.filter(file => file.id !== fileId)
-      })));
-
-      toast({
-        title: "✅ Fichier supprimé",
-        description: "Le fichier a été supprimé."
-      });
-      
-      return true;
-
-    } catch (error) {
-      console.error('❌ Error deleting file:', error);
-      toast({
-        title: "❌ Erreur",
-        description: "Une erreur s'est produite lors de la suppression",
-        variant: "destructive"
-      });
-      return false;
-    }
-  };
-
-  // ✅ Déplacer un fichier - PERSISTENCE TOTALE
-  const moveFile = async (fileId: string, newFolderId: string) => {
-    if (!user) return false;
-
-    let fileToMove: WorkspaceFile | null = null;
-    
-    // Trouver le fichier à déplacer
-    for (const folder of folders) {
-      const file = folder.files.find(f => f.id === fileId);
-      if (file) {
-        fileToMove = file;
-        break;
-      }
-    }
-
-    if (!fileToMove) {
-      toast({
-        title: "❌ Erreur",
-        description: "Fichier introuvable",
-        variant: "destructive"
-      });
-      return false;
-    }
-
-    try {
-      // 1. Déplacer dans Supabase d'abord
-      const moved = await workspaceService.moveFile(fileId, newFolderId, fileToMove.name, user.id);
-      
-      if (!moved) {
-        toast({
-          title: "❌ Erreur de déplacement",
-          description: "Impossible de déplacer le fichier",
-          variant: "destructive"
-        });
-        return false;
-      }
-
-      // 2. Mettre à jour l'interface localement
-      setFolders(prev => {
-        // Retirer le fichier de son dossier actuel
-        const foldersWithoutFile = prev.map(folder => ({
+      const saved = await workspaceService.updateFile(fileId, content, user.id);
+      if (saved) {
+        // Mettre à jour localement
+        setFolders(prev => prev.map(folder => ({
           ...folder,
-          files: folder.files.filter(file => file.id !== fileId)
-        }));
-
-        // Ajouter le fichier au nouveau dossier
-        return foldersWithoutFile.map(folder => 
-          folder.id === newFolderId
-            ? { 
-                ...folder, 
-                files: [...folder.files, { ...fileToMove!, folderId: newFolderId }] 
-              }
-            : folder
-        );
-      });
-
-      toast({
-        title: "✅ Fichier déplacé",
-        description: "Le fichier a été déplacé vers le nouveau dossier."
-      });
-      
-      return true;
-
+          files: folder.files.map(file => 
+            file.id === fileId ? { ...file, content, lastModified: new Date().toISOString().split('T')[0] } : file
+          )
+        })));
+        
+        toast({
+          title: "💾 Sauvegardé",
+          description: "Fichier mis à jour"
+        });
+        return true;
+      }
     } catch (error) {
-      console.error('❌ Error moving file:', error);
       toast({
-        title: "❌ Erreur",
-        description: "Une erreur s'est produite lors du déplacement",
+        title: "❌ Erreur de sauvegarde",
+        description: "Impossible de sauvegarder",
         variant: "destructive"
       });
-      return false;
     }
-  };
-
-  // Filtrer les dossiers
-  const getFilteredFolders = (type: 'personal' | 'resources', searchQuery: string = '') => {
-    return folders.filter(folder => {
-      const matchesType = folder.type === type;
-      const matchesSearch = searchQuery === '' || 
-        folder.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        folder.files.some(file => 
-          file.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          file.content?.toLowerCase().includes(searchQuery.toLowerCase())
-        );
-      return matchesType && matchesSearch;
-    });
-  };
-
-  // Statistiques EN TEMPS RÉEL
-  const getStats = () => {
-    const totalFiles = folders.reduce((sum, folder) => sum + folder.files.length, 0);
-    const personalFiles = folders
-      .filter(f => f.type === 'personal')
-      .reduce((sum, folder) => sum + folder.files.length, 0);
-    const resourceFiles = folders
-      .filter(f => f.type === 'resources')
-      .reduce((sum, folder) => sum + folder.files.length, 0);
-
-    return {
-      totalFolders: folders.length,
-      totalFiles,
-      personalFiles,
-      resourceFiles
-    };
+    return false;
   };
 
   return {
+    // États
     folders,
     loading,
-    addFolder,
-    deleteFolder,
-    toggleFolder,
-    addFile,
-    updateFile,
-    deleteFile,
-    moveFile,
-    getFilteredFolders,
-    getStats,
-    refreshWorkspace: loadWorkspaceData
+    selectedFile,
+    selectedFolder,
+    
+    // Stats
+    totalFolders,
+    totalFiles,
+    resourceFiles,
+    videoFiles,
+    
+    // Actions de sélection
+    handleFileSelect,
+    handleFolderSelect,
+    handleCloseEditor,
+    
+    // Actions CRUD
+    handleNewNote,
+    handleAddLink,
+    handleUploadFile,
+    handleNewFolder,
+    handleSaveFile,
+    
+    // Utilitaires
+    loadWorkspaceData
   };
 };
