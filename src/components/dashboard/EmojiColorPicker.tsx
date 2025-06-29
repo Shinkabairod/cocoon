@@ -1,6 +1,9 @@
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { FileText, Folder, BarChart3, Target } from 'lucide-react';
 
 // Emojis 2D simples organisés par catégories
 const EMOJI_CATEGORIES = {
@@ -13,26 +16,19 @@ const EMOJI_CATEGORIES = {
 };
 
 // Couleurs disponibles
-const COLORS = ['#3B82F6',
-// blue
-'#EF4444',
-// red
-'#10B981',
-// green
-'#F59E0B',
-// yellow
-'#8B5CF6',
-// purple
-'#EC4899',
-// pink
-'#06B6D4',
-// cyan
-'#84CC16',
-// lime
-'#F97316',
-// orange
-'#6B7280' // gray
+const COLORS = [
+  '#3B82F6', // blue
+  '#EF4444', // red
+  '#10B981', // green
+  '#F59E0B', // yellow
+  '#8B5CF6', // purple
+  '#EC4899', // pink
+  '#06B6D4', // cyan
+  '#84CC16', // lime
+  '#F97316', // orange
+  '#6B7280'  // gray
 ];
+
 interface EmojiColorPickerProps {
   isOpen: boolean;
   onClose: () => void;
@@ -40,6 +36,7 @@ interface EmojiColorPickerProps {
   currentEmoji?: string;
   currentColor?: string;
 }
+
 const EmojiColorPicker: React.FC<EmojiColorPickerProps> = ({
   isOpen,
   onClose,
@@ -49,11 +46,14 @@ const EmojiColorPicker: React.FC<EmojiColorPickerProps> = ({
 }) => {
   const [selectedEmoji, setSelectedEmoji] = useState(currentEmoji);
   const [selectedColor, setSelectedColor] = useState(currentColor);
+
   const handleConfirm = () => {
     onSelect(selectedEmoji, selectedColor);
     onClose();
   };
-  return <Dialog open={isOpen} onOpenChange={onClose}>
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle>Choisir un emoji et une couleur</DialogTitle>
@@ -62,10 +62,13 @@ const EmojiColorPicker: React.FC<EmojiColorPickerProps> = ({
         <div className="space-y-6">
           {/* Aperçu */}
           <div className="text-center p-4 bg-gray-50 rounded-lg">
-            <div className="text-4xl mb-2 inline-block p-2 rounded-lg" style={{
-            backgroundColor: selectedColor + '20',
-            border: `2px solid ${selectedColor}`
-          }}>
+            <div 
+              className="text-4xl mb-2 inline-block p-2 rounded-lg" 
+              style={{
+                backgroundColor: selectedColor + '20',
+                border: `2px solid ${selectedColor}`
+              }}
+            >
               {selectedEmoji}
             </div>
             <p className="text-sm text-gray-600">Aperçu</p>
@@ -75,16 +78,32 @@ const EmojiColorPicker: React.FC<EmojiColorPickerProps> = ({
           <div className="space-y-3">
             <h3 className="font-medium text-sm">Choisir un emoji :</h3>
             <div className="space-y-3">
-              {Object.entries(EMOJI_CATEGORIES).map(([category, emojis]) => <div key={category}>
+              {Object.entries(EMOJI_CATEGORIES).map(([category, emojis]) => (
+                <div key={category}>
                   <p className="text-xs font-medium text-gray-500 mb-2 capitalize">
-                    {category === 'files' ? 'Fichiers' : category === 'creative' ? 'Créatif' : category === 'tech' ? 'Tech' : category === 'business' ? 'Business' : category === 'education' ? 'Éducation' : 'Divers'}
+                    {category === 'files' ? 'Fichiers' : 
+                     category === 'creative' ? 'Créatif' : 
+                     category === 'tech' ? 'Tech' : 
+                     category === 'business' ? 'Business' : 
+                     category === 'education' ? 'Éducation' : 'Divers'}
                   </p>
                   <div className="grid grid-cols-8 gap-1">
-                    {emojis.map((emoji, index) => <Button key={`${category}-${index}`} variant="ghost" size="sm" className={`h-10 w-10 p-0 text-xl hover:bg-gray-100 ${selectedEmoji === emoji ? 'bg-blue-100 border-2 border-blue-500' : ''}`} onClick={() => setSelectedEmoji(emoji)}>
+                    {emojis.map((emoji, index) => (
+                      <Button
+                        key={`${category}-${index}`}
+                        variant="ghost"
+                        size="sm"
+                        className={`h-10 w-10 p-0 text-xl hover:bg-gray-100 ${
+                          selectedEmoji === emoji ? 'bg-blue-100 border-2 border-blue-500' : ''
+                        }`}
+                        onClick={() => setSelectedEmoji(emoji)}
+                      >
                         {emoji}
-                      </Button>)}
+                      </Button>
+                    ))}
                   </div>
-                </div>)}
+                </div>
+              ))}
             </div>
           </div>
 
@@ -92,9 +111,18 @@ const EmojiColorPicker: React.FC<EmojiColorPickerProps> = ({
           <div className="space-y-3">
             <h3 className="font-medium text-sm">Choisir une couleur :</h3>
             <div className="flex flex-wrap gap-2">
-              {COLORS.map(color => <Button key={color} variant="ghost" size="sm" className={`h-8 w-8 p-0 rounded-full border-2 ${selectedColor === color ? 'border-gray-800 scale-110' : 'border-gray-300'}`} style={{
-              backgroundColor: color
-            }} onClick={() => setSelectedColor(color)} />)}
+              {COLORS.map(color => (
+                <Button
+                  key={color}
+                  variant="ghost"
+                  size="sm"
+                  className={`h-8 w-8 p-0 rounded-full border-2 ${
+                    selectedColor === color ? 'border-gray-800 scale-110' : 'border-gray-300'
+                  }`}
+                  style={{ backgroundColor: color }}
+                  onClick={() => setSelectedColor(color)}
+                />
+              ))}
             </div>
           </div>
 
@@ -109,15 +137,67 @@ const EmojiColorPicker: React.FC<EmojiColorPickerProps> = ({
           </div>
         </div>
       </DialogContent>
-    </Dialog>;
+    </Dialog>
+  );
 };
 
-// Composant pour les stats Dashboard Home
-export const DashboardStats: React.FC<{
-  stats: any;
-}> = ({
-  stats
-}) => {
-  return;
+// ✅ Composant pour les stats Dashboard Home - CORRIGÉ
+export const DashboardStats: React.FC<{ stats: any }> = ({ stats }) => {
+  return (
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Total Files</CardTitle>
+          <FileText className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{stats?.totalFiles || 0}</div>
+          <p className="text-xs text-muted-foreground">
+            +2 from last week
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Folders</CardTitle>
+          <Folder className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{stats?.totalFolders || 0}</div>
+          <p className="text-xs text-muted-foreground">
+            Organized workspace
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Personal Files</CardTitle>
+          <Target className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{stats?.personalFiles || 0}</div>
+          <p className="text-xs text-muted-foreground">
+            Your content
+          </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <CardTitle className="text-sm font-medium">Resources</CardTitle>
+          <BarChart3 className="h-4 w-4 text-muted-foreground" />
+        </CardHeader>
+        <CardContent>
+          <div className="text-2xl font-bold">{stats?.resourceFiles || 0}</div>
+          <p className="text-xs text-muted-foreground">
+            Shared resources
+          </p>
+        </CardContent>
+      </Card>
+    </div>
+  );
 };
+
 export default EmojiColorPicker;
