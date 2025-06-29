@@ -132,23 +132,23 @@ const Dashboard = () => {
   }, {
     id: 'workspace',
     icon: FolderOpen,
-    label: "My Workspace",
+    label: "Resources",
     path: "/dashboard/workspace"
+  }, {
+    id: 'creation',
+    icon: FileText,
+    label: "Workspace",
+    path: "/dashboard/scripts"
+  }, {
+    id: 'monetization',
+    icon: Crown,
+    label: "AI Bot",
+    path: "/dashboard/monetization"
   }, {
     id: 'library',
     icon: BookOpen,
     label: "Library",
     path: "/dashboard/library"
-  }, {
-    id: 'creation',
-    icon: FileText,
-    label: "My Creations",
-    path: "/dashboard/scripts"
-  }, {
-    id: 'monetization',
-    icon: Crown,
-    label: "My AI Bot",
-    path: "/dashboard/monetization"
   }, {
     id: 'settings',
     icon: Settings,
