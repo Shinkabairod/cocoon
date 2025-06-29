@@ -1,397 +1,205 @@
-// src/hooks/useWorkspace.ts - Version avec données réelles Supabase + icônes UI
-import { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { workspaceService, WorkspaceFile, WorkspaceFolder } from '@/services/workspaceService';
-import { useToast } from '@/hooks/use-toast';
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { FolderOpen, FileText, Search, Filter, Link, Upload, Plus } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import FolderTree from './FolderTree';
+import FileEditor from './FileEditor';
+import { FileContent, FolderItem } from '@/types/folders';
+import { useFolderSystem } from '@/hooks/useFolderSystem';
 
-export interface FolderItem {
-  id: string;
-  name: string;
-  emoji: string;
-  color: string;
-  type: 'personal' | 'resources';
-  files: WorkspaceFile[];
-  isExpanded?: boolean;
-}
-
-export const useWorkspace = () => {
-  const { user } = useAuth();
-  const { toast } = useToast();
-  const [folders, setFolders] = useState<FolderItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [selectedFile, setSelectedFile] = useState<WorkspaceFile | null>(null);
+const UserWorkspace = () => {
+  const [selectedFile, setSelectedFile] = useState<FileContent | null>(null);
   const [selectedFolder, setSelectedFolder] = useState<FolderItem | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeView, setActiveView] = useState<'tree' | 'editor'>('tree');
+  const { folderStructure } = useFolderSystem();
 
-  // Structure des dossiers par défaut - ICÔNES 2D LUCIDE UNIQUEMENT
-  const defaultFolders: Omit<WorkspaceFolder, 'userId' | 'createdAt'>[] = [
-    {
-      id: 'personal-profile',
-      name: 'My Profile',
-      emoji: 'User',           // Icône Lucide au lieu d'emoji
-      color: '#3B82F6',
-      type: 'personal'
-    },
-    {
-      id: 'personal-goals',
-      name: 'My Goals',
-      emoji: 'Target',         // Icône Lucide au lieu d'emoji
-      color: '#10B981',
-      type: 'personal'
-    },
-    {
-      id: 'personal-business',
-      name: 'My Business',
-      emoji: 'Building',       // Icône Lucide au lieu d'emoji
-      color: '#8B5CF6',
-      type: 'personal'
-    },
-    {
-      id: 'personal-platforms',
-      name: 'My Platforms',
-      emoji: 'Smartphone',     // Icône Lucide au lieu d'emoji
-      color: '#F59E0B',
-      type: 'personal'
-    },
-    {
-      id: 'personal-challenges',
-      name: 'My Challenges',
-      emoji: 'Zap',           // Icône Lucide au lieu d'emoji
-      color: '#EF4444',
-      type: 'personal'
-    },
-    {
-      id: 'resources-scripts',
-      name: 'Video Scripts',
-      emoji: 'Video',         // Icône Lucide au lieu d'emoji
-      color: '#06B6D4',
-      type: 'resources'
-    },
-    {
-      id: 'resources-templates',
-      name: 'Templates',
-      emoji: 'Clipboard',     // Icône Lucide au lieu d'emoji
-      color: '#84CC16',
-      type: 'resources'
-    }
-  ];
-
-  // Charger les données au démarrage
-  useEffect(() => {
-    if (user) {
-      loadWorkspaceData();
-    }
-  }, [user]);
-
-  // Chargement des données depuis Supabase
-  const loadWorkspaceData = async () => {
-    if (!user) return;
-
-    setLoading(true);
-    try {
-      console.log('📂 Loading workspace for user:', user.id);
-
-      // 1. Charger dossiers existants
-      const existingFolders = await workspaceService.loadUserFolders(user.id);
-      
-      // 2. Créer dossiers par défaut si manquants
-      const folderPromises = defaultFolders.map(async (defaultFolder) => {
-        const exists = existingFolders.find(f => f.id === defaultFolder.id);
-        if (!exists) {
-          const newFolder: WorkspaceFolder = {
-            ...defaultFolder,
-            userId: user.id,
-            createdAt: new Date().toISOString(),
-            isExpanded: false
-          };
-          
-          await workspaceService.saveFolder(newFolder);
-          return newFolder;
-        }
-        return exists;
-      });
-
-      const allFolders = await Promise.all(folderPromises);
-
-      // 3. Charger fichiers utilisateur + onboarding
-      const [userFiles, onboardingFiles] = await Promise.all([
-        workspaceService.loadUserFiles(user.id),
-        workspaceService.loadOnboardingAsFiles(user.id)
-      ]);
-
-      const allFiles = [...userFiles, ...onboardingFiles];
-
-      // 4. Organiser dans structure finale
-      const organizedFolders: FolderItem[] = allFolders.map(folder => ({
-        id: folder.id,
-        name: folder.name,
-        emoji: folder.emoji,
-        color: folder.color || '#3B82F6',
-        type: folder.type,
-        isExpanded: false,
-        files: allFiles.filter(file => file.folderId === folder.id)
-      }));
-
-      setFolders(organizedFolders);
-      console.log('✅ Workspace loaded:', {
-        folders: organizedFolders.length,
-        files: allFiles.length
-      });
-
-    } catch (error) {
-      console.error('❌ Error loading workspace:', error);
-      toast({
-        title: "❌ Erreur de chargement",
-        description: "Impossible de charger votre workspace",
-        variant: "destructive"
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Stats calculées en temps réel
-  const totalFolders = folders.length;
-  const totalFiles = folders.reduce((sum, folder) => sum + folder.files.length, 0);
-  const resourceFiles = folders.reduce((sum, folder) => 
-    sum + folder.files.filter(f => f.type === 'link').length, 0
-  );
-  const videoFiles = folders.reduce((sum, folder) => 
-    sum + folder.files.filter(f => f.type === 'video').length, 0
-  );
-
-  // Actions de sélection
-  const handleFileSelect = (file: WorkspaceFile) => {
+  const handleFileSelect = (file: FileContent) => {
     setSelectedFile(file);
-    setSelectedFolder(null);
-    console.log('📄 File selected:', file.name);
+    setActiveView('editor');
   };
 
   const handleFolderSelect = (folder: FolderItem) => {
     setSelectedFolder(folder);
-    setSelectedFile(null);
-    console.log('📁 Folder selected:', folder.name);
   };
 
   const handleCloseEditor = () => {
     setSelectedFile(null);
-    setSelectedFolder(null);
+    setActiveView('tree');
   };
 
-  // Actions CRUD avec persistance Supabase
-  const handleNewNote = async () => {
-    if (!user) return;
-    
-    const newFile: WorkspaceFile = {
-      id: `note_${Date.now()}`,
-      name: `New Note ${new Date().toLocaleDateString()}.md`,
-      type: 'text',
-      content: '# Nouvelle Note\n\nCommencez à écrire...',
-      lastModified: new Date().toISOString().split('T')[0],
-      folderId: 'personal-profile',
-      userId: user.id
-    };
+  const totalFolders = folderStructure.folders.length;
+  const totalFiles = folderStructure.files.length;
+  const resourceFiles = folderStructure.files.filter(f => f.contentType === 'resource').length;
+  const videoFiles = folderStructure.files.filter(f => f.contentType === 'video').length;
 
-    try {
-      const saved = await workspaceService.saveFile(newFile);
-      if (saved) {
-        await loadWorkspaceData();
-        setSelectedFile(newFile);
-        toast({
-          title: "📝 Note créée",
-          description: "Nouvelle note ajoutée avec succès"
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "❌ Erreur",
-        description: "Impossible de créer la note",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleAddLink = async () => {
-    const url = prompt('URL de la ressource:');
-    const title = prompt('Titre de la ressource:');
-    
-    if (!url || !title || !user) return;
-
-    const newFile: WorkspaceFile = {
-      id: `link_${Date.now()}`,
-      name: `${title}.link`,
-      type: 'link',
-      content: url,
-      url: url,
-      lastModified: new Date().toISOString().split('T')[0],
-      folderId: 'resources-templates',
-      userId: user.id
-    };
-
-    try {
-      const saved = await workspaceService.saveFile(newFile);
-      if (saved) {
-        await loadWorkspaceData();
-        toast({
-          title: "🔗 Lien ajouté",
-          description: `${title} sauvegardé`
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "❌ Erreur",
-        description: "Impossible d'ajouter le lien",
-        variant: "destructive"
-      });
-    }
-  };
-
-  const handleUploadFile = () => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.pdf,.doc,.docx,.txt,.md';
-    input.onchange = async (e) => {
-      const file = (e.target as HTMLInputElement).files?.[0];
-      if (!file || !user) return;
-
-      try {
-        const reader = new FileReader();
-        reader.onload = async (event) => {
-          const content = event.target?.result as string;
-          
-          const newFile: WorkspaceFile = {
-            id: `file_${Date.now()}`,
-            name: file.name,
-            type: 'text',
-            content: content,
-            size: `${Math.round(file.size / 1024)} KB`,
-            lastModified: new Date().toISOString().split('T')[0],
-            folderId: 'personal-profile',
-            userId: user.id
-          };
-
-          const saved = await workspaceService.saveFile(newFile);
-          if (saved) {
-            await loadWorkspaceData();
-            toast({
-              title: "📁 Fichier uploadé",
-              description: file.name
-            });
-          }
-        };
-        reader.readAsText(file);
-      } catch (error) {
-        toast({
-          title: "❌ Erreur d'upload",
-          description: "Impossible d'uploader le fichier",
-          variant: "destructive"
-        });
-      }
-    };
-    input.click();
-  };
-
-  const handleNewFolder = async () => {
-    const name = prompt('Nom du dossier:');
-    const iconName = prompt('Icône du dossier (User, Target, Building, etc.):') || 'Folder';
-    
-    if (!name || !user) return;
-
-    const newFolder: WorkspaceFolder = {
-      id: `custom-${Date.now()}`,
-      name,
-      emoji: iconName,        // Nom d'icône Lucide au lieu d'emoji
-      color: '#3B82F6',
-      type: 'personal',
-      userId: user.id,
-      createdAt: new Date().toISOString(),
-      isExpanded: true
-    };
-
-    try {
-      const saved = await workspaceService.saveFolder(newFolder);
-      if (saved) {
-        await loadWorkspaceData();
-        toast({
-          title: "📂 Dossier créé",
-          description: name
-        });
-      }
-    } catch (error) {
-      toast({
-        title: "❌ Erreur",
-        description: "Impossible de créer le dossier",
-        variant: "destructive"
-      });
-    }
-  };
-
-  // Sauvegarder fichier modifié
-  const handleSaveFile = async (fileId: string, content: string) => {
-    if (!user) return false;
-
-    try {
-      const saved = await workspaceService.updateFile(fileId, content, user.id);
-      if (saved) {
-        // Mettre à jour localement
-        setFolders(prev => prev.map(folder => ({
-          ...folder,
-          files: folder.files.map(file => 
-            file.id === fileId ? { ...file, content, lastModified: new Date().toISOString().split('T')[0] } : file
-          )
-        })));
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="text-2xl font-semibold flex items-center gap-2">
+            <FolderOpen className="h-6 w-6" />
+            My Workspace
+          </h2>
+          <p className="text-muted-foreground">
+            Organize your content, notes, links, and resources in custom folders synced with Obsidian
+          </p>
+        </div>
         
-        toast({
-          title: "💾 Sauvegardé",
-          description: "Fichier mis à jour"
-        });
-        return true;
-      }
-    } catch (error) {
-      toast({
-        title: "❌ Erreur de sauvegarde",
-        description: "Impossible de sauvegarder",
-        variant: "destructive"
-      });
-    }
-    return false;
-  };
+        <div className="flex items-center gap-2">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search files and folders..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 w-64"
+            />
+          </div>
+          <Button variant="outline" size="sm">
+            <Filter className="h-4 w-4 mr-1" />
+            Filter
+          </Button>
+        </div>
+      </div>
 
-  return {
-    // États
-    folders,
-    loading,
-    selectedFile,
-    selectedFolder,
-    
-    // Stats calculées en temps réel
-    totalFolders,
-    totalFiles,
-    resourceFiles,
-    videoFiles,
-    
-    // Actions de sélection
-    handleFileSelect,
-    handleFolderSelect,
-    handleCloseEditor,
-    
-    // Actions CRUD
-    handleNewNote,
-    handleAddLink,
-    handleUploadFile,
-    handleNewFolder,
-    handleSaveFile,
-    
-    // Utilitaires
-    loadWorkspaceData,
-    
-    // Fonction pour les stats (au cas où elle est appelée ailleurs)
-    getWorkspaceStats: () => ({
-      totalFolders,
-      totalFiles,
-      resourceFiles,
-      videoFiles,
-      personalFiles: folders.filter(f => f.type === 'personal').reduce((sum, folder) => sum + folder.files.length, 0),
-      resourceFolders: folders.filter(f => f.type === 'resources').length
-    })
-  };
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card variant="neomorphic" className="hover:shadow-md transition-shadow cursor-pointer">
+          <CardContent className="pt-6">
+            <div className="flex items-center">
+              <Plus className="h-8 w-8 text-blue-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium">New Note</p>
+                <p className="text-xs text-muted-foreground">Create a new note</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card variant="neomorphic" className="hover:shadow-md transition-shadow cursor-pointer">
+          <CardContent className="pt-6">
+            <div className="flex items-center">
+              <Link className="h-8 w-8 text-green-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium">Add Link</p>
+                <p className="text-xs text-muted-foreground">Save web resources</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card variant="neomorphic" className="hover:shadow-md transition-shadow cursor-pointer">
+          <CardContent className="pt-6">
+            <div className="flex items-center">
+              <Upload className="h-8 w-8 text-purple-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium">Upload Files</p>
+                <p className="text-xs text-muted-foreground">PDFs, videos, docs</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card variant="neomorphic" className="hover:shadow-md transition-shadow cursor-pointer">
+          <CardContent className="pt-6">
+            <div className="flex items-center">
+              <FolderOpen className="h-8 w-8 text-orange-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium">New Folder</p>
+                <p className="text-xs text-muted-foreground">Organize content</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Folder Tree */}
+        <div className="lg:col-span-1">
+          <Card variant="neomorphic" className="h-[600px]">
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2">
+                <FolderOpen className="h-5 w-5" />
+                Folders & Files
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-0">
+              <div className="h-[500px] overflow-y-auto px-4 pb-4">
+                <FolderTree 
+                  onFileSelect={handleFileSelect}
+                  onFolderSelect={handleFolderSelect}
+                />
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* File Editor */}
+        <div className="lg:col-span-2">
+          <div className="h-[600px]">
+            <FileEditor 
+              file={selectedFile}
+              onClose={handleCloseEditor}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Quick Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <Card variant="neomorphic">
+          <CardContent className="pt-6">
+            <div className="flex items-center">
+              <FolderOpen className="h-8 w-8 text-blue-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-muted-foreground">Total Folders</p>
+                <p className="text-2xl font-bold">{totalFolders}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card variant="neomorphic">
+          <CardContent className="pt-6">
+            <div className="flex items-center">
+              <FileText className="h-8 w-8 text-green-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-muted-foreground">Total Files</p>
+                <p className="text-2xl font-bold">{totalFiles}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card variant="neomorphic">
+          <CardContent className="pt-6">
+            <div className="flex items-center">
+              <Link className="h-8 w-8 text-purple-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-muted-foreground">Saved Links</p>
+                <p className="text-2xl font-bold">{resourceFiles}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card variant="neomorphic">
+          <CardContent className="pt-6">
+            <div className="flex items-center">
+              <Upload className="h-8 w-8 text-orange-600" />
+              <div className="ml-4">
+                <p className="text-sm font-medium text-muted-foreground">Video Files</p>
+                <p className="text-2xl font-bold">{videoFiles}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
 };
+
+export default UserWorkspace;
