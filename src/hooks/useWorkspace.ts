@@ -1,205 +1,157 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { FolderOpen, FileText, Search, Filter, Link, Upload, Plus } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import FolderTree from './FolderTree';
-import FileEditor from './FileEditor';
-import { FileContent, FolderItem } from '@/types/folders';
-import { useFolderSystem } from '@/hooks/useFolderSystem';
 
-const UserWorkspace = () => {
-  const [selectedFile, setSelectedFile] = useState<FileContent | null>(null);
+import { useState, useEffect, useCallback } from 'react';
+import { useAuth } from '@/contexts/AuthContext';
+import { workspaceService } from '@/services/workspaceService';
+
+export interface FolderItem {
+  id: string;
+  name: string;
+  type: 'personal' | 'resources';
+  emoji: string;
+  files: WorkspaceFile[];
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface WorkspaceFile {
+  id: string;
+  name: string;
+  content: string;
+  type: string;
+  size: string;
+  folderId: string;
+  uploadedAt: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export const useWorkspace = () => {
+  const { user } = useAuth();
+  const [folders, setFolders] = useState<FolderItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedFile, setSelectedFile] = useState<WorkspaceFile | null>(null);
   const [selectedFolder, setSelectedFolder] = useState<FolderItem | null>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [activeView, setActiveView] = useState<'tree' | 'editor'>('tree');
-  const { folderStructure } = useFolderSystem();
 
-  const handleFileSelect = (file: FileContent) => {
+  // Calculate stats
+  const totalFolders = folders.length;
+  const totalFiles = folders.reduce((acc, folder) => acc + folder.files.length, 0);
+  const resourceFiles = folders
+    .filter(f => f.type === 'resources')
+    .reduce((acc, folder) => acc + folder.files.length, 0);
+  const videoFiles = folders
+    .reduce((acc, folder) => acc + folder.files.filter(f => f.type === 'video').length, 0);
+
+  // Load workspace data
+  useEffect(() => {
+    if (user) {
+      loadWorkspace();
+    }
+  }, [user]);
+
+  const loadWorkspace = async () => {
+    if (!user) return;
+    
+    try {
+      setLoading(true);
+      console.log('📂 Loading workspace for user:', user.id);
+      
+      const workspaceData = await workspaceService.loadWorkspace(user.id);
+      setFolders(workspaceData.folders || []);
+      
+      console.log('✅ Workspace loaded:', {
+        folders: workspaceData.folders?.length || 0,
+        files: workspaceData.folders?.reduce((acc: number, f: FolderItem) => acc + f.files.length, 0) || 0
+      });
+    } catch (error) {
+      console.error('❌ Error loading workspace:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Selection handlers
+  const handleFileSelect = useCallback((file: WorkspaceFile) => {
     setSelectedFile(file);
-    setActiveView('editor');
-  };
+  }, []);
 
-  const handleFolderSelect = (folder: FolderItem) => {
+  const handleFolderSelect = useCallback((folder: FolderItem) => {
     setSelectedFolder(folder);
-  };
+  }, []);
 
-  const handleCloseEditor = () => {
+  const handleCloseEditor = useCallback(() => {
     setSelectedFile(null);
-    setActiveView('tree');
+    setSelectedFolder(null);
+  }, []);
+
+  // CRUD operations
+  const handleNewNote = useCallback(async () => {
+    console.log('Creating new note...');
+    // TODO: Implement note creation
+  }, []);
+
+  const handleAddLink = useCallback(async () => {
+    console.log('Adding new link...');
+    // TODO: Implement link addition
+  }, []);
+
+  const handleUploadFile = useCallback(async () => {
+    console.log('Uploading file...');
+    // TODO: Implement file upload
+  }, []);
+
+  const handleNewFolder = useCallback(async () => {
+    console.log('Creating new folder...');
+    // TODO: Implement folder creation
+  }, []);
+
+  const handleSaveFile = useCallback(async (fileId: string, content: string) => {
+    console.log('Saving file:', fileId);
+    // TODO: Implement file saving
+  }, []);
+
+  // Get workspace stats
+  const getWorkspaceStats = useCallback(() => {
+    return {
+      totalFolders,
+      totalFiles,
+      resourceFiles,
+      videoFiles,
+      folders: folders.length,
+      storageUsed: folders.reduce((acc, folder) => 
+        acc + folder.files.reduce((fileAcc, file) => 
+          fileAcc + parseInt(file.size?.replace('MB', '') || '0'), 0), 0),
+      storageLimit: 1000,
+      lastSync: new Date().toISOString()
+    };
+  }, [totalFolders, totalFiles, resourceFiles, videoFiles, folders]);
+
+  return {
+    // State
+    folders,
+    loading,
+    selectedFile,
+    selectedFolder,
+    
+    // Computed stats
+    totalFolders,
+    totalFiles,
+    resourceFiles,
+    videoFiles,
+    
+    // Selection handlers
+    handleFileSelect,
+    handleFolderSelect,
+    handleCloseEditor,
+    
+    // CRUD operations
+    handleNewNote,
+    handleAddLink,
+    handleUploadFile,
+    handleNewFolder,
+    handleSaveFile,
+    
+    // Utilities
+    getWorkspaceStats,
+    loadWorkspace
   };
-
-  const totalFolders = folderStructure.folders.length;
-  const totalFiles = folderStructure.files.length;
-  const resourceFiles = folderStructure.files.filter(f => f.contentType === 'resource').length;
-  const videoFiles = folderStructure.files.filter(f => f.contentType === 'video').length;
-
-  return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-semibold flex items-center gap-2">
-            <FolderOpen className="h-6 w-6" />
-            My Workspace
-          </h2>
-          <p className="text-muted-foreground">
-            Organize your content, notes, links, and resources in custom folders synced with Obsidian
-          </p>
-        </div>
-        
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search files and folders..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 w-64"
-            />
-          </div>
-          <Button variant="outline" size="sm">
-            <Filter className="h-4 w-4 mr-1" />
-            Filter
-          </Button>
-        </div>
-      </div>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card variant="neomorphic" className="hover:shadow-md transition-shadow cursor-pointer">
-          <CardContent className="pt-6">
-            <div className="flex items-center">
-              <Plus className="h-8 w-8 text-blue-600" />
-              <div className="ml-4">
-                <p className="text-sm font-medium">New Note</p>
-                <p className="text-xs text-muted-foreground">Create a new note</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card variant="neomorphic" className="hover:shadow-md transition-shadow cursor-pointer">
-          <CardContent className="pt-6">
-            <div className="flex items-center">
-              <Link className="h-8 w-8 text-green-600" />
-              <div className="ml-4">
-                <p className="text-sm font-medium">Add Link</p>
-                <p className="text-xs text-muted-foreground">Save web resources</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card variant="neomorphic" className="hover:shadow-md transition-shadow cursor-pointer">
-          <CardContent className="pt-6">
-            <div className="flex items-center">
-              <Upload className="h-8 w-8 text-purple-600" />
-              <div className="ml-4">
-                <p className="text-sm font-medium">Upload Files</p>
-                <p className="text-xs text-muted-foreground">PDFs, videos, docs</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card variant="neomorphic" className="hover:shadow-md transition-shadow cursor-pointer">
-          <CardContent className="pt-6">
-            <div className="flex items-center">
-              <FolderOpen className="h-8 w-8 text-orange-600" />
-              <div className="ml-4">
-                <p className="text-sm font-medium">New Folder</p>
-                <p className="text-xs text-muted-foreground">Organize content</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Folder Tree */}
-        <div className="lg:col-span-1">
-          <Card variant="neomorphic" className="h-[600px]">
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <FolderOpen className="h-5 w-5" />
-                Folders & Files
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="h-[500px] overflow-y-auto px-4 pb-4">
-                <FolderTree 
-                  onFileSelect={handleFileSelect}
-                  onFolderSelect={handleFolderSelect}
-                />
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* File Editor */}
-        <div className="lg:col-span-2">
-          <div className="h-[600px]">
-            <FileEditor 
-              file={selectedFile}
-              onClose={handleCloseEditor}
-            />
-          </div>
-        </div>
-      </div>
-
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card variant="neomorphic">
-          <CardContent className="pt-6">
-            <div className="flex items-center">
-              <FolderOpen className="h-8 w-8 text-blue-600" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Total Folders</p>
-                <p className="text-2xl font-bold">{totalFolders}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card variant="neomorphic">
-          <CardContent className="pt-6">
-            <div className="flex items-center">
-              <FileText className="h-8 w-8 text-green-600" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Total Files</p>
-                <p className="text-2xl font-bold">{totalFiles}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card variant="neomorphic">
-          <CardContent className="pt-6">
-            <div className="flex items-center">
-              <Link className="h-8 w-8 text-purple-600" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Saved Links</p>
-                <p className="text-2xl font-bold">{resourceFiles}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card variant="neomorphic">
-          <CardContent className="pt-6">
-            <div className="flex items-center">
-              <Upload className="h-8 w-8 text-orange-600" />
-              <div className="ml-4">
-                <p className="text-sm font-medium text-muted-foreground">Video Files</p>
-                <p className="text-2xl font-bold">{videoFiles}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
-  );
 };
-
-export default UserWorkspace;
