@@ -34,7 +34,7 @@ const Dashboard = () => {
     onboardingData
   } = useOnboarding();
   const {
-    getStats
+    getWorkspaceStats
   } = useWorkspace();
   const {
     data: userStats,
@@ -256,7 +256,6 @@ const Dashboard = () => {
 
   const renderWelcomePage = () => {
     // ✅ Récupérer les vraies stats du Workspace avec getWorkspaceStats
-    const { getWorkspaceStats } = useWorkspace();
     const realStats = getWorkspaceStats();
     
     return <div className="space-y-8">
