@@ -39,10 +39,17 @@ export const WorkspaceTree: React.FC<WorkspaceTreeProps> = ({
   // Obtenir l'icône Lucide à partir du nom stocké
   const getFolderIcon = (iconName: string) => {
     // Essayer dans folders d'abord, puis dans les autres catégories
-    return getIcon('folders', iconName) || 
-           getIcon('files', iconName) || 
-           getIcon('business', iconName) ||
-           Icons.folders.Folder; // Fallback
+    const folderIcon = getIcon('folders', iconName);
+    if (folderIcon) return folderIcon;
+    
+    const fileIcon = getIcon('files', iconName);
+    if (fileIcon) return fileIcon;
+    
+    const businessIcon = getIcon('business', iconName);
+    if (businessIcon) return businessIcon;
+    
+    // Fallback vers l'icône de dossier par défaut
+    return Icons.folders.Folder;
   };
 
   return (
