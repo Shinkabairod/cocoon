@@ -1,7 +1,6 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { workspaceService } from '@/services/workspaceService';
 
 export interface FolderItem {
   id: string;
@@ -25,6 +24,56 @@ export interface WorkspaceFile {
   updatedAt: Date;
 }
 
+// Mock service for now
+const mockWorkspaceService = {
+  async loadWorkspace(userId: string) {
+    // Mock data matching the expected structure
+    const mockFolders: FolderItem[] = [
+      {
+        id: 'personal-profile',
+        name: 'Personal Profile',
+        type: 'personal',
+        emoji: 'User',
+        files: [
+          {
+            id: '1',
+            name: 'bio.txt',
+            content: 'My personal bio...',
+            type: 'text',
+            size: '2KB',
+            folderId: 'personal-profile',
+            uploadedAt: new Date().toISOString(),
+            createdAt: new Date(),
+            updatedAt: new Date()
+          }
+        ],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: 'personal-goals',
+        name: 'Goals & Objectives',
+        type: 'personal',
+        emoji: 'Target',
+        files: [],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      },
+      {
+        id: 'resources-scripts',
+        name: 'Video Scripts',
+        type: 'resources',
+        emoji: 'Video',
+        files: [],
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ];
+
+    return { folders: mockFolders };
+  }
+};
+
 export const useWorkspace = () => {
   const { user } = useAuth();
   const [folders, setFolders] = useState<FolderItem[]>([]);
@@ -42,20 +91,14 @@ export const useWorkspace = () => {
     .reduce((acc, folder) => acc + folder.files.filter(f => f.type === 'video').length, 0);
 
   // Load workspace data
-  useEffect(() => {
-    if (user) {
-      loadWorkspace();
-    }
-  }, [user]);
-
-  const loadWorkspace = async () => {
+  const loadWorkspace = useCallback(async () => {
     if (!user) return;
     
     try {
       setLoading(true);
       console.log('📂 Loading workspace for user:', user.id);
       
-      const workspaceData = await workspaceService.loadWorkspace(user.id);
+      const workspaceData = await mockWorkspaceService.loadWorkspace(user.id);
       setFolders(workspaceData.folders || []);
       
       console.log('✅ Workspace loaded:', {
@@ -67,7 +110,13 @@ export const useWorkspace = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user]);
+
+  useEffect(() => {
+    if (user) {
+      loadWorkspace();
+    }
+  }, [user, loadWorkspace]);
 
   // Selection handlers
   const handleFileSelect = useCallback((file: WorkspaceFile) => {
