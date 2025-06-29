@@ -236,7 +236,7 @@ export const AIInsights: React.FC<{ insights: any[] }> = ({ insights = [] }) => 
 // Section workspace
 export const WorkspaceSection: React.FC<{ workspace: any }> = ({ workspace }) => {
   return (
-    <Card>
+    <Card variant="neomorphic">
       <CardHeader>
         <CardTitle className="flex items-center justify-between">
           <span>Mon Workspace</span>
