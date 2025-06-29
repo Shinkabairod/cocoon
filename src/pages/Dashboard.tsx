@@ -14,7 +14,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Textarea } from '@/components/ui/textarea';
-import WorkspacePage from '@/components/dashboard/pages/WorkspacePage'; // ✅ Import de la vraie page workspace
+import MyWorkspace from '@/components/dashboard/MyWorkspace';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -26,13 +26,24 @@ import { Home, Folder, Sparkles, DollarSign, Settings, Menu, X, Users, Target, T
 import UserSettingsSection from '@/components/dashboard/UserSettingsSection';
 import OnboardingDataSection from '@/components/dashboard/OnboardingDataSection';
 import CreationsSection from '@/components/dashboard/CreationsSection';
-
 const Dashboard = () => {
-  const { user } = useAuth();
-  const { onboardingData } = useOnboarding();
-  const { getWorkspaceStats } = useWorkspace();
-  const { data: userStats, isLoading, refetch } = useUserStats(user?.id);
-  const { toast } = useToast();
+  const {
+    user
+  } = useAuth();
+  const {
+    onboardingData
+  } = useOnboarding();
+  const {
+    getWorkspaceStats
+  } = useWorkspace();
+  const {
+    data: userStats,
+    isLoading,
+    refetch
+  } = useUserStats(user?.id);
+  const {
+    toast
+  } = useToast();
   const [activePage, setActivePage] = useState('welcome');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const isMobile = useIsMobile();
@@ -113,44 +124,42 @@ const Dashboard = () => {
   });
 
   // Navigation items pour la sidebar (ORDRE MODIFIÉ avec Library ajoutée)
-  const navItems = [
-    {
-      id: 'welcome',
-      icon: Home,
-      label: "Home",
-      path: "/dashboard"
-    },
-    {
-      id: 'workspace',
-      icon: FolderOpen,
-      label: "Workspace", // ✅ Changé de "Resources" à "Workspace"
-      path: "/dashboard/workspace"
-    },
-    {
-      id: 'creation',
-      icon: FileText,
-      label: "Creation",
-      path: "/dashboard/scripts"
-    },
-    {
-      id: 'monetization',
-      icon: Crown,
-      label: "AI Bot",
-      path: "/dashboard/monetization"
-    },
-    {
-      id: 'library',
-      icon: BookOpen,
-      label: "Library",
-      path: "/dashboard/library"
-    },
-    {
-      id: 'settings',
-      icon: Settings,
-      label: "Settings",
-      path: "/dashboard/settings"
-    }
-  ];
+  const navItems = [{
+    id: 'welcome',
+    icon: Home,
+    label: "Home",
+    path: "/dashboard"
+  }, {
+    id: 'workspace',
+    icon: FolderOpen,
+    label: "Resources",
+    path: "/dashboard/workspace"
+  }, {
+    id: 'creation',
+    icon: FileText,
+    label: "Workspace",
+    path: "/dashboard/scripts"
+  }, {
+    id: 'monetization',
+    icon: Crown,
+    label: "AI Bot",
+    path: "/dashboard/monetization"
+  }, {
+    id: 'library',
+    icon: BookOpen,
+    label: "Library",
+    path: "/dashboard/library"
+  }, {
+    id: 'settings',
+    icon: Settings,
+    label: "Settings",
+    path: "/dashboard/settings"
+  }];
+  const accountItems = [{
+    icon: HelpCircle,
+    label: "Help & Support",
+    path: "/dashboard/support"
+  }];
 
   // Toutes vos fonctions existantes CONSERVÉES
   const handleExecuteCustomButton = async (buttonData, placeholderValues) => {
@@ -470,8 +479,7 @@ const Dashboard = () => {
       case 'resources':
         return renderResourcesPage();
       case 'library':
-        return (
-          <div className="space-y-6">
+        return <div className="space-y-6">
             <div className="text-center py-12">
               <BookOpen className="h-16 w-16 text-purple-500 mx-auto mb-4" />
               <h2 className="text-2xl font-semibold mb-2">
@@ -483,13 +491,11 @@ const Dashboard = () => {
                 Add to Library
               </Button>
             </div>
-          </div>
-        );
+          </div>;
       case 'creation':
         return <CreationsSection folders={folders} onExecuteButton={handleExecuteCustomButton} />;
       case 'monetization':
-        return (
-          <div className="text-center py-12">
+        return <div className="text-center py-12">
             <Crown className="h-16 w-16 text-yellow-500 mx-auto mb-4" />
             <h2 className="text-2xl font-semibold mb-2">
               <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">My AI Bot</span>
@@ -498,17 +504,12 @@ const Dashboard = () => {
             <Button className="bg-black text-white" disabled>
               In Development
             </Button>
-          </div>
-        );
+          </div>;
       case 'settings':
         return <SettingsSection />;
       case 'workspace':
         // ✅ NOUVEAU
-        return <WorkspacePage 
-          user={user} 
-          onboardingData={onboardingData} 
-          userStats={userStats} 
-        />;
+        return <MyWorkspace />;
       default:
         return renderWelcomePage();
     }
