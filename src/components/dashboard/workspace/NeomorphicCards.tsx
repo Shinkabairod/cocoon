@@ -1,3 +1,4 @@
+
 // src/components/dashboard/workspace/NeomorphicCards.tsx
 import React from 'react';
 import { Icons, Icon2D, getIcon } from '@/components/ui/icons';
@@ -414,7 +415,11 @@ export const NeomorphicGrid: React.FC<NeomorphicGridProps> = ({ cards }) => {
       ))}
     </div>
   );
-};;
+};
+
+// Composant pour les stats du workspace
+interface WorkspaceStatsCardsProps {
+  totalFolders: number;
   totalFiles: number;
   resourceFiles: number;
   videoFiles: number;
@@ -422,7 +427,9 @@ export const NeomorphicGrid: React.FC<NeomorphicGridProps> = ({ cards }) => {
   onAddLink: () => void;
   onUploadFile: () => void;
   onNewFolder: () => void;
-}> = ({
+}
+
+export const WorkspaceStatsCards: React.FC<WorkspaceStatsCardsProps> = ({
   totalFolders,
   totalFiles,
   resourceFiles,
