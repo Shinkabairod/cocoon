@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -68,7 +67,7 @@ const UserWorkspace = () => {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card className="hover: hover:shadow-md transition-shadow cursor-pointer">
+        <Card variant="neomorphic" className="hover:shadow-md transition-shadow cursor-pointer">
           <CardContent className="pt-6">
             <div className="flex items-center">
               <Plus className="h-8 w-8 text-blue-600" />
@@ -80,7 +79,7 @@ const UserWorkspace = () => {
           </CardContent>
         </Card>
         
-        <Card className="hover:shadow-md transition-shadow cursor-pointer">
+        <Card variant="neomorphic" className="hover:shadow-md transition-shadow cursor-pointer">
           <CardContent className="pt-6">
             <div className="flex items-center">
               <Link className="h-8 w-8 text-green-600" />
@@ -92,7 +91,7 @@ const UserWorkspace = () => {
           </CardContent>
         </Card>
         
-        <Card className="hover:shadow-md transition-shadow cursor-pointer">
+        <Card variant="neomorphic" className="hover:shadow-md transition-shadow cursor-pointer">
           <CardContent className="pt-6">
             <div className="flex items-center">
               <Upload className="h-8 w-8 text-purple-600" />
@@ -104,7 +103,7 @@ const UserWorkspace = () => {
           </CardContent>
         </Card>
         
-        <Card className="hover:shadow-md transition-shadow cursor-pointer">
+        <Card variant="neomorphic" className="hover:shadow-md transition-shadow cursor-pointer">
           <CardContent className="pt-6">
             <div className="flex items-center">
               <FolderOpen className="h-8 w-8 text-orange-600" />
@@ -120,7 +119,7 @@ const UserWorkspace = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Folder Tree */}
         <div className="lg:col-span-1">
-          <Card className="h-[600px]">
+          <Card variant="neomorphic" className="h-[600px]">
             <CardHeader>
               <CardTitle className="text-lg flex items-center gap-2">
                 <FolderOpen className="h-5 w-5" />
@@ -151,7 +150,7 @@ const UserWorkspace = () => {
 
       {/* Quick Stats */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <Card>
+        <Card variant="neomorphic">
           <CardContent className="pt-6">
             <div className="flex items-center">
               <FolderOpen className="h-8 w-8 text-blue-600" />
@@ -163,7 +162,7 @@ const UserWorkspace = () => {
           </CardContent>
         </Card>
         
-        <Card>
+        <Card variant="neomorphic">
           <CardContent className="pt-6">
             <div className="flex items-center">
               <FileText className="h-8 w-8 text-green-600" />
@@ -175,7 +174,7 @@ const UserWorkspace = () => {
           </CardContent>
         </Card>
         
-        <Card>
+        <Card variant="neomorphic">
           <CardContent className="pt-6">
             <div className="flex items-center">
               <Link className="h-8 w-8 text-purple-600" />
@@ -187,7 +186,7 @@ const UserWorkspace = () => {
           </CardContent>
         </Card>
         
-        <Card>
+        <Card variant="neomorphic">
           <CardContent className="pt-6">
             <div className="flex items-center">
               <Upload className="h-8 w-8 text-orange-600" />
