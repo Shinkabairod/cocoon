@@ -70,7 +70,11 @@ export const WorkspaceFileEditor: React.FC<WorkspaceFileEditorProps> = ({
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <span className="text-2xl">{selectedFolder.emoji}</span>
+              <Icon2D 
+                icon={getIcon('folders', selectedFolder.emoji) || Icons.folders.Folder} 
+                size={20}
+                color={selectedFolder.color}
+              />
               <span>{selectedFolder.name}</span>
             </div>
             <Button variant="ghost" size="sm" onClick={onClose}>
