@@ -363,7 +363,7 @@ export const useWorkspace = () => {
     selectedFile,
     selectedFolder,
     
-    // Stats
+    // Stats calculées en temps réel
     totalFolders,
     totalFiles,
     resourceFiles,
@@ -382,6 +382,16 @@ export const useWorkspace = () => {
     handleSaveFile,
     
     // Utilitaires
-    loadWorkspaceData
+    loadWorkspaceData,
+    
+    // Fonction pour les stats (au cas où elle est appelée ailleurs)
+    getWorkspaceStats: () => ({
+      totalFolders,
+      totalFiles,
+      resourceFiles,
+      videoFiles,
+      personalFiles: folders.filter(f => f.type === 'personal').reduce((sum, folder) => sum + folder.files.length, 0),
+      resourceFolders: folders.filter(f => f.type === 'resources').length
+    })
   };
 };
