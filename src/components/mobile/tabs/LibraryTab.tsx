@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -32,17 +31,17 @@ const LibraryTab = ({ contents, getContentsByStatus, userStats }: LibraryTabProp
       {/* Real Workspace Stats */}
       {userStats?.workspace && (
         <div className="grid grid-cols-3 gap-4">
-          <Card className="p-4 text-center glass-card">
+          <Card variant="neomorphic" className="p-4 text-center glass-card">
             <div className="text-2xl font-bold text-blue-600 mb-1">{userStats.workspace.totalFiles}</div>
             <div className="text-xs text-blue-700 font-medium">Fichiers</div>
             <div className="text-xs text-blue-600 mt-1">Total</div>
           </Card>
-          <Card className="p-4 text-center glass-card">
+          <Card variant="neomorphic" className="p-4 text-center glass-card">
             <div className="text-2xl font-bold text-green-600 mb-1">{userStats.workspace.folders.length}</div>
             <div className="text-xs text-green-700 font-medium">Dossiers</div>
             <div className="text-xs text-green-600 mt-1">Organisés</div>
           </Card>
-          <Card className="p-4 text-center glass-card">
+          <Card variant="neomorphic" className="p-4 text-center glass-card">
             <div className="text-2xl font-bold text-purple-600 mb-1">{Math.round(userStats.workspace.storageUsed)}MB</div>
             <div className="text-xs text-purple-700 font-medium">Stockage</div>
             <div className="text-xs text-purple-600 mt-1">Utilisé</div>
@@ -52,17 +51,17 @@ const LibraryTab = ({ contents, getContentsByStatus, userStats }: LibraryTabProp
 
       {/* Enhanced Stats Cards */}
       <div className="grid grid-cols-3 gap-4">
-        <Card className="p-4 text-center bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+        <Card variant="neomorphic" className="p-4 text-center bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
           <div className="text-2xl font-bold text-blue-600 mb-1">{getContentsByStatus('draft').length}</div>
           <div className="text-xs text-blue-700 font-medium">Brouillons</div>
           <div className="text-xs text-blue-600 mt-1">À éditer</div>
         </Card>
-        <Card className="p-4 text-center bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200">
+        <Card variant="neomorphic" className="p-4 text-center bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-200">
           <div className="text-2xl font-bold text-yellow-600 mb-1">{getContentsByStatus('planned').length}</div>
           <div className="text-xs text-yellow-700 font-medium">Planifiés</div>
           <div className="text-xs text-yellow-600 mt-1">Programmés</div>
         </Card>
-        <Card className="p-4 text-center bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+        <Card variant="neomorphic" className="p-4 text-center bg-gradient-to-br from-green-50 to-green-100 border-green-200">
           <div className="text-2xl font-bold text-green-600 mb-1">{getContentsByStatus('published').length}</div>
           <div className="text-xs text-green-700 font-medium">Publiés</div>
           <div className="text-xs text-green-600 mt-1">En ligne</div>
@@ -71,7 +70,7 @@ const LibraryTab = ({ contents, getContentsByStatus, userStats }: LibraryTabProp
 
       {/* Recent Files */}
       {userStats?.recentFiles && userStats.recentFiles.length > 0 && (
-        <Card className="p-6 glass-card">
+        <Card variant="neomorphic" className="p-6 glass-card">
           <h3 className="font-semibold text-lg flex items-center gap-2 mb-4">
             <FileText className="h-5 w-5 text-coach-primary" />
             Fichiers Récents
@@ -96,7 +95,7 @@ const LibraryTab = ({ contents, getContentsByStatus, userStats }: LibraryTabProp
       )}
 
       {/* Content Library Component */}
-      <Card className="p-1">
+      <Card variant="neomorphic" className="p-1">
         <ContentLibrary 
           contents={contents}
           onEdit={(content) => console.log('Edit:', content)}
@@ -105,7 +104,7 @@ const LibraryTab = ({ contents, getContentsByStatus, userStats }: LibraryTabProp
       </Card>
 
       {/* Editorial Calendar */}
-      <Card className="p-6 glass-card">
+      <Card variant="neomorphic" className="p-6 glass-card">
         <h3 className="font-semibold text-lg flex items-center gap-2 mb-4">
           <Calendar className="h-5 w-5 text-coach-primary" />
           Calendrier Éditorial
