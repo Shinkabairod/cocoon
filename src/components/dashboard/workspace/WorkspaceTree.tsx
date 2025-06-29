@@ -1,22 +1,22 @@
-// src/components/dashboard/workspace/WorkspaceTree.tsx
+/ src/components/dashboard/workspace/WorkspaceTree.tsx
 import React from 'react';
-import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ChevronRight, ChevronDown, Folder, FileText } from 'lucide-react';
-import { useFolderSystem } from '@/hooks/useFolderSystem';
+import { Icons, Icon2D } from '@/components/ui/icons';
+import { FolderItem } from '@/hooks/useWorkspace';
 
 interface WorkspaceTreeProps {
+  folders: FolderItem[];
   searchQuery: string;
   onFileSelect: (file: any) => void;
   onFolderSelect: (folder: any) => void;
 }
 
 export const WorkspaceTree: React.FC<WorkspaceTreeProps> = ({
+  folders,
   searchQuery,
   onFileSelect,
   onFolderSelect
 }) => {
-  const { folderStructure } = useFolderSystem();
   const [expandedFolders, setExpandedFolders] = React.useState<Set<string>>(new Set());
 
   const toggleFolder = (folderId: string) => {
@@ -29,7 +29,7 @@ export const WorkspaceTree: React.FC<WorkspaceTreeProps> = ({
     setExpandedFolders(newExpanded);
   };
 
-  const filteredFolders = folderStructure.folders.filter(folder =>
+  const filteredFolders = folders.filter(folder =>
     folder.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
     folder.files.some(file => 
       file.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -50,12 +50,12 @@ export const WorkspaceTree: React.FC<WorkspaceTreeProps> = ({
             }}
           >
             {expandedFolders.has(folder.id) ? (
-              <ChevronDown className="h-4 w-4 mr-2" />
+              <Icon2D icon={Icons.actions.ChevronDown} size={16} className="mr-2" />
             ) : (
-              <ChevronRight className="h-4 w-4 mr-2" />
+              <Icon2D icon={Icons.actions.ChevronRight} size={16} className="mr-2" />
             )}
-            <Folder className="h-4 w-4 mr-2" style={{ color: folder.color }} />
-            <span className="text-sm">{folder.name}</span>
+            <span className="text-lg mr-2">{folder.emoji}</span>
+            <span className="text-sm flex-1 text-left">{folder.name}</span>
             <span className="ml-auto text-xs text-muted-foreground">
               {folder.files.length}
             </span>
@@ -71,8 +71,12 @@ export const WorkspaceTree: React.FC<WorkspaceTreeProps> = ({
                   className="w-full justify-start p-2 h-auto text-xs"
                   onClick={() => onFileSelect(file)}
                 >
-                  <FileText className="h-3 w-3 mr-2" />
-                  <span>{file.name}</span>
+                  <Icon2D 
+                    icon={file.type === 'link' ? Icons.files.Link : Icons.files.FileText} 
+                    size={14} 
+                    className="mr-2" 
+                  />
+                  <span className="truncate">{file.name}</span>
                 </Button>
               ))}
             </div>
