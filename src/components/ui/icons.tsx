@@ -1,3 +1,4 @@
+
 // src/components/ui/icons.tsx
 import React from 'react';
 import {
@@ -90,7 +91,6 @@ import {
   Mic,
   Play,
   Pause,
-  Stop,
   Volume2,
   VolumeX,
   Headphones,
@@ -106,7 +106,6 @@ import {
   Coins,
   
   // Outils & Utilitaires
-  Tool,
   Wrench,
   Scissors,
   Paintbrush,
@@ -134,7 +133,6 @@ import {
   
   // Temps & Productivité
   Timer,
-  Stopwatch,
   AlarmClock,
   CalendarDays,
   
@@ -165,7 +163,6 @@ import {
   Sidebar,
   PanelLeft,
   PanelRight,
-  Tabs,
   Command,
   
   // Création de contenu
@@ -228,7 +225,7 @@ export const Icons = {
     Heart,         // Favoris
     Star,          // Important
     BookOpen,      // Apprentissage
-    Archive,       // Archives
+    Archive,       // Archives  
     Database,      // Données
     Cloud,         // Cloud storage
     File,          // Fichier générique
@@ -279,7 +276,8 @@ export const Icons = {
     MoreHorizontal,
     MoreVertical,
     Maximize,
-    Minimize
+    Minimize,
+    X
   },
 
   // États & Feedback
@@ -311,7 +309,6 @@ export const Icons = {
     Mic,
     Play,
     Pause,
-    Stop,
     Volume2,
     VolumeX,
     Headphones,
@@ -339,7 +336,6 @@ export const Icons = {
 
   // Outils & Création
   tools: {
-    Tool,
     Wrench,
     Scissors,
     Paintbrush,
@@ -398,7 +394,6 @@ export const Icons = {
   time: {
     Clock,
     Timer,
-    Stopwatch,
     AlarmClock,
     Calendar,
     CalendarDays
@@ -409,7 +404,6 @@ export const Icons = {
     Sidebar,
     PanelLeft,
     PanelRight,
-    Tabs,
     Command
   }
 };

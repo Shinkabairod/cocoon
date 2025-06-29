@@ -255,8 +255,10 @@ const Dashboard = () => {
   // Remplacez votre fonction renderWelcomePage() par celle-ci dans Dashboard.tsx :
 
   const renderWelcomePage = () => {
-    // ✅ Récupérer les vraies stats du Workspace
-    const realStats = getStats();
+    // ✅ Récupérer les vraies stats du Workspace avec getWorkspaceStats
+    const { getWorkspaceStats } = useWorkspace();
+    const realStats = getWorkspaceStats();
+    
     return <div className="space-y-8">
         {/* ✅ Stats cards avec vraies données */}
         <DashboardStats stats={realStats} />

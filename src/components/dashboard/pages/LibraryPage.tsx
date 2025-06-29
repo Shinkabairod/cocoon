@@ -1,344 +1,162 @@
 
+// src/components/dashboard/pages/LibraryPage.tsx
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Icons, Icon2D } from '@/components/ui/icons';
 import { useWorkspace } from '@/hooks/useWorkspace';
-import { 
-  BookOpen, 
-  Search, 
-  Filter, 
-  Grid, 
-  List, 
-  Plus,
-  FileText,
-  Video,
-  Image,
-  Music,
-  Download,
-  Eye,
-  Star,
-  Clock
-} from 'lucide-react';
 
-const LibraryPage = () => {
-  const { getStats } = useWorkspace();
-  const stats = getStats();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [selectedFilter, setSelectedFilter] = useState('all');
+interface LibraryPageProps {
+  user: any;
+  onboardingData: any;
+  userStats: any;
+}
 
-  // Mock library items - in a real app, this would come from your data source
-  const libraryItems = [
-    {
-      id: '1',
-      title: 'Video Script Template',
-      type: 'template',
-      category: 'video',
-      description: 'Professional video script template for social media',
-      tags: ['video', 'social media', 'template'],
-      createdAt: '2024-01-15',
-      fileType: 'text',
-      size: '2.3 KB',
-      starred: true
-    },
-    {
-      id: '2',
-      title: 'Brand Guidelines PDF',
-      type: 'document',
-      category: 'branding',
-      description: 'Complete brand identity guidelines',
-      tags: ['branding', 'guidelines', 'pdf'],
-      createdAt: '2024-01-10',
-      fileType: 'pdf',
-      size: '1.2 MB',
-      starred: false
-    },
-    {
-      id: '3',
-      title: 'Content Calendar Template',
-      type: 'template',
-      category: 'planning',
-      description: 'Monthly content planning template',
-      tags: ['planning', 'calendar', 'content'],
-      createdAt: '2024-01-05',
-      fileType: 'spreadsheet',
-      size: '845 KB',
-      starred: true
-    },
-    {
-      id: '4',
-      title: 'Social Media Graphics Pack',
-      type: 'media',
-      category: 'graphics',
-      description: 'Collection of social media templates and graphics',
-      tags: ['graphics', 'social media', 'templates'],
-      createdAt: '2024-01-03',
-      fileType: 'zip',
-      size: '15.7 MB',
-      starred: false
-    }
+const LibraryPage: React.FC<LibraryPageProps> = ({
+  user,
+  onboardingData,
+  userStats
+}) => {
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState('all');
+  
+  // Utilisons getWorkspaceStats au lieu de getStats
+  const { getWorkspaceStats } = useWorkspace();
+  const stats = getWorkspaceStats();
+
+  const categories = [
+    { id: 'all', label: 'All Items', icon: Icons.folders.Archive },
+    { id: 'templates', label: 'Templates', icon: Icons.files.Clipboard },
+    { id: 'resources', label: 'Resources', icon: Icons.files.Link },
+    { id: 'scripts', label: 'Scripts', icon: Icons.files.FileText },
+    { id: 'media', label: 'Media', icon: Icons.files.Video },
   ];
 
-  const getFileIcon = (fileType: string) => {
-    switch (fileType) {
-      case 'pdf':
-      case 'text':
-        return <FileText className="h-5 w-5 text-blue-600" />;
-      case 'video':
-        return <Video className="h-5 w-5 text-red-600" />;
-      case 'image':
-      case 'graphics':
-      case 'zip':
-        return <Image className="h-5 w-5 text-green-600" />;
-      case 'audio':
-        return <Music className="h-5 w-5 text-purple-600" />;
-      default:
-        return <FileText className="h-5 w-5 text-gray-600" />;
-    }
-  };
-
-  const filteredItems = libraryItems.filter(item => {
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    
-    const matchesFilter = selectedFilter === 'all' || 
-                         item.category === selectedFilter ||
-                         item.type === selectedFilter;
-    
-    return matchesSearch && matchesFilter;
-  });
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold flex items-center gap-2">
-            <BookOpen className="h-6 w-6" />
-            <span className="bg-gradient-to-r from-violet-600 to-purple-600 bg-clip-text text-transparent">
-              Library
-            </span>
-          </h2>
-          <p className="text-gray-600">
-            Your collection of templates, resources, and assets
+          <h1 className="text-3xl font-bold flex items-center gap-3">
+            <Icon2D icon={Icons.folders.BookOpen} size={32} color="#8B5CF6" />
+            Library
+          </h1>
+          <p className="text-muted-foreground mt-2">
+            Your collection of templates, resources, and saved content
           </p>
         </div>
-        <Button className="bg-black text-white hover:bg-gray-800">
-          <Plus className="h-4 w-4 mr-2" />
-          Add Item
-        </Button>
+        
+        <div className="flex items-center gap-2">
+          <div className="relative">
+            <Icon2D 
+              icon={Icons.actions.Search} 
+              className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" 
+              size={16}
+            />
+            <Input
+              placeholder="Search library..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-10 w-64"
+            />
+          </div>
+          <Button>
+            <Icon2D icon={Icons.actions.Plus} size={16} className="mr-2" />
+            Add to Library
+          </Button>
+        </div>
+      </div>
+
+      {/* Categories */}
+      <div className="flex gap-2 overflow-x-auto pb-2">
+        {categories.map((category) => (
+          <Button
+            key={category.id}
+            variant={activeCategory === category.id ? "default" : "outline"}
+            onClick={() => setActiveCategory(category.id)}
+            className="flex items-center gap-2 whitespace-nowrap"
+          >
+            <Icon2D icon={category.icon} size={16} />
+            {category.label}
+          </Button>
+        ))}
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Items</CardTitle>
-            <BookOpen className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{libraryItems.length}</div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Templates</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {libraryItems.filter(item => item.type === 'template').length}
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <Icon2D icon={Icons.files.Clipboard} size={24} color="#3B82F6" />
+              <div>
+                <div className="text-2xl font-bold text-blue-600">12</div>
+                <div className="text-sm text-muted-foreground">Templates</div>
+              </div>
             </div>
           </CardContent>
         </Card>
-        
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Documents</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {libraryItems.filter(item => item.type === 'document').length}
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <Icon2D icon={Icons.files.Link} size={24} color="#10B981" />
+              <div>
+                <div className="text-2xl font-bold text-green-600">{stats.resourceFiles}</div>
+                <div className="text-sm text-muted-foreground">Resources</div>
+              </div>
             </div>
           </CardContent>
         </Card>
-        
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Starred</CardTitle>
-            <Star className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {libraryItems.filter(item => item.starred).length}
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <Icon2D icon={Icons.files.FileText} size={24} color="#8B5CF6" />
+              <div>
+                <div className="text-2xl font-bold text-purple-600">8</div>
+                <div className="text-sm text-muted-foreground">Scripts</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center gap-3">
+              <Icon2D icon={Icons.files.Video} size={24} color="#F59E0B" />
+              <div>
+                <div className="text-2xl font-bold text-orange-600">{stats.videoFiles}</div>
+                <div className="text-sm text-muted-foreground">Media Files</div>
+              </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Search and Filters */}
-      <div className="flex flex-col md:flex-row gap-4 items-center justify-between">
-        <div className="flex-1 flex gap-4">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <Input
-              placeholder="Search library..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+      {/* Library Content */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Icon2D icon={Icons.folders.Archive} size={20} />
+            Library Items
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="text-center py-12">
+            <Icon2D 
+              icon={Icons.folders.BookOpen} 
+              size={64} 
+              className="mx-auto mb-4 text-muted-foreground" 
             />
-          </div>
-          
-          <div className="flex gap-2">
-            <Button 
-              variant={selectedFilter === 'all' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setSelectedFilter('all')}
-            >
-              All
-            </Button>
-            <Button 
-              variant={selectedFilter === 'template' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setSelectedFilter('template')}
-            >
-              Templates
-            </Button>
-            <Button 
-              variant={selectedFilter === 'document' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setSelectedFilter('document')}
-            >
-              Documents
-            </Button>
-            <Button 
-              variant={selectedFilter === 'media' ? 'default' : 'outline'}
-              size="sm"
-              onClick={() => setSelectedFilter('media')}
-            >
-              Media
+            <h3 className="text-lg font-semibold mb-2">Your Library is Empty</h3>
+            <p className="text-muted-foreground mb-6">
+              Start building your library by saving templates, resources, and content.
+            </p>
+            <Button>
+              <Icon2D icon={Icons.actions.Plus} size={16} className="mr-2" />
+              Add First Item
             </Button>
           </div>
-        </div>
-        
-        <div className="flex gap-2">
-          <Button
-            variant={viewMode === 'grid' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setViewMode('grid')}
-          >
-            <Grid className="h-4 w-4" />
-          </Button>
-          <Button
-            variant={viewMode === 'list' ? 'default' : 'outline'}
-            size="sm"
-            onClick={() => setViewMode('list')}
-          >
-            <List className="h-4 w-4" />
-          </Button>
-        </div>
-      </div>
-
-      {/* Library Items */}
-      {viewMode === 'grid' ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredItems.map((item) => (
-            <Card key={item.id} className="hover:shadow-lg transition-shadow cursor-pointer">
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gray-100 rounded-lg">
-                      {getFileIcon(item.fileType)}
-                    </div>
-                    <div className="flex-1">
-                      <CardTitle className="text-base">{item.title}</CardTitle>
-                      <p className="text-sm text-gray-600">{item.size}</p>
-                    </div>
-                  </div>
-                  {item.starred && <Star className="h-4 w-4 text-yellow-500 fill-current" />}
-                </div>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-gray-600 mb-3">{item.description}</p>
-                <div className="flex flex-wrap gap-1 mb-3">
-                  {item.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary" className="text-xs">
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between text-xs text-gray-500">
-                  <div className="flex items-center gap-1">
-                    <Clock className="h-3 w-3" />
-                    {item.createdAt}
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-3 w-3" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Download className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      ) : (
-        <div className="space-y-2">
-          {filteredItems.map((item) => (
-            <Card key={item.id} className="hover:shadow-md transition-shadow">
-              <CardContent className="p-4">
-                <div className="flex items-center gap-4">
-                  <div className="p-2 bg-gray-100 rounded-lg">
-                    {getFileIcon(item.fileType)}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-medium">{item.title}</h3>
-                      {item.starred && <Star className="h-4 w-4 text-yellow-500 fill-current" />}
-                    </div>
-                    <p className="text-sm text-gray-600">{item.description}</p>
-                    <div className="flex items-center gap-4 mt-1 text-xs text-gray-500">
-                      <span>{item.size}</span>
-                      <span>{item.createdAt}</span>
-                      <div className="flex gap-1">
-                        {item.tags.map((tag) => (
-                          <Badge key={tag} variant="secondary" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="sm">
-                      <Eye className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Download className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      )}
-
-      {filteredItems.length === 0 && (
-        <div className="text-center py-12">
-          <BookOpen className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-600 mb-2">No items found</h3>
-          <p className="text-gray-500">Try adjusting your search or filters</p>
-        </div>
-      )}
+        </CardContent>
+      </Card>
     </div>
   );
 };
